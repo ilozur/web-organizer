@@ -215,5 +215,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Doxygen output
+docs/
+
+
 # End of https://www.gitignore.io/api/linux,macos,python,django,pycharm+all
 
