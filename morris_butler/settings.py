@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
+    'calendars.apps.CalendarsConfig',
+    'notes.apps.NotesConfig',
+    'todolist.apps.TodolistConfig',
 ]
 
 MIDDLEWARE = [

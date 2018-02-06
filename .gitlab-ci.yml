@@ -8,15 +8,5 @@ before_script:
 test:
   script:
   - doxygen Doxyfile
-  except:
-  - master
-  
-pages:
-  script:
-  - doxygen Doxyfile
-  - mv docs/ public/
-  artifacts:
-    paths:
-    - public
   only:
-  - master
+  - develop
