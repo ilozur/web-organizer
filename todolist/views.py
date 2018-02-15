@@ -7,3 +7,6 @@ def index(request):
         'header': "Todolist index page header"
     }
     return render(request, "todolist/index.html", context)
+
+def add_todo():
+    pass
