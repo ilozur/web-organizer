@@ -5,8 +5,6 @@ from notes.models import Notes
 
 
 def index(request):
-    for i in Notes.objects.all():
-        print(i.name, i.data)
     context = {
         'title': "Notes index page",
         'header': "Notes index page header",
