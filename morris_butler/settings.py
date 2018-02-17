@@ -84,6 +84,8 @@ DATABASES = {
         'NAME': 'morris_db',
         'USER': 'morris_user',
         'PASSWORD': 'morris_pass',
+        'HOST': 'localhost',
+        'PORT': '10061'
     }
 }
 
