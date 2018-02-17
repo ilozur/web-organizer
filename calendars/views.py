@@ -1,5 +1,7 @@
 from calendars.models import *
 from django.shortcuts import render
+from django.contrib.auth.decorators import *
+from datetime import datetime
 
 
 def index(request):
@@ -38,3 +40,13 @@ def get_events(sorting_type, user=None):
     elif modificator == 'private':
         events = events.filter(is_public=0)
     return events
+
+
+@login_required
+def add_event(data):
+    time_now = datetime.now()
+    data['date'] = time_now.date()
+    data['time'] = time_now.time()
+    event = Event(user=data['user'], date=data['date'], time=data['time'], title=data['title'],
+                  description=data['description'], is_public=data['is_public'])
+    event.save()
