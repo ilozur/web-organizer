@@ -1,6 +1,9 @@
 {% extends "main/base.html" %}
 
 {% block content %}
-    <h1>{{ header }}</h1>
-    <p>Add todo</p>
+    <h1>Add new todo</h1>
+    <form action="/add" method="post" id="add_form">
+        {% csrf_token %}
+        {{ add_form.as_p }}
+    </form>
 {% endblock %}
