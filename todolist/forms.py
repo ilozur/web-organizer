@@ -6,4 +6,4 @@ class AddTodoForm(forms.Form):
     text = forms.CharField(label='Enter description', max_length=400,
                            error_messages={'required': "Enter todo's description"})
     priority = forms.CharField(label='Enter priority', max_length=200)
-    deadline = forms.CharField(max_length=128, default="deadline")  # планируется интеграция с календарем
+    deadline = forms.CharField(max_length=128, label='Enter deadline')  # планируется интеграция с календарем
