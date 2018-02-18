@@ -7,7 +7,7 @@ import os
 from todolist.forms import AddTodoForm
 from todolist.models import Todos
 from django import forms
-import time
+import datetime
 
 
 def index(request):
