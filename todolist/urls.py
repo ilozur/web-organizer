@@ -5,5 +5,5 @@ from todolist import views
 
 urlpatterns = [
     path('', index, name='todolist.index'),
-    path('add', views.add_todo, name='add_todo'),
+    path('add', views.add_todo, name='todolist.add_todo'),
 ]
