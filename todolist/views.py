@@ -16,7 +16,7 @@ def index(request):
         'title': "Todolist index page",
         'header': "Todolist index page header"
     }
-    return render(request, "todolist/index.html", context, {'items': items})
+    return render(request, "todolist/index.html", {'items': items}, context)
 
 #@login_required
 def add_todo(request):
@@ -42,7 +42,9 @@ def add_todo(request):
 
 def time_and_date_for_todo():
     addtime = datetime.datetime.now()
-    addtime = addtime.strftime("%d-%m-%Y %H:%M")
+    print(addtime)
+    addtime = addtime.strftime("%H:%M:%S %Y-%m-%d")
+    print(addtime)
     dater, timer = addtime.split(' ')
     return timer, dater
 
