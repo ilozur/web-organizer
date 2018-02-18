@@ -43,6 +43,6 @@ def add_todo(request):
 def time_and_date_for_todo():
     addtime = datetime.datetime.now()
     addtime = addtime.strftime("%d-%m-%Y %H:%M")
-    timer, dater = addtime.split(' ')
+    dater, timer = addtime.split(' ')
     return timer, dater
 
