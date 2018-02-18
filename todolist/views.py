@@ -11,11 +11,12 @@ import time
 
 
 def index(request):
+    items = Todos.objects.all()
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
     }
-    return render(request, "todolist/index.html", context)
+    return render(request, "todolist/index.html", context, {'items': items})
 
 #@login_required
 def add_todo(request):

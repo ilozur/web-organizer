@@ -3,5 +3,10 @@
 {% block content %}
     <h1>{{ header }}</h1>
     <p>Welcome to the todolist index page</p>
+    {% for x in items %}
+    <p>{{ x.title }}</p>
+    <p>{{ x.text }}</p>
+    <hr>
+    {% endfor %}
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
 {% endblock %}
