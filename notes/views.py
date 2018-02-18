@@ -9,6 +9,8 @@ def index(request):
         'title': "Notes index page",
         'header': "Notes index page header",
     }
+    notes_list = Notes.objects.orderby('-added_time')
+    context['Notes_list'] = notes_list
     return render(request, "notes/index.html", context)
 
 def add_note(request):
