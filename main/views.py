@@ -11,6 +11,8 @@ def index(request):
         'title': "Index page",
         'header': "Index page header",
     }
+    login_form = AuthForm()
+    context['login_form'] = login_form
     return render(request, "main/index.html", context)
 
 
@@ -35,8 +37,6 @@ def login_view(request):
                 return HttpResponse('Username or email or password not correct. Go to <a href="/">main</a>.')
         else:
             return HttpResponse('Login failed. Sorry. Go to <a href="/">main</a>.')
-    else:
-        pass
 
 
 def logout_view(request):
