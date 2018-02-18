@@ -8,4 +8,4 @@ class AddNoteForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    resulter = forms.CharField(label='search', max_length=70)
+    resulter = forms.CharField(label='Whatcha lookin\' for?', max_length=70)

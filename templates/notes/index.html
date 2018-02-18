@@ -4,4 +4,9 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the notes index page</p>
     <li><a href='/notes/add'>Add note</a></li>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ SearchForm }}
+        <input type="submit" value="Search" />
+    </form>
 {% endblock %}
