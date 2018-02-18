@@ -5,6 +5,6 @@
     <form action="/todo/add" method="post" id="add_form">
         {% csrf_token %}
         {{ add_form.as_p }}
-        <a href="/todo/add_result"><input name="add_todo" type="submit" value="Submit"></a>
+        <a href="/todo/add"><input name="add_todo" type="submit" value="Submit"></a>
     </form>
 {% endblock %}
