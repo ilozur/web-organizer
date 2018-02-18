@@ -45,8 +45,9 @@ def get_events(sorting_type, user=None):
 @login_required
 def add_event(data):
     time_now = datetime.now()
-    data['date'] = time_now.date()
-    data['time'] = time_now.time()
+    data['added_date'] = time_now.date()
+    data['added_time'] = time_now.time()
     event = Event(user=data['user'], date=data['date'], time=data['time'], title=data['title'],
-                  description=data['description'], is_public=data['is_public'])
+                  description=data['description'], is_public=data['is_public'],
+                  added_date=data['added_date'], added_time=data['added_time'], status="opened")
     event.save()
