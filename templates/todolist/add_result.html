@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Add result</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Add new Todo</h1>
+    {% if not errors %}
+        <h1>Added Todo #{{ id }}</h1>
+    {% else %}
+        <h1>Something went wrong</h1>
+        Details: {{ errors }}
+    {% endif %}
+{% endblock %}
