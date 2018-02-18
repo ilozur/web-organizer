@@ -26,10 +26,9 @@ def add_todo(request):
             form = AddTodoForm(request.POST)
             if form.is_valid():
                 user = request.user
-                time_for_todo()
-                date_for_todo()
-                p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time_for_todo(),
-                          added_date=date_for_todo(), priority=form.data['priority'], deadline=form.data['deadline'])
+                date, time = time_and_date_for_todo()
+                p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
+                          added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
                 p.save()
                 context['id'] = p.id
             else:
@@ -41,27 +40,9 @@ def add_todo(request):
             return render(request, 'todolist/add.html', context)
 
 
-def time_for_todo():
-    timer = tuple()
-    timer.asctime()
-    todo_time = []
-    spaces = 0
-    for i in range(len(timer)):
-            if timer[i] == ' ':
-                spaces += 1
-            if spaces == 2:
-                todo_time.append(timer[i])
-    return todo_time
+def time_and_date_for_todo():
+    addtime = datetime.datetime.now()
+    addtime = addtime.strftime("%d-%m-%Y %H:%M")
+    timer, dater = addtime.split(' ')
+    return timer, dater
 
-
-def date_for_todo():
-    date = tuple()
-    date.asctime()
-    todo_date = []
-    spaces = 0
-    for i in range(len(date)):
-            if date[i] == ' ':
-                spaces += 1
-            if (spaces>2) or (spaces<2):
-                todo_date.append(date[i])
-    return todo_date
