@@ -11,6 +11,7 @@ def index(request):
     }
     return render(request, "notes/index.html", context)
 
+
 def add_note(request):
     if request.POST:
         form = AddNoteForm(request.POST)
@@ -24,3 +25,13 @@ def add_note(request):
         form = AddNoteForm()
         context['form'] = form
         return render(request, "notes/add_note.html", context)
+
+
+def search(substr):
+    obj = Notes.objects.all()
+    ret_list = []
+    for i in obj:
+        if substr in i.name:
+            ret_list.append(i)
+
+    return ret_list
