@@ -11,13 +11,14 @@ import time
 
 
 def index(request):
+    items = Todos.objects.all()
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
     }
-    return render(request, "todolist/index.html", context)
+    return render(request, "todolist/index.html", context, {'items': items})
 
-@login_required
+#@login_required
 def add_todo(request):
         context = {}
         context['user'] = request.user
@@ -33,11 +34,11 @@ def add_todo(request):
                 context['id'] = p.id
             else:
                 context['errors'] = form.errors
-            return render(request, 'add_result.html', context)
+            return render(request, 'todolist/add.html', context)
         else:
             form = AddTodoForm()
             context['add_form'] = form
-            return render(request, 'add.html', context)
+            return render(request, 'todolist/add.html', context)
 
 
 def time_for_todo():
