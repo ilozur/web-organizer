@@ -2,12 +2,14 @@
 
 {% block content %}
     <h1>{{ header }}</h1>
-    <p>Welcome to the todolist index page</p>
+    <h3>All todos</h3>
+    <hr>
     {% for item in items %}
-        <p>{{ item.title }} - Added at {{ item.added_date }} {{ item.added_time }}</p>
-
+        <h4>{{ item.title }}</h4>
+        <p>Added at: {{ item.added_date }} {{ item.added_time }}</p>
+        <p>Priority: {{ item.priority }}</p>
         <p>{{ item.text }}</p>
-        <hr />
+        <hr>
     {% endfor %}
-    <a href="/todo/add"><input type="submit" value="Add new todo"></a>
+    <a href="/todo/add"><input type="submit" value="Add new"></a>
 {% endblock %}

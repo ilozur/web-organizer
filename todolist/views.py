@@ -12,6 +12,7 @@ import datetime
 
 def index(request):
     items = Todos.objects.all()
+    print(items)
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
