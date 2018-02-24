@@ -9,7 +9,12 @@ def index(request):
         'title': "Notes index page",
         'header': "Notes index page header",
     }
+    notes_list = list()
+    for i in Notes.objects.filter(id=1):
+        notes_list.append((i.name, i.added_time, i.id))
+    context['notes_data'] = notes_list
     return render(request, "notes/index.html", context)
+
 
 def add_note(request):
     if request.POST:
