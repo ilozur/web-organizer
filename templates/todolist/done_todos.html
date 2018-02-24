@@ -3,16 +3,17 @@
 {% block content %}
     <h1>{{ header }}</h1>
     <p>Completed Todos</p>
-    <aside>
-        <h1>Type of sort</h1><hr>
-        <a href="/todo/done"><input type="submit" value="new"></a>
-        <a href="/todo/done"><input type="submit" value="old"></a><br>
-        <a href="/todo/done"><input type="submit" value="A to Z"></a>
-        <a href="/todo/done"><input type="submit" value="Z to A"></a><br>
-    </aside>
-    {% for x in items %}
-    <p>{{ x.title }}</p><br>
-    <p>{{ x.text }}</p><a href="/todo/done"><input type="submit" value="Mark todo as uncompleted"></a>
+    <a href="/todo"><input type="submit" value="Todos"></a>
+    <form action="/todo/done" method="get">
+        <input type="submit" value="From A to Z">
+        <input type="submit" name="ZtoA" value="From Z to A"><br>
+        <input type="submit" name="new" value="Newest first">
+        <input type="submit" name="old" value="Oldest first">
+    </form>
     <hr>
+    {% for item in items %}
+        <h4>{{ item.title }}</h4>
+        <p>{{ item.text }}</p>
+        <hr>
     {% endfor %}
 {% endblock %}
