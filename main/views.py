@@ -46,7 +46,6 @@ def sign_up_view(request):
             return HttpResponseRedirect('/')
     else:
         response_data = {}
-        result = ""
         if not request.user.is_authenticated:
             form = SignUpForm(request.POST)
             if form.is_valid():
