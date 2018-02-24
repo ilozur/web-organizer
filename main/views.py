@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from main.forms import *
+import json
 
 
 def index(request):
@@ -11,37 +12,42 @@ def index(request):
         'title': "Index page",
         'header': "Index page header",
     }
-    login_form = AuthForm()
-    context['login_form'] = login_form
+    if not request.user.is_authenticated:
+        login_form = AuthForm()
+        context['login_form'] = login_form
     return render(request, "main/index.html", context)
 
 
-def login_view(request):
-    context = {}
-    if request.POST:
+def login_ajax(request):
+    response_data = {}
+    if request.method == "POST":
         form = AuthForm(request.POST)
         if form.is_valid():
-            pattern = compile('(^|\s)[-a-z0-9_.]+@([-a-z0-9]+\.)+[a-z]{2,6}(\s|$)')
-            if pattern.match(form.data['username'].lower()):
-                tmp = User.objects.filter(email=form.data['username'].lower()).first().username
+            name = form.data['username'].lower()
+            password = form.data['password']
+            found_user = (len(User.objects.filter(username=name)) > 0) or \
+                         (len(User.objects.filter(email=name)) > 0)
+            if not found_user:
+                result = "User not found"
             else:
-                tmp = form.data['username'].lower()
-            user = authenticate(request, username=tmp, password=form.data['password'])
-            if user is not None:
-                login(request, user)
-                context['title'] = 'Index page'
-                context['header'] = 'Index page header'
-                messages.add_message(request, messages.INFO, context)
-                return HttpResponseRedirect('/')
-            else:
-                return HttpResponse('Username or email or password not correct. Go to <a href="/">main</a>.')
+                user = User.objects.filter(email=name).first()
+                if user is None:
+                    user = User.objects.filter(username=name).first()
+                loginned_user = authenticate(request, username=user.username, password=password)
+                if loginned_user is None:
+                    result = "Wrong password"
+                else:
+                    login(request, loginned_user)
+                    result = "Success"
         else:
-            return HttpResponse('Login failed. Sorry. Go to <a href="/">main</a>.')
+            result = "Form not valid"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
+@login_required
 def logout_view(request):
     logout(request)
-    context = {'index_text': 'Welcome to out simple voteapp'}
-    context['user'] = request.user
-    messages.add_message(request, messages.INFO, context)
     return HttpResponseRedirect('/')
