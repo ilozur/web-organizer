@@ -2,7 +2,16 @@
 
 {% block content %}
     <h1>{{ header }}</h1>
-    <h3>All todos</h3>
+    <p>Welcome to the todolist index page</p>
+    <a href="/todo/add"><input type="submit" value="Add new todo"></a>
+    <a href="/todo/done"><input type="submit" value="Completed Todos"></a>
+    <aside>
+        <h1>Type of sort</h1><hr>
+        <a href="/todo/"><input type="submit" value="new"></a>
+        <a href="/todo/"><input type="submit" value="old"></a><br>
+        <a href="/todo/"><input type="submit" value="A to Z"></a>
+        <a href="/todo/"><input type="submit" value="Z to A"></a><br>
+    </aside>
     <hr>
     {% for item in items %}
         <h4>{{ item.title }}</h4>

@@ -7,6 +7,7 @@
     <h1>Add new Todo</h1>
     {% if not errors %}
         <h1>Added Todo #{{ id }}</h1>
+        <a href="/todo/"><input type="submit" value="Return to list of Todos"></a>
     {% else %}
         <h1>Something went wrong</h1>
         Details: {{ errors }}
