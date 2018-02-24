@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from notes.forms import AddNoteForm
+from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
 
 
@@ -13,6 +13,8 @@ def index(request):
     for i in Notes.objects.filter(id=1):
         notes_list.append((i.name, i.added_time, i.id))
     context['notes_data'] = notes_list
+    search_form = SearchForm()
+    context['search_form'] = search_form
     return render(request, "notes/index.html", context)
 
 

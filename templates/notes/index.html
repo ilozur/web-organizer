@@ -6,7 +6,7 @@
     <li><a href='/notes/add'>Add note</a></li>
     <form method="POST" action="">
         {% csrf_token %}
-        {{ SearchForm }}
+        {{ search_form }}
         <input type="submit" value="Search" />
     </form>
 {% endblock %}
