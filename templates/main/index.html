@@ -2,5 +2,33 @@
 
 {% block content %}
     <h1>{{ header }}</h1>
+    {% if user.is_authenticated %}
+        <a href="logout">Logout</a>
+    {% else %}
+        <form id="login_form">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+        </form>
+        <input type="submit" value="Sign in" onclick="login_ajax()">
+        <script>
+            function login_ajax()
+            {
+                result = "";
+                $.ajax({
+                    type: "POST",
+                    url: '/login/',
+                    data: $('#login_form').serialize(),
+                    success: function(response)
+                    {
+                        alert(response['result']);
+                        if (response['result'] == "Success")
+                        {
+                            window.location.href = '/';
+                        }
+                    }
+                });
+            };
+        </script>
+    {% endif %}
     <p>Welcome to the index page</p>
 {% endblock %}
