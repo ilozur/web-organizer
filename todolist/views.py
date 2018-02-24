@@ -12,22 +12,11 @@ sortTodo_list = []
 timeTodo_list = []
 
 
-def index(request, type_of_sort):
-    if type_of_sort == 'old':
-        items = timeTodo_list
-    elif type_of_sort == 'new':
-        items = timeTodo_list
-        items.reverse()
-    elif type_of_sort == 'default':
-        items = Todos.objects.all()
-    elif type_of_sort == 'A to Z':  # Мишина сортировка
-        items = sortTodo_list       #
-    elif type_of_sort == 'Z to A':  #
-        items = sortTodo_list
-        for item in items:
-            if not (item.status == 'in progress'):
-                items.pop(item)
-                #
+def index(request):
+    items = checkType_of_sort(type_of_sort='default')
+    for item in items:
+        if not (item.status == 'in progress'):
+            items.pop(item)
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
@@ -65,23 +54,28 @@ def time_and_date_for_todo():
     return timer, dater
 
 
-def completed_todos(request, type_of_sort):
-    if type_of_sort == 'old':
-        items = timeTodo_list
-    elif type_of_sort == 'new':
-        items = timeTodo_list
-        items.reverse()
-    elif type_of_sort == 'default':
-        items = Todos.objects.all()
-    elif type_of_sort == 'A to Z':  # Мишина сортировка
-        items = sortTodo_list       #
-    elif type_of_sort == 'Z to A':  #
-        items = sortTodo_list       #
-        for item in items:
-            if item.status == 'in progress':
-                items.pop(item)
+def completed_todos(request):
+    items = checkType_of_sort(type_of_sort='default')
+    for item in items:
+        if item.status == 'in progress':
+            items.pop(item)
     context = {
         'title': "Completed todos page",
         'header': "You can mark avaliable todos as uncompleted"
     }
     return render(request, "todolist/done_todos.html", context, {'items': items})
+
+
+def checkType_of_sort(type_of_sort):
+    if type_of_sort == 'old':
+        return timeTodo_list
+    elif type_of_sort == 'new':
+        reversed = timeTodo_list
+        reversed.reverse()
+        return reversed
+    elif type_of_sort == 'default':
+        return Todos.objects.all()
+    elif type_of_sort == 'A to Z':  # Мишина сортировка
+        return sortTodo_list       #
+    elif type_of_sort == 'Z to A':  #
+        return sortTodo_list
