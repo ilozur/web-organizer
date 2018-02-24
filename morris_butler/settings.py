@@ -82,8 +82,6 @@ DATABASES = {
         'NAME': 'morris_db',
         'USER': 'morris_user',
         'PASSWORD': 'morris_pass',
-        'HOST': 'localhost',
-        'PORT': '10061'
     }
 }
 
@@ -125,10 +123,25 @@ STATIC_URL = '/static/'
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': [['Source', 'Link', 'Unlink', 'SpecialChar', 'Image', 'CodeSnippet']],
-        'height': 400,
-        'width': 900,
-        'removePlugins': 'stylesheetparser',
-        'extraPlugins': 'codesnippet',
-    },
+        'toolbar': [
+            ['Undo', 'Redo',
+             '-', 'Bold', 'Italic', 'Underline',
+             '-', 'Format',
+             '-', 'Maximize',
+             '-', 'Table',
+             '-', 'Image',
+             '-', 'NumberedList', 'BulletedList'
+            ],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+             '-', 'Styles', 'Font', 'FontSize', 'TextColor',
+             '-', 'HorizontalRule',
+             '-', 'Blockquote'
+            ]
+        ],
+        'height': 500,
+        'width': '100%',
+        'toolbarCanCollapse': False,
+        'forcePasteAsPlainText': True,
+    }
+
 }

@@ -9,4 +9,8 @@
         {{ search_form }}
         <input type="submit" value="Search" />
     </form>
+    {% for item in notes_data %}
+        <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
+    {% endfor %}
+
 {% endblock %}

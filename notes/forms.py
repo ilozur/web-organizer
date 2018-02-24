@@ -7,5 +7,9 @@ class AddNoteForm(forms.Form):
     data = forms.CharField(widget=CKEditorWidget())
 
 
+class ShowNoteForm(forms.Form):
+    data = forms.CharField(widget=CKEditorWidget())
+
+
 class SearchForm(forms.Form):
-    resulter = forms.CharField(label='Whatcha lookin\' for?', max_length=70)
+    resulter = forms.CharField(label='What are you looking for?', max_length=70)
