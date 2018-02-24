@@ -7,7 +7,7 @@
     <a href="/todo/done"><input type="submit" value="Done"></a>
     <hr>
     <form action="/todo/" method="get">
-        <input type="submit" value="From A to Z">
+        <input type="submit" name="AtoZ" value="From A to Z">
         <input type="submit" name="ZtoA" value="From Z to A"><br>
         <input type="submit" name="new" value="Newest first">
         <input type="submit" name="old" value="Oldest first">
@@ -18,6 +18,9 @@
         <p>Added at: {{ item.added_date }} {{ item.added_time }}</p>
         <p>Priority: {{ item.priority }}</p>
         <p>{{ item.text }}</p>
+        <form action="/todo" method="get">
+            <input type="submit" name="{{ item.title }}" value="Done">
+        </form>
         <hr>
     {% endfor %}
 {% endblock %}

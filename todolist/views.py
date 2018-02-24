@@ -11,14 +11,9 @@ import datetime
 timeTodo_list = []
 
 def index(request):
-    items = Todos.objects.filter(status='in progress')
-    items = Todos.objects.order_by('title')
-    if (request.GET.get('ZtoA')):
-        items = reversed(Todos.objects.order_by('title'))
-    elif (request.GET.get('old')):
-        items = Todos.objects.order_by('added_date', 'added_time')
-    elif (request.GET.get('new')):
-        items = reversed(Todos.objects.order_by('added_date', 'added_time'))
+    type = list(request.GET.keys())
+    items = sorting(type)
+    items = items.filter(status='in progress')
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
@@ -50,19 +45,29 @@ def add_todo(request):
 
 
 def time_and_date_for_todo():
-    addtime = datetime.datetime.now()
-    print(addtime)
-    addtime = addtime.strftime("%H:%M:%S %Y-%m-%d")
-    print(addtime)
+    addtime = (datetime.datetime.now()).strftime("%H:%M:%S %Y-%m-%d")
     dater, timer = addtime.split(' ')
     return timer, dater
 
 
 def completed_todos(request):
-    items = Todos.objects.filter(status='done')
+    type = list(request.GET.keys())
+    items = sorting(type)
+    items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
         'header': "You can mark avaliable todos as uncompleted"
     }
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
+def sorting(type):
+    mode = {
+        'AtoZ': Todos.objects.order_by('title'),
+        'ZtoA': (Todos.objects.order_by('title')).reverse(),
+        'old': Todos.objects.order_by('added_date', 'added_time'),
+        'new': (Todos.objects.order_by('added_date', 'added_time')).reverse()
+    }
+    if type != []:
+        return mode.get(type[0], Todos.objects.all())
+    else:
+        return Todos.objects.all()
