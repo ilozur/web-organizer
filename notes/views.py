@@ -1,16 +1,18 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from notes.forms import AddNoteForm, SearchForm, ShowNoteForm
 from notes.models import Notes
 
-
+@login_required
 def index(request):
     context = {
         'title': "Notes index page",
         'header': "Notes index page header",
     }
     notes_list = list()
-    notes = get_notes('title_up', 1)
+    user = request.user
+    notes = get_notes('title_up', user)
     for i in notes:
         notes_list.append((i.name, i.added_time, i.id))
     context['notes_data'] = notes_list
@@ -18,11 +20,11 @@ def index(request):
     context['search_form'] = search_form
     return render(request, "notes/index.html", context)
 
-
+@login_required
 def add_note(request):
     if request.POST:
         form = AddNoteForm(request.POST)
-        tmp_note = Notes(name=form.data['title'], data=form.data['data'])
+        tmp_note = Notes(name=form.data['title'], data=form.data['data'], user=request.user)
         tmp_note.save()
         return HttpResponseRedirect('/notes')
     else:

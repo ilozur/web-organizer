@@ -145,6 +145,7 @@ CKEDITOR_CONFIGS = {
     }
 
 }
+
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'Morris-Butler-Organaizer@yandex.ru'
