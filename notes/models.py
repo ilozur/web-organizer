@@ -8,3 +8,4 @@ class Notes(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
     name = models.CharField(max_length=128, default="title")
     added_time = models.DateTimeField(auto_now_add=True)
+    is_voise = models.BooleanField(default=False)
