@@ -47,7 +47,7 @@ def show_todo(request, id):
     context = {}
     context['user'] = request.user
     todo_now = Todos.objects.filter(id=id).first()
-    context['a'] = todo_now 
+    context['a'] = todo_now
     return render(request, 'show.html', context)
 
 
