@@ -13,8 +13,17 @@ def index(request):
     notes_list = list()
     user = request.user
     notes = get_notes('title_up', user)
-    for i in notes:
+    voice_notes = 0
+    text_notes = 0
+    notes = get_notes('title_up', 1)
+    for i in notes.object.filter(user=request.user):
         notes_list.append((i.name, i.added_time, i.id))
+        if i.is_voice:
+            voice_notes += 1
+        else:
+            text_notes += 1
+    context['text_note'] = text_notes
+    context['voice_note'] = voice_notes
     context['notes_data'] = notes_list
     search_form = SearchForm()
     context['search_form'] = search_form

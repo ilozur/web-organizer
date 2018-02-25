@@ -4,6 +4,8 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the notes index page</p>
     <li><a href='/notes/add'>Add note</a></li>
+    voise notes {{name_tmp}}
+
     <form method="POST" action="">
         {% csrf_token %}
         {{ search_form }}
