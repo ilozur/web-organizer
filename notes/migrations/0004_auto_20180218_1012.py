@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='notes',
             name='data',
-            field=models.CharField(max_length=10000000),
+            field=models.CharField(max_length=10000),
         ),
     ]
