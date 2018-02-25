@@ -7,11 +7,18 @@
         {% csrf_token %}
         {{ sign_up_form.as_p }}
     </form>
-    <input type="submit" value="Sign up" onclick="sign_up_ajax()">
+    <input type="submit" value="Sign up" onclick="sign_up_ajax()" id="sign_up_btn">
     <script>
         function sign_up_ajax()
             {
                 result = "";
+                $("#sign_up_form").each(function(){
+                    if ($(this).find(':input').attr('name') != 'csrfmiddlewaretoken')
+                    {
+                        $(this).find(':input').attr('disabled', 'disabled');
+                    }
+                });
+                $('#sign_up_btn').attr('disabled', 'disabled');
                 $.ajax({
                     type: "POST",
                     url: '/sign_up/',
@@ -21,8 +28,15 @@
                         alert(response['result']);
                         if (response['result'] == "Success")
                         {
-                            window.location.href = '/';
+                            window.location.href = '/?just_signed_up=True';
                         }
+                        $("#sign_up_form").each(function(){
+                            if ($(this).find(':input').attr('name') != 'csrfmiddlewaretoken')
+                            {
+                                $(this).find(':input').removeAttr('disabled');
+                            }
+                        });
+                        $('#sign_up_btn').removeAttr('disabled');
                     }
                 });
             };

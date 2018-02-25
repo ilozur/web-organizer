@@ -12,14 +12,22 @@ from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 
 
 def index(request):
-    context = {
-        'title': "Index page",
-        'header': "Index page header",
-    }
-    if not request.user.is_authenticated:
-        sign_in_form = SignInForm()
-        context['sign_in_form'] = sign_in_form
-    return render(request, "main/index.html", context)
+    if request.method == "GET":
+        context = {
+            'title': "Index page",
+            'header': "Index page header",
+        }
+        if not request.user.is_authenticated:
+            just_signed_up = 'just_signed_up' in dict(request.GET)
+            if just_signed_up:
+                context['just_signed_up'] = True
+            else:
+                context['just_signed_up'] = False
+                sign_in_form = SignInForm()
+                context['sign_in_form'] = sign_in_form
+        return render(request, "main/index.html", context)
+    else:
+        return HttpResponseRedirect('/')
 
 
 def send_mail(mail):
