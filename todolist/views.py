@@ -46,9 +46,12 @@ def add_todo(request):
 def show_todo(request, id):
     context = {}
     context['user'] = request.user
-    todo_now = Todos.objects.filter(id=id).first()
-    context['a'] = todo_now
-    return render(request, 'show.html', context)
+    todo_now = Todos.objects.get(id=id).first()
+    if todo_now is None:
+        context['errors'] = ['NOT FOUND']
+    else:
+        context['a'] = todo_now
+        return render(request, 'show.html', context)
 
 
 def time_for_todo():
