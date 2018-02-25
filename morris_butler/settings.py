@@ -85,6 +85,8 @@ DATABASES = {
         'NAME': 'morris_db',
         'USER': 'morris_user',
         'PASSWORD': 'morris_pass',
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
 }
 
@@ -192,3 +194,10 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'Morris-Butler-Organaizer@yandex.ru'
+EMAIL_HOST_PASSWORD = '7966915'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'Morris-Butler-Organaizer@yandex.ru'

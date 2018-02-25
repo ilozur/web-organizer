@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 import calendars.urls, notes.urls, todolist.urls
-from main.views import index
+from main.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,8 @@ urlpatterns = [
     path('notes/', include(notes.urls)),
     path('calendar/', include(calendars.urls)),
     path('todo/', include(todolist.urls)),
+    path('sign_in/', sign_in_ajax, name='sign_in'),
+    path('sign_out/', sign_out_view, name='sign_out'),
+    path('sign_up/', sign_up_view, name='sign_up'),
+    path('activate/<str:key>', activate_key, name='activate_key')
 ]
