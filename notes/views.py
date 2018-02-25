@@ -18,7 +18,7 @@ def index(request):
     notes = get_notes('title_up', 1)
     for i in notes.object.filter(user=request.user):
         notes_list.append((i.name, i.added_time, i.id))
-        if i.is_voice:
+        if i.is_voise:
             voice_notes += 1
         else:
             text_notes += 1
