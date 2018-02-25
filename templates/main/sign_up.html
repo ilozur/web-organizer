@@ -12,17 +12,15 @@
         function sign_up_ajax()
             {
                 result = "";
-                $("#sign_up_form").each(function(){
-                    if ($(this).find(':input').attr('name') != 'csrfmiddlewaretoken')
-                    {
-                        $(this).find(':input').attr('disabled', 'disabled');
-                    }
+                form_data = $('#sign_up_form').serialize()
+                $("#sign_up_form").find(':input').each(function(){
+                    $(this).attr('disabled', 'disabled');
                 });
                 $('#sign_up_btn').attr('disabled', 'disabled');
                 $.ajax({
                     type: "POST",
                     url: '/sign_up/',
-                    data: $('#sign_up_form').serialize(),
+                    data: form_data,
                     success: function(response)
                     {
                         alert(response['result']);
@@ -30,11 +28,8 @@
                         {
                             window.location.href = '/?just_signed_up=True';
                         }
-                        $("#sign_up_form").each(function(){
-                            if ($(this).find(':input').attr('name') != 'csrfmiddlewaretoken')
-                            {
-                                $(this).find(':input').removeAttr('disabled');
-                            }
+                        $("#sign_up_form").find(':input').each(function(){
+                            $(this).removeAttr('disabled');
                         });
                         $('#sign_up_btn').removeAttr('disabled');
                     }
