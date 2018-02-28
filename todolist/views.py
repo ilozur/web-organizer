@@ -10,7 +10,6 @@ from todolist.forms import AddTodoForm
 from todolist.models import Todos
 from django import forms
 import datetime
-timeTodo_list = []
 
 def index(request):
     type = list(request.GET.keys())
@@ -35,8 +34,6 @@ def add_todo(request):
                 p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
                           added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
                 p.save()
-                global timeTodo_list
-                timeTodo_list.append(p)
                 context['id'] = p.id
             else:
                 context['errors'] = form.errors
