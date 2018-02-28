@@ -10,20 +10,17 @@ from todolist.forms import AddTodoForm
 from todolist.models import Todos
 from django import forms
 import datetime
-sortTodo_list = []
 timeTodo_list = []
 
-
 def index(request):
-    items = checkType_of_sort(type_of_sort='default')
-    for item in items:
-        if not (item.status == 'in progress'):
-            items.pop(item)
+    type = list(request.GET.keys())
+    items = sorting(type)
+    items = items.filter(status='in progress')
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
     }
-    return render(request, "todolist/index.html", context, {'items': items})
+    return render(request, "todolist/index.html", {'items': items}, context)
 
 
 #@login_required
@@ -51,37 +48,32 @@ def add_todo(request):
 
 
 def time_and_date_for_todo():
-    addtime = datetime.datetime.now()
-    addtime = addtime.strftime("%d-%m-%Y %H:%M")
+    addtime = (datetime.datetime.now()).strftime("%H:%M:%S %Y-%m-%d")
     dater, timer = addtime.split(' ')
     return timer, dater
 
 
 def completed_todos(request):
-    items = checkType_of_sort(type_of_sort='default')
-    for item in items:
-        if item.status == 'in progress':
-            items.pop(item)
+    type = list(request.GET.keys())
+    items = sorting(type)
+    items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
         'header': "You can mark avaliable todos as uncompleted"
     }
-    return render(request, "todolist/done_todos.html", context, {'items': items})
+    return render(request, "todolist/done_todos.html", {'items': items}, context)
 
-
-def checkType_of_sort(type_of_sort):
-    if type_of_sort == 'old':
-        return timeTodo_list
-    elif type_of_sort == 'new':
-        reversed = timeTodo_list
-        reversed.reverse()
-        return reversed
-    elif type_of_sort == 'default':
+def sorting(type):
+    mode = {
+        'AtoZ': Todos.objects.order_by('title'),
+        'ZtoA': (Todos.objects.order_by('title')).reverse(),
+        'old': Todos.objects.order_by('added_date', 'added_time'),
+        'new': (Todos.objects.order_by('added_date', 'added_time')).reverse()
+    }
+    if type != []:
+        return mode.get(type[0], Todos.objects.all())
+    else:
         return Todos.objects.all()
-    elif type_of_sort == 'A to Z':  # Мишина сортировка
-        return sortTodo_list       #
-    elif type_of_sort == 'Z to A':  #
-        return sortTodo_list
 
 
 def show_todo(request, id):
