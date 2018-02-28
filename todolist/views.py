@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 import os
+
+from todolist import models
 from todolist.forms import AddTodoForm
 from todolist.models import Todos
 from django import forms
@@ -22,6 +24,7 @@ def index(request):
         'header': "Todolist index page header"
     }
     return render(request, "todolist/index.html", context, {'items': items})
+
 
 #@login_required
 def add_todo(request):
@@ -79,3 +82,14 @@ def checkType_of_sort(type_of_sort):
         return sortTodo_list       #
     elif type_of_sort == 'Z to A':  #
         return sortTodo_list
+
+
+def show_todo(request, id):
+    context = {}
+    context['user'] = request.user
+    todo_now = Todos.objects.get(id=id).first()
+    if todo_now is None:
+        context['errors'] = ['NOT FOUND']
+    else:
+        context['a'] = todo_now
+        return render(request, 'show.html', context)
