@@ -82,3 +82,14 @@ def show_todo(request, id):
     else:
         context['a'] = todo_now
         return render(request, 'show.html', context)
+
+
+def save_todo(request,id):
+    context = {}
+    context['user'] = request.user
+    saving_todo = Todos.objects.get(id=id).first()
+    f = open('saved_todos/todo.txt', 'wt')
+    f.write(saving_todo)
+    f.close()
+    context['title'] = saving_todo.title
+    return render(request, 'saving.html', context)
