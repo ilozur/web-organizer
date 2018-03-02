@@ -2,9 +2,11 @@ from calendars.models import *
 from django.shortcuts import render
 from django.contrib.auth.decorators import *
 from datetime import datetime
+from main.notifier import *
 
 
 def index(request):
+    notify_if_needed()
     context = {
         'title': "Calendar index page",
         'header': "Calendar index page header",
@@ -50,5 +52,7 @@ def add_event(request, data):
     data['user'] = request.user
     event = Event(user=data['user'], date=data['date'], time=data['time'], title=data['title'],
                   description=data['description'], is_public=data['is_public'],
-                  added_date=data['added_date'], added_time=data['added_time'], status="opened")
+                  added_date=data['added_date'], added_time=data['added_time'], status="opened",
+                  should_notify_hours=data['should_notify_hours'], should_notify_minutes=data['should_notify_minutes'],
+                  should_notify_days=data['should_notify_days'])
     event.save()
