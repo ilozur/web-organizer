@@ -31,3 +31,6 @@ def notify_user(event):
     mail = create_mail(event.user, text, html)
     send_mail(mail)
     event.save()
+
+
+notify_if_needed()

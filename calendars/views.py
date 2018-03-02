@@ -2,11 +2,9 @@ from calendars.models import *
 from django.shortcuts import render
 from django.contrib.auth.decorators import *
 from datetime import datetime
-from main.notifier import *
 
 
 def index(request):
-    notify_if_needed()
     context = {
         'title': "Calendar index page",
         'header': "Calendar index page header",
