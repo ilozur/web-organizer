@@ -5,8 +5,8 @@ from main.views import create_mail, send_mail
 
 
 class Command(BaseCommand):
-    args = '<poll_id poll_id ...>'
-    help = 'Closes the specified poll for voting'
+    args = "There is no args"
+    help = 'Notifies all users'
 
     def handle(self, *args, **options):
         Command.notify_if_needed()
