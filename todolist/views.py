@@ -82,3 +82,30 @@ def show_todo(request, id):
     else:
         context['a'] = todo_now
         return render(request, 'show.html', context)
+
+
+
+ def show_todolist(request, id):
+    context = {}
+    if request.POST:
+        form = ShowTodolistForm(request)
+        Todo = Todos.objects.filter(id=id).first()
+        Todolist = request.POST
+        Todolist.data = request.POST['data']
+        Todolist.save()
+        return HttpResponseRedirect('/todolist')
+    else:
+        if len(Todo.objects.filter(id=id)) > 0:
+            todo = Todolist.objects.filter(id=id).first()
+            context = {
+                'header': "Show todo page header",
+                'id': id,
+                'title': Todos.title,
+                'priority' : todo
+                'status':
+            }
+            form = ShowTodolistForm({'data': Todolist.data})
+            context['form'] = form
+        else:
+            context['error'] = True
+        return render(request, "todolist/index.html", context)
