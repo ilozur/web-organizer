@@ -28,7 +28,7 @@ class Command(BaseCommand):
                               event.time.hour, event.time.minute, event.time.second)
         event_time -= timedelta(days=event.should_notify_days, hours=event.should_notify_hours,
                                 minutes=event.should_notify_minutes)
-        if event_time < time_now:
+        if event_time <= time_now:
             return True
         else:
             return False
