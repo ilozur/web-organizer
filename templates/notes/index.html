@@ -3,4 +3,14 @@
 {% block content %}
     <h1>{{ header }}</h1>
     <p>Welcome to the notes index page</p>
+    <li><a href='/notes/add'>Add note</a></li>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ search_form }}
+        <input type="submit" value="Search" />
+    </form>
+    {% for item in notes_data %}
+        <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
+    {% endfor %}
+
 {% endblock %}
