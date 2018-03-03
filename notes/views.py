@@ -121,4 +121,4 @@ def sort_ajax(request):
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/') 
