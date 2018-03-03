@@ -11,8 +11,10 @@ import datetime
 timeTodo_list = []
 
 def index(request):
-    type = list(request.GET.keys())
-    items = sorting(type)
+    typeget = list(request.GET.keys())
+    post_data = request.POST
+    change_status(post_data)
+    items = sorting(typeget)
     items = items.filter(status='in progress')
     context = {
         'title': "Todolist index page",
@@ -51,8 +53,10 @@ def time_and_date_for_todo():
 
 
 def completed_todos(request):
-    type = list(request.GET.keys())
-    items = sorting(type)
+    typeget = list(request.GET.keys())
+    post_data = request.POST
+    change_status(post_data)
+    items = sorting(typeget)
     items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
@@ -71,3 +75,19 @@ def sorting(type):
         return mode.get(type[0], Todos.objects.all())
     else:
         return Todos.objects.all()
+
+def change_status(data):
+    title = list(data.keys())
+    mode = {
+        'Reopen': 'in progress',
+        'Done': 'done'
+    }
+    if title != []:
+        title.remove('csrfmiddlewaretoken')
+        obj = Todos.objects.get(title=title[0])
+        print(data.get(title[0]))
+        obj.status = mode.get(data.get(title[0]))
+        obj.save()
+        print(title)
+    else:
+        pass
