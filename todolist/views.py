@@ -78,3 +78,8 @@ def date_for_todo():
         if (spaces > 2) or (spaces < 2):
             todo_date.append(date[i])
     return todo_date
+
+
+def Read_file(file_name):
+    s = open(file_name, "r")
+    a = s.split(" ")
