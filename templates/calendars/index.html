@@ -3,4 +3,8 @@
 {% block content %}
     <h1>{{ header }}</h1>
     <p>Welcome to the Calendar index page</p>
+    {% if just_added_event %}
+        <h2>You successfully added new event!</h2>
+    {% endif %}
+    <li><a href='/calendar/event/add'>Add event</a></li>
 {% endblock %}
