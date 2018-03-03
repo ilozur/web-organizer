@@ -9,3 +9,23 @@ class Notes(models.Model):
     name = models.CharField(max_length=128, default="title")
     added_time = models.DateTimeField(auto_now_add=True)
     is_voise = models.BooleanField(default=False)
+
+    @staticmethod
+    def get_notes(sorting_type, user=1):
+        # if aim = 'date' -> 'up' = new-old, 'down' = old-new
+        # if aim = 'title' -> 'up' = a-z, 'down' = z-a
+        sort = sorting_type.split('_')
+        aim = sort[0]
+        direction = sort[1]
+        notes = Notes.objects.filter(user=user)
+        if aim == "date":
+            if direction == "up":
+                notes = notes.order_by('-added_time')
+            elif direction == "down":
+                notes = notes.order_by('added_time')
+        elif aim == "title":
+            if direction == "up":
+                notes = notes.order_by('name')
+            elif direction == "down":
+                notes = notes.order_by('-name')
+        return notes
