@@ -73,7 +73,11 @@ def sign_up_view(request):
                             user.save()
                             sign_up_key = create_sign_up_key(user, username, pass1)
                             sign_up_key.save()
-                            mail = create_mail(user, sign_up_key)
+                            mail = create_mail(user,
+                                               "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
+                                               sign_up_key.key,
+                                               "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
+                                               "'>Go to this link to activate your account</a>")
                             send_mail(mail)
                             result = "Success"
                         else:
@@ -91,14 +95,13 @@ def sign_up_view(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def create_mail(user, sign_up_key):
+def create_mail(user, text, html):
     mail = dict()
     mail['subject'] = 'Dear ' + user.first_name + ' ' + user.last_name + '!'
     mail['from_email'] = EMAIL_HOST_USER
     mail['to_email'] = user.email
-    mail['text_content'] = "Go to this link to activate your account: 127.0.0.1:8000/activate/" + sign_up_key.key
-    mail['html_content'] = "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key + \
-                           "'>Go to this link to activate your account</a>"
+    mail['text_content'] = text
+    mail['html_content'] = html
     return mail
 
 
