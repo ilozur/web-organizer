@@ -14,10 +14,13 @@ class Notes(models.Model):
     def get_notes(sorting_type, user=1):
         # if aim = 'date' -> 'up' = new-old, 'down' = old-new
         # if aim = 'title' -> 'up' = a-z, 'down' = z-a
-        sort = sorting_type.split('_')
-        aim = sort[0]
-        direction = sort[1]
         notes = Notes.objects.filter(user=user)
+        if sorting_type != 'all':
+            sort = sorting_type.split('_')
+            aim = sort[0]
+            direction = sort[1]
+        else:
+            return notes
         if aim == "date":
             if direction == "up":
                 notes = notes.order_by('-added_time')
@@ -29,3 +32,7 @@ class Notes(models.Model):
             elif direction == "down":
                 notes = notes.order_by('-name')
         return notes
+
+    @staticmethod
+    def get_note_by_id(id):
+        return Notes.objects.filter(id=id).first()

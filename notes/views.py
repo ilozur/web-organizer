@@ -45,7 +45,7 @@ def add_note(request):
 
 
 def search_notes(substr, user):
-    obj = Notes.objects.filter(user=user)
+    obj = Notes.get_notes('all', user)
     ret_list = list()
     for i in obj:
         if substr in i.name:
@@ -56,13 +56,13 @@ def search_notes(substr, user):
 def show_note(request, id):
     context = {}
     if request.POST:
-        note = Notes.objects.filter(id=id).first()
+        note = Notes.get_note_by_id(id)
         note.data = request.POST['data']
         note.save()
         return HttpResponseRedirect('/notes')
     else:
-        if len(Notes.objects.filter(id=id)) > 0:
-            note = Notes.objects.filter(id=id).first()
+        if Notes.get_note_by_id(id) is not None:
+            note = Notes.get_note_by_id(id)
             context = {
                 'header': "Show note page header",
                 'id': id,
@@ -121,4 +121,4 @@ def sort_ajax(request):
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
-        return HttpResponseRedirect('/') 
+        return HttpResponseRedirect('/')
