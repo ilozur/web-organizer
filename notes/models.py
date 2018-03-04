@@ -12,10 +12,10 @@ class Notes(models.Model):
 
 
     @staticmethod
-    def get_notes_by_ranged_name(user,name_range=[]):
+    def get_notes_by_ranged_name(user, name_range=[]):
         notes = Notes.objects.filter(user=user)
         sorted_list = []
-        if len(name_range) == 2:
+        if len(name_range) == 1:
             for i in notes:
                 if i.name[0] == name_range.lower():
                     sorted_list.append(i)
