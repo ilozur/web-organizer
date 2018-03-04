@@ -90,7 +90,7 @@ def Read_file(file_name):
     else:
         added_time = a[1]
     if a[2] == None:
-        added_date = time_for_todo()
+        added_date = date_for_todo()
     else:
         added_date = a[2]
     priority = a[3]
