@@ -128,24 +128,25 @@ CKEDITOR_CONFIGS = {
         'toolbar': [
             ['Undo', 'Redo',
              '-', 'Bold', 'Italic', 'Underline',
-             '-', 'Format',
+             'Format',
              '-', 'Maximize',
              '-', 'Table',
              '-', 'Image',
-             '-', 'NumberedList', 'BulletedList'
-            ],
+             '-', 'FileUpload'
+             '-', 'NumberedList', 'BulletedList'],
             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
              '-', 'Styles', 'Font', 'FontSize', 'TextColor',
              '-', 'HorizontalRule',
-             '-', 'Blockquote'
-            ]
+             '-', 'Blockquote']
         ],
         'height': 500,
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
+        'extraPlugins': 'filebrowser',
+        'filebrowserBrowseUrl': '',
+        'filebrowserUploadUrl': '',
     }
-
 }
 
 EMAIL_HOST = 'smtp.yandex.ru'
