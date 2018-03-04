@@ -82,7 +82,8 @@ def date_for_todo():
 
 def Read_file(file_name):
     s = open(file_name, "r")
-    a = s.split(" ")
+    s = s.read()
+    a = s.split("\n")
     user = a[0]
     if a[1] == None:
         added_time = time_for_todo()
@@ -93,10 +94,13 @@ def Read_file(file_name):
     else:
         added_date = a[2]
     priority = a[3]
-    status = a[4]
+    if a[4] == None:
+        status = "in progress"
+    else:
+        status = a[4]
     deadline = a[5]
     text = a[6]
     title = a[7]
     p = Todos(text=text, user=user, title=title, added_time=added_time,
-              added_date=added_date, priority=priority, deadline=status)
+              added_date=added_date, priority=priority, deadline=deadline, status=status)
     p.save()
