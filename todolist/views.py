@@ -11,18 +11,22 @@ from todolist.models import Todos
 from django import forms
 import datetime
 
+@login_required
 def index(request):
-    type = list(request.GET.keys())
-    items = sorting(type)
-    items = items.filter(status='in progress')
     context = {
-        'title': "Todolist index page",
-        'header': "Todolist index page header"
+        'title': "Todos index page",
+        'header': "Todos index page header",
     }
-    return render(request, "todolist/index.html", {'items': items}, context)
+    todo_list = list()
+    user = request.user
+    todos = Todos.get_todos('AtoZ', user)
+    for i in todos:
+        todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+    context['todo_data'] = todo_list
+    return render(request, "todolist/index.html", context)
 
 
-#@login_required
+@login_required
 def add_todo(request):
         context = {}
         context['user'] = request.user
@@ -49,7 +53,7 @@ def time_and_date_for_todo():
     dater, timer = addtime.split(' ')
     return timer, dater
 
-
+@login_required
 def completed_todos(request):
     type = list(request.GET.keys())
     items = sorting(type)
@@ -60,19 +64,7 @@ def completed_todos(request):
     }
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
-def sorting(type):
-    mode = {
-        'AtoZ': Todos.objects.order_by('title'),
-        'ZtoA': (Todos.objects.order_by('title')).reverse(),
-        'old': Todos.objects.order_by('added_date', 'added_time'),
-        'new': (Todos.objects.order_by('added_date', 'added_time')).reverse()
-    }
-    if type != []:
-        return mode.get(type[0], Todos.objects.all())
-    else:
-        return Todos.objects.all()
-
-
+@login_required
 def show_todo(request, id):
     context = {}
     context['user'] = request.user
@@ -83,13 +75,37 @@ def show_todo(request, id):
         context['a'] = todo_now
         return render(request, 'show.html', context)
 
-
+@login_required
 def save_todo(request,id):
     context = {}
     context['user'] = request.user
     saving_todo = Todos.objects.get(id=id).first()
     f = open('saved_todos/todo.txt', 'wt')
-    f.write(saving_todo)
+    f.write(saving_todo.title)
+    f.write(saving_todo.text)
     f.close()
     context['title'] = saving_todo.title
     return render(request, 'saving.html', context)
+
+def sort_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            sorting_types = ('AtoZ', 'ZtoA', 'old', 'new')
+            sort_type = request.POST.get('data')
+            if sort_type in sorting_types:
+                todo_list = list()
+                for i in Todos.get_todos(sort_type, request.user):
+                    todo_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+                response_data = {
+                    'todo_list': todo_list
+                }
+                result = 'Success'
+            else:
+                result = 'Wrong type'
+        else:
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')

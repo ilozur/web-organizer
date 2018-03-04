@@ -4,23 +4,42 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the todolist index page</p>
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
-    <a href="/todo/done"><input type="submit" value="Done"></a>
     <hr>
-    <form action="/todo/" method="get">
-        <input type="submit" name="AtoZ" value="From A to Z">
-        <input type="submit" name="ZtoA" value="From Z to A"><br>
-        <input type="submit" name="new" value="Newest first">
-        <input type="submit" name="old" value="Oldest first">
-    </form>
+    <aside>
+        <input type="button" onclick="var a = new sort_ajax('AtoZ')" value="From A to Z">
+        <input type="button" onclick="var a = new sort_ajax('ZtoA')" value="From Z to A"><br>
+        <input type="button" onclick="var a = new sort_ajax('new')" value="Newest first">
+        <input type="button" onclick="var a = new sort_ajax('old')" value="Oldest first">
+    </aside>
     <hr>
+    <div id = "todo_list">
     {% for item in items %}
-        <h4>{{ item.title }}</h4>
-        <p>Added at: {{ item.added_date }} {{ item.added_time }}</p>
-        <p>Priority: {{ item.priority }}</p>
-        <p>{{ item.text }}</p>
+        <li><a href='/todo/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
         <form action="/todo" method="get">
             <input type="submit" name="{{ item.title }}" value="Done">
         </form>
         <hr>
     {% endfor %}
+        </div>
+
+    <script>
+            function sort_ajax(type){
+                    result = "";
+                    $.ajax({
+                        type: "POST",
+                        url: '/todo/sort',
+                        data: {"data": type},
+                        success: function(response)
+                        {
+                            if (response['result'] == "Success")
+                            {
+                                $("#todo_list").html('');
+                                for (var i = 0; i < response['todo_list'].length; i++) {
+                                    $("#todo_list").append("<li><a href='/todo/show/" + response['todo_list'][i][2] + "'>" + response['todo_list'][i][0] + "</a></li> - added at " + response['todo_list'][i][1])
+                                }
+                            }
+                        }
+                    });
+                };
+        </script>
 {% endblock %}
