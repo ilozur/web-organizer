@@ -18,6 +18,17 @@ def index(request):
     return render(request, "calendars/index.html", context)
 
 
+def search(string):
+    events = get_events("title_up_all")
+    found_events = []
+    for i in events:
+        if i.title.find(string) != -1:
+            found_events.append(i)
+    return found_events
+
+
+
+
 def get_events(sorting_type, user=None):
     # if aim = 'date' -> 'up' = new-old, 'down' = old-new
     # if aim = 'title' -> 'up' = a-z, 'down' = z-a
