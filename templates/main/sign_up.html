@@ -7,24 +7,33 @@
         {% csrf_token %}
         {{ sign_up_form.as_p }}
     </form>
-    <input type="submit" value="Sign up" onclick="sign_up_ajax()">
+    <input type="submit" value="Sign up" onclick="sign_up_ajax()" id="sign_up_btn">
     <script>
         function sign_up_ajax()
-            {
-                result = "";
-                $.ajax({
-                    type: "POST",
-                    url: '/sign_up/',
-                    data: $('#sign_up_form').serialize(),
-                    success: function(response)
+        {
+            result = "";
+            form_data = $('#sign_up_form').serialize();
+            $("#sign_up_form").find(':input').each(function(){
+                $(this).attr('disabled', 'disabled');
+            });
+            $('#sign_up_btn').attr('disabled', 'disabled');
+            $.ajax({
+                type: "POST",
+                url: '/sign_up/',
+                data: form_data,
+                success: function(response)
+                {
+                    alert(response['result']);
+                    if (response['result'] == "Success")
                     {
-                        alert(response['result']);
-                        if (response['result'] == "Success")
-                        {
-                            window.location.href = '/';
-                        }
+                        window.location.href = '/?just_signed_up=True';
                     }
-                });
-            };
+                    $("#sign_up_form").find(':input').each(function(){
+                        $(this).removeAttr('disabled');
+                    });
+                    $('#sign_up_btn').removeAttr('disabled');
+                }
+            });
+        };
     </script>
 {% endblock %}

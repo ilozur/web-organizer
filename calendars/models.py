@@ -13,3 +13,7 @@ class Event(models.Model):
     date = models.DateField(default="2018-01-01")
     time = models.TimeField()
     status = models.CharField(max_length=64, default="opened")
+    notified_already = models.BooleanField(default=False)
+    should_notify_hours = models.SmallIntegerField(default=0)
+    should_notify_minutes = models.SmallIntegerField(default=0)
+    should_notify_days = models.SmallIntegerField(default=0)
