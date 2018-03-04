@@ -13,15 +13,15 @@ import datetime
 
 
 def index(request):
-    get_data = list(request.GET.keys())
-    post_data = request.POST
-    change_status(post_data)
-    items = sorting(get_data)
-    items = items.filter(status='in progress')
     context = {
         'title': "Todolist index page",
         'header': "Todolist index page header"
     }
+    items = Todos.objects.filter(status='in progress')
+    if request.GET:
+        items = sorting(request.GET, items)
+    if request.POST:
+        change_status(request.POST, items)
     return render(request, "todolist/index.html", {'items': items}, context)
 
 
@@ -53,44 +53,39 @@ def time_and_date_for_todo():
 
 
 def completed_todos(request):
-    typeget = list(request.GET.keys())
-    post_data = request.POST
-    change_status(post_data)
-    items = sorting(typeget)
-    items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
         'header': "You can mark available todos as uncompleted"
     }
+    items = Todos.objects.filter(status='done')
+    if request.GET:
+        sorting(request.GET, items)
+    if request.POST:
+        change_status(request.POST, items)
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
 
-def sorting(type):
+def sorting(type, items):
+    type = list(type)
     mode = {
-        'AtoZ': Todos.objects.order_by('title'),
-        'ZtoA': (Todos.objects.order_by('title')).reverse(),
-        'old': Todos.objects.order_by('added_date', 'added_time'),
-        'new': (Todos.objects.order_by('added_date', 'added_time')).reverse()
+        'AtoZ': items.order_by('title'),
+        'ZtoA': (items.order_by('title')).reverse(),
+        'old': items.order_by('added_date', 'added_time'),
+        'new': (items.order_by('added_date', 'added_time')).reverse()
     }
-    if type:
-        return mode.get(type[0], Todos.objects.all())
-    else:
-        return Todos.objects.all()
+    return mode.get(type[0], items.all())
 
 
-def change_status(data):
+def change_status(data, items):
     title = list(data.keys())
     mode = {
         'Reopen': 'in progress',
         'Done': 'done'
     }
-    if title:
-        title.remove('csrfmiddlewaretoken')
-        obj = Todos.objects.get(title=title[0])
-        obj.status = mode.get(data.get(title[0]))
-        obj.save()
-    else:
-        pass
+    title.remove('csrfmiddlewaretoken')
+    obj = items.get(title=title[0])
+    obj.status = mode.get(data.get(title[0]))
+    obj.save()
 
 
 def show_todo(request, id):
