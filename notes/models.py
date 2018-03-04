@@ -10,6 +10,23 @@ class Notes(models.Model):
     added_time = models.DateTimeField(auto_now_add=True)
     is_voice = models.BooleanField(default=False)
 
+
+    @staticmethod
+    def get_notes_by_ranged_name(user,name_range=[]):
+        notes = Notes.objects.filter(user=user)
+        sorted_list = []
+        if len(name_range) == 2:
+            for i in notes:
+                if i.name[0] == name_range.lower():
+                    sorted_list.append(i)
+        else:
+            for i in notes:
+                if name_range[0] <= i.name[0] <= name_range[1]:
+                    sorted_list.append(i)
+        return sorted_list
+
+
+
     @staticmethod
     def get_notes(sorting_type, user=1):
         # if aim = 'date' -> 'up' = new-old, 'down' = old-new
