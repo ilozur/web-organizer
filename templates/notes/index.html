@@ -3,22 +3,26 @@
 {% block content %}
     <h1>{{ header }}</h1>
     <p>Welcome to the notes index page</p>
-    <li><a href='/notes/add'>Add note</a></li>
-    voice notes {{name_tmp}}
-
+    <ul>
+        <li><a href='/notes/add' class="btn btn-info">Add note</a></li>
+        <li><a href='#' class="btn btn-info disabled">voice notes {{name_tmp}}</a></li>
+    </ul>
     <form id="search_form">
         {% csrf_token %}
         {{ search_form }}
         <input type="submit" value="Search" onclick="search_ajax()"/>
     </form>
 
-    <p>Voice count: {{ voice_note }}
-    <p>Text count: {{ text_note }}
+    <ul>
+        <li>Voice count: {{ voice_note }}</li>
+        <li>Text count: {{ text_note }}</li>
+    </ul>
 
-
+    <ul>
     {% for item in notes_data %}
         <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
     {% endfor %}
+    </ul>
     <input type="button" value="sort_by_Date_up" onclick="var a = new sort_ajax('date_up')" />
     <input type="button" value="sort_by_Date_down" onclick="var a = new sort_ajax('date_down')" />
     <input type="button" value="sort_by_title_A-Z" onclick="var a = new sort_ajax('title_up')" />
