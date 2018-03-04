@@ -36,3 +36,30 @@ class Notes(models.Model):
     @staticmethod
     def get_note_by_id(id):
         return Notes.objects.filter(id=id).first()
+
+    @staticmethod
+    def notes_sort_by_date(datetime, user): #note: datetime = {1: date_one NOT NULL, 2: date_two}
+        notelist = []
+        if len(datetime) == 1:
+            date = datetime[0].date()
+            for note in Notes.objects.filter(user=user):
+                if note.added_time == date:
+                    notelist.append(note)
+        else:
+            for note in Notes.objects.filter(user=user):
+                if ((note.added_time.year <= datetime[1].year) and
+                    (note.added_time.year >= datetime[0].year) and
+                    (note.added_time.month <= datetime[1].month) and
+                    (note.added_time.month >= datetime[0].month) and
+                    (note.added_time.day <= datetime[1].day) and
+                    (note.added_time.day >= datetime[0].day)):
+                        notelist.append(note)
+                        sort_hl(notelist)
+
+
+        return notelist
+
+
+def sort_hl(notelist):
+    for note in notelist:
+        pass #todo: add sorting algorithm
