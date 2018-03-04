@@ -8,26 +8,24 @@ def index(request):
     }
     return render(request, "todolist/index.html", context)
  
- def show_todolist(request, id):
+ def edit_todolist(request, id):
     context = {}
     if request.POST:
         form = ShowTodolistForm(request)
         Todo = Todolist.objects.filter(id=id).first()
-        Todolist.data = request.POST['data']
-        Todolist.save()
-        return HttpResponseRedirect('/todolist')
+        Todo.data = request.POST['data']
+        Todo.save()
+        return redirect('/todolist')
     else:
         if len(todolist.objects.filter(id=id)) > 0:
             todo = todolist.objects.filter(id=id).first()
             context = {
                 'header': "Show note page header",
                 'id': id,
-                'title': note.name
-                'priority' :
-                'status':
+                'title': todo.name
             }
             form = ShowTodolistForm({'data': todolist.data})
             context['form'] = form
         else:
             context['error'] = True
-        return render(request, "notes/show_todolist.html", context)
+        return render(request, "todos/edit_todolist.html", context)
