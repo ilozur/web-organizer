@@ -36,3 +36,8 @@ class Notes(models.Model):
     @staticmethod
     def get_note_by_id(id):
         return Notes.objects.filter(id=id).first()
+
+    @staticmethod
+    def delete_note(id):
+        Notes.objects.filter(id=id).delete()
+
