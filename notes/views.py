@@ -10,15 +10,10 @@ def index(request):
         'title': "Notes index page",
         'header': "Notes index page header",
     }
-    notes_list = list()
     user = request.user
-    notes = get_notes('title_up', user)
-    voice_notes = 0
-    text_notes = 0
-    notes = get_notes('title_up', 1)
-    context['voice_note'] = notes.object.filter(user=request.user, is_voice=True).count()
-    context['text_note'] = notes.object.filter(user=request.user, is_voice=False).count()
-    context['notes_data'] = notes.object.filter(user=request.user)
+    context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+    context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+    context['notes_data'] = Notes.objects.filter(user=request.user)
     search_form = SearchForm()
     context['search_form'] = search_form
 
