@@ -121,9 +121,3 @@ def sort_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
-
-
-@csrf_exempt
-def test(request):
-    print(request)
-    return HttpResponse("qweqweqwew")

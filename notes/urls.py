@@ -8,5 +8,4 @@ urlpatterns = [
     path('show/<int:id>', show_note, name='notes.show_note'),
     path('search', search_ajax, name='search'),
     path('sort', sort_ajax, name='sort'),
-    path('test', test, name='test'),
 ]
