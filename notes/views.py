@@ -1,12 +1,9 @@
-from time import ctime
-
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-
-from notes.forms import AddNoteForm, SearchForm, ShowNoteForm
+from notes.forms import *
 from notes.models import Notes
 import json
 
@@ -53,6 +50,7 @@ def search_notes(substr, user):
     return ret_list
 
 
+@login_required
 def show_note(request, id):
     context = {}
     if request.POST:
@@ -75,13 +73,14 @@ def show_note(request, id):
         return render(request, "notes/show_note.html", context)
 
 
+@login_required
 def search_ajax(request):
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:
             form = SearchForm(request.POST)
             if form.is_valid():
-                string = form.data['resulter']
+                string = form.data['result']
                 response_data = {
                     'notes_list': search_notes(string, request.user)
                 }
@@ -99,7 +98,7 @@ def search_ajax(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def sort_ajax(request):
     response_data = {}
     if request.method == "POST":
@@ -122,3 +121,9 @@ def sort_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+@csrf_exempt
+def test(request):
+    print(request)
+    return HttpResponse("qweqweqwew")

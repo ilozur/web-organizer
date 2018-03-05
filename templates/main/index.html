@@ -4,7 +4,7 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the index page</p>
     {% if user.is_authenticated %}
-        <a href="sign_out">Sign out</a>
+        <a href='{% url "sign_out" %}'>Sign out</a>
     {% else %}
         {% if just_signed_up %}
             <h2>You have successfully signed up! Check your email to confirm it!</h2>
@@ -14,7 +14,7 @@
                 {{ sign_in_form.as_p }}
             </form>
             <input type="submit" value="Sign in" onclick="sign_in_ajax()" id="sign_in_btn">
-            <a href="/sign_up">Sign up</a>
+            <a href='{% url "sign_up" %}'>Sign up</a>
             <script>
                 function sign_in_ajax()
                 {

@@ -143,9 +143,6 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
-        'extraPlugins': 'filebrowser',
-        'filebrowserBrowseUrl': '',
-        'filebrowserUploadUrl': '',
     }
 }
 

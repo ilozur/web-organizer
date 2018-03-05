@@ -3,26 +3,27 @@
 {% block content %}
     <h1>{{ header }}</h1>
     <p>Welcome to the notes index page</p>
-    <li><a href='/notes/add'>Add note</a></li>
+    <li><a href='{% url "notes.add_note" %}'>Add note</a></li>
     <form id="search_form">
         {% csrf_token %}
         {{ search_form }}
-        <input type="submit" value="Search" onclick="search_ajax()"/>
     </form>
+    <input type="submit" value="Search" onclick="search_ajax()"/>
     <input type="button" value="sort_by_Date_up" onclick="var a = new sort_ajax('date_up')" />
     <input type="button" value="sort_by_Date_down" onclick="var a = new sort_ajax('date_down')" />
     <input type="button" value="sort_by_title_A-Z" onclick="var a = new sort_ajax('title_up')" />
     <input type="button" value="sort_by_title_Z-A" onclick="var a = new sort_ajax('title_down')" />
     <div id="notes_list">
+        <ul>
         {% for item in notes_data %}
             <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
         {% endfor %}
+        </ul>
     </div>
 
     <script>
         function search_ajax()
             {
-                result = "";
                 form_data = $('#search_form').serialize();
                 $("#search_form").find(':input').each(function(){
                     $(this).attr('disabled', 'disabled');
