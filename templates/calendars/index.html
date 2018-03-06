@@ -6,5 +6,5 @@
     {% if just_added_event %}
         <h2>You successfully added new event!</h2>
     {% endif %}
-    <li><a href='/calendar/event/add'>Add event</a></li>
+    <li><a href='{% url "calendar.event_view" %}'>Add event</a></li>
 {% endblock %}

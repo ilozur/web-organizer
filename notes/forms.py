@@ -12,4 +12,4 @@ class ShowNoteForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    resulter = forms.CharField(label='What are you looking for?', max_length=70)
+    result = forms.CharField(label='What are you looking for?', max_length=70)

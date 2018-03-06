@@ -1,6 +1,6 @@
 from django.urls import path
 
-from notes.views import index, add_note, show_note, search_ajax, sort_ajax
+from notes.views import *
 
 urlpatterns = [
     path('', index, name='notes.index'),
