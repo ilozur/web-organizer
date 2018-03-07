@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'todolist.apps.TodolistConfig',
     'ckeditor',
     'bootstrapform',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -122,11 +123,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_ROOT = ''
-
+STATIC_ROOT = 'static_root'
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = (os.path.join('static'), )
+
+MEDIA_ROOT = 'media_root'
+MEDIA_URL = '/media/'
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -150,6 +152,14 @@ CKEDITOR_CONFIGS = {
         'forcePasteAsPlainText': True,
     }
 }
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_JQUERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
+CKEDITOR_RESTRICT_BY_USER = True
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465

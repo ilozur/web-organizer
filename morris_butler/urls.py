@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from ckeditor_uploader import urls
 
 import calendars.urls
 import notes.urls
@@ -31,4 +32,5 @@ urlpatterns = [
     path('sign_out/', sign_out_view, name='sign_out'),
     path('sign_up/', sign_up_view, name='sign_up'),
     path('activate/<str:key>', activate_key, name='activate_key'),
+    path('ckeditor/', include(urls)),
 ]
