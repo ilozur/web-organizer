@@ -1,4 +1,5 @@
-Django
+Django==2.0.2
 mysqlclient
 django-ckeditor
 django-bootstrap-form
+Pillow
