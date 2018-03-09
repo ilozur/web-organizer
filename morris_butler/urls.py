@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-import calendars.urls, notes.urls, todolist.urls
+from ckeditor_uploader import views
+import calendars.urls
+import notes.urls
+import todolist.urls
 from main.views import *
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from morris_butler import settings
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +34,8 @@ urlpatterns = [
     path('sign_in/', sign_in_ajax, name='sign_in'),
     path('sign_out/', sign_out_view, name='sign_out'),
     path('sign_up/', sign_up_view, name='sign_up'),
-    path('activate/<str:key>', activate_key, name='activate_key')
+    path('activate/<str:key>', activate_key, name='activate_key'),
+    path('ckeditor/upload/', login_required(views.upload), name='ckeditor_upload'),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += staticfiles_urlpatterns()
