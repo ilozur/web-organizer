@@ -41,15 +41,6 @@ def add_note(request):
         return render(request, "notes/add_note.html", context)
 
 
-def search_notes(substr, user):
-    obj = Notes.get_notes('all', user)
-    ret_list = list()
-    for i in obj:
-        if substr in i.name:
-            ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
-    return ret_list
-
-
 @login_required
 def show_note(request, id):
     context = {}
