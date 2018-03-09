@@ -139,7 +139,6 @@ CKEDITOR_CONFIGS = {
              '-', 'Maximize',
              '-', 'Table',
              '-', 'Image',
-             '-', 'FileUpload'
              '-', 'NumberedList', 'BulletedList'],
             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
              '-', 'Styles', 'Font', 'FontSize', 'TextColor',
@@ -150,6 +149,7 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
+        'filebrowserBrowseUrl': ''
     }
 }
 

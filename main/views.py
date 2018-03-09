@@ -136,6 +136,7 @@ def activate_key(request, key):
                 user.is_active = True
                 user.save()
                 keys.first().delete()
+                logout(request)
                 login(request, user)
     return HttpResponseRedirect('/')
 
