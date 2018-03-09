@@ -11,6 +11,7 @@ from todolist.models import Todos
 from django import forms
 import datetime
 
+
 @login_required
 def index(request):
     context = {
@@ -28,24 +29,23 @@ def index(request):
 
 @login_required
 def add_todo(request):
-        context = {}
-        context['user'] = request.user
-        if request.POST:
-            form = AddTodoForm(request.POST)
-            if form.is_valid():
-                user = request.user
-                date, time = time_and_date_for_todo()
-                p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
-                          added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
-                p.save()
-                context['id'] = p.id
-            else:
-                context['errors'] = form.errors
-            return render(request, 'todolist/add.html', context)
+    context = {'user': request.user}
+    if request.POST:
+        form = AddTodoForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            date, time = time_and_date_for_todo()
+            p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
+                      added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
+            p.save()
+            context['id'] = p.id
         else:
-            form = AddTodoForm()
-            context['add_form'] = form
-            return render(request, 'todolist/add.html', context)
+            context['errors'] = form.errors
+        return render(request, 'todolist/add.html', context)
+    else:
+        form = AddTodoForm()
+        context['add_form'] = form
+        return render(request, 'todolist/add.html', context)
 
 
 def time_and_date_for_todo():
@@ -60,20 +60,24 @@ def completed_todos(request):
     items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
-        'header': "You can mark avaliable todos as uncompleted"
+        'header': "You can mark available todos as uncompleted"
     }
+    if request.GET:
+        sorting(request.GET, items)
+    if request.POST:
+        change_status(request.POST, items)
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
-@login_required
+
 def show_todo(request, id):
-    context = {}
-    context['user'] = request.user
+    context = {'user': request.user}
     todo_now = Todos.objects.get(id=id).first()
     if todo_now is None:
         context['errors'] = ['NOT FOUND']
     else:
         context['a'] = todo_now
         return render(request, 'show.html', context)
+
 
 @login_required
 def save_todo(request,id):

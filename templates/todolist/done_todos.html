@@ -7,14 +7,15 @@
     <form action="/todo/done" method="get">
         <input type="submit" name="AtoZ" value="From A to Z">
         <input type="submit" name="ZtoA" value="From Z to A"><br>
-        <input type="submit" name="new" value="Newest first">
-        <input type="submit" name="old" value="Oldest first">
+        <input type="submit" name="new" value="Last created">
+        <input type="submit" name="old" value="Oldest created">
     </form>
     <hr>
     {% for item in items %}
         <h4>{{ item.title }}</h4>
         <p>{{ item.text }}</p>
-        <form action="/todo/done" method="get">
+        <form action="" method="post">
+            {% csrf_token %}
             <input type="submit" name="{{ item.title }}" value="Reopen">
         </form>
         <hr>
