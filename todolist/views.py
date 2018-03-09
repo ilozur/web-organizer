@@ -55,8 +55,8 @@ def time_and_date_for_todo():
 
 @login_required
 def completed_todos(request):
-    type = list(request.GET.keys())
-    items = sorting(type)
+    user = request.user
+    items = Todos.get_todos('AtoZ', user)
     items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
