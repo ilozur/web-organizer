@@ -21,6 +21,7 @@ def index(request):
     todo_list = list()
     user = request.user
     todos = Todos.get_todos('AtoZ', user)
+    todos = todos.filter(status='in progress')
     for i in todos:
         todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
     context['todo_data'] = todo_list
@@ -28,6 +29,8 @@ def index(request):
 
 
 @login_required
+
+#@login_required
 def add_todo(request):
     context = {'user': request.user}
     if request.POST:
@@ -59,6 +62,7 @@ def completed_todos(request):
     user = request.user
     items = Todos.get_todos('AtoZ', user)
     items = items.filter(status='done')
+
     context = {
         'title': "Completed todos page",
         'header': "You can mark available todos as uncompleted"
@@ -67,7 +71,8 @@ def completed_todos(request):
 
 
 def show_todo(request, id):
-    context = {'user': request.user}
+    context = {}
+    context['user'] = request.user
     todo_now = Todos.objects.get(id=id).first()
     if todo_now is None:
         context['errors'] = ['NOT FOUND']
@@ -87,6 +92,7 @@ def save_todo(request,id):
     f.close()
     context['title'] = saving_todo.title
     return render(request, 'saving.html', context)
+
 
 def sort_ajax(request):
     response_data = {}
@@ -146,3 +152,29 @@ def sort_ajax(request):
             context['error'] = True
         return render(request, "todolist/show.html", context)
 
+
+def Read_file(file_name):
+    s = open(file_name, "r")
+    s = s.read()
+    a = s.split("\n")
+    user = a[0]
+    date, time = time_and_date_for_todo()
+    if a[1] == None:
+        added_time = time
+    else:
+        added_time = a[1]
+    if a[2] == None:
+        added_date = date
+    else:
+        added_date = a[2]
+    priority = a[3]
+    if a[4] == None:
+        status = "in progress"
+    else:
+        status = a[4]
+    deadline = a[5]
+    text = a[6]
+    title = a[7]
+    p = Todos(text=text, user=user, title=title, added_time=added_time,
+              added_date=added_date, priority=priority, deadline=deadline, status=status)
+    p.save()
