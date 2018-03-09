@@ -7,17 +7,17 @@ import os
 
 from todolist import models
 from todolist.forms import AddTodoForm
+from todolist.forms import ShowTodoForm
 from todolist.models import Todos
 from django import forms
 import datetime
 
 def index(request):
-    type = list(request.GET.keys())
-    items = sorting(type)
+    items =Todos
     items = items.filter(status='in progress')
     context = {
-        'title': "Todolist index page",
-        'header': "Todolist index page header"
+        'title': "Todos index page",
+        'header': "Todos index page header"
     }
     return render(request, "todolist/index.html", {'items': items}, context)
 
@@ -44,15 +44,9 @@ def add_todo(request):
             return render(request, 'todolist/add.html', context)
 
 
-def time_and_date_for_todo():
-    addtime = (datetime.datetime.now()).strftime("%H:%M:%S %Y-%m-%d")
-    dater, timer = addtime.split(' ')
-    return timer, dater
-
 
 def completed_todos(request):
-    type = list(request.GET.keys())
-    items = sorting(type)
+    items = Todos
     items = items.filter(status='done')
     context = {
         'title': "Completed todos page",
@@ -60,17 +54,6 @@ def completed_todos(request):
     }
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
-def sorting(type):
-    mode = {
-        'AtoZ': Todos.objects.order_by('title'),
-        'ZtoA': (Todos.objects.order_by('title')).reverse(),
-        'old': Todos.objects.order_by('added_date', 'added_time'),
-        'new': (Todos.objects.order_by('added_date', 'added_time')).reverse()
-    }
-    if type != []:
-        return mode.get(type[0], Todos.objects.all())
-    else:
-        return Todos.objects.all()
 
 
 def show_todo(request, id):
@@ -88,24 +71,33 @@ def show_todo(request, id):
  def show_todolist(request, id):
     context = {}
     if request.POST:
-        form = ShowTodolistForm(request)
+        form = ShowTodoForm(request)
         Todo = Todos.objects.filter(id=id).first()
         Todolist = request.POST
         Todolist.data = request.POST['data']
         Todolist.save()
         return HttpResponseRedirect('/todolist')
+    return render(request, "todolist/index.html", context)
+ 
+ def edit_todolist(request, id):
+    context = {}
+    if request.POST:
+        form = ShowTodoForm(request)
+        Todo = Todos.objects.filter(id=id).first()
+        Todo.data = request.POST['data']
+        Todo.save()
+        return redirect('/todolist')
     else:
-        if len(Todo.objects.filter(id=id)) > 0:
-            todo = Todolist.objects.filter(id=id).first()
+        if len(Todos.objects.filter(id=id)) > 0:
+            todo = Todos.objects.filter(id=id).first()
             context = {
                 'header': "Show todo page header",
                 'id': id,
-                'title': Todos.title,
-                'priority' : todo
-                'status':
+                'title': todo.title,
+                'priority' : todo.priority
             }
-            form = ShowTodolistForm({'data': Todolist.data})
+            form = ShowTodoForm({'text': todo.text})
             context['form'] = form
         else:
             context['error'] = True
-        return render(request, "todolist/index.html", context)
+        return render(request, "todolist/show.html", context)

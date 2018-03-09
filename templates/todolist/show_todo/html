@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+    <h1>{{ header }}</h1>
+    {% if error %}
+        <p>Note is not found</p>
+    {% else %}
+        <p>Welcome to the showing todo page</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Save changes" />
+        </form>
+
+{% endif %}
+{% endblock %}
