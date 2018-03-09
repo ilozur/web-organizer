@@ -8,7 +8,7 @@ class Notes(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
     name = models.CharField(max_length=128, default="title")
     added_time = models.DateTimeField(auto_now_add=True)
-    is_voise = models.BooleanField(default=False)
+    is_voice = models.BooleanField(default=False)
 
     @staticmethod
     def get_notes(sorting_type, user=1):
@@ -36,3 +36,8 @@ class Notes(models.Model):
     @staticmethod
     def get_note_by_id(id):
         return Notes.objects.filter(id=id).first()
+
+    @staticmethod
+    def delete_note(id):
+        Notes.objects.filter(id=id).delete()
+
