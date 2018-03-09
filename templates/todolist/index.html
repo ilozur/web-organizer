@@ -6,22 +6,31 @@
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
     <a href="/todo/done"><input type="submit" value="Done"></a>
     <hr>
-    <form action="/todo/" method="get">
-        <input type="submit" name="AtoZ" value="From A to Z">
-        <input type="submit" name="ZtoA" value="From Z to A"><br>
-        <input type="submit" name="new" value="Last created">
-        <input type="submit" name="old" value="Oldest created">
-    </form>
+    <input type="button" value="From A to Z" onclick="sort_ajax('AtoZ')">
+    <input type="button" value="From Z to A" onclick="sort_ajax('ZtoA')"><br>
+    <input type="button" value="Last created" onclick="sort_ajax('new')">
+    <input type="button" value="Oldest created" onclick="sort_ajax('old')"><br>
     <hr>
-    {% for item in items %}
-        <h4>{{ item.title }}</h4>
-        <p>Added at: {{ item.added_date }} {{ item.added_time }}</p>
-        <p>Priority: {{ item.priority }}</p>
-        <p>{{ item.text }}</p>
-        <form action="" method="post">
-            {% csrf_token %}
-            <input type="submit" name="{{ item.title }}" value="Done">
-        </form>
-        <hr>
-    {% endfor %}
+    <div id="todolist">
+        {% for item in items %}
+            {{ item }}
+        {% endfor %}
+    </div>
+
+    <script>
+        function sort_ajax(type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/sort',
+                data: {'data': type},
+                success: function(response){
+                    $("#todolist").html('');
+                    for (var i = 0; i < response['todolist'].length; i++){
+                        $("#todolist").append("<li>" + response['todolist'][i][0] + "</li> - added at " + response['todolist'][i][1])
+                    }
+                }
+            });
+        };
+    </script>
+
 {% endblock %}

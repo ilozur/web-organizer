@@ -11,3 +11,4 @@ class Todos(models.Model):
     deadline = models.CharField(max_length=128, default="deadline")
     text = models.CharField(max_length=200, default="time")
     title = models.CharField(max_length=128, default="title")
+

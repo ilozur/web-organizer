@@ -1,15 +1,11 @@
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-import os
+import datetime
+import json
 
-from todolist import models
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from todolist.forms import AddTodoForm
 from todolist.models import Todos
-from django import forms
-import datetime
 
 
 def index(request):
@@ -17,7 +13,7 @@ def index(request):
         'title': "Todolist index page",
         'header': "Todolist index page header"
     }
-    items = Todos.objects.filter(status='in progress')
+    items = None
     if request.GET:
         items = sorting(request.GET, items)
     if request.POST:
@@ -106,3 +102,22 @@ def save_todo(request, id):
     f.close()
     context['title'] = saving_todo.title
     return render(request, 'saving.html', context)
+
+
+@csrf_exempt
+def sort_ajax(request):
+    if request.method == "POST":
+        todolist = list()
+        mode = {
+            'AtoZ': Todos.objects.order_by('title'),
+            'ZtoA': (Todos.objects.order_by('-title')),
+            'old': Todos.objects.order_by('added_date', 'added_time'),
+            'new': (Todos.objects.order_by('added_date', 'added_time'))
+        }
+        sort_type = request.POST.get('data')
+        for i in mode.get(sort_type):
+            todolist.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.text))
+        response = {'todolist': todolist}
+        return HttpResponse(json.dumps(response), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
