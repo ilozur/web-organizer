@@ -57,49 +57,49 @@
                         {% load bootstrap %}
                         <h2 class="cover-heading">Добро пожаловать</h2>
                         <p class="lead">
-                        <form id="sign_up_form">
-                            {% csrf_token %}
-                            <div class="form-row">
-                                <div class="form-group col-md-5">
-                                    {{ sign_up_form.username|bootstrap }}
+                            <form id="sign_up_form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-5">
+                                        {{ sign_up_form.username|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ sign_up_form.name|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-7">
+                                        {{ sign_up_form.surname|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ sign_up_form.email|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ sign_up_form.password1|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ sign_up_form.password2|bootstrap }}
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-5">
-                                    {{ sign_up_form.name|bootstrap }}
+                                <div class="form-check" style="margin-bottom: 20px;">
+                                    <input type="checkbox" class="form-check-input">
+                                    <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
                                 </div>
-                                <div class="form-group col-md-7">
-                                    {{ sign_up_form.surname|bootstrap }}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ sign_up_form.email|bootstrap }}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ sign_up_form.password1|bootstrap }}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ sign_up_form.password2|bootstrap }}
-                                </div>
-                            </div>
-                            <div class="form-check" style="margin-bottom: 20px;">
-                                <input type="checkbox" class="form-check-input">
-                                <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
-                            </div>
-                            <a class="btn btn-success btn-block" onclick="sign_up_ajax()">Зарегестрироваться</a>
-                        </form>
+                                <a class="btn btn-success btn-block" onclick="sign_up_ajax()">Зарегестрироваться</a>
+                            </form>
                         </p>
                         <p class="lead" style="margin-top: 50px;">
-                        <h3 class="cover-heading">Уже с нами?</h3>
-                        <form id="sign_in_form">
-                            {% csrf_token %}
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    {{ sign_in_form.username|bootstrap }}
+                            <h3 class="cover-heading">Уже с нами?</h3>
+                            <form id="sign_in_form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ sign_in_form.username|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_in_form.password|bootstrap }}
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_in_form.password|bootstrap }}
-                                </div>
-                            </div>
-                            <a class="btn btn-primary btn-block" onclick="sign_in_ajax()">Войти</a>
-                        </form>
+                                <a class="btn btn-primary btn-block" onclick="sign_in_ajax()">Войти</a>
+                            </form>
                         </p>
                     </section>
                     <section id="about">
@@ -116,101 +116,48 @@
                 </footer>
                 <a href="#hello" class="scrollup">Наверх</a>
             </div>
-        </div>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$(window).scroll(function(){
-					if ($(this).scrollTop() > 100) {
-						$('.scrollup').fadeIn();
-					} else {
-						$('.scrollup').fadeOut();
-					}
-				});
-				$('.scrollup').click(function(){
-					$("html, body").animate({ scrollTop: 0 }, 600);
-					return false;
-				});
-			});
-		</script>
-		<script type="text/javascript">
-			$(document).ready(function() {
-			   $('a[href^="#"]').click(function () {
-			     elementClick = $(this).attr("href");
-			     destination = $(elementClick).offset().top;
-			     if($.browser.safari){
-			       $('body').animate( { scrollTop: destination }, 1200 );
-			     }else{
-			       $('html').animate( { scrollTop: destination }, 1200 );
-			     }
-			     return false;
-			   });
-			 });
-		</script>
-		<script>
-			$(document).ready(function() {
-				$(window).on('scroll', function() {
-					var scroll = $(window).scrollTop();
-					if (scroll >= 50) {
-						$('#header').addClass('fixed');
-					} else {
-						$('#header').removeClass('fixed');
-					}
-				});
-			});
-		</script>
-            <script>
-                function sign_in_ajax()
-                {
-                    form_data = $('#sign_in_form').serialize();
-                    $("#sign_in_form").find(':input').each(function(){
-                        $(this).attr('disabled', 'disabled');
-                    });
-                    $('#sign_in_btn').attr('disabled', 'disabled');
-                    $.ajax({
-                        type: "POST",
-                        url: '/sign_in/',
-                        data: form_data,
-                        success: function(response)
-                        {
-                            alert(response['result']);
-                            if (response['result'] == "Success")
-                            {
-                                window.location.href = '/';
-                            }
-                            $("#sign_in_form").find(':input').each(function(){
-                               $(this).removeAttr('disabled');
-                            });
-                            $('#sign_in_btn').removeAttr('disabled');
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $(window).scroll(function(){
+                        if ($(this).scrollTop() > 100) {
+                            $('.scrollup').fadeIn();
+                        } else {
+                            $('.scrollup').fadeOut();
                         }
                     });
-                };
-                function sign_up_ajax()
-                {
-                    form_data = $('#sign_up_form').serialize();
-                    $("#sign_up_form").find(':input').each(function(){
-                        $(this).attr('disabled', 'disabled');
+                    $('.scrollup').click(function(){
+                        $("html, body").animate({ scrollTop: 0 }, 600);
+                        return false;
                     });
-                    $('#sign_up_btn').attr('disabled', 'disabled');
-                    $.ajax({
-                        type: "POST",
-                        url: '/sign_up/',
-                        data: form_data,
-                        success: function(response)
-                        {
-                            alert(response['result']);
-                            if (response['result'] == "Success")
-                            {
-                                window.location.href = '/?just_signed_up=True';
-                            }
-                            $("#sign_up_form").find(':input').each(function(){
-                                $(this).removeAttr('disabled');
-                            });
-                            $('#sign_up_btn').removeAttr('disabled');
-                        }
-                    });
-                };
+                });
             </script>
-
+            <script type="text/javascript">
+                $(document).ready(function() {
+                   $('a[href^="#"]').click(function () {
+                     elementClick = $(this).attr("href");
+                     destination = $(elementClick).offset().top;
+                     if($.browser.safari){
+                       $('body').animate( { scrollTop: destination }, 1200 );
+                     }else{
+                       $('html').animate( { scrollTop: destination }, 1200 );
+                     }
+                     return false;
+                   });
+                 });
+            </script>
+            <script>
+                $(document).ready(function() {
+                    $(window).on('scroll', function() {
+                        var scroll = $(window).scrollTop();
+                        if (scroll >= 50) {
+                            $('#header').addClass('fixed');
+                        } else {
+                            $('#header').removeClass('fixed');
+                        }
+                    });
+                });
+            </script>
+        </div>
     {% endif %}
 {% endblock %}

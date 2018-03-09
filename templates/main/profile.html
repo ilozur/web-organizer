@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<title>Кабинет</title>
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/general.css">
+		<link rel="stylesheet" href="../css/profile.css">
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<section class="profile">
+			<div class="card text-center">
+				<div class="card-header">
+					<h1> Личный кабинет </h1>
+				</div>
+				<div class="card-body">
+					<picture>
+						<img src="../img/avatar_user.png" class="avatar">
+					</picture>
+					<div class="data" style="margin-top: 25px;">
+						<span>Имя</span>
+						<h2 class="card-title">Иван</h2>
+					</div>
+					<div class="data">
+						<span>Фамилия</span>
+						<h2 class="card-title">Иванов</h2>
+					</div>
+					<div class="data">
+						<span>Email</span>
+						<h2 class="card-title">ioan@morris-butler.ru</h2>
+					</div>
+				</div>
+				<div class="card-footer">
+					<button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#Edit">
+						<picture><img src="../icons/edit_icon.png" class="icon"></picture>
+					</button>
+					<button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#Settings">
+						<picture><img src="../icons/settings_icon.png" class="icon"></picture>
+					</button>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="modal fade" id="Edit">
+				<div class="modal-dialog modal-lg modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2 class="modal-title">Редактировать профиль</h2>
+						</div>
+						<div class="modal-body">
+							<div class="form-group btn btn-secondary change-avatar">
+								<label>Изменить аватар</label>
+								<input type="file" class="form-control-file">
+							</div>
+							<form>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="inputEmail4">Имя</label>
+										<input type="text" class="form-control" placeholder="Имя">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="inputPassword4">Фамилия</label>
+										<input type="text" class="form-control" placeholder="Фамилия">
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<label for="inputEmail4">Email</label>
+									<input type="email" class="form-control" placeholder="Email">
+								</div>
+								<div class="form-group">
+									<label for="inputPassword4">Пароль</label>
+									<input type="password" class="form-control" placeholder="Пароль">
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="submit" class="btn btn-secondary">Сохранить</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="Settings">
+				<div class="modal-dialog modal-lg modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2 class="modal-title">Настройки</h2>
+						</div>
+						<div class="modal-body">
+							<span> Выберите тембр голоса Морриса:</span>
+							<div class="btn-group btn-group-lg" style="margin-left: 50px;">
+								<button type="button" class="btn btn-secondary">Низкий</button>
+								<button type="button" class="btn btn-secondary active">Средний</button>
+								<button type="button" class="btn btn-secondary">Высокий</button>
+							</div>
+							<hr/>
+							<span>Выберите язык:</span>
+							<div class="btn-group btn-group-lg" style="margin-left: 185px;">
+								<button type="button" class="btn btn-secondary active">Русский</button>
+								<button type="button" class="btn btn-secondary">Английский</button>
+								<button type="button" class="btn btn-secondary" disabled>Немецкий</button>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="submit" class="btn btn-secondary">Сохранить</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+	<script src="../js/jquery-3.2.1.slim.min.js"></script>
+	<script src="../js/popper.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/holder.min.js"></script>
+	</body>
+</html>

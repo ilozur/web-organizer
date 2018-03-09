@@ -1,9 +1,15 @@
-{% extends "main/base.html" %}
-{% block css_link %} <link rel="stylesheet" href="static/css/index.css"> {% endblock %}
-
-{% block content %}
-    {% if user.is_authenticated %}
-        <div class="carousel">
+<!doctype html>
+<html lang="ru">
+	<head>
+		<title>Morris Butler</title>
+		<link rel="stylesheet" href="static/css/bootstrap.min.css">
+		<link rel="stylesheet" href="static/css/general.css">
+		<link rel="stylesheet" href="static/css/index.css">
+		<meta charset="utf-8">
+	</head>
+	<body>
+	<!-- Информационное табло -->
+		<div class="carousel">
 			<div class="carousel-item active">
 				<img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">
 				<div class="carousel-caption text-left">
@@ -23,14 +29,14 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-4">
-					<h2><a class="btn btn-warning btn-lg btn-block section" href="/notes">Заметки</a></h2>
+					<h2><a class="btn btn-warning btn-lg btn-block section" href="../notes/index.html">Заметки</a></h2>
 					<div class="card">
 						<div class="card-body">
 							<h4>Последние заметки:</h4>
 							<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">Список покупок</a></p>
 							<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">Резервные коды</a></p>
 							<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">Идеи для подарка</a></p>
-							<p class="lead"> <small><a href="/notes">Показать все</a></small></p>
+							<p class="lead"> <small><a href="../notes/index.html">Показать все</a></small></p>
 							<a href="#" class="badge badge-warning add-new" data-toggle="modal" data-target="#New-Note"><font class="plus">+</font></a>
 						</div>
 					</div>
@@ -43,7 +49,7 @@
 					</div>
 				</div>
 				<div class="col-lg-4">
-					<h2><a class="btn btn-danger btn-lg btn-block section" href="/calendar">Календарь</a></h2>
+					<h2><a class="btn btn-danger btn-lg btn-block section" href="../calendar/index.html">Календарь</a></h2>
 					<div class="card">
 						<div class="card-body">
 							<h4>Ближайшие события календаря:</h4>
@@ -64,7 +70,7 @@
 					</div>
 				</div>
 				<div class="col-lg-4">
-					<h2><a class="btn btn-primary btn-lg btn-block section" href="/todo">Напоминания</a></h2>
+					<h2><a class="btn btn-primary btn-lg btn-block section" href="../todolist/index.html">Напоминания</a></h2>
 					<div class="card">
 						<div class="card-body">
 							<h4>Последние напоминания:</h4>
@@ -74,7 +80,7 @@
 							<h4>Завершенные напоминания:</h4>
 							<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-danger">&#10007;</a> </p>
 							<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-danger">&#10007;</a> </p>
-							<p class="lead"> <small><a href="/todolist">Показать все</a></small></p>
+							<p class="lead"> <small><a href="../todolist/index.html">Показать все</a></small></p>
 							<a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
 						</div>
 					</div>
@@ -118,7 +124,7 @@
 						<h3>Записать аудио</h3>
 						<button type="button" class="btn btn-warning btn-lg btn-block">
 							<picture>
-								<img src="static/icons/micro_icon.png">
+								<img src="../icons/micro_icon.png">
 							</picture>
 						</button>
 					</div>
@@ -175,7 +181,7 @@
 						<h3>Записать аудио</h3>
 						<button type="button" class="btn btn-danger btn-lg btn-block">
 							<picture>
-								<img src="static/icons/micro_icon.png">
+								<img src="../icons/micro_icon.png">
 							</picture>
 						</button>
 					</div>
@@ -273,7 +279,7 @@
 						<h3>Записать аудио</h3>
 						<button type="button" class="btn btn-primary btn-lg btn-block">
 							<picture>
-								<img src="static/icons/micro_icon.png">
+								<img src="../icons/micro_icon.png">
 							</picture>
 						</button>
 					</div>
@@ -299,7 +305,7 @@
               <h3>г.Мытищи, МО, Россия</h3>
               <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Watch-in-Map">Посмотреть на карте</button>
               <hr/>
-              <h4>
+              <h4> 
                 А я Никита, ля-ля-ля-ляяяяя
               </h4>
               <hr/>
@@ -322,7 +328,7 @@
                 <div class="collapse" id="collapseExample">
                   <div class="card bg-danger comment">
                     <div class="card-header">
-                      <picture><img src="static/img/avatar.png"></picture>
+                      <picture><img src="../img/avatar.png"></picture>
                       <h5>John Doe</h5>
                       <span class="date-of-comments">28.02.2018</span>
                     </div>
@@ -332,7 +338,7 @@
                   </div>
                   <div class="card bg-danger comment">
                     <div class="card-header">
-                      <picture><img src="static/img/avatar.png"></picture>
+                      <picture><img src="../img/avatar.png"></picture>
                       <h5>Alice</h5>
                       <span class="date-of-comments">27.02.2018</span>
                     </div>
@@ -342,7 +348,7 @@
                   </div>
                   <div class="card bg-danger comment">
                     <div class="card-header">
-                      <picture><img src="static/img/avatar.png"></picture>
+                      <picture><img src="../img/avatar.png"></picture>
                       <h5>Bob</h5>
                       <span class="date-of-comments">26.02.2018</span>
                     </div>
@@ -383,7 +389,7 @@
 							I want a perfect body <br/>
 							I want a perfect soul <br/>
 							I want you to notice when I'm not around <br/>
-							You're so fucking special <br/>
+							You're so fucking special <br/> 
 							I wish I was special
 						</p>
 						<small>28.02.2018</small> <br/>
@@ -455,12 +461,10 @@
 				</div>
 			</div>
 
-    {% else %}
-        <script type="text/javascript">
-            function reloadPage()
-            {
-                window.location.reload()
-            }
-        </script>
-    {% endif %}
-{% endblock %}
+
+		<script src="../js/jquery-3.2.1.slim.min.js"></script>
+		<script src="../js/popper.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/holder.min.js"></script>
+	</body>
+</html>

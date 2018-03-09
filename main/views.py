@@ -31,7 +31,7 @@ def index(request):
                 context['sign_in_form'] = sign_in_form
                 sign_up_form = SignUpForm()
                 context['sign_up_form'] = sign_up_form
-            return render(request, "main/index_authenticated.html", context)
+            return render(request, "main/index.html", context)
         else:
             return render(request, "main/home.html", context)
     else:
