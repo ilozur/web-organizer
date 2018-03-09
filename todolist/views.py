@@ -7,6 +7,7 @@ import os
 
 from todolist import models
 from todolist.forms import AddTodoForm
+from todolist.forms import ShowTodoForm
 from todolist.models import Todos
 from django import forms
 import datetime
@@ -16,8 +17,7 @@ import datetime
 def index(request):
     context = {
         'title': "Todos index page",
-        'header': "Todos index page header",
-    }
+        'header': "Todos index page header" }
     todo_list = list()
     user = request.user
     todos = Todos.get_todos('AtoZ', user)
@@ -53,6 +53,7 @@ def time_and_date_for_todo():
     dater, timer = addtime.split(' ')
     return timer, dater
 
+
 @login_required
 def completed_todos(request):
     user = request.user
@@ -62,10 +63,6 @@ def completed_todos(request):
         'title': "Completed todos page",
         'header': "You can mark available todos as uncompleted"
     }
-    if request.GET:
-        sorting(request.GET, items)
-    if request.POST:
-        change_status(request.POST, items)
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
 
@@ -113,3 +110,39 @@ def sort_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+ def show_todolist(request, id):
+    context = {}
+    if request.POST:
+        form = ShowTodoForm(request)
+        Todo = Todos.objects.filter(id=id).first()
+        Todolist = request.POST
+        Todolist.text = request.POST['text']
+        Todolist.save()
+        return HttpResponseRedirect('/todolist')
+    return render(request, "todolist/index.html", context)
+ 
+ def edit_todolist(request, id):
+    context = {}
+    if request.POST:
+        form = ShowTodoForm(request)
+        Todo = Todos.objects.filter(id=id).first()
+        Todo.data = request.POST['text']
+        Todo.save()
+        return redirect('/todolist')
+    else:
+        if len(Todos.objects.filter(id=id)) > 0:
+            todo = Todos.objects.filter(id=id).first()
+            context = {
+                'header': "Show todo page header",
+                'id': id,
+                'title': todo.title,
+                'priority' : todo.priority
+            }
+            form = ShowTodoForm({'text': todo.text})
+            context['form'] = form
+        else:
+            context['error'] = True
+        return render(request, "todolist/show.html", context)
+
