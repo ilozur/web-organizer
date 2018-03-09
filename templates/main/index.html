@@ -1,5 +1,10 @@
 {% extends "main/base.html" %}
-{% block css_link %} <link rel="stylesheet" href="static/css/cover.css"> {% endblock %}
+{% block css_links %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/general.css" %}'>
+	<link rel="stylesheet" href='{% static "css/cover.css" %}'>
+{% endblock %}
 
 {% block content %}
     {% if user.is_authenticated %}
@@ -60,22 +65,22 @@
                             <form id="sign_up_form">
                                 {% csrf_token %}
                                 <div class="form-row">
-                                    <div class="form-group col-md-5">
+                                    <div class="form-group col-md-6">
                                         {{ sign_up_form.username|bootstrap }}
                                     </div>
-                                    <div class="form-group col-md-5">
-                                        {{ sign_up_form.name|bootstrap }}
-                                    </div>
-                                    <div class="form-group col-md-7">
-                                        {{ sign_up_form.surname|bootstrap }}
-                                    </div>
-                                    <div class="form-group col-md-5">
+                                    <div class="form-group col-md-6">
                                         {{ sign_up_form.email|bootstrap }}
                                     </div>
-                                    <div class="form-group col-md-5">
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.name|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.surname|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
                                         {{ sign_up_form.password1|bootstrap }}
                                     </div>
-                                    <div class="form-group col-md-5">
+                                    <div class="form-group col-md-6">
                                         {{ sign_up_form.password2|bootstrap }}
                                     </div>
                                 </div>
@@ -83,7 +88,7 @@
                                     <input type="checkbox" class="form-check-input">
                                     <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
                                 </div>
-                                <a class="btn btn-success btn-block" onclick="sign_up_ajax()">Зарегестрироваться</a>
+                                <a class="btn btn-success btn-block" id="sign_up_btn" onclick="sign_up_ajax()">Зарегестрироваться</a>
                             </form>
                         </p>
                         <p class="lead" style="margin-top: 50px;">
@@ -98,7 +103,7 @@
                                         {{ sign_in_form.password|bootstrap }}
                                     </div>
                                 </div>
-                                <a class="btn btn-primary btn-block" onclick="sign_in_ajax()">Войти</a>
+                                <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
                             </form>
                         </p>
                     </section>
@@ -116,7 +121,6 @@
                 </footer>
                 <a href="#hello" class="scrollup">Наверх</a>
             </div>
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
             <script type="text/javascript">
                 $(document).ready(function(){
                     $(window).scroll(function(){
@@ -157,6 +161,75 @@
                         }
                     });
                 });
+            </script>
+            <script>
+                function sign_in_ajax()
+                {
+                    form_data = $('#sign_in_form').serialize();
+                    $("#sign_in_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_in_btn').attr('disabled', 'disabled');
+                    $("#sign_up_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_up_btn').attr('disabled', 'disabled');
+                    $.ajax({
+                        type: "POST",
+                        url: '/sign_in/',
+                        data: form_data,
+                        success: function(response)
+                        {
+                            alert(response['result']);
+                            if (response['result'] == "Success")
+                            {
+                                window.location.href = '/';
+                            }
+                            $("#sign_in_form").find(':input').each(function(){
+                               $(this).removeAttr('disabled');
+                            });
+                            $('#sign_in_btn').removeAttr('disabled');
+                            $("#sign_up_form").find(':input').each(function(){
+                                $(this).removeAttr('disabled');
+                            });
+                            $('#sign_up_btn').removeAttr('disabled');
+                        }
+                    });
+                };
+
+                function sign_up_ajax()
+                {
+                    form_data = $('#sign_up_form').serialize();
+                    $("#sign_up_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_up_btn').attr('disabled', 'disabled');
+                    $("#sign_in_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_in_btn').attr('disabled', 'disabled');
+                    $.ajax({
+                        type: "POST",
+                        url: '/sign_up/',
+                        data: form_data,
+                        success: function(response)
+                        {
+                            alert(response['result']);
+                            if (response['result'] == "Success")
+                            {
+                                window.location.href = '/?just_signed_up=True';
+                            }
+                            $("#sign_up_form").find(':input').each(function(){
+                                $(this).removeAttr('disabled');
+                            });
+                            $('#sign_up_btn').removeAttr('disabled');
+                            $("#sign_in_form").find(':input').each(function(){
+                               $(this).removeAttr('disabled');
+                            });
+                            $('#sign_in_btn').removeAttr('disabled');
+                        }
+                    });
+                };
             </script>
         </div>
     {% endif %}

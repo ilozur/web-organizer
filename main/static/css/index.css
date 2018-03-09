@@ -1,40 +1,38 @@
+/*Стили для главной страницы*/
+
+/*Цвет фона и текста с отступом*/
 body {
   color: #5a5a5a;
   background-color: #f1f1f1;
+  margin-bottom: 1.5rem;
 }
 
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: none;
-}
-
+/*Ссылки в баннере и костыль*/
 .link-section {
-  text-decoration: none;
   color: #fff;
 }
-
 .link-section:hover {
-  text-decoration: none;
   color: #fff;
 }
 
+/*Отступ от баннера*/
 .carousel {
   margin-bottom: 4rem;
 }
 
+/*Текст на баннере*/
 .carousel-caption {
   bottom: 3rem;
   z-index: 10;
 }
 
+/*Баннер*/
 .carousel-item {
   height: 32rem;
   background-color: #777;
 }
 
+/*Изображеение на баннере*/
 .carousel-item>img {
   position: absolute;
   top: 0;
@@ -43,11 +41,13 @@ a:hover {
   height: 32rem;
 }
 
+/*Карточка*/
 .card {
   width: 350px;
   margin-top: 30px;
 }
 
+/*Кнопка добавления нового и анимация при наведении */
 .add-new {
   float: right;
   width: 50px;
@@ -56,87 +56,43 @@ a:hover {
   color: #fff;
   transition: 0.2s;
 }
-
 .add-new:hover {
   border-radius: 100%;
   transition: 0.2s;
   color: #fff;
 }
 
+/*Костыль к цвету кнопки добавления*/
 .plus {
   color: #fff;
 }
 
-.container .col-lg-4 {
-  margin-bottom: 1.5rem;
-}
-
-.container h2 {
-  font-weight: 400;
-}
-
-.container .col-lg-4 p {
-  margin-right: .75rem;
-  margin-left: .75rem;
-}
-
+/*Секция и ее анимация при наведении*/
 .section {
-  height: 325px;
+  height: 150px;
   width: 350px;
   font-size: 25pt;
   color: #fff;
   transition: 0.2s;
   text-align: center;
-  padding-top: 125px;
+  padding-top: 50px;
 }
-
 .section:hover {
-  height: 350px;
   color: #fff;
-  transition: 0.2s;
 }
 
-.featurette-divider {
-  margin: 5rem 0;
-}
-
-.featurette-heading {
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -.05rem;
-}
-
-@media (min-width: 40em) {
-  .carousel-caption p {
-    margin-bottom: 1.25rem;
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-  .featurette-heading {
-    font-size: 50px;
-  }
-}
-
-@media (min-width: 62em) {
-  .featurette-heading {
-    margin-top: 7rem;
-  }
-}
-
-.first-slide {
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
+/*Расположение лайка*/
 .like {
   float: right;
 }
 
+/*Комментарий*/
 .comment {
   margin-top: 15px;
   color: #fff;
 }
 
+/*Дата комментария*/
 .date-of-comments {
   float: left;
   font-size: 10pt;

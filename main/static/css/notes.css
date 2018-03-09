@@ -1,8 +1,12 @@
+/*Стили для раздела 'Заметки'*/
+
+/*Цвет фона для сайта и отступ в конце*/
 .notes {
   background-color: #ffd;
   padding-bottom: 50px;
 }
 
+/*Мачта*/
 .mast {
   padding-top: 6em;
   padding-bottom: 6em;
@@ -10,7 +14,7 @@
   text-align: center;
 }
 
-
+/*Оформление карты и анимация при наводке*/
 .card {
   background-color: #ffb;
   height: 300px;
@@ -19,30 +23,20 @@
   margin-bottom: 40px;
   cursor: pointer;
 }
-
 .card:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: 0.2s;
 }
 
+/*Цвет текста в кнопках и костыль*/
 .btn {
   color: #fff;
 }
-
 .btn:hover {
   color: #fff;
 }
 
-a {
-  text-decoration: none;
-  color: #000;
-}
-
-a:hover {
-  text-decoration: none;
-  color: #000;
-}
-
+/*Последняя карта для добавления новой карты*/
 .last {
   border: 5px #c90 dotted;
   text-align: center;
@@ -51,33 +45,31 @@ a:hover {
   padding-top: 20%;
 }
 
-.disabled a {
-  color: #fff;
-}
-
-.navbar a {
-  color: #fff;
-}
-
+/*Заголовок модуля*/
 .modal-header {
   background-color: #ffd;
   border-bottom: 0px;
 }
 
+/*'Тело' модуля*/
 .modal-body {
   background-color: #ffe;
 }
 
+/*Подвал модуля*/
 .modal-footer {
   background-color: #ffd;
   border-top: 0px;
 }
 
+/*Дата*/
 .date {
   font-size: 10pt;
   float: right;
 }
 
+/*Размер изображения пользователя*/
+/*!Нужно переделать!*/
 .user-image {
   width: 50px;
   height: 50px;
