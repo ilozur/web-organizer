@@ -12,3 +12,14 @@ class Todos(models.Model):
     text = models.CharField(max_length=200, default="time")
     title = models.CharField(max_length=128, default="title")
 
+
+    @staticmethod
+    def get_todos(sorting_type, user=1):
+        todos = Todos.objects.filter(user=user)
+        mode = {
+            'AtoZ': todos.order_by('title'),
+            'ZtoA': (todos.order_by('-title')),
+            'old': todos.order_by('added_date', 'added_time'),
+            'new': (todos.order_by('-added_date', '-added_time'))
+        }
+        return mode.get(sorting_type)

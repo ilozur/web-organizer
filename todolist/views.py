@@ -1,27 +1,36 @@
+from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
+import os
+
+from todolist import models
+from todolist.forms import AddTodoForm
+from todolist.models import Todos
+from django import forms
 import datetime
 import json
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-from todolist.forms import AddTodoForm
-from todolist.models import Todos
 
 
+@login_required
 def index(request):
     context = {
-        'title': "Todolist index page",
-        'header': "Todolist index page header"
+        'title': "Todos index page",
+        'header': "Todos index page header",
     }
-    items = None
-    if request.GET:
-        items = sorting(request.GET, items)
-    if request.POST:
-        change_status(request.POST, items)
-    return render(request, "todolist/index.html", {'items': items}, context)
+    todo_list = list()
+    user = request.user
+    todos = Todos.get_todos('AtoZ', user)
+    for i in todos:
+        todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+    context['todo_data'] = todo_list
+    return render(request, "todolist/index.html", context)
 
 
-# @login_required
+@login_required
 def add_todo(request):
     context = {'user': request.user}
     if request.POST:
@@ -47,7 +56,7 @@ def time_and_date_for_todo():
     dater, timer = addtime.split(' ')
     return timer, dater
 
-
+@login_required
 def completed_todos(request):
     context = {
         'title': "Completed todos page",
@@ -84,6 +93,7 @@ def change_status(data, items):
     obj.save()
 
 
+@login_required
 def show_todo(request, id):
     context = {'user': request.user}
     todo_now = Todos.objects.get(id=id).first()
@@ -94,11 +104,14 @@ def show_todo(request, id):
         return render(request, 'show.html', context)
 
 
-def save_todo(request, id):
-    context = {'user': request.user}
+@login_required
+def save_todo(request,id):
+    context = {}
+    context['user'] = request.user
     saving_todo = Todos.objects.get(id=id).first()
     f = open('saved_todos/todo.txt', 'wt')
-    f.write(saving_todo)
+    f.write(saving_todo.title)
+    f.write(saving_todo.text)
     f.close()
     context['title'] = saving_todo.title
     return render(request, 'saving.html', context)
@@ -107,17 +120,11 @@ def save_todo(request, id):
 @csrf_exempt
 def sort_ajax(request):
     if request.method == "POST":
-        todolist = list()
-        mode = {
-            'AtoZ': Todos.objects.order_by('title'),
-            'ZtoA': (Todos.objects.order_by('-title')),
-            'old': Todos.objects.order_by('added_date', 'added_time'),
-            'new': (Todos.objects.order_by('added_date', 'added_time'))
-        }
+        todo_list = list()
         sort_type = request.POST.get('data')
-        for i in mode.get(sort_type):
-            todolist.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.text))
-        response = {'todolist': todolist}
+        for i in Todos.get_todos(sort_type):
+            todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.text))
+        response = {'todo_list': todo_list}
         return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')

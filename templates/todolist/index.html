@@ -4,14 +4,13 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the todolist index page</p>
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
-    <a href="/todo/done"><input type="submit" value="Done"></a>
     <hr>
     <input type="button" value="From A to Z" onclick="sort_ajax('AtoZ')">
     <input type="button" value="From Z to A" onclick="sort_ajax('ZtoA')"><br>
     <input type="button" value="Last created" onclick="sort_ajax('new')">
     <input type="button" value="Oldest created" onclick="sort_ajax('old')"><br>
     <hr>
-    <div id="todolist">
+    <div id="todo_list">
         {% for item in items %}
             {{ item }}
         {% endfor %}
@@ -24,9 +23,9 @@
                 url: '/todo/sort',
                 data: {'data': type},
                 success: function(response){
-                    $("#todolist").html('');
-                    for (var i = 0; i < response['todolist'].length; i++){
-                        $("#todolist").append("<li>" + response['todolist'][i][0] + "</li> - added at " + response['todolist'][i][1])
+                    $("#todo_list").html('');
+                    for (var i = 0; i < response['todo_list'].length; i++){
+                        $("#todo_list").append("<li>" + response['todo_list'][i][0] + "</li> - added at " + response['todo_list'][i][1])
                     }
                 }
             });
