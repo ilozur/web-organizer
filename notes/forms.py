@@ -5,12 +5,15 @@ from ckeditor_uploader.fields import RichTextUploadingFormField
 
 
 class AddNoteForm(forms.Form):
-    title = forms.CharField(label='Enter title', max_length=200)
+    title = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                           'placeholder': 'Заметочка'}))
     data = RichTextUploadingFormField(widget=CKEditorUploadingWidget)
 
 
 class ShowNoteForm(forms.Form):
-    data = forms.CharField(widget=CKEditorWidget())
+    title_show = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                           'placeholder': 'Заметочка'}))
+    data_show = forms.CharField(widget=CKEditorWidget())
 
 
 class SearchForm(forms.Form):
