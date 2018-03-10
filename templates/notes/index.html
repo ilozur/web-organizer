@@ -289,6 +289,7 @@
     				CKEDITOR.instances[instance].updateElement();
 				}
 				var data = CKEDITOR.instances.id_data_show.getData();
+				var id = $('#note_num').html();
                 $("#save_form").find(':input').each(function(){
                     $(this).attr('disabled', 'disabled');
                 });
@@ -296,12 +297,16 @@
                 $.ajax({
                     type: "POST",
                     url: '/notes/save',
-                    data: {"id": $('#note_num').html(), "title": $('#id_title').val(), "data": data},
+                    data: {"id": id, "title": $('#id_title_show').val(), "data": data},
                     success: function(response)
                     {
                         if (response['result'] == "Success")
                         {
-                        	alert(response['result']);
+                        	alert('OK, Changes were saved');
+                        	$('#note_title_' + id).html($('#id_title_show').val());
+                        	$('#note_data_' + id).html(data);
+                        	CKEDITOR.instances.id_data_show.setData(data);
+                        	open_note(id);
                         }
                         $("#save_form").find(':input').each(function(){
                             $(this).removeAttr('disabled');

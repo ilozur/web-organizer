@@ -140,7 +140,7 @@ def save_ajax(request):
             data = request.POST.get('data')
             if Notes.objects.filter(id=id).first():
                 tmp = Notes.objects.filter(id=id).first()
-                tmp.title = name
+                tmp.name = name
                 tmp.data = data
                 tmp.save()
                 result = 'Success'
