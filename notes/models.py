@@ -54,14 +54,25 @@ class Notes ( models.Model ):
                         (note.added_time.day <= datetime[1].day) and
                         (note.added_time.day >= datetime[0].day)):
                     notelist.append ( note )
-                    sort_hl ( notelist )
+                    sort_new_old ( notelist )
 
         return notelist
 
 
-def sort_hl ( notelist ):
-    sorted(notelist)
+
+    def sort_new_old ( notelist ):
+        notelist.append('')
+        for counter in range(len(notelist))
+            for i in range(1, len(notelist)):
+                if (notelist[i].added_time.year >= notelist[0].added_time.year)\
+                        and(notelist[i].added_time.month >= notelist[0].added_time.month)\
+                        and(notelist[i].added_time.day >= notelist[0].added_time.day):
+                    temp = notelist[i]
+                    for j in reversed(range(i)):
+                        notelist[j+1] = notelist[j]
+                    notelist[0] = temp
 
 
 
-    #todo: add sorting algorithm, test
+
+'''to do: add sorting algorithm, test'''
