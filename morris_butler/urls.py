@@ -18,10 +18,9 @@ from django.urls import path, include
 from ckeditor_uploader import views
 import calendars.urls
 import notes.urls
-import todolist.urls
+import todo.urls
 from main.views import *
 from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from morris_butler import settings
 from django.contrib.auth.decorators import login_required
 
@@ -30,7 +29,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('notes/', include(notes.urls)),
     path('calendar/', include(calendars.urls)),
-    path('todo/', include(todolist.urls)),
+    path('todo/', include(todo.urls)),
     path('sign_in/', sign_in_ajax, name='sign_in'),
     path('sign_out/', sign_out_view, name='sign_out'),
     path('sign_up/', sign_up_view, name='sign_up'),
@@ -38,4 +37,4 @@ urlpatterns = [
     path('ckeditor/upload/', login_required(views.upload), name='ckeditor_upload'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

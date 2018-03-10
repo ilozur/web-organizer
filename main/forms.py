@@ -29,4 +29,3 @@ class SignUpForm(forms.Form):
     password2 = forms.CharField(label='Password again', max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                   'placeholder': 'Enter your password again'}))
-

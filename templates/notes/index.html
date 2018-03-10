@@ -1,6 +1,12 @@
 {% extends "main/base.html" %}
 
-{% block css_link %} <link rel="stylesheet" href="/static/css/notes.css"> {% endblock %}
+{% block css_links %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/general.css" %}'>
+	<link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <link rel="stylesheet" href='{% static "css/notes.css" %}'>
+{% endblock %}
 
 {% block content %}
     <article class="notes">

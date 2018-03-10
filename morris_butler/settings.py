@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'calendars.apps.CalendarsConfig',
     'notes.apps.NotesConfig',
-    'todolist.apps.TodolistConfig',
+    'todo.apps.TodoConfig',
     'ckeditor',
     'bootstrapform',
     'ckeditor_uploader',
@@ -125,7 +125,6 @@ USE_TZ = True
 
 STATIC_ROOT = 'static_root'
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join('static'), )
 
 MEDIA_ROOT = 'media_root'
 MEDIA_URL = '/media/'
