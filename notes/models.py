@@ -62,7 +62,7 @@ class Notes ( models.Model ):
 
     def sort_new_old ( notelist ):
         notelist.append('')
-        for counter in range(len(notelist))
+        for counter in range(len(notelist)):
             for i in range(1, len(notelist)):
                 if (notelist[i].added_time.year >= notelist[0].added_time.year)\
                         and(notelist[i].added_time.month >= notelist[0].added_time.month)\
