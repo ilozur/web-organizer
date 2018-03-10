@@ -30,19 +30,23 @@ def index(request):
 
 
 @login_required
+@csrf_exempt
 def add_note_ajax(request):
-    if request.POST:
-        form = AddNoteForm(request.POST)
-        tmp_note = Notes(name=form.data['title'], data=form.data['data'], user=request.user)
-        tmp_note.save()
-        return HttpResponseRedirect('/notes')
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            name = request.POST.get('title')
+            data = request.POST.get('data')
+            tmp = Notes(name=name, data=data, user=request.user)
+            tmp.save()
+            result = "Success"
+            response_data['id'] = tmp.id
+        else:
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
-        context = {
-            'header': "Add_note page"
-        }
-        form = AddNoteForm()
-        context['form'] = form
-        return render(request, "notes/add_note.html", context)
+        return HttpResponseRedirect('/')
 
 
 def search_notes(substr, user):

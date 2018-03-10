@@ -8,4 +8,5 @@ urlpatterns = [
     path('search', search_ajax, name='search'),
     path('sort', sort_ajax, name='sort'),
     path('save', save_ajax, name='save'),
+    path('add', add_note_ajax, name='add'),
 ]
