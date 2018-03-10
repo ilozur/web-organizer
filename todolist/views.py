@@ -29,8 +29,6 @@ def index(request):
 
 
 @login_required
-
-#@login_required
 def add_todo(request):
     context = {'user': request.user}
     if request.POST:
@@ -50,11 +48,11 @@ def add_todo(request):
         context['add_form'] = form
         return render(request, 'todolist/add.html', context)
 
-
 def time_and_date_for_todo():
     addtime = (datetime.datetime.now()).strftime("%H:%M:%S %Y-%m-%d")
     dater, timer = addtime.split(' ')
     return timer, dater
+
 
 
 @login_required
@@ -67,9 +65,10 @@ def completed_todos(request):
         'title': "Completed todos page",
         'header': "You can mark available todos as uncompleted"
     }
-    return render(request, "todolist/done_todos.html", {'items': items}, context)
+    return render(request, "todolist/index.html", {'items': items}, context)
 
 
+@login_required
 def show_todo(request, id):
     context = {}
     context['user'] = request.user
@@ -94,6 +93,9 @@ def save_todo(request,id):
     return render(request, 'saving.html', context)
 
 
+
+
+@login_required
 def sort_ajax(request):
     response_data = {}
     if request.method == "POST":
@@ -118,22 +120,27 @@ def sort_ajax(request):
         return HttpResponseRedirect('/')
 
 
- def show_todolist(request, id):
+@login_required
+def show_todolist(request, id):
     context = {}
     if request.POST:
         form = ShowTodoForm(request)
         Todo = Todos.objects.filter(id=id).first()
         Todolist = request.POST
+        Todolist.data = request.POST['data']
         Todolist.text = request.POST['text']
         Todolist.save()
         return HttpResponseRedirect('/todolist')
     return render(request, "todolist/index.html", context)
- 
- def edit_todolist(request, id):
+
+
+@login_required
+def edit_todolist(request, id):
     context = {}
     if request.POST:
         form = ShowTodoForm(request)
         Todo = Todos.objects.filter(id=id).first()
+        Todo.data = request.POST['data']
         Todo.data = request.POST['text']
         Todo.save()
         return redirect('/todolist')
@@ -153,6 +160,7 @@ def sort_ajax(request):
         return render(request, "todolist/show.html", context)
 
 
+@login_required
 def Read_file(file_name):
     s = open(file_name, "r")
     s = s.read()
