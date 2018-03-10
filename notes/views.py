@@ -18,7 +18,7 @@ def index(request):
     user = request.user
     notes = Notes.get_notes('title_up', user)
     for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data))
+        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
     context['notes_data'] = notes_list
     search_form = SearchForm()
     context['search_form'] = search_form
@@ -50,7 +50,7 @@ def search_notes(substr, user):
     ret_list = list()
     for i in obj:
         if substr in i.name:
-            ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+            ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
     return ret_list
 
 

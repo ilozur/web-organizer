@@ -11,12 +11,12 @@
 				<section class="navigation">
 					<nav class="navbar">
 						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-warning" onclick="$('.list-view').hide(); $('.card-view').hide(); $('.card-view').removeAttr('hidden'); $('.card-view').show('slow');">
+							<button type="button" class="btn btn-warning" onclick="show_cards();">
 								<picture>
 									<img src="/static/icons/card_icon.png" class="icon">
 								</picture>
 							</button>
-							<button type="button" class="btn btn-warning" onclick="$('.card-view').hide(); $('.list-view').slideDown('slow')">
+							<button type="button" class="btn btn-warning" onclick="show_list();">
 								<picture>
 									<img src="/static/icons/list_icon.png" class="icon">
 								</picture>
@@ -34,10 +34,16 @@
 							<small>Текстовых: 24</small> <br/>
 							<small>Голосовых: 18</small> <br/>
 						</div>
+						<form id="search_form" onsubmit="return false;">
+							{% load bootstrap %}
+							{% csrf_token %}
+							{{ search_form.result | bootstrap }}
+						</form>
+						<input id="search_btn" type="button" value="Search" class="btn btn-warning" onclick="search_ajax();">
 					</nav>
 				</section>
 				<section class="list-view">
-					<div class="list-group">
+					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
 							<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open-{{item.2}}">
 								{{ item.0 }}
@@ -47,7 +53,7 @@
 					</div>
 				</section>
 				<section class="card-view" hidden>
-					<div class="row">
+					<div class="row" id="cards_id">
 						{% for item in notes_data %}
 							<div class="col-md-4" data-toggle="modal" data-target="#Open-{{item.2}}">
 							<div class="card">
@@ -75,7 +81,7 @@
 			</section>
 		</article>
 		<article class="modals">
-			{% load bootstrap %}
+
 			<div class="modal fade" id="New">
 				<div class="modal-dialog modal-lg modal-dialog-centered">
 					<div class="modal-content">
@@ -118,7 +124,7 @@
 							</div>
 							<div class="modal-body">
 								<p>
-									{% autoescape off %}{{ item.3 }}{% endautoescape %}
+									{% autoescape off %}{{ item.3.0 }}{% endautoescape %}
 
 								</p>
 								<small>{{ item.1 }}</small> <br/>
@@ -127,7 +133,7 @@
 							<div class="modal-footer">
 								<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
 								<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
-								<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
+								<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#Edit" onclick="set_cke_data({{ item.3}}, '{{ item.0 }}')">Редактировать</button>
 								<button type="button" class="btn btn-warning">Прослушать</button>
 							</div>
 						</div>
@@ -217,6 +223,25 @@
 			</div>
 		</article>
     <script>
+        function show_cards(){
+    		$('.list-view').hide();
+    		$('.card-view').hide();
+    		$('.card-view').removeAttr('hidden');
+    		$('.card-view').show('slow');
+    	};
+
+    	function show_list(){
+    		$('.card-view').hide();
+    		$('.list-view').hide();
+    		$('.list-view').removeAttr('hidden');
+    		$('.list-view').slideDown('slow');
+    	};
+
+    	function set_cke_data(val_data, val_title){
+    		CKEDITOR.instances.id_data_show.setData(val_data[0]);
+    		$('#id_title_show').val(val_title);
+    	};
+
         function search_ajax()
             {
                 form_data = $('#search_form').serialize();
@@ -232,9 +257,11 @@
                     {
                         if (response['result'] == "Success")
                         {
-                            $("#notes_list").html('');
+                            $("#list_id").html('');
                             for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#notes_list").append("<li><a href='/notes/show/" + response['notes_list'][i][2] + "'>" + response['notes_list'][i][0] + "</a></li> - added at " + response['notes_list'][i][1])
+                                $("#list_id").append('<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target=#Open-'
+                                +response['notes_list'][i][2] + '>' + response['notes_list'][i][0] + '<div class="date"> <small>'
+                                + response['notes_list'][i][1] + '</small></div></a>')
                             }
                         }
                         $("#search_form").find(':input').each(function(){
