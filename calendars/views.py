@@ -25,7 +25,7 @@ def index_date(request, date):
             tmp = date.split('_')
             tmp = [int(num) for num in tmp]
             if len(tmp) == 2:
-                if datetime_now.month == tmp[1]:
+                if (datetime_now.month == tmp[1]) and (datetime_now.year == tmp[0]):
                     now_date = datetime(year=tmp[0], month=tmp[1], day=datetime_now.day)
                 else:
                     now_date = datetime(year=tmp[0], month=tmp[1], day=1)
