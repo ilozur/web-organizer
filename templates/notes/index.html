@@ -51,7 +51,7 @@
 				<section class="list-view">
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
-							<div onclick="open_note('{{item.2}}');">
+							<div id="note_{{item.2}}" onclick="open_note('{{item.2}}');">
 								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open">
 									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
 									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
@@ -91,7 +91,6 @@
 			</section>
 		</article>
 		<article class="modals">
-
 			<div class="modal fade" id="New">
 				<div class="modal-dialog modal-lg modal-dialog-centered">
 					<div class="modal-content">
@@ -140,7 +139,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" id="delete_btn" >Удалить</button>
 							<button type="button" id="open_btn" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
 							<button type="button" class="btn btn-warning">Прослушать</button>
 						</div>
@@ -233,7 +232,9 @@
     		str = $('#note_data_' + id).html();
 			$('#open_title').html($('#note_title_' + id).html());
 			$('#open_data').html(str);
+			$('#open_date').html($('#note_date_' + id).html())
 			$('#open_btn').attr('onClick', 'set_cke_data();');
+			$('#delete_btn').attr('onClick', 'delete_ajax(' + id + ');');
 			$('#note_num').html(id);
     	};
 
@@ -348,6 +349,7 @@
 							+ '</small></div></a><div id="note_data_' + response['id']
 							+ '" hidden>' + data + '</div></div>');
 					}
+					open_note(response['id']);
 					$('#add_btn').removeAttr('disabled');
 				}
 			});
@@ -383,5 +385,25 @@
                 });
             };
     </script>
+	<script>
+		function delete_ajax(id)
+		{
+			$('#delete_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/notes/delete',
+				data: {"id": id},
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						alert('OK, note was deleted');
+						$('#note_' + id).slideUp("Slow");
+					}
+					$('#delete_btn').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
 
 {% endblock %}

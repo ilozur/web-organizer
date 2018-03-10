@@ -157,3 +157,22 @@ def save_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+@login_required
+@csrf_exempt
+def delete_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            id = request.POST.get('id')
+            if Notes.delete_note(id):
+                result = "Success"
+            else:
+                result = "Sorry, Note does not exist"
+        else:
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
