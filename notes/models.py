@@ -54,25 +54,71 @@ class Notes ( models.Model ):
                         (note.added_time.day <= datetime[1].day) and
                         (note.added_time.day >= datetime[0].day)):
                     notelist.append ( note )
-                    sort_new_old ( notelist )
+                    qsort ( notelist )
 
         return notelist
 
 
-
-    def sort_new_old ( notelist ):
-        notelist.append('')
-        for counter in range(len(notelist)):
-            for i in range(1, len(notelist)):
-                if (notelist[i].added_time.year >= notelist[0].added_time.year)\
-                        and(notelist[i].added_time.month >= notelist[0].added_time.month)\
-                        and(notelist[i].added_time.day >= notelist[0].added_time.day):
-                    temp = notelist[i]
-                    for j in reversed(range(i)):
-                        notelist[j+1] = notelist[j]
-                    notelist[0] = temp
+# sorting algorithm section START
 
 
+def qsort ( array ):
+    less = []
+    equal = []
+    greater = []
+    if len ( array ) > 1:
+        pivot = array[0].added_time.year
+        for x in array:
+            if x.added_time.year < pivot:
+                less.append ( x )
+            if x.added_time.year == pivot:
+                equal.append ( x )
+            if x.added_time.year > pivot:
+                greater.append ( x )
+            qsort_m ( less )
+            qsort_m ( equal )
+            qsort_m ( greater )
+        return less + equal + greater
+    else:
+        return array
 
 
-'''to do: add sorting algorithm, test'''
+def qsort_m ( array ):
+    less = []
+    equal = []
+    greater = []
+    if len ( array ) > 1:
+        pivot = array[0].added_time.month
+        for x in array:
+            if x.added_time.month < pivot:
+                less.append ( x )
+            if x.added_time.month == pivot:
+                equal.append ( x )
+            if x.added_time.month > pivot:
+                greater.append ( x )
+            qsort_d ( less )
+            qsort_d ( equal )
+            qsort_d ( greater )
+        return less + equal + greater
+    else:
+        return array
+
+
+def qsort_d ( array ):
+    less = []
+    equal = []
+    greater = []
+    if len ( array ) > 1:
+        pivot = array[0].added_time.day
+        for x in array:
+            if x.added_time.day < pivot:
+                less.append ( x )
+            if x.added_time.day == pivot:
+                equal.append ( x )
+            if x.added_time.day > pivot:
+                greater.append ( x )
+        return less + equal + greater
+    else:
+        return array
+
+# sorting algorithm section END
