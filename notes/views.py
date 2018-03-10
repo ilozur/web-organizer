@@ -125,3 +125,30 @@ def sort_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+@login_required
+@csrf_exempt
+def save_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            print(request.POST)
+            request.POST.get('id')
+            id = request.POST.get('id')
+            name = request.POST.get('title')
+            data = request.POST.get('data')
+            if Notes.objects.filter(id=id).first():
+                tmp = Notes.objects.filter(id=id).first()
+                tmp.title = name
+                tmp.data = data
+                tmp.save()
+                result = 'Success'
+            else:
+                result = 'No such note'
+        else:
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')

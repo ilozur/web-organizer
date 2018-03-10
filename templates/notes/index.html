@@ -45,10 +45,14 @@
 				<section class="list-view">
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
-							<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open-{{item.2}}">
-								{{ item.0 }}
-								<div class="date"> <small>{{ item.1 }}</small></div>
-							</a>
+							<div onclick="open_note('{{item.2}}');">
+								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open">
+									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
+									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
+								</a>
+								<div id="note_data_{{ item.2}}" hidden>{{ item.3.0 | safe }}</div>
+							</div>
+
 						{% endfor %}
 					</div>
 				</section>
@@ -115,31 +119,28 @@
 					</div>
 				</div>
 			</div>
-			{% for item in notes_data %}
-				<div class="modal fade" id="Open-{{item.2}}">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h2>{{ item.0 }}</h2>
-							</div>
-							<div class="modal-body">
-								<p>
-									{% autoescape off %}{{ item.3.0 }}{% endautoescape %}
-
-								</p>
-								<small>{{ item.1 }}</small> <br/>
-								<small class="text-muted">4.03.2018 (редакт.)</small>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-								<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
-								<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#Edit" onclick="set_cke_data({{ item.3}}, '{{ item.0 }}')">Редактировать</button>
-								<button type="button" class="btn btn-warning">Прослушать</button>
-							</div>
+			<div class="modal fade" id="Open">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div id="note_num" hidden></div>
+						<div class="modal-header">
+							<h2 id="open_title"></h2>
+						</div>
+						<div class="modal-body">
+							<p id="open_data">
+							</p>
+							<small id="open_date">01.01</small> <br/>
+							<small class="text-muted">4.03.2018 (редакт.)</small>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+							<button type="button" id="open_btn" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
+							<button type="button" class="btn btn-warning">Прослушать</button>
 						</div>
 					</div>
 				</div>
-			{% endfor %}
+			</div>
 			<div class="modal fade" id="Open-Image">
 				<div class="modal-dialog modal modal-dialog-centered">
 					<div class="modal-content">
@@ -198,13 +199,12 @@
 							<h2>Редактирование заметки</h2>
 						</div>
 						<div class="modal-body">
-							<form>
+							<form id="save_form">
 								{% csrf_token %}
 								{{ show_form.meia }}
 								<h3>Изменить название</h3>
 								{{ show_form.title_show }}
 								<h3>Изменить текст</h3>
-								<h3> Изменить изображение </h3>
 								{{ show_form.data_show }}
 							</form>
 							<h3>Переписать аудио</h3>
@@ -216,13 +216,21 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-							<button class="btn btn-warning" data-dismiss="modal">Сохранить</button>
+							<button class="btn btn-warning" data-dismiss="modal" id="save_btn" onclick="save_ajax();">Сохранить</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</article>
     <script>
+    	function open_note(id){
+    		str = $('#note_data_' + id).html();
+			$('#open_title').html($('#note_title_' + id).html());
+			$('#open_data').html(str);
+			$('#open_btn').attr('onClick', 'set_cke_data();');
+			$('#note_num').html(id);
+    	};
+
         function show_cards(){
     		$('.list-view').hide();
     		$('.card-view').hide();
@@ -237,9 +245,9 @@
     		$('.list-view').slideDown('slow');
     	};
 
-    	function set_cke_data(val_data, val_title){
-    		CKEDITOR.instances.id_data_show.setData(val_data[0]);
-    		$('#id_title_show').val(val_title);
+    	function set_cke_data(){
+    		CKEDITOR.instances.id_data_show.setData($('#open_data').html());
+    		$('#id_title_show').val($('#open_title').html());
     	};
 
         function search_ajax()
@@ -257,17 +265,48 @@
                     {
                         if (response['result'] == "Success")
                         {
-                            $("#list_id").html('');
-                            for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#list_id").append('<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target=#Open-'
-                                +response['notes_list'][i][2] + '>' + response['notes_list'][i][0] + '<div class="date"> <small>'
-                                + response['notes_list'][i][1] + '</small></div></a>')
-                            }
+                        	$("#list_id").html('');
+                        	for (var i = 0; i < response['notes_list'].length; i++) {
+								$("#list_id").append('<div onclick="open_note('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
+								+ '</h7><div class="date"> <small id="note_date_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
+								+ '</small></div></a><div id="note_data_' + response['notes_list'][i][2]
+								+ '" hidden>' + response['notes_list'][i][3][0] + '</div></div>');
+							}
+                        	$("#search_form").find(':input').each(function(){
+                            	$(this).removeAttr('disabled');
+                        	});
+                        	$('#sign_up_btn').removeAttr('disabled');
                         }
-                        $("#search_form").find(':input').each(function(){
+                    }
+                });
+            };
+
+            function save_ajax()
+            {
+            	for (instance in CKEDITOR.instances) {
+    				CKEDITOR.instances[instance].updateElement();
+				}
+				var data = CKEDITOR.instances.id_data_show.getData();
+                $("#save_form").find(':input').each(function(){
+                    $(this).attr('disabled', 'disabled');
+                });
+                $('#save_btn').attr('disabled', 'disabled');
+                $.ajax({
+                    type: "POST",
+                    url: '/notes/save',
+                    data: {"id": $('#note_num').html(), "title": $('#id_title').val(), "data": data},
+                    success: function(response)
+                    {
+                        if (response['result'] == "Success")
+                        {
+                        	alert(response['result']);
+                        }
+                        $("#save_form").find(':input').each(function(){
                             $(this).removeAttr('disabled');
                         });
-                        $('#sign_up_btn').removeAttr('disabled');
+                        $('#save_btn').removeAttr('disabled');
                     }
                 });
             };
