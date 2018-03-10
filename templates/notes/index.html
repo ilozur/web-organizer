@@ -30,10 +30,10 @@
 						</div>
 						<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New">+</button>
 						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-warning">Сначала новые</button>
-							<button type="button" class="btn btn-warning">Сначала старые</button>
-							<button type="button" class="btn btn-warning">А..Я</button>
-							<button type="button" class="btn btn-warning">Я..А</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('date_up')">Сначала новые</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('date_down')">Сначала старые</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('title_up')">А..Я</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('title_down')">Я..А</button>
 						</div>
 						<div class="alert alert-warning">
 							<small>Всего заметок: 42</small> <br/>
@@ -365,10 +365,19 @@
                     {
                         if (response['result'] == "Success")
                         {
-                            $("#notes_list").html('');
-                            for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#notes_list").append("<li><a href='/notes/show/" + response['notes_list'][i][2] + "'>" + response['notes_list'][i][0] + "</a></li> - added at " + response['notes_list'][i][1])
-                            }
+                            $("#list_id").html('');
+                        	for (var i = 0; i < response['notes_list'].length; i++) {
+								$("#list_id").append('<div onclick="open_note('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
+								+ '</h7><div class="date"> <small id="note_date_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
+								+ '</small></div></a><div id="note_data_' + response['notes_list'][i][2]
+								+ '" hidden>' + response['notes_list'][i][3][0] + '</div></div>');
+							}
+                        	$("#search_form").find(':input').each(function(){
+                            	$(this).removeAttr('disabled');
+                        	});
+                        	$('#sign_up_btn').removeAttr('disabled');
                         }
                     }
                 });

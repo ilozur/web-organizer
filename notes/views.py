@@ -107,6 +107,7 @@ def search_ajax(request):
 
 
 @login_required
+@csrf_exempt
 def sort_ajax(request):
     response_data = {}
     if request.method == "POST":
@@ -116,7 +117,7 @@ def sort_ajax(request):
             if sort_type in sorting_types:
                 notes_list = list()
                 for i in Notes.get_notes(sort_type, request.user):
-                    notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+                    notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
                 response_data = {
                     'notes_list': notes_list
                 }
