@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'calendars.apps.CalendarsConfig',
     'notes.apps.NotesConfig',
-    'todolist.apps.TodolistConfig',
+    'todo.apps.TodoConfig',
     'ckeditor',
+    'bootstrapform',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -121,32 +123,42 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATIC_ROOT = 'static_root'
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = 'media_root'
+MEDIA_URL = '/media/'
 
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': [
             ['Undo', 'Redo',
              '-', 'Bold', 'Italic', 'Underline',
-             '-', 'Format',
+             'Format',
              '-', 'Maximize',
              '-', 'Table',
              '-', 'Image',
-             '-', 'NumberedList', 'BulletedList'
-            ],
+             '-', 'NumberedList', 'BulletedList'],
             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
              '-', 'Styles', 'Font', 'FontSize', 'TextColor',
              '-', 'HorizontalRule',
-             '-', 'Blockquote'
-            ]
+             '-', 'Blockquote']
         ],
         'height': 500,
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
+        'filebrowserBrowseUrl': ''
     }
-
 }
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_JQUERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
+CKEDITOR_RESTRICT_BY_USER = True
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465

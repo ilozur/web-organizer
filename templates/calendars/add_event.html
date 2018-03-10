@@ -11,7 +11,6 @@
     <script>
         function add_event_ajax()
         {
-            result = "";
             form_data = $('#add_event_form').serialize();
             $("#add_event_form").find(':input').each(function(){
                 $(this).attr('disabled', 'disabled');
@@ -26,7 +25,7 @@
                     alert(response['result']);
                     if (response['result'] == "Success")
                     {
-                        window.location.href = '/calendar/?just_added_event=True';
+                        window.location.href = '/calendar;
                     }
                     $("#add_event_form").find(':input').each(function(){
                        $(this).removeAttr('disabled');

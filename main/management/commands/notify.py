@@ -9,17 +9,17 @@ class Command(BaseCommand):
     help = 'Notifies all users'
 
     def handle(self, *args, **options):
-        Command.notify_if_needed()
-        self.stdout.write("Successfully notified all users")
+        Command.notify_if_needed(self)
+        self.stdout.write("Complete!")
 
-    @staticmethod
-    def notify_if_needed():
+    def notify_if_needed(self):
         events = Event.objects.all()
         for event in events:
             if not event.notified_already:
                 should_notify = Command.check_notify(event)
                 if should_notify:
                     Command.notify_user(event)
+                    self.stdout.write("Successfully notified " + event.user.username + " user")
 
     @staticmethod
     def check_notify(event):
