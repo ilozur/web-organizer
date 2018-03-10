@@ -11,7 +11,7 @@ import json
 def index(request):
     if request.method == "GET":
         date = datetime.now()
-        return HttpResponseRedirect('/calendar/' + str(date.year) + '_' + str(date.month) + '_' + str(date.day))
+        return HttpResponseRedirect('/calendar/' + str(date.year) + '_' + str(date.month))
     else:
         return HttpResponseRedirect('/calendar/')
 
@@ -19,14 +19,16 @@ def index(request):
 @login_required
 def index_date(request, date):
     if request.method == "GET":
+        datetime_now = datetime.now()
         context = dict(title="Calendar index page", header="Calendar index page header")
         try:
             tmp = date.split('_')
             tmp = [int(num) for num in tmp]
-            if len(tmp) == 3:
-                now_date = datetime(year=tmp[0], month=tmp[1], day=tmp[2])
-            elif len(tmp) == 2:
-                now_date = datetime(year=tmp[0], month=tmp[1], day=1)
+            if len(tmp) == 2:
+                if datetime_now.month == tmp[1]:
+                    now_date = datetime(year=tmp[0], month=tmp[1], day=datetime_now.day)
+                else:
+                    now_date = datetime(year=tmp[0], month=tmp[1], day=1)
             else:
                 return HttpResponseRedirect('/calendar/')
         except ValueError:
@@ -34,7 +36,6 @@ def index_date(request, date):
         context['weeks'] = get_weeks(now_date)
         context['now_month'] = get_month_name(now_date.month)
         context['now_year'] = now_date.year
-        datetime_now = datetime.now()
         if now_date.month == 1:
             back_link = str(now_date.year - 1) + '_12'
             if (12 == datetime_now.month) and (now_date.year - 1 == datetime_now.year):
@@ -98,7 +99,8 @@ def get_weeks(date_time):
     date -= timedelta(days=date.weekday())
     if (date.day > 1) and (date.month == date_time.month):
         date -= timedelta(days=7 * (date.day // 7))
-        date -= timedelta(days=7)
+        if date.month == date_time.month:
+            date -= timedelta(days=7)
     weeks = []
     for i in range(1, 5):
         tmp = dict()

@@ -68,7 +68,7 @@
             &nbsp;&nbsp;
             <a href='/calendar'><button type="button" class="btn btn-danger">Сегодня</button></a>
           </div>
-          <table class="table table-danger table-mouth">
+          <table class="table table-danger table-mouth" id="month_calendar">
             <thead>
               <tr class="bg-danger">
                 <th></th>
@@ -81,7 +81,7 @@
                 <th>Воскресенье</th>
               </tr>
             </thead>
-            <tbody id="month_calendar">
+            <tbody>
                 {% for week in weeks %}
                     <tr>
                         <th class="bg-danger">{{ week.week_num }}</th>
@@ -661,4 +661,39 @@
       </div>
     </article>
     </section>
+    <script>
+        var now_date = '{{ now_date }}';
+
+        function next_month()
+        {
+            $.ajax({
+                type: "POST",
+                url: '/calendar/' + now_date,
+                data: form_data,
+                success: function(response)
+                {
+                    alert(response['result']);
+                    if (response['result'] == "Success")
+                    {
+                        window.location.href = '/calendar;
+                    }
+                    $("#add_event_form").find(':input').each(function(){
+                       $(this).removeAttr('disabled');
+                    });
+                    $('#add_event_btn').removeAttr('disabled');
+                }
+            });
+            $("#month_calendar").find('tbody').each(
+                function()
+                {
+                    $(this).remove();
+                }
+            );
+
+        };
+
+        function back_month()
+        {
+        };
+    </script>
 {% endblock %}
