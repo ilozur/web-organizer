@@ -39,24 +39,17 @@ class Notes ( models.Model ):
 
     @staticmethod
     def notes_sort_by_date ( datetime, user ):  # note: datetime = {1: date_one NOT NULL, 2: date_two}
-        notelist = []
+        notelist = Notes.objects.filter(user=user)
+        ret_list = []
         if len ( datetime ) == 1:
-            date = datetime[0].date ()
-            for note in Notes.objects.filter ( user=user ):
-                if note.added_time == date:
-                    notelist.append ( note )
+            date = datetime[0].date()
+            return notelist.filter(pub_date=date)
         else:
-            for note in Notes.objects.filter ( user=user ):
-                if ((note.added_time.year <= datetime[1].year) and
-                        (note.added_time.year >= datetime[0].year) and
-                        (note.added_time.month <= datetime[1].month) and
-                        (note.added_time.month >= datetime[0].month) and
-                        (note.added_time.day <= datetime[1].day) and
-                        (note.added_time.day >= datetime[0].day)):
-                    notelist.append ( note )
-                    qsort ( notelist )
-
-        return notelist
+            for i in reversed(range(datetime[0].year, datetime[1].year+1)):
+                for j in reversed(range(datetime[0].month, datetime[1].month+1)):
+                    for k in reversed(range(datetime[0].day, datetime[1].day+1)):
+                        ret_list.append(notelist.filter(pub_date=[i,j,k]))
+            return ret_list
 
 
 # sorting algorithm section START
