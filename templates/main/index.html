@@ -16,9 +16,6 @@
             }
         </script>
     {% else %}
-        {% if just_signed_up %}
-            <h2>You have successfully signed up! Check your email to confirm it!</h2>
-        {% endif %}
         <div class="text-center">
             <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
                 <header class="masthead mb-auto">
@@ -217,7 +214,7 @@
                             alert(response['result']);
                             if (response['result'] == "success")
                             {
-                                window.location.href = '/?just_signed_up=True';
+                                window.location.href = '/';
                             }
                             $("#sign_up_form").find(':input').each(function(){
                                 $(this).removeAttr('disabled');
