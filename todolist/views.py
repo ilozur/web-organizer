@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+import json
 import os
 
 from todolist import models
@@ -10,6 +11,7 @@ from todolist.forms import AddTodoForm
 from todolist.models import Todos
 from django import forms
 import datetime
+
 
 @login_required
 def index(request):
@@ -28,30 +30,31 @@ def index(request):
 
 @login_required
 def add_todo(request):
-        context = {}
-        context['user'] = request.user
-        if request.POST:
-            form = AddTodoForm(request.POST)
-            if form.is_valid():
-                user = request.user
-                date, time = time_and_date_for_todo()
-                p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
-                          added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
-                p.save()
-                context['id'] = p.id
-            else:
-                context['errors'] = form.errors
-            return render(request, 'todolist/add.html', context)
+    context = {}
+    context['user'] = request.user
+    if request.POST:
+        form = AddTodoForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            date, time = time_and_date_for_todo()
+            p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
+                      added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
+            p.save()
+            context['id'] = p.id
         else:
-            form = AddTodoForm()
-            context['add_form'] = form
-            return render(request, 'todolist/add.html', context)
+            context['errors'] = form.errors
+        return render(request, 'todolist/add.html', context)
+    else:
+        form = AddTodoForm()
+        context['add_form'] = form
+        return render(request, 'todolist/add.html', context)
 
 
 def time_and_date_for_todo():
     addtime = (datetime.datetime.now()).strftime("%H:%M:%S %Y-%m-%d")
     dater, timer = addtime.split(' ')
     return timer, dater
+
 
 @login_required
 def completed_todos(request):
@@ -64,6 +67,7 @@ def completed_todos(request):
     }
     return render(request, "todolist/done_todos.html", {'items': items}, context)
 
+
 @login_required
 def show_todo(request, id):
     context = {}
@@ -75,8 +79,9 @@ def show_todo(request, id):
         context['a'] = todo_now
         return render(request, 'show.html', context)
 
+
 @login_required
-def save_todo(request,id):
+def save_todo(request, id):
     context = {}
     context['user'] = request.user
     saving_todo = Todos.objects.get(id=id).first()
@@ -87,6 +92,7 @@ def save_todo(request,id):
     context['title'] = saving_todo.title
     return render(request, 'saving.html', context)
 
+
 def sort_ajax(request):
     response_data = {}
     if request.method == "POST":
@@ -96,7 +102,7 @@ def sort_ajax(request):
             if sort_type in sorting_types:
                 todo_list = list()
                 for i in Todos.get_todos(sort_type, request.user):
-                    todo_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+                    todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
                 response_data = {
                     'todo_list': todo_list
                 }

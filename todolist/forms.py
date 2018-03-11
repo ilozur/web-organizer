@@ -1,5 +1,5 @@
 from django import forms
-
+from ckeditor.widgets import CKEditorWidget
 
 class AddTodoForm(forms.Form):
     title = forms.CharField(label='Enter title', max_length=200, error_messages={'required': "Enter todo's title"})
@@ -7,3 +7,4 @@ class AddTodoForm(forms.Form):
                            error_messages={'required': "Enter todo's description"})
     priority = forms.CharField(label='Enter priority', max_length=200)
     deadline = forms.CharField(max_length=128, label='Enter deadline')  # планируется интеграция с календарем
+
