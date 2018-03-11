@@ -1,6 +1,236 @@
 {% extends "main/base.html" %}
+{% block css_links %}
+    {% load staticfiles %}
+    {% load bootstrap %}
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/general.css" %}'>
+	<link rel="stylesheet" href='{% static "css/cover.css" %}'>
+{% endblock %}
 
 {% block content %}
-    <h1>{{ header }}</h1>
-    <p>Welcome to the index page</p>
+    {% if user.is_authenticated %}
+        <script type="text/javascript">
+            function reloadPage()
+            {
+                window.location.reload()
+            }
+        </script>
+    {% else %}
+        {% if just_signed_up %}
+            <h2>You have successfully signed up! Check your email to confirm it!</h2>
+        {% endif %}
+        <div class="text-center">
+            <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+                <header class="masthead mb-auto">
+                    <div class="inner">
+                        <h1 class="masthead-brand">Morris Butler</h1>
+                        <nav class="nav nav-masthead justify-content-center" id="header">
+                            <a class="nav-link" href="#notes">Заметки</a>
+                            <a class="nav-link" href="#calendar">Календарь</a>
+                            <a class="nav-link" href="#todo">Напоминания</a>
+                            <a class="nav-link" href="#login">Войти</a>
+                            <a class="nav-link" href="#about">О нас</a>
+                        </nav>
+                    </div>
+                </header>
+                <main role="main" class="inner cover">
+                    <section class="hello">
+                        <h2 class="cover-heading">Моррис на связи!</h2>
+                        <p class="lead">Вас приветствует Моррис Батлер -- Передовой Web-органайзер, способный на многое и не способный на ничего</p>
+                        <p class="lead">
+                            <a href="#notes" class="btn btn-lg btn-secondary">Познакомиться поближе</a>
+                        </p>
+                    </section>
+                    <section id="notes">
+                        <h2 class="cover-heading">Заметки</h2>
+                        <p class="lead">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. </p>
+                        <p class="lead">
+                        </p>
+                    </section>
+                    <section id="calendar">
+                        <h2 class="cover-heading">Календарь</h2>
+                        <p class="lead">Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. </p>
+                        <p class="lead">
+                        </p>
+                    </section>
+                    <section id="todo">
+                        <h2 class="cover-heading">Напоминания</h2>
+                        <p class="lead">Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. </p>
+                        <p class="lead">
+                        </p>
+                    </section>
+                    <section id="login">
+                        <h2 class="cover-heading">Добро пожаловать</h2>
+                        <p class="lead">
+                            <form id="sign_up_form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.username|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.email|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.name|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.surname|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.password1|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.password2|bootstrap }}
+                                    </div>
+                                </div>
+                                <div class="form-check" style="margin-bottom: 20px;">
+                                    <input type="checkbox" class="form-check-input">
+                                    <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
+                                </div>
+                                <a class="btn btn-success btn-block" id="sign_up_btn" onclick="sign_up_ajax()">Зарегестрироваться</a>
+                            </form>
+                        </p>
+                        <p class="lead" style="margin-top: 50px;">
+                            <h3 class="cover-heading">Уже с нами?</h3>
+                            <form id="sign_in_form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ sign_in_form.username|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_in_form.password|bootstrap }}
+                                    </div>
+                                </div>
+                                <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
+                            </form>
+                        </p>
+                    </section>
+                    <section id="about">
+                        <h2 class="cover-heading">О нас</h2>
+                        <p class="lead">Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa. Sed cursus turpis vitae tortor. Donec posuere vulputate arcu. Phasellus accumsan cursus velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Phasellus consectetuer vestibulum elit. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Donec elit libero, sodales nec, volutpat a, suscipit non, turpis. Nullam sagittis. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. </p>
+                        <p class="lead">
+                        </p>
+                    </section>
+                </main>
+                <footer class="mastfoot mt-auto">
+                    <div class="inner">
+                        <p>MPS51 Team</p>
+                    </div>
+                </footer>
+                <a href="#hello" class="scrollup">Наверх</a>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $(window).scroll(function(){
+                        if ($(this).scrollTop() > 100) {
+                            $('.scrollup').fadeIn();
+                        } else {
+                            $('.scrollup').fadeOut();
+                        }
+                    });
+                    $('.scrollup').click(function(){
+                        $("html, body").animate({ scrollTop: 0 }, 600);
+                        return false;
+                    });
+                });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                   $('a[href^="#"]').click(function () {
+                     elementClick = $(this).attr("href");
+                     destination = $(elementClick).offset().top;
+                     if($.browser.safari){
+                       $('body').animate( { scrollTop: destination }, 1200 );
+                     }else{
+                       $('html').animate( { scrollTop: destination }, 1200 );
+                     }
+                     return false;
+                   });
+                 });
+            </script>
+            <script>
+                $(document).ready(function() {
+                    $(window).on('scroll', function() {
+                        var scroll = $(window).scrollTop();
+                        if (scroll >= 50) {
+                            $('#header').addClass('fixed');
+                        } else {
+                            $('#header').removeClass('fixed');
+                        }
+                    });
+                });
+            </script>
+            <script>
+                function sign_in_ajax()
+                {
+                    form_data = $('#sign_in_form').serialize();
+                    $("#sign_in_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_in_btn').attr('disabled', 'disabled');
+                    $("#sign_up_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_up_btn').attr('disabled', 'disabled');
+                    $.ajax({
+                        type: "POST",
+                        url: '/sign_in/',
+                        data: form_data,
+                        success: function(response)
+                        {
+                            alert(response['result']);
+                            if (response['result'] == "success")
+                            {
+                                window.location.href = '/';
+                            }
+                            $("#sign_in_form").find(':input').each(function(){
+                               $(this).removeAttr('disabled');
+                            });
+                            $('#sign_in_btn').removeAttr('disabled');
+                            $("#sign_up_form").find(':input').each(function(){
+                                $(this).removeAttr('disabled');
+                            });
+                            $('#sign_up_btn').removeAttr('disabled');
+                        }
+                    });
+                };
+
+                function sign_up_ajax()
+                {
+                    form_data = $('#sign_up_form').serialize();
+                    $("#sign_up_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_up_btn').attr('disabled', 'disabled');
+                    $("#sign_in_form").find(':input').each(function(){
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    $('#sign_in_btn').attr('disabled', 'disabled');
+                    $.ajax({
+                        type: "POST",
+                        url: '/sign_up/',
+                        data: form_data,
+                        success: function(response)
+                        {
+                            alert(response['result']);
+                            if (response['result'] == "success")
+                            {
+                                window.location.href = '/?just_signed_up=True';
+                            }
+                            $("#sign_up_form").find(':input').each(function(){
+                                $(this).removeAttr('disabled');
+                            });
+                            $('#sign_up_btn').removeAttr('disabled');
+                            $("#sign_in_form").find(':input').each(function(){
+                               $(this).removeAttr('disabled');
+                            });
+                            $('#sign_in_btn').removeAttr('disabled');
+                        }
+                    });
+                };
+            </script>
+        </div>
+    {% endif %}
 {% endblock %}

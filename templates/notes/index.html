@@ -1,6 +1,409 @@
 {% extends "main/base.html" %}
 
+{% block css_links %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/general.css" %}'>
+	<link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <link rel="stylesheet" href='{% static "css/notes.css" %}'>
+{% endblock %}
+
 {% block content %}
-    <h1>{{ header }}</h1>
-    <p>Welcome to the notes index page</p>
+    <article class="notes">
+			<section class="mast">
+				<h1>Заметки</h1>
+			</section>
+			<section class="content">
+				<section class="navigation">
+					<nav class="navbar">
+						<div class="btn-group btn-group-lg">
+							<button type="button" class="btn btn-warning" onclick="show_cards();">
+								<picture>
+									<img src="/static/icons/card_icon.png" class="icon">
+								</picture>
+							</button>
+							<button type="button" class="btn btn-warning" onclick="show_list();">
+								<picture>
+									<img src="/static/icons/list_icon.png" class="icon">
+								</picture>
+							</button>
+						</div>
+						<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New">+</button>
+						<div class="btn-group btn-group-lg">
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('date_up')">Сначала новые</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('date_down')">Сначала старые</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('title_up')">А..Я</button>
+							<button type="button" class="btn btn-warning" onclick="sort_ajax('title_down')">Я..А</button>
+						</div>
+						<div class="alert alert-warning">
+							<small>Всего заметок: 42</small> <br/>
+							<small>Текстовых: 24</small> <br/>
+							<small>Голосовых: 18</small> <br/>
+						</div>
+						<form id="search_form" onsubmit="return false;">
+							{% load bootstrap %}
+							{% csrf_token %}
+							{{ search_form.result | bootstrap }}
+						</form>
+						<input id="search_btn" type="button" value="Search" class="btn btn-warning" onclick="search_ajax();">
+					</nav>
+				</section>
+				<section class="list-view">
+					<div class="list-group" id="list_id">
+						{% for item in notes_data %}
+							<div id="note_{{item.2}}" onclick="open_note('{{item.2}}');">
+								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open">
+									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
+									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
+								</a>
+								<div id="note_data_{{ item.2}}" hidden>{{ item.3.0 | safe }}</div>
+							</div>
+
+						{% endfor %}
+					</div>
+				</section>
+				<section class="card-view" hidden>
+					<div class="row" id="cards_id">
+						{% for item in notes_data %}
+							<div class="col-md-4" data-toggle="modal" data-target="#Open-{{item.2}}">
+							<div class="card">
+								<div class="card-body">
+									<h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
+									<hr/>
+									<p>
+										...
+									</p>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</section>
+				<nav class="navbar">
+					<div class="btn-group btn-group-lg">
+						<a href="#"><button type="button" class="btn btn-warning">&laquo;</button></a>
+						<a href="#"><button type="button" class="btn btn-warning disabled">1</button></a>
+						<a href="#"><button type="button" class="btn btn-warning">2</button></a>
+						<a href="#"><button type="button" class="btn btn-warning">3</button></a>
+						<a href="#"><button type="button" class="btn btn-warning">&raquo;</button></a>
+					</div>
+				</nav>
+			</section>
+		</article>
+		<article class="modals">
+			<div class="modal fade" id="New">
+				<div class="modal-dialog modal-lg modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2>Создание заметки</h2>
+						</div>
+						<div class="modal-body">
+							<form id="add_form">
+								{% csrf_token %}
+								{{ add_form.media }}
+								<h3>Название</h3>
+								{{ add_form.title }}
+								<h3>Текст</h3>
+								{{ add_form.data}}
+								<h3> Изображение </h3>
+								<div class="form-group btn btn-warning">
+									<input type="file" class="form-control-file">
+								</div>
+							</form>
+							<h3>Записать аудио</h3>
+							<button type="button" class="btn btn-warning btn-lg btn-block">
+								<picture>
+									<img src="/static/icons/micro_icon.png">
+								</picture>
+							</button>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="button" class="btn btn-warning" data-dismiss="modal" id="add_btn" onclick="add_ajax()">Создать</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="Open">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div id="note_num" hidden></div>
+						<div class="modal-header">
+							<h2 id="open_title"></h2>
+						</div>
+						<div class="modal-body">
+							<p id="open_data">
+							</p>
+							<small id="open_date">01.01</small> <br/>
+							<small class="text-muted">4.03.2018 (редакт.)</small>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" id="delete_btn" >Удалить</button>
+							<button type="button" id="open_btn" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
+							<button type="button" class="btn btn-warning">Прослушать</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="Open-Image">
+				<div class="modal-dialog modal modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2>Fake Plastic Trees</h2>
+						</div>
+						<div class="modal-body">
+							<p>She looks like the real thing <br/>
+								She tastes like the real thing <br/>
+								My fake plastic love <br/>
+							</p>
+							<picture>
+								<img src="/static/img/for_notes.jpg" class="user-image">
+							</picture>
+							<br/>
+							<small>27.02.2018</small> <br/>
+							<small class="text-muted">4.03.2018 (редакт.)</small>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+							<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
+							<button type="button" class="btn btn-warning">Прослушать</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="Open-Sound">
+				<div class="modal-dialog modal modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2>Lucky</h2>
+						</div>
+						<div class="modal-body">
+							<button type="button" class="btn btn-warning btn-lg btn-block">
+								<picture>
+									<img src="/static/icons/sound_icon.png">
+								</picture>
+							</button>
+							<small>22.02.2018</small> <br/>
+							<small class="text-muted">4.03.2018 (редакт.)</small>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+							<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="Edit">
+				<div class="modal-dialog modal-lg modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2>Редактирование заметки</h2>
+						</div>
+						<div class="modal-body">
+							<form id="save_form">
+								{% csrf_token %}
+								{{ show_form.meia }}
+								<h3>Изменить название</h3>
+								{{ show_form.title_show }}
+								<h3>Изменить текст</h3>
+								{{ show_form.data_show }}
+							</form>
+							<h3>Переписать аудио</h3>
+							<button type="button" class="btn btn-warning btn-lg btn-block">
+								<picture>
+									<img src="/static/icons/micro_icon.png">
+								</picture>
+							</button>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button class="btn btn-warning" data-dismiss="modal" id="save_btn" onclick="save_ajax();">Сохранить</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
+    <script>
+    	function open_note(id){
+    		str = $('#note_data_' + id).html();
+			$('#open_title').html($('#note_title_' + id).html());
+			$('#open_data').html(str);
+			$('#open_date').html($('#note_date_' + id).html())
+			$('#open_btn').attr('onClick', 'set_cke_data();');
+			$('#delete_btn').attr('onClick', 'delete_ajax(' + id + ');');
+			$('#note_num').html(id);
+    	};
+
+        function show_cards(){
+    		$('.list-view').hide();
+    		$('.card-view').hide();
+    		$('.card-view').removeAttr('hidden');
+    		$('.card-view').show('slow');
+    	};
+
+    	function show_list(){
+    		$('.card-view').hide();
+    		$('.list-view').hide();
+    		$('.list-view').removeAttr('hidden');
+    		$('.list-view').slideDown('slow');
+    	};
+
+    	function set_cke_data(){
+    		CKEDITOR.instances.id_data_show.setData($('#open_data').html());
+    		$('#id_title_show').val($('#open_title').html());
+    	};
+	</script>
+	<script>
+		function search_ajax()
+            {
+                form_data = $('#search_form').serialize();
+                $("#search_form").find(':input').each(function(){
+                    $(this).attr('disabled', 'disabled');
+                });
+                $('#sign_up_btn').attr('disabled', 'disabled');
+                $.ajax({
+                    type: "POST",
+                    url: '/notes/search',
+                    data: form_data,
+                    success: function(response)
+                    {
+                        if (response['result'] == "Success")
+                        {
+                        	$("#list_id").html('');
+                        	for (var i = 0; i < response['notes_list'].length; i++) {
+								$("#list_id").append('<div onclick="open_note('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
+								+ '</h7><div class="date"> <small id="note_date_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
+								+ '</small></div></a><div id="note_data_' + response['notes_list'][i][2]
+								+ '" hidden>' + response['notes_list'][i][3][0] + '</div></div>');
+							}
+                        	$("#search_form").find(':input').each(function(){
+                            	$(this).removeAttr('disabled');
+                        	});
+                        	$('#sign_up_btn').removeAttr('disabled');
+                        }
+                    }
+                });
+            };
+	</script>
+	<script>
+		function save_ajax()
+		{
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+			var data = CKEDITOR.instances.id_data_show.getData();
+			var id = $('#note_num').html();
+			$("#save_form").find(':input').each(function(){
+				$(this).attr('disabled', 'disabled');
+			});
+			$('#save_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/notes/save',
+				data: {"id": id, "title": $('#id_title_show').val(), "data": data},
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						alert('OK, Changes were saved');
+						$('#note_title_' + id).html($('#id_title_show').val());
+						$('#note_data_' + id).html(data);
+						CKEDITOR.instances.id_data_show.setData(data);
+						open_note(id);
+					}
+					$("#save_form").find(':input').each(function(){
+						$(this).removeAttr('disabled');
+					});
+					$('#save_btn').removeAttr('disabled');
+				}
+			});
+		};
+    </script>
+	<script>
+		function add_ajax()
+		{
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+			var data = CKEDITOR.instances.id_data.getData();
+			$('#add_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/notes/add',
+				data: {"title": $('#id_title').val(), "data": data},
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						alert('OK, note was added');
+						$("#list_id").append('<div onclick="open_note('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+							+ response['id'] + '">' + $('#id_title').val()
+							+ '</h7><div class="date"> <small id="note_date_'
+							+ response['id'] + '">' + '03.11.18'
+							+ '</small></div></a><div id="note_data_' + response['id']
+							+ '" hidden>' + data + '</div></div>');
+					}
+					open_note(response['id']);
+					$('#add_btn').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
+
+    <script>
+        function sort_ajax(type){
+                result = "";
+                $.ajax({
+                    type: "POST",
+                    url: '/notes/sort',
+                    data: {"data": type},
+                    success: function(response)
+                    {
+                        if (response['result'] == "Success")
+                        {
+                            $("#list_id").html('');
+                        	for (var i = 0; i < response['notes_list'].length; i++) {
+								$("#list_id").append('<div onclick="open_note('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
+								+ '</h7><div class="date"> <small id="note_date_'
+								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
+								+ '</small></div></a><div id="note_data_' + response['notes_list'][i][2]
+								+ '" hidden>' + response['notes_list'][i][3][0] + '</div></div>');
+							}
+                        	$("#search_form").find(':input').each(function(){
+                            	$(this).removeAttr('disabled');
+                        	});
+                        	$('#sign_up_btn').removeAttr('disabled');
+                        }
+                    }
+                });
+            };
+    </script>
+	<script>
+		function delete_ajax(id)
+		{
+			$('#delete_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/notes/delete',
+				data: {"id": id},
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						alert('OK, note was deleted');
+						$('#note_' + id).slideUp("Slow");
+					}
+					$('#delete_btn').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
+
 {% endblock %}
