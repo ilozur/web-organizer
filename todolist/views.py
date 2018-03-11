@@ -25,7 +25,7 @@ def index(request):
     todos = todos.filter(status='in progress')
     for i in todos:
         todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
-    context['todo_data'] = todo_list
+    context['items'] = todo_list
     return render(request, "todolist/index.html", context)
 
 

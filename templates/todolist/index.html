@@ -5,16 +5,15 @@
     <p>Welcome to the todolist index page</p>
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
     <hr>
-    <aside>
         <input type="button" onclick="var a = new sort_ajax('AtoZ')" value="From A to Z">
         <input type="button" onclick="var a = new sort_ajax('ZtoA')" value="From Z to A"><br>
         <input type="button" onclick="var a = new sort_ajax('new')" value="Newest first">
         <input type="button" onclick="var a = new sort_ajax('old')" value="Oldest first">
-    </aside>
     <hr>
     <div id = "todo_list">
     {% for item in items %}
         <li><a href='/todo/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
+        <input type="button" onclick="var a = new mark_todo_as_completed_ajax" value="Done">
     {% endfor %}
         </div>
 
