@@ -8,3 +8,6 @@ class AddTodoForm(forms.Form):
     priority = forms.CharField(label='Enter priority', max_length=200)
     deadline = forms.CharField(max_length=128, label='Enter deadline')  # планируется интеграция с календарем
 
+class ShowTodoForm(forms.Form):
+    text = forms.CharField(widget=CKEditorWidget())
+
