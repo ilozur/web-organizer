@@ -53,31 +53,22 @@
 				{% endif %}
 			</header>
 		{% endblock %}
-	</div>
 
-	{% block content %}{% endblock %}
+		{% block content %} {% endblock %}
 
-	{% block footer %}
-		<!--
-		<footer class="base-footer">
-
-			{% if user.is_authenticated %}
-				<div class="container">
-					<span class="text-muted"> With <font style="color: #ff2400;">&hearts;</font> MPS51 Team</span>
-				</div>
-			{% endif %}
-
-		</footer>
-		-->
-	{% endblock %}
-
-	<!-- Optional JavaScript -->
-	<!-- jQuery first, then Popper.js, then Bootstrap JS, then ajax -->
-	<script src="/static/js/jquery-3.2.1.slim.min.js"></script>
-	<script src="/static/js/popper.min.js"></script>
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/holder.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-</body>
+		{% block footer %}
+            {% if user.is_authenticated %}
+                <footer class="base-footer">
+                    <div class="container">
+                        <span class="text-muted"> With <font style="color: #ff2400;">&hearts;</font> MPS51 Team</span>
+                    </div>
+                </footer>
+            {% endif %}
+		{% endblock %}
+		<script src='{% static "js/jquery-3.2.1.slim.min.js" %}'></script>
+		<script src='{% static "js/popper.min.js" %}'></script>
+		<script src='{% static "js/bootstrap.min.js" %}'></script>
+		<script src='{% static "js/holder.min.js" %}'></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	</body>
 </html>
-
