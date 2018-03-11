@@ -87,7 +87,7 @@ def sign_up_view(request):
                                                "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
                                                "'>Go to this link to activate your account</a>")
                             send_mail(mail)
-                            result = "Success"
+                            result = "success"
                         else:
                             result = "Passwords do not match"
                     else:
@@ -154,6 +154,7 @@ def sign_in_ajax(request):
     if request.method == "POST":
         if not request.user.is_authenticated:
             form = SignInForm(request.POST)
+            print(request.POST)
             if form.is_valid():
                 name = form.data['username'].lower()
                 password = form.data['password']
@@ -171,7 +172,7 @@ def sign_in_ajax(request):
                             result = "Wrong password"
                         else:
                             login(request, loginned_user)
-                            result = "Success"
+                            result = "success"
                     else:
                         result = "User was not activated with email"
             else:

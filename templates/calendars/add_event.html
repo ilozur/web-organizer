@@ -23,9 +23,9 @@
                 success: function(response)
                 {
                     alert(response['result']);
-                    if (response['result'] == "Success")
+                    if (response['result'] == "success")
                     {
-                        window.location.href = '/calendar;
+                        window.location.href = '/calendar';
                     }
                     $("#add_event_form").find(':input').each(function(){
                        $(this).removeAttr('disabled');

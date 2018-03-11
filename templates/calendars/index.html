@@ -62,11 +62,11 @@
         </section>
         <section class="section-mouth">
           <div class="btn-group btn-group-sm btn-mouth">
-            <a href='/calendar/{{ back_link }}'><button type="button" class="btn btn-danger">&laquo;</button></a>
-            <h2>&nbsp;&nbsp;{{ now_month }} {{ now_year }}&nbsp;&nbsp;</h2>
-            <a href='/calendar/{{ next_link }}'><button type="button" class="btn btn-danger">&raquo;</button></a>
+              <a><button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button></a>
+              <h2>&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
+              <a><button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button></a>
             &nbsp;&nbsp;
-            <a href='/calendar'><button type="button" class="btn btn-danger">Сегодня</button></a>
+            <a><button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button></a>
           </div>
           <table class="table table-danger table-mouth" id="month_calendar">
             <thead>
@@ -662,38 +662,210 @@
     </article>
     </section>
     <script>
-        var now_date = '{{ now_date }}';
+        var now_year = {{ now_year }};
+        var now_month = {{ now_month_num }};
 
         function next_month()
         {
-            $.ajax({
-                type: "POST",
-                url: '/calendar/' + now_date,
-                data: form_data,
-                success: function(response)
-                {
-                    alert(response['result']);
-                    if (response['result'] == "Success")
-                    {
-                        window.location.href = '/calendar;
+            now_month += 1;
+            if (now_month == 13)
+            {
+                now_month = 1;
+                now_year += 1;
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                    return cookieValue;
                     }
-                    $("#add_event_form").find(':input').each(function(){
-                       $(this).removeAttr('disabled');
-                    });
-                    $('#add_event_btn').removeAttr('disabled');
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
                 }
             });
-            $("#month_calendar").find('tbody').each(
-                function()
+            $.ajax({
+                type: "POST",
+                url: '/calendar/',
+                data: {'now_date': String(now_year) + '_' + String(now_month)},
+                success: function(response)
                 {
-                    $(this).remove();
+                    if (response['result'] == "success")
+                    {
+                        $("#month_holder").text(response['month_name']);
+                        $("#year_holder").text(response['now_year']);
+                        $("#month_calendar").find('tbody').each(
+                            function()
+                            {
+                                var weeks = response['weeks'];
+                                result_html = '';
+                                weeks.forEach(function(week, i, weeks)
+                                {
+                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                                    var week_days = week['week_days'];
+                                    week_days.forEach(function(day, i, week_days)
+                                    {
+                                        if (day['class'])
+                                        {
+                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                        else
+                                        {
+                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                    });
+                                    result_html += '</tr>\n';
+                                });
+                                $(this).html(result_html);
+                            }
+                        );
+                    }
                 }
-            );
+            });
+        };
 
+        function go_to_now_month()
+        {
+            now_month = {{ now_month_num }};
+            now_year = {{ now_year }};
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                    return cookieValue;
+                    }
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/calendar/',
+                data: {'now_date': String(now_year) + '_' + String(now_month)},
+                success: function(response)
+                {
+                    if (response['result'] == "success")
+                    {
+                        $("#month_holder").text(response['month_name']);
+                        $("#year_holder").text(response['now_year']);
+                        $("#month_calendar").find('tbody').each(
+                            function()
+                            {
+                                var weeks = response['weeks'];
+                                result_html = '';
+                                weeks.forEach(function(week, i, weeks)
+                                {
+                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                                    var week_days = week['week_days'];
+                                    week_days.forEach(function(day, i, week_days)
+                                    {
+                                        if (day['class'])
+                                        {
+                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                        else
+                                        {
+                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                    });
+                                    result_html += '</tr>\n';
+                                });
+                                $(this).html(result_html);
+                            }
+                        );
+                    }
+                }
+            });
         };
 
         function back_month()
         {
+            now_month -= 1;
+            if (now_month == 0)
+            {
+                now_month = 12;
+                now_year -= 1;
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                    return cookieValue;
+                    }
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/calendar/',
+                data: {'now_date': String(now_year) + '_' + String(now_month)},
+                success: function(response)
+                {
+                    if (response['result'] == "success")
+                    {
+                        $("#month_holder").text(response['month_name']);
+                        $("#year_holder").text(response['now_year']);
+                        $("#month_calendar").find('tbody').each(
+                            function()
+                            {
+                                var weeks = response['weeks'];
+                                result_html = '';
+                                weeks.forEach(function(week, i, weeks)
+                                {
+                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                                    var week_days = week['week_days'];
+                                    week_days.forEach(function(day, i, week_days)
+                                    {
+                                        if (day['class'])
+                                        {
+                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                        else
+                                        {
+                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                    });
+                                    result_html += '</tr>\n';
+                                });
+                                $(this).html(result_html);
+                            }
+                        );
+                    }
+                }
+            });
         };
     </script>
 {% endblock %}
