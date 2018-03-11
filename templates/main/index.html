@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 {% block css_links %}
     {% load staticfiles %}
+    {% load bootstrap %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/cover.css" %}'>
@@ -59,7 +60,6 @@
                         </p>
                     </section>
                     <section id="login">
-                        {% load bootstrap %}
                         <h2 class="cover-heading">Добро пожаловать</h2>
                         <p class="lead">
                             <form id="sign_up_form">

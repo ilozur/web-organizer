@@ -17,6 +17,8 @@ def index(request):
         context['now_year'] = date.year
         context['now_month_num'] = date.month
         context['now_date'] = str(date.year) + "_" + str(date.month)
+        add_event_form = AddingEventForm()
+        context['add_event_form'] = add_event_form
         return render(request, "calendars/index.html", context)
     else:
         response_data = {}
