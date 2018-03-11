@@ -17,11 +17,11 @@ class Notes(models.Model):
         sorted_list = []
         if len(name_range) == 1:
             for i in notes:
-                if i.name[0] == name_range.lower():
+                if i.name[0].lower() == name_range[0].lower():
                     sorted_list.append(i)
         else:
             for i in notes:
-                if name_range[0] <= i.name[0] <= name_range[1]:
+                if name_range[0].lower() <= i.name[0].lower() <= name_range[1].lower():
                     sorted_list.append(i)
         return sorted_list
 
