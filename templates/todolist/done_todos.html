@@ -6,10 +6,10 @@
     <a href="/todo"><input type="submit" value="Todos"></a>
     <hr>
     <aside>
-        <input type="submit" name="AtoZ" value="From A to Z">
-        <input type="submit" name="ZtoA" value="From Z to A">
-        <input type="submit" name="new" value="Last created">
-        <input type="submit" name="old" value="Oldest created">
+        <input type="button" value="From A to Z" onclick="sorting('AtoZ')">
+        <input type="button" value="From Z to A" onclick="sorting('ZtoA')">
+        <input type="button" value="Last created" onclick="sorting('new')">
+        <input type="button" value="Oldest created" onclick="sorting('old')">
     </aside>
     <hr>
     <div id="todo_list">
@@ -37,7 +37,7 @@
     </script>
 
     <script>
-        function sort_ajax(type){
+        function sorting(type){
             $.ajax({
                 type: "POST",
                 url: '/todo/sort',
@@ -46,7 +46,11 @@
                     if (response['result'] == "Success"){
                         $("#todo_list").html('');
                         for (var i = 0; i < response['todo_list'].length; i++){
-                            $("#todo_list").append("<li><a href='/todo/show/" + response['todo_list'][i][2] + "'>" + response['todo_list'][i][0] + "</a></li> - added at " + response['todo_list'][i][1])
+                            $("#todo_list").append("<li><a href='/todo/show/"
+                            + response['todo_list'][i][2] + "'>"
+                            + response['todo_list'][i][0] + "</a> - added at "
+                            + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
+                            + response['todo_list'][i][2] + ',' + ' done' + ')" value="Done"><hr>')
                         }
                     }
                 }

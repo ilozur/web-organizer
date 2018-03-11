@@ -5,9 +5,6 @@
     <p>Welcome to the todolist index page</p>
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
     <a href="/todo/done"><input type="submit" value="Done"></a>
-    <div id="status_btn">
-        <input type="button" value="Done (AJAX)" onclick="view('done')">
-    </div>
     <hr>
     <aside>
         <input type="button" value="From A to Z" onclick="sorting('AtoZ')">
@@ -26,30 +23,6 @@
             <hr>
         {% endfor %}
     </div>
-
-    <script>
-        function view(status){
-            $.ajax({
-                type: "POST",
-                url: '/todo/view',
-                data: {'status': status},
-                success: function(response){
-                    $("#todo_list").html('');
-                    for (var i = 0; i < response['todo_list'].length; i++){
-                        $("#todo_list").append("<li><a href='/todo/show/"
-                        + response['todo_list'][i][2] + "'>"
-                        + response['todo_list'][i][0] + "</a> - added at "
-                        + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
-                        + response['todo_list'][i][2] + ','
-                        + response['captions'][0] + ')" value="'
-                        + response['captions'][1] + '"><hr>')
-                    }
-                    var a = ("#status_btn").html('');
-                    a("#status_btn").append('<input id="status_btn" type="button" value="' + response['captions'][2] + '" onclick="view(' + response['captions'][0] + ')">')
-                }
-            });
-        };
-    </script>
 
     <script>
         function sorting(type){

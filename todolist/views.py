@@ -8,6 +8,7 @@ import os
 
 from todolist import models
 from todolist.forms import AddTodoForm
+from todolist.forms import ShowTodoForm
 from todolist.models import Todos
 from django import forms
 import json
@@ -27,6 +28,8 @@ def index(request):
 
 @login_required
 def add_todo(request):
+    context = {}
+    context['user'] = request.user
     context = {'user': request.user}
     if request.POST:
         form = AddTodoForm(request.POST)
@@ -48,17 +51,19 @@ def add_todo(request):
 @login_required
 def completed_todos(request):
     context = {
-        'title': "Completed todos page",
-        'header': "You can mark available todos as uncompleted"
+        'title': "Todos index page",
+        'header': "Todos index page header",
     }
-    todo_list = Todos.get_todos('AtoZ', 'done', request.user)
+    user = request.user
+    todo_list = Todos.get_todos('AtoZ', 'done', user)
     context['items'] = todo_list
     return render(request, "todolist/done_todos.html", context)
 
 
 @login_required
 def show_todo(request, id):
-    context = {'user': request.user}
+    context = {}
+    context['user'] = request.user
     todo_now = Todos.objects.get(id=id).first()
     if todo_now is None:
         context['errors'] = ['NOT FOUND']
@@ -115,22 +120,70 @@ def status_change(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
-def view(request):
-    response = {}
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            captions = {
-                'done': ['in progress','Reopen', 'Todos'],
-                'in progress': ['done', 'Done', 'Done Todos']
-            }
-            status = request.POST.get('status')
-            print(captions.get(status)[0])
-            response['todo_list'] = Todos.get_todos('AtoZ', status, request.user)
-            response['captions'] = captions.get(status)
-            response['result'] = "Success"
-        else:
-            response['result'] = "User is not authenticated"
-        return HttpResponse(json.dumps(response), content_type='application/json')
+
+@login_required
+def show_todolist(request, id):
+    context = {}
+    if request.POST:
+        form = ShowTodoForm(request)
+        Todo = Todos.objects.filter(id=id).first()
+        Todolist = request.POST
+        Todolist.data = request.POST['data']
+        Todolist.text = request.POST['text']
+        Todolist.save()
+        return HttpResponseRedirect('/todolist')
+    return render(request, "todolist/index.html", context)
+
+
+@login_required
+def edit_todolist(request, id):
+    context = {}
+    if request.POST:
+        form = ShowTodoForm(request)
+        Todo = Todos.objects.filter(id=id).first()
+        Todo.data = request.POST['data']
+        Todo.data = request.POST['text']
+        Todo.save()
+        return HttpResponseRedirect('/todolist')
     else:
-        return HttpResponseRedirect('/')
+        if len(Todos.objects.filter(id=id)) > 0:
+            todo = Todos.objects.filter(id=id).first()
+            context = {
+                'header': "Show todo page header",
+                'id': id,
+                'title': todo.title,
+                'priority' : todo.priority
+            }
+            form = ShowTodoForm({'text': todo.text})
+            context['form'] = form
+        else:
+            context['error'] = True
+        return render(request, "todolist/show.html", context)
+
+
+@login_required
+def Read_file(file_name):
+    s = open(file_name, "r")
+    s = s.read()
+    a = s.split("\n")
+    user = a[0]
+    date, time = time_and_date_for_todo()
+    if a[1] == None:
+        added_time = time
+    else:
+        added_time = a[1]
+    if a[2] == None:
+        added_date = date
+    else:
+        added_date = a[2]
+    priority = a[3]
+    if a[4] == None:
+        status = "in progress"
+    else:
+        status = a[4]
+    deadline = a[5]
+    text = a[6]
+    title = a[7]
+    p = Todos(text=text, user=user, title=title, added_time=added_time,
+              added_date=added_date, priority=priority, deadline=deadline, status=status)
+    p.save()
