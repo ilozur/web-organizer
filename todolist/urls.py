@@ -1,5 +1,4 @@
 from django.urls import path
-
 from todolist.views import index
 from todolist import views
 
@@ -8,6 +7,8 @@ urlpatterns = [
     path('add', views.add_todo, name='todolist.add_todo'),
     path('done', views.completed_todos, name='todolist.completed_todos'),
     path('show/<int:id>', views.show_todo, name='todolist.show_todo'),
-    path('saving',views.save_todo, name='todolst.save_todo'),
-    path('sort', views.sort_ajax, name='sort'),
+    path('saving',views.save_todo, name='todolist.save_todo'),
+    path('sort', views.sorting, name='sort'),
+    path('change', views.status_change, name='change'),
+    path('view', views.view, name='view')
 ]

@@ -4,29 +4,83 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the todolist index page</p>
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
+    <a href="/todo/done"><input type="submit" value="Done"></a>
+    <div id="status_btn">
+        <input type="button" value="Done (AJAX)" onclick="view('done')">
+    </div>
     <hr>
-    <input type="button" value="From A to Z" onclick="sort_ajax('AtoZ')">
-    <input type="button" value="From Z to A" onclick="sort_ajax('ZtoA')"><br>
-    <input type="button" value="Last created" onclick="sort_ajax('new')">
-    <input type="button" value="Oldest created" onclick="sort_ajax('old')"><br>
-    <hr>
+    <aside>
+        <input type="button" value="From A to Z" onclick="sorting('AtoZ')">
+        <input type="button" value="From Z to A" onclick="sorting('ZtoA')">
+        <input type="button" value="Last created" onclick="sorting('new')">
+        <input type="button" value="Oldest created" onclick="sorting('old')">
+        <hr>
+    </aside>
     <div id="todo_list">
         {% for item in items %}
-            {{ item }}
+            {% csrf_token %}
+            <li>
+                <a href='/todo/show/{{ item.2 }}'>{{ item.0 }}</a> - added at {{ item.1 }}
+            </li>
+            <input type="submit" onclick="status_change({{ item.2 }}, 'done')" value="Done">
+            <hr>
         {% endfor %}
     </div>
 
     <script>
-        function sort_ajax(type){
+        function view(status){
+            $.ajax({
+                type: "POST",
+                url: '/todo/view',
+                data: {'status': status},
+                success: function(response){
+                    $("#todo_list").html('');
+                    for (var i = 0; i < response['todo_list'].length; i++){
+                        $("#todo_list").append("<li><a href='/todo/show/"
+                        + response['todo_list'][i][2] + "'>"
+                        + response['todo_list'][i][0] + "</a> - added at "
+                        + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
+                        + response['todo_list'][i][2] + ','
+                        + response['captions'][0] + ')" value="'
+                        + response['captions'][1] + '"><hr>')
+                    }
+                    var a = ("#status_btn").html('');
+                    a("#status_btn").append('<input id="status_btn" type="button" value="' + response['captions'][2] + '" onclick="view(' + response['captions'][0] + ')">')
+                }
+            });
+        };
+    </script>
+
+    <script>
+        function sorting(type){
             $.ajax({
                 type: "POST",
                 url: '/todo/sort',
                 data: {'data': type},
                 success: function(response){
-                    $("#todo_list").html('');
-                    for (var i = 0; i < response['todo_list'].length; i++){
-                        $("#todo_list").append("<li>" + response['todo_list'][i][0] + "</li> - added at " + response['todo_list'][i][1])
+                    if (response['result'] == "Success"){
+                        $("#todo_list").html('');
+                        for (var i = 0; i < response['todo_list'].length; i++){
+                            $("#todo_list").append("<li><a href='/todo/show/"
+                            + response['todo_list'][i][2] + "'>"
+                            + response['todo_list'][i][0] + "</a> - added at "
+                            + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
+                            + response['todo_list'][i][2] + ',' + ' done' + ')" value="Done"><hr>')
+                        }
                     }
+                }
+            });
+        };
+    </script>
+
+    <script>
+        function status_change(id, type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/change',
+                data: {'id': id, 'type': type},
+                success: function(response){
+
                 }
             });
         };

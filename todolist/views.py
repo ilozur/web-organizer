@@ -10,9 +10,7 @@ from todolist import models
 from todolist.forms import AddTodoForm
 from todolist.models import Todos
 from django import forms
-import datetime
 import json
-
 
 
 @login_required
@@ -21,12 +19,9 @@ def index(request):
         'title': "Todos index page",
         'header': "Todos index page header",
     }
-    todo_list = list()
     user = request.user
-    todos = Todos.get_todos('AtoZ', user)
-    for i in todos:
-        todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
-    context['todo_data'] = todo_list
+    todo_list = Todos.get_todos('AtoZ', 'in progress', user)
+    context['items'] = todo_list
     return render(request, "todolist/index.html", context)
 
 
@@ -37,9 +32,8 @@ def add_todo(request):
         form = AddTodoForm(request.POST)
         if form.is_valid():
             user = request.user
-            date, time = time_and_date_for_todo()
-            p = Todos(text=form.data['text'], user=user, title=form.data['title'], added_time=time,
-                      added_date=date, priority=form.data['priority'], deadline=form.data['deadline'])
+            p = Todos(text=form.data['text'], user=user, title=form.data['title'],
+                      priority=form.data['priority'], deadline=form.data['deadline'])
             p.save()
             context['id'] = p.id
         else:
@@ -51,46 +45,15 @@ def add_todo(request):
         return render(request, 'todolist/add.html', context)
 
 
-def time_and_date_for_todo():
-    addtime = (datetime.datetime.now()).strftime("%H:%M:%S %Y-%m-%d")
-    dater, timer = addtime.split(' ')
-    return timer, dater
-
 @login_required
 def completed_todos(request):
     context = {
         'title': "Completed todos page",
         'header': "You can mark available todos as uncompleted"
     }
-    items = Todos.objects.filter(status='done')
-    if request.GET:
-        sorting(request.GET, items)
-    if request.POST:
-        change_status(request.POST, items)
-    return render(request, "todolist/done_todos.html", {'items': items}, context)
-
-
-def sorting(type, items):
-    type = list(type)
-    mode = {
-        'AtoZ': items.order_by('title'),
-        'ZtoA': (items.order_by('title')).reverse(),
-        'old': items.order_by('added_date', 'added_time'),
-        'new': (items.order_by('added_date', 'added_time')).reverse()
-    }
-    return mode.get(type[0], items.all())
-
-
-def change_status(data, items):
-    title = list(data.keys())
-    mode = {
-        'Reopen': 'in progress',
-        'Done': 'done'
-    }
-    title.remove('csrfmiddlewaretoken')
-    obj = items.get(title=title[0])
-    obj.status = mode.get(data.get(title[0]))
-    obj.save()
+    todo_list = Todos.get_todos('AtoZ', 'done', request.user)
+    context['items'] = todo_list
+    return render(request, "todolist/done_todos.html", context)
 
 
 @login_required
@@ -106,8 +69,7 @@ def show_todo(request, id):
 
 @login_required
 def save_todo(request,id):
-    context = {}
-    context['user'] = request.user
+    context = {'user': request.user}
     saving_todo = Todos.objects.get(id=id).first()
     f = open('saved_todos/todo.txt', 'wt')
     f.write(saving_todo.title)
@@ -118,13 +80,57 @@ def save_todo(request,id):
 
 
 @csrf_exempt
-def sort_ajax(request):
+def sorting(request):
+    response = {}
     if request.method == "POST":
-        todo_list = list()
-        sort_type = request.POST.get('data')
-        for i in Todos.get_todos(sort_type):
-            todo_list.append((i.title, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.text))
-        response = {'todo_list': todo_list}
+        if request.user.is_authenticated:
+            sort_type = request.POST.get('data')
+            todo_list = Todos.get_todos(sort_type, 'in progress', request.user)
+            response = {
+                'todo_list': todo_list,
+                'result': "Success"
+            }
+        else:
+            response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+@csrf_exempt
+def status_change(request):
+    response = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            id = request.POST.get('id')
+            type = request.POST.get('type')
+            obj = Todos.get_todo_by_id(id)
+            obj.status = type
+            obj.save()
+            response['result'] = "Success"
+        else:
+            response['result'] = "User is not authenticated"
+        return HttpResponse(json.dumps(response), content_type='application/json')
+    else:
+        return HttpResponseRedirect('/')
+
+
+@csrf_exempt
+def view(request):
+    response = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            captions = {
+                'done': ['in progress','Reopen', 'Todos'],
+                'in progress': ['done', 'Done', 'Done Todos']
+            }
+            status = request.POST.get('status')
+            print(captions.get(status)[0])
+            response['todo_list'] = Todos.get_todos('AtoZ', status, request.user)
+            response['captions'] = captions.get(status)
+            response['result'] = "Success"
+        else:
+            response['result'] = "User is not authenticated"
+        return HttpResponse(json.dumps(response), content_type='application/json')
     else:
         return HttpResponseRedirect('/')
