@@ -9,8 +9,9 @@
         <form action="" method="post">
             {% csrf_token %}
             {{ form.media }}
-            {{ form.data }}
+            {{ form.as_p }}
             <input type="submit" value="Save changes" />
         </form>
+
     {% endif %}
 {% endblock %}

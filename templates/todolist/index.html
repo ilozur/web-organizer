@@ -4,37 +4,60 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the todolist index page</p>
     <a href="/todo/add"><input type="submit" value="Add new todo"></a>
+    <a href="/todo/done"><input type="submit" value="Done"></a>
     <hr>
-        <input type="button" onclick="var a = new sort_ajax('AtoZ')" value="From A to Z">
-        <input type="button" onclick="var a = new sort_ajax('ZtoA')" value="From Z to A"><br>
-        <input type="button" onclick="var a = new sort_ajax('new')" value="Newest first">
-        <input type="button" onclick="var a = new sort_ajax('old')" value="Oldest first">
-    <hr>
-    <div id = "todo_list">
-    {% for item in items %}
-        <li><a href='/todo/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
-        <input type="button" onclick="var a = new mark_todo_as_completed_ajax" value="Done">
-    {% endfor %}
-        </div>
+    <aside>
+        <input type="button" value="From A to Z" onclick="sorting('AtoZ')">
+        <input type="button" value="From Z to A" onclick="sorting('ZtoA')">
+        <input type="button" value="Last created" onclick="sorting('new')">
+        <input type="button" value="Oldest created" onclick="sorting('old')">
+        <hr>
+    </aside>
+    <div id="todo_list">
+        {% for item in items %}
+            {% csrf_token %}
+            <li>
+                <a href='/todo/show/{{ item.2 }}'>{{ item.0 }}</a> - added at {{ item.1 }}
+            </li>
+            <input type="submit" onclick="status_change({{ item.2 }}, 'done')" value="Done">
+            <hr>
+        {% endfor %}
+    </div>
+
 
     <script>
-            function sort_ajax(type){
-                    result = "";
-                    $.ajax({
-                        type: "POST",
-                        url: '/todo/sort',
-                        data: {"data": type},
-                        success: function(response)
-                        {
-                            if (response['result'] == "Success")
-                            {
-                                $("#todo_list").html('');
-                                for (var i = 0; i < response['todo_list'].length; i++) {
-                                    $("#todo_list").append("<li><a href='/todo/show/" + response['todo_list'][i][2] + "'>" + response['todo_list'][i][0] + "</a></li> - added at " + response['todo_list'][i][1])
-                                }
-                            }
+        function sorting(type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/sort',
+                data: {'data': type},
+                success: function(response){
+                    if (response['result'] == "Success"){
+                        $("#todo_list").html('');
+                        for (var i = 0; i < response['todo_list'].length; i++){
+                            $("#todo_list").append("<li><a href='/todo/show/"
+                            + response['todo_list'][i][2] + "'>"
+                            + response['todo_list'][i][0] + "</a> - added at "
+                            + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
+                            + response['todo_list'][i][2] + ',' + ' done' + ')" value="Done"><hr>')
                         }
-                    });
-                };
-        </script>
+                    }
+                }
+            });
+        };
+    </script>
+
+    <script>
+        function status_change(id, type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/change',
+                data: {'id': id, 'type': type},
+                success: function(response){
+
+                }
+            });
+        };
+    </script>
+
 {% endblock %}

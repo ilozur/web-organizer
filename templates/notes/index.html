@@ -4,71 +4,13 @@
     <h1>{{ header }}</h1>
     <p>Welcome to the notes index page</p>
     <li><a href='/notes/add'>Add note</a></li>
-    <form id="search_form">
+    <form method="POST" action="">
         {% csrf_token %}
         {{ search_form }}
-        <input type="submit" value="Search" onclick="search_ajax()"/>
+        <input type="submit" value="Search" />
     </form>
-    <input type="button" value="sort_by_Date_up" onclick="var a = new sort_ajax('date_up')" />
-    <input type="button" value="sort_by_Date_down" onclick="var a = new sort_ajax('date_down')" />
-    <input type="button" value="sort_by_title_A-Z" onclick="var a = new sort_ajax('title_up')" />
-    <input type="button" value="sort_by_title_Z-A" onclick="var a = new sort_ajax('title_down')" />
-    <div id="notes_list">
-        {% for item in notes_data %}
-            <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
-        {% endfor %}
-    </div>
-
-    <script>
-        function search_ajax()
-            {
-                result = "";
-                form_data = $('#search_form').serialize();
-                $("#search_form").find(':input').each(function(){
-                    $(this).attr('disabled', 'disabled');
-                });
-                $('#sign_up_btn').attr('disabled', 'disabled');
-                $.ajax({
-                    type: "POST",
-                    url: '/notes/search',
-                    data: form_data,
-                    success: function(response)
-                    {
-                        if (response['result'] == "Success")
-                        {
-                            $("#notes_list").html('');
-                            for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#notes_list").append("<li><a href='/notes/show/" + response['notes_list'][i][2] + "'>" + response['notes_list'][i][0] + "</a></li> - added at " + response['notes_list'][i][1])
-                            }
-                        }
-                        $("#search_form").find(':input').each(function(){
-                            $(this).removeAttr('disabled');
-                        });
-                        $('#sign_up_btn').removeAttr('disabled');
-                    }
-                });
-            };
-    </script>
-
-    <script>
-        function sort_ajax(type){
-                result = "";
-                $.ajax({
-                    type: "POST",
-                    url: '/notes/sort',
-                    data: {"data": type},
-                    success: function(response)
-                    {
-                        if (response['result'] == "Success")
-                        {
-                            $("#notes_list").html('');
-                            for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#notes_list").append("<li><a href='/notes/show/" + response['notes_list'][i][2] + "'>" + response['notes_list'][i][0] + "</a></li> - added at " + response['notes_list'][i][1])
-                            }
-                        }
-                    }
-                });
-            };
-    </script>
+    {% for item in notes_data %}
+        <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
+    {% endfor %}
 
 {% endblock %}

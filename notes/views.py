@@ -1,15 +1,8 @@
-from time import ctime
-
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-
 from notes.forms import AddNoteForm, SearchForm, ShowNoteForm
 from notes.models import Notes
-import json
-
 
 @login_required
 def index(request):
@@ -19,14 +12,13 @@ def index(request):
     }
     notes_list = list()
     user = request.user
-    notes = Notes.get_notes('title_up', user)
+    notes = get_notes('title_up', user)
     for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+        notes_list.append((i.name, i.added_time, i.id))
     context['notes_data'] = notes_list
     search_form = SearchForm()
     context['search_form'] = search_form
     return render(request, "notes/index.html", context)
-
 
 @login_required
 def add_note(request):
@@ -44,25 +36,27 @@ def add_note(request):
         return render(request, "notes/add_note.html", context)
 
 
-def search_notes(substr, user):
-    obj = Notes.get_notes('all', user)
-    ret_list = list()
+def search(substr):
+    obj = Notes.objects.all()
+    ret_list = []
     for i in obj:
         if substr in i.name:
-            ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+            ret_list.append(i)
+
     return ret_list
 
 
 def show_note(request, id):
     context = {}
     if request.POST:
-        note = Notes.get_note_by_id(id)
+        form = ShowNoteForm(request)
+        note = Notes.objects.filter(id=id).first()
         note.data = request.POST['data']
         note.save()
         return HttpResponseRedirect('/notes')
     else:
-        if Notes.get_note_by_id(id) is not None:
-            note = Notes.get_note_by_id(id)
+        if len(Notes.objects.filter(id=id)) > 0:
+            note = Notes.objects.filter(id=id).first()
             context = {
                 'header': "Show note page header",
                 'id': id,
@@ -75,50 +69,21 @@ def show_note(request, id):
         return render(request, "notes/show_note.html", context)
 
 
-def search_ajax(request):
-    response_data = {}
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            form = SearchForm(request.POST)
-            if form.is_valid():
-                string = form.data['resulter']
-                response_data = {
-                    'notes_list': search_notes(string, request.user)
-                }
-                result = 'Success'
-            else:
-                response_data = {
-                    'notes_list': Notes.get_notes(request.sorting_type, request.user)
-                }
-                result = 'Form is not valid'
-        else:
-            result = 'user is not authenticated'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
-
-
-@csrf_exempt
-def sort_ajax(request):
-    response_data = {}
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            sorting_types = ('date_up', 'date_down', 'title_up', 'title_down')
-            sort_type = request.POST.get('data')
-            if sort_type in sorting_types:
-                notes_list = list()
-                for i in Notes.get_notes(sort_type, request.user):
-                    notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
-                response_data = {
-                    'notes_list': notes_list
-                }
-                result = 'Success'
-            else:
-                result = 'Wrong type'
-        else:
-            result = 'user is not authenticated'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
+def get_notes(sorting_type, user=1):
+    # if aim = 'date' -> 'up' = new-old, 'down' = old-new
+    # if aim = 'title' -> 'up' = a-z, 'down' = z-a
+    sort = sorting_type.split('_')
+    aim = sort[0]
+    direction = sort[1]
+    notes = Notes.objects.filter(user=user)
+    if aim == "date":
+        if direction == "up":
+            notes = notes.order_by('-added_time')
+        elif direction == "down":
+            notes = notes.order_by('added_time')
+    elif aim == "title":
+        if direction == "up":
+            notes = notes.order_by('name')
+        elif direction == "down":
+            notes = notes.order_by('-name')
+    return notes
