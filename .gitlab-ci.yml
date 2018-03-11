@@ -2,19 +2,20 @@ image: alpine
 
 before_script:
 - apk update
-- apk add doxygen
-- apk add ttf-freefont graphviz
-- apk add py-pip
-- pip install pycodestyle
-
 
 documentation:
+  before_script:
+  - apk add doxygen
+  - apk add ttf-freefont graphviz
   script:
   - doxygen Doxyfile_CI
   only:
   - develop
 
 code_style:
+  before_script:
+  - apk add py-pip
+  - pip install pycodestyle
   script:
   - pycodestyle --ignore=E501 main calendars notes todo
   only:
