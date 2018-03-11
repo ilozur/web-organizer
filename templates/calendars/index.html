@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 {% block css_links %}
     {% load staticfiles %}
+    {% load bootstrap %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/calendar.css" %}'>
@@ -62,13 +63,13 @@
         </section>
         <section class="section-mouth">
           <div class="btn-group btn-group-sm btn-mouth">
-            <a href='/calendar/{{ back_link }}'><button type="button" class="btn btn-danger">&laquo;</button></a>
-            <h2>&nbsp;&nbsp;{{ now_month }} {{ now_year }}&nbsp;&nbsp;</h2>
-            <a href='/calendar/{{ next_link }}'><button type="button" class="btn btn-danger">&raquo;</button></a>
+              <a><button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button></a>
+              <h2>&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
+              <a><button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button></a>
             &nbsp;&nbsp;
-            <a href='/calendar'><button type="button" class="btn btn-danger">Сегодня</button></a>
+            <a><button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button></a>
           </div>
-          <table class="table table-danger table-mouth">
+          <table class="table table-danger table-mouth" id="month_calendar">
             <thead>
               <tr class="bg-danger">
                 <th></th>
@@ -81,7 +82,7 @@
                 <th>Воскресенье</th>
               </tr>
             </thead>
-            <tbody id="month_calendar">
+            <tbody>
                 {% for week in weeks %}
                     <tr>
                         <th class="bg-danger">{{ week.week_num }}</th>
@@ -166,10 +167,12 @@
               <h2 class="modal-title">Создание мероприятия</h2>
             </div>
             <div class="modal-body">
-              <form>
+              <form id="add_event_form">
+                  {% csrf_token %}
+                  {{ add_event_form.media }}
                 <div class="form-group">
                   <h3>Название</h3>
-                  <input type="name" class="form-control" placeholder="Мероприятиеюшка">
+                  {{ add_event_form.title|bootstrap }}
                 </div>
                 <div class="form-group">
                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Date">
@@ -187,17 +190,11 @@
                 </div>
                 <div class="form-group">
                   <h3>Описание</h3>
-                  <textarea class="form-control" rows="7" placeholder="Описание (по желанию)"></textarea>
-                  <div class="btn-group btn-group-sm WYSIWYG">
-                    <button type="button" class="btn btn-danger"><strong>B</strong></button>
-                    <button type="button" class="btn btn-danger"><em>I</em></button>
-                    <button type="button" class="btn btn-danger"><del>S</del></button>
-                    <button type="button" class="btn btn-danger"><ins>U</ins></button>
-                  </div>
+                    {{ add_event_form.description }}
                 </div>
                 <div class="form-group">
                   <div class="form-check btn btn-danger">
-                    <input class="form-check-input" type="checkbox">
+                    {{ add_event_form.is_public }}
                     <label class="form-check-label"> Приватное мероприятие</label>
                   </div>
                 </div>
@@ -211,7 +208,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger">Создать</button>
+              <button type="button" class="btn btn-danger" onclick="add_event_ajax()">Создать</button>
             </div>
           </div>
         </div>
@@ -279,13 +276,11 @@
               <h2 class="modal-title">Выбор даты</h2>
             </div>
             <div class="modal-body">
-              <form>
-                <input type="date"></input>
-              </form>
+                {{ add_event_form.date|bootstrap }}
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger">ОК</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
             </div>
           </div>
         </div>
@@ -297,13 +292,11 @@
               <h2 class="modal-title">Выбор времени</h2>
             </div>
             <div class="modal-body">
-              <form>
-              <input type="time"></input>
-              </form>
+              {{ add_event_form.time|bootstrap }}
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger">ОК</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
             </div>
           </div>
         </div>
@@ -661,4 +654,242 @@
       </div>
     </article>
     </section>
+    <script>
+        var now_year = {{ now_year }};
+        var now_month = {{ now_month_num }};
+
+        function next_month()
+        {
+            now_month += 1;
+            if (now_month == 13)
+            {
+                now_month = 1;
+                now_year += 1;
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                    return cookieValue;
+                    }
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/calendar/',
+                data: {'now_date': String(now_year) + '_' + String(now_month)},
+                success: function(response)
+                {
+                    if (response['result'] == "success")
+                    {
+                        $("#month_holder").text(response['month_name']);
+                        $("#year_holder").text(response['now_year']);
+                        $("#month_calendar").find('tbody').each(
+                            function()
+                            {
+                                var weeks = response['weeks'];
+                                result_html = '';
+                                weeks.forEach(function(week, i, weeks)
+                                {
+                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                                    var week_days = week['week_days'];
+                                    week_days.forEach(function(day, i, week_days)
+                                    {
+                                        if (day['class'])
+                                        {
+                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                        else
+                                        {
+                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                    });
+                                    result_html += '</tr>\n';
+                                });
+                                $(this).html(result_html);
+                            }
+                        );
+                    }
+                }
+            });
+        };
+
+        function go_to_now_month()
+        {
+            now_month = {{ now_month_num }};
+            now_year = {{ now_year }};
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                    return cookieValue;
+                    }
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/calendar/',
+                data: {'now_date': String(now_year) + '_' + String(now_month)},
+                success: function(response)
+                {
+                    if (response['result'] == "success")
+                    {
+                        $("#month_holder").text(response['month_name']);
+                        $("#year_holder").text(response['now_year']);
+                        $("#month_calendar").find('tbody').each(
+                            function()
+                            {
+                                var weeks = response['weeks'];
+                                result_html = '';
+                                weeks.forEach(function(week, i, weeks)
+                                {
+                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                                    var week_days = week['week_days'];
+                                    week_days.forEach(function(day, i, week_days)
+                                    {
+                                        if (day['class'])
+                                        {
+                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                        else
+                                        {
+                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                    });
+                                    result_html += '</tr>\n';
+                                });
+                                $(this).html(result_html);
+                            }
+                        );
+                    }
+                }
+            });
+        };
+
+        function back_month()
+        {
+            now_month -= 1;
+            if (now_month == 0)
+            {
+                now_month = 12;
+                now_year -= 1;
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                    return cookieValue;
+                    }
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/calendar/',
+                data: {'now_date': String(now_year) + '_' + String(now_month)},
+                success: function(response)
+                {
+                    if (response['result'] == "success")
+                    {
+                        $("#month_holder").text(response['month_name']);
+                        $("#year_holder").text(response['now_year']);
+                        $("#month_calendar").find('tbody').each(
+                            function()
+                            {
+                                var weeks = response['weeks'];
+                                result_html = '';
+                                weeks.forEach(function(week, i, weeks)
+                                {
+                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                                    var week_days = week['week_days'];
+                                    week_days.forEach(function(day, i, week_days)
+                                    {
+                                        if (day['class'])
+                                        {
+                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                        else
+                                        {
+                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                        }
+                                    });
+                                    result_html += '</tr>\n';
+                                });
+                                $(this).html(result_html);
+                            }
+                        );
+                    }
+                }
+            });
+        };
+
+        function add_event_ajax()
+        {
+            form_data = $('#add_event_form').serialize();
+            $("#add_event_form").find(':input').each(function(){
+                $(this).attr('disabled', 'disabled');
+            });
+            $("#add_event_form").find(':button').each(function(){
+                $(this).attr('disabled', 'disabled');
+            });
+            $.ajax({
+                type: "POST",
+                url: '/calendar/event/add',
+                data: form_data,
+                success: function(response)
+                {
+                    alert(response['result']);
+                    if (response['result'] == "success")
+                    {
+                        window.location.href = '/calendar';
+                    }
+                    $("#add_event_form").find(':input').each(function(){
+                       $(this).removeAttr('disabled');
+                    });
+                    $("#add_event_form").find(':button').each(function(){
+                        $(this).removeAttr('disabled', 'disabled');
+                    });
+                }
+            });
+
+        };
+    </script>
 {% endblock %}

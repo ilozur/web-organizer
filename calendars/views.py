@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import *
 from datetime import datetime, timedelta
 from calendars.forms import *
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 import json
 
 
@@ -11,81 +11,36 @@ import json
 def index(request):
     if request.method == "GET":
         date = datetime.now()
-        return HttpResponseRedirect('/calendar/' + str(date.year) + '_' + str(date.month) + '_' + str(date.day))
-    else:
-        return HttpResponseRedirect('/calendar/')
-
-
-@login_required
-def index_date(request, date):
-    if request.method == "GET":
         context = dict(title="Calendar index page", header="Calendar index page header")
-        try:
-            tmp = date.split('_')
-            tmp = [int(num) for num in tmp]
-            if len(tmp) == 3:
-                now_date = datetime(year=tmp[0], month=tmp[1], day=tmp[2])
-            elif len(tmp) == 2:
-                now_date = datetime(year=tmp[0], month=tmp[1], day=1)
-            else:
-                return HttpResponseRedirect('/calendar/')
-        except ValueError:
-            return HttpResponseRedirect('/calendar/')
-        context['weeks'] = get_weeks(now_date)
-        context['now_month'] = get_month_name(now_date.month)
-        context['now_year'] = now_date.year
-        datetime_now = datetime.now()
-        if now_date.month == 1:
-            back_link = str(now_date.year - 1) + '_12'
-            if (12 == datetime_now.month) and (now_date.year - 1 == datetime_now.year):
-                back_link += '_' + str(datetime_now.day)
-        else:
-            back_link = str(now_date.year) + '_' + str(now_date.month - 1)
-            if (now_date.month - 1 == datetime_now.month) and (now_date.year == datetime_now.year):
-                back_link += '_' + str(datetime_now.day)
-        if now_date.month == 12:
-            next_link = str(now_date.year + 1) + '_1'
-            if (1 == datetime_now.month) and (now_date.year + 1 == datetime_now.year):
-                next_link += '_' + str(datetime_now.day)
-        else:
-            next_link = str(now_date.year) + '_' + str(now_date.month + 1)
-            if (now_date.month + 1 == datetime_now.month) and (now_date.year == datetime_now.year):
-                next_link += '_' + str(datetime_now.day)
-        context['back_link'] = back_link
-        context['next_link'] = next_link
-        context['now_date'] = str(datetime_now.year) + '_' + str(datetime_now.month) + '_' + str(datetime_now.day)
+        context['weeks'] = get_weeks(date)
+        context['now_month'] = get_month_name(date.month)
+        context['now_year'] = date.year
+        context['now_month_num'] = date.month
+        context['now_date'] = str(date.year) + "_" + str(date.month)
+        add_event_form = AddingEventForm()
+        context['add_event_form'] = add_event_form
         return render(request, "calendars/index.html", context)
     else:
-        return HttpResponseRedirect('/calendar/')
-
-
-def get_month_name(month):
-    result = ""
-    if month == 1:
-        result = "Январь"
-    elif month == 2:
-        result = "Февраль"
-    elif month == 3:
-        result = "Март"
-    elif month == 4:
-        result = "Апрель"
-    elif month == 5:
-        result = "Май"
-    elif month == 6:
-        result = "Июнь"
-    elif month == 7:
-        result = "Июль"
-    elif month == 8:
-        result = "Август"
-    elif month == 9:
-        result = "Сентябрь"
-    elif month == 10:
-        result = "Октябрь"
-    elif month == 11:
-        result = "Ноябрь"
-    elif month == 12:
-        result = "Декабрь"
-    return result
+        response_data = {}
+        datetime_now = datetime.now()
+        try:
+            now_date_string = request.POST.get('now_date', '')
+            tmp = now_date_string.split('_')
+            tmp = [int(num) for num in tmp]
+            if len(tmp) == 2:
+                if (datetime_now.month == tmp[1]) and (datetime_now.year == tmp[0]):
+                    now_date = datetime(year=tmp[0], month=tmp[1], day=datetime_now.day)
+                else:
+                    now_date = datetime(year=tmp[0], month=tmp[1], day=1)
+            else:
+                return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
+        except ValueError:
+            return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
+        response_data['weeks'] = get_weeks(now_date)
+        response_data['month_name'] = get_month_name(now_date.month)
+        response_data['now_year'] = now_date.year
+        response_data['result'] = "success"
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def get_weeks(date_time):
@@ -98,7 +53,8 @@ def get_weeks(date_time):
     date -= timedelta(days=date.weekday())
     if (date.day > 1) and (date.month == date_time.month):
         date -= timedelta(days=7 * (date.day // 7))
-        date -= timedelta(days=7)
+        if date.month == date_time.month:
+            date -= timedelta(days=7)
     weeks = []
     for i in range(1, 5):
         tmp = dict()
@@ -144,6 +100,35 @@ def get_weeks(date_time):
         tmp['week_days'] = week_days
         weeks.append(tmp)
     return weeks
+
+
+def get_month_name(month):
+    result = ""
+    if month == 1:
+        result = "Январь"
+    elif month == 2:
+        result = "Февраль"
+    elif month == 3:
+        result = "Март"
+    elif month == 4:
+        result = "Апрель"
+    elif month == 5:
+        result = "Май"
+    elif month == 6:
+        result = "Июнь"
+    elif month == 7:
+        result = "Июль"
+    elif month == 8:
+        result = "Август"
+    elif month == 9:
+        result = "Сентябрь"
+    elif month == 10:
+        result = "Октябрь"
+    elif month == 11:
+        result = "Ноябрь"
+    elif month == 12:
+        result = "Декабрь"
+    return result
 
 
 def get_events(sorting_type, user=None):
@@ -195,7 +180,7 @@ def add_event(request, data):
                           should_notify_minutes=data['should_notify_minutes'],
                           should_notify_days=data['should_notify_days'])
             event.save()
-            return "Success"
+            return "success"
 
 
 @login_required
