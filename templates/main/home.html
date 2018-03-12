@@ -99,24 +99,16 @@
                     <h2 class="modal-title">Создание заметки</h2>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="add_note_form">
+                        {% csrf_token %}
+                        {{ add_note_form.media }}
+                        <h3>Название</h3>
                         <div class="form-group">
-                            <h3>Название</h3>
-                            <input type="name" class="form-control" placeholder="Заметочка">
+                            {{ add_note_form.title }}
                         </div>
+                        <h3>Текст</h3>
                         <div class="form-group">
-                            <h3>Текст</h3>
-                            <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
-                            <div class="btn-group btn-group-sm WYSIWYG">
-                                <button type="button" class="btn btn-warning" style="color: #fff;"><strong>B</strong></button>
-                                <button type="button" class="btn btn-warning" style="color: #fff;"><em>I</em></button>
-                                <button type="button" class="btn btn-warning" style="color: #fff;"><del>S</del></button>
-                                <button type="button" class="btn btn-warning" style="color: #fff;"><ins>U</ins></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <h3>Изображение </h3>
-                            <input type="file" class="form-control-file">
+                            {{ add_note_form.data }}
                         </div>
                     </form>
                     <h3>Записать аудио</h3>
@@ -140,40 +132,36 @@
                     <h2 class="modal-title">Создание мероприятия</h2>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="add_event_form">
+                        {% csrf_token %}
+                        {{ add_event_form.media }}
                         <div class="form-group">
-                            <h3>Название</h3>
-                            <input type="name" class="form-control" placeholder="Мероприятиеюшка">
+                          <h3>Название</h3>
+                          {{ add_event_form.title }}
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Date">
-                            Выбрать дату
-                            </button>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Time">
-                            Выбрать время
-                            </button>
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Date">
+                          Выбрать дату
+                          </button>
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Time">
+                          Выбрать время
+                          </button>
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Place">
-                            Выбрать место
-                            </button>
-                            <span><small>Место и время по желанию</small></span>
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Place">
+                          Выбрать место
+                          </button>
+                          <span><small>Место и время по желанию</small></span>
                         </div>
                         <div class="form-group">
-                            <h3>Описание</h3>
-                            <textarea class="form-control" rows="7" placeholder="Описание (по желанию)"></textarea>
-                            <div class="btn-group btn-group-sm WYSIWYG">
-                                <button type="button" class="btn btn-danger"><strong>B</strong></button>
-                                <button type="button" class="btn btn-danger"><em>I</em></button>
-                                <button type="button" class="btn btn-danger"><del>S</del></button>
-                                <button type="button" class="btn btn-danger"><ins>U</ins></button>
-                            </div>
+                          <h3>Описание</h3>
+                          {{ add_event_form.description }}
                         </div>
                         <div class="form-group">
-                            <div class="form-check btn btn-danger">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> Приватное мероприятие</label>
-                            </div>
+                          <div class="form-check btn btn-danger">
+                            {{ add_event_form.is_public }}
+                            <label class="form-check-label"> Приватное мероприятие</label>
+                          </div>
                         </div>
                     </form>
                     <h3>Записать аудио</h3>

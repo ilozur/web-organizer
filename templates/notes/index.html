@@ -102,12 +102,12 @@
 								{% csrf_token %}
 								{{ add_form.media }}
 								<h3>Название</h3>
-								{{ add_form.title }}
+								<div class="form-group">
+									{{ add_form.title }}
+								</div>
 								<h3>Текст</h3>
-								{{ add_form.data}}
-								<h3> Изображение </h3>
-								<div class="form-group btn btn-warning">
-									<input type="file" class="form-control-file">
+								<div class="form-group">
+									{{ add_form.data }}
 								</div>
 							</form>
 							<h3>Записать аудио</h3>

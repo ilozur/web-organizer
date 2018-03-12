@@ -9,6 +9,8 @@ import binascii
 from datetime import datetime, timedelta
 from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
+from calendars.forms import AddingEventForm
+from notes.forms import AddNoteForm
 
 
 def index(request):
@@ -24,6 +26,8 @@ def index(request):
             context['sign_up_form'] = sign_up_form
             return render(request, "main/index.html", context)
         else:
+            context['add_event_form'] = AddingEventForm()
+            context['add_note_form'] = AddNoteForm()
             return render(request, "main/home.html", context)
     else:
         return HttpResponseRedirect('/')

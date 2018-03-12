@@ -172,7 +172,7 @@
                   {{ add_event_form.media }}
                 <div class="form-group">
                   <h3>Название</h3>
-                  {{ add_event_form.title|bootstrap }}
+                  {{ add_event_form.title }}
                 </div>
                 <div class="form-group">
                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Date">
@@ -190,7 +190,7 @@
                 </div>
                 <div class="form-group">
                   <h3>Описание</h3>
-                    {{ add_event_form.description }}
+                  {{ add_event_form.description }}
                 </div>
                 <div class="form-group">
                   <div class="form-check btn btn-danger">
@@ -276,7 +276,7 @@
               <h2 class="modal-title">Выбор даты</h2>
             </div>
             <div class="modal-body">
-                {{ add_event_form.date|bootstrap }}
+                {{ add_event_form.date }}
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
@@ -292,7 +292,7 @@
               <h2 class="modal-title">Выбор времени</h2>
             </div>
             <div class="modal-body">
-              {{ add_event_form.time|bootstrap }}
+              {{ add_event_form.time }}
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
@@ -863,7 +863,12 @@
 
         function add_event_ajax()
         {
+            for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+			var description = CKEDITOR.instances.id_description.getData();
             form_data = $('#add_event_form').serialize();
+            form_data['description'] = description;
             $("#add_event_form").find(':input').each(function(){
                 $(this).attr('disabled', 'disabled');
             });
