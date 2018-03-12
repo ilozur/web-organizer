@@ -11,6 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import AddNoteForm
+from notes.models import Notes
 
 
 def index(request):
@@ -28,9 +29,20 @@ def index(request):
         else:
             context['add_event_form'] = AddingEventForm()
             context['add_note_form'] = AddNoteForm()
+            context['last_notes'] = get_last_notes(request.user)
+            context['last_notes_count'] = len(context['last_notes'])
             return render(request, "main/home.html", context)
     else:
         return HttpResponseRedirect('/')
+
+
+def get_last_notes(user):
+    all_notes = Notes.get_notes("date_up", user)
+    if all_notes.count() >= 3:
+        first_three = all_notes[1:4]
+    else:
+        first_three = all_notes
+    return first_three
 
 
 def send_mail(mail):

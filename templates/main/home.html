@@ -54,10 +54,18 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>Последние заметки:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">Список покупок</a></p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">Резервные коды</a></p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">Идеи для подарка</a></p>
-                        <p class="lead"> <small><a href='{% url "notes.index" %}'>Показать все</a></small></p>
+                        {% if last_notes_count == 0 %}
+                            <h5>Нет заметок</h5>
+                            <div id="last_notes_holder">
+                            </div>
+                        {% else %}
+                            <div id="last_notes_holder">
+                                {% for note in last_notes %}
+                                    <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">{{ note.name }}</a></p>
+                                {% endfor %}
+                                <p class="lead"> <small><a href='{% url "notes.index" %}'>Показать все</a></small></p>
+                            </div>
+                        {% endif %}
                         <a href="#" class="badge badge-warning add-new" data-toggle="modal" data-target="#New-Note"><font class="plus">+</font></a>
                     </div>
                 </div>
@@ -466,6 +474,8 @@
         </div>
     </div>
     <script>
+
+        notes_link = {% url "notes.index" %}
 		function add_note_ajax()
 		{
 			for (instance in CKEDITOR.instances) {
@@ -484,6 +494,23 @@
 					if (response['result'] == "Success")
 					{
 						alert('OK, note was added');
+						var now_notes_count = $("#last_notes_holder").find('p').length - 1;
+						if (now_notes_count == -1)
+						{
+						    $("#last_notes_holder").html('<p class="lead"> <small><a href="' + notes_link + '">Показать все</a></small></p>');
+						    $("#last_notes_holder").parent().find('h5').remove();
+						}
+						if (now_notes_count < 3)
+						{
+						    var new_note_html = '<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">' + response["name"] + '</a></p>';
+						    $("#last_notes_holder").html(new_note_html + $("#last_notes_holder").html());
+						}
+						else
+						{
+						    $("#last_notes_holder").find('p')[2].remove();
+						    var new_note_html = '<p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Note">' + response["name"] + '</a></p>';
+						    $("#last_notes_holder").html(new_note_html + $("#last_notes_holder").html());
+						}
 						$("#close_notes_btn").trigger("click");
 					}
 					$('#New-Note').removeAttr('disabled');

@@ -357,6 +357,7 @@
 			var data = CKEDITOR.instances.id_data.getData();
 			form_data = $('#add_form').serialize();
             form_data['data'] = data;
+            $('#add_btn').attr('disabled', 'disabled');
 			$.ajax({
 				type: "POST",
 				url: '/notes/add',

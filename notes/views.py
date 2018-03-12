@@ -41,6 +41,7 @@ def add_note_ajax(request):
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
+            response_data['name'] = tmp.name
         else:
             result = 'form not valid'
         response_data['result'] = result
