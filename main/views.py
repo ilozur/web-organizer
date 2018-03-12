@@ -18,19 +18,10 @@ def index(request):
             'header': "Index page header",
         }
         if not request.user.is_authenticated:
-            just_signed_up = 'just_signed_up' in dict(request.GET)
-            if just_signed_up:
-                context['just_signed_up'] = True
-                sign_in_form = SignInForm()
-                context['sign_in_form'] = sign_in_form
-                sign_up_form = SignUpForm()
-                context['sign_up_form'] = sign_up_form
-            else:
-                context['just_signed_up'] = False
-                sign_in_form = SignInForm()
-                context['sign_in_form'] = sign_in_form
-                sign_up_form = SignUpForm()
-                context['sign_up_form'] = sign_up_form
+            sign_in_form = SignInForm()
+            context['sign_in_form'] = sign_in_form
+            sign_up_form = SignUpForm()
+            context['sign_up_form'] = sign_up_form
             return render(request, "main/index.html", context)
         else:
             return render(request, "main/home.html", context)
