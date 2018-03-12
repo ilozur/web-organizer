@@ -165,6 +165,12 @@ def add_event(request, data):
     time_now = datetime.now()
     data['added_date'] = time_now.date()
     data['added_time'] = time_now.time()
+    if data['should_notify_hours'] is None:
+        data['should_notify_hours'] = 0
+    if data['should_notify_days'] is None:
+        data['should_notify_days'] = 0
+    if data['should_notify_minutes'] is None:
+        data['should_notify_minutes'] = 0
     data['user'] = request.user
     if time_now > datetime(data['date'].year, data['date'].month, data['date'].day, data['time'].hour,
                            data['time'].minute, data['time'].second):

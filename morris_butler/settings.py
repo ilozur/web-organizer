@@ -144,11 +144,11 @@ CKEDITOR_CONFIGS = {
              '-', 'HorizontalRule',
              '-', 'Blockquote']
         ],
-        'height': 500,
+        'height': 100,
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
-        'filebrowserBrowseUrl': ''
+        'filebrowserBrowseUrl': '',
     }
 }
 

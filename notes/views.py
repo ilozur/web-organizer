@@ -30,19 +30,19 @@ def index(request):
 
 
 @login_required
-@csrf_exempt
 def add_note_ajax(request):
     response_data = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            name = request.POST.get('title')
-            data = request.POST.get('data')
+        form = AddNoteForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['title']
+            data = form.cleaned_data['data']
             tmp = Notes(name=name, data=data, user=request.user)
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
         else:
-            result = 'user is not authenticated'
+            result = 'form not valid'
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
@@ -107,7 +107,6 @@ def search_ajax(request):
 
 
 @login_required
-@csrf_exempt
 def sort_ajax(request):
     response_data = {}
     if request.method == "POST":
@@ -133,7 +132,6 @@ def sort_ajax(request):
 
 
 @login_required
-@csrf_exempt
 def save_ajax(request):
     response_data = {}
     if request.method == "POST":
@@ -160,7 +158,6 @@ def save_ajax(request):
 
 
 @login_required
-@csrf_exempt
 def delete_ajax(request):
     response_data = {}
     if request.method == "POST":

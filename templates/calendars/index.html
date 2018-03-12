@@ -1,11 +1,34 @@
 {% extends "main/base.html" %}
-{% block css_links %}
+{% block meta %}
     {% load staticfiles %}
     {% load bootstrap %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/calendar.css" %}'>
     <link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <script>
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                function getCookie(name) {
+                     var cookieValue = null;
+                     if (document.cookie && document.cookie != '') {
+                         var cookies = document.cookie.split(';');
+                         for (var i = 0; i < cookies.length; i++) {
+                             var cookie = jQuery.trim(cookies[i]);
+                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                 break;
+                             }
+                         }
+                     }
+                return cookieValue;
+                }
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -181,8 +204,6 @@
                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Time">
                   Выбрать время
                   </button>
-                </div>
-                <div class="form-group">
                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Place">
                   Выбрать место
                   </button>
@@ -666,27 +687,6 @@
                 now_month = 1;
                 now_year += 1;
             }
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    function getCookie(name) {
-                         var cookieValue = null;
-                         if (document.cookie && document.cookie != '') {
-                             var cookies = document.cookie.split(';');
-                             for (var i = 0; i < cookies.length; i++) {
-                                 var cookie = jQuery.trim(cookies[i]);
-                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                     break;
-                                 }
-                             }
-                         }
-                    return cookieValue;
-                    }
-                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                    }
-                }
-            });
             $.ajax({
                 type: "POST",
                 url: '/calendar/',
@@ -731,27 +731,6 @@
         {
             now_month = {{ now_month_num }};
             now_year = {{ now_year }};
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    function getCookie(name) {
-                         var cookieValue = null;
-                         if (document.cookie && document.cookie != '') {
-                             var cookies = document.cookie.split(';');
-                             for (var i = 0; i < cookies.length; i++) {
-                                 var cookie = jQuery.trim(cookies[i]);
-                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                     break;
-                                 }
-                             }
-                         }
-                    return cookieValue;
-                    }
-                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                    }
-                }
-            });
             $.ajax({
                 type: "POST",
                 url: '/calendar/',
@@ -800,27 +779,6 @@
                 now_month = 12;
                 now_year -= 1;
             }
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    function getCookie(name) {
-                         var cookieValue = null;
-                         if (document.cookie && document.cookie != '') {
-                             var cookies = document.cookie.split(';');
-                             for (var i = 0; i < cookies.length; i++) {
-                                 var cookie = jQuery.trim(cookies[i]);
-                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                     break;
-                                 }
-                             }
-                         }
-                    return cookieValue;
-                    }
-                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                    }
-                }
-            });
             $.ajax({
                 type: "POST",
                 url: '/calendar/',

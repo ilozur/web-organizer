@@ -1,10 +1,33 @@
 {% extends "main/base.html" %}
-{% block css_links %}
+{% block meta %}
     {% load staticfiles %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/index.css" %}'>
     <link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <script>
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                function getCookie(name) {
+                     var cookieValue = null;
+                     if (document.cookie && document.cookie != '') {
+                         var cookies = document.cookie.split(';');
+                         for (var i = 0; i < cookies.length; i++) {
+                             var cookie = jQuery.trim(cookies[i]);
+                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                 break;
+                             }
+                         }
+                     }
+                return cookieValue;
+                }
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -119,8 +142,8 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-warning">Создать</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_notes_btn">Отменить</button>
+                    <button type="button" class="btn btn-warning" onclick="add_note_ajax()">Создать</button>
                 </div>
             </div>
         </div>
@@ -146,8 +169,6 @@
                           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Time">
                           Выбрать время
                           </button>
-                        </div>
-                        <div class="form-group">
                           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Place">
                           Выбрать место
                           </button>
@@ -172,8 +193,8 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-danger">Создать</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_calendar_btn">Отменить</button>
+                    <button type="button" class="btn btn-danger" onclick="add_event_ajax()">Создать</button>
                 </div>
             </div>
         </div>
@@ -181,38 +202,36 @@
 
     <div class="modal fade" id="Choose-Date">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Выбор даты</h2>
-                </div>
-                <div class="modal-body">
-                    <form>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-danger">ОК</button>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Выбор даты</h2>
             </div>
+            <div class="modal-body">
+                {{ add_event_form.date }}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
+            </div>
+          </div>
         </div>
-    </div>
-    <div class="modal fade" id="Choose-Time">
+      </div>
+      <div class="modal fade" id="Choose-Time">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Выбор времени</h2>
-                </div>
-                <div class="modal-body">
-                    <form>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-danger">ОК</button>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Выбор времени</h2>
             </div>
+            <div class="modal-body">
+              {{ add_event_form.time }}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
     <div class="modal fade" id="Choose-Place">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -446,4 +465,55 @@
             </div>
         </div>
     </div>
+    <script>
+		function add_note_ajax()
+		{
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+			var data = CKEDITOR.instances.id_data.getData();
+			form_data = $('#add_note_form').serialize();
+			form_data['data'] = data;
+			$('#New-Note').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/notes/add',
+				data: form_data,
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						alert('OK, note was added');
+						$("#close_notes_btn").trigger("click");
+					}
+					$('#New-Note').removeAttr('disabled');
+				}
+			});
+		};
+
+		function add_event_ajax()
+		{
+			for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+			var data = CKEDITOR.instances.id_description.getData();
+			form_data = $('#add_event_form').serialize();
+			form_data['data'] = data;
+			$('#New-Date').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/calendar/events/add',
+				data: form_data,
+				success: function(response)
+				{
+					if (response['result'] == "success")
+					{
+						alert('OK, event was added');
+						$("#close_calendar_btn").trigger("click");
+					}
+					$('#New-Date').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
 {% endblock %}

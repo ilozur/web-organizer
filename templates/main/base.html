@@ -3,7 +3,12 @@
 	<head>
 		<title>{{ title }}</title>
         {% load staticfiles %}
-		{% block css_links %}
+        <script src='{% static "js/jquery-3.2.1.slim.min.js" %}'></script>
+		<script src='{% static "js/popper.min.js" %}'></script>
+		<script src='{% static "js/bootstrap.min.js" %}'></script>
+		<script src='{% static "js/holder.min.js" %}'></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		{% block meta %}
         {% endblock %}
 		<meta charset="utf-8">
 	</head>
@@ -65,10 +70,5 @@
                 </footer>
             {% endif %}
 		{% endblock %}
-		<script src='{% static "js/jquery-3.2.1.slim.min.js" %}'></script>
-		<script src='{% static "js/popper.min.js" %}'></script>
-		<script src='{% static "js/bootstrap.min.js" %}'></script>
-		<script src='{% static "js/holder.min.js" %}'></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	</body>
 </html>

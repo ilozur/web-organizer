@@ -4,5 +4,5 @@ from calendars.views import *
 
 urlpatterns = [
     path('', index, name='calendar.index'),
-    path('event/add', event_view, name='calendar.event_view'),
+    path('events/add', event_view, name='calendar.event_view'),
 ]
