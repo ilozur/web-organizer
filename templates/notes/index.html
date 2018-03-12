@@ -355,8 +355,8 @@
 				CKEDITOR.instances[instance].updateElement();
 			}
 			var data = CKEDITOR.instances.id_data.getData();
-			form_data = $('#add_event_form').serialize();
-            form_data['description'] = description;
+			form_data = $('#add_form').serialize();
+            form_data['data'] = data;
 			$.ajax({
 				type: "POST",
 				url: '/notes/add',
@@ -366,12 +366,13 @@
 					if (response['result'] == "Success")
 					{
 						alert('OK, note was added');
-						$("#list_id").append('<div onclick="open_note('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+						result_html = '<div onclick="open_note('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
 							+ response['id'] + '">' + $('#id_title').val()
 							+ '</h7><div class="date"> <small id="note_date_'
 							+ response['id'] + '">' + '03.11.18'
 							+ '</small></div></a><div id="note_data_' + response['id']
-							+ '" hidden>' + data + '</div></div>');
+							+ '" hidden>' + data + '</div></div>';
+						$("#list_id").html(result_html + $("#list_id").html());
 					}
 					open_note(response['id']);
 					$('#add_btn').removeAttr('disabled');
