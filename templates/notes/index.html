@@ -361,7 +361,7 @@
 			$.ajax({
 				type: "POST",
 				url: '/notes/add',
-				data: {"title": $('#id_title').val(), "data": data},
+				data: form_data
 				success: function(response)
 				{
 					if (response['result'] == "Success")

@@ -161,7 +161,6 @@ def sign_in_ajax(request):
     if request.method == "POST":
         if not request.user.is_authenticated:
             form = SignInForm(request.POST)
-            print(request.POST)
             if form.is_valid():
                 name = form.data['username'].lower()
                 password = form.data['password']
