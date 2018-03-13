@@ -20,12 +20,9 @@ def index(request):
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
     context['notes_data'] = notes_list
-    search_form = SearchForm()
-    context['search_form'] = search_form
-    form = AddNoteForm()
-    context['add_form'] = form
-    form = ShowNoteForm()
-    context['show_form'] = form
+    context['search_note_form'] = SearchForm()
+    context['add_note_form'] = AddNoteForm()
+    context['show_note_form'] = ShowNoteForm()
     return render(request, "notes/index.html", context)
 
 
@@ -146,7 +143,7 @@ def save_ajax(request):
                 tmp.name = name
                 tmp.data = data
                 tmp.save()
-                result = 'Success'
+                result = 'success'
             else:
                 result = 'No such note'
         else:
@@ -164,7 +161,7 @@ def delete_ajax(request):
         if request.user.is_authenticated:
             id = request.POST.get('id')
             if Notes.delete_note(id):
-                result = "Success"
+                result = "success"
             else:
                 result = "Sorry, Note does not exist"
         else:

@@ -1,858 +1,269 @@
 {% extends "main/base.html" %}
 {% block meta %}
-    {% load staticfiles %}
-    {% load bootstrap %}
-    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
-    <link rel="stylesheet" href='{% static "css/general.css" %}'>
-	<link rel="stylesheet" href='{% static "css/calendar.css" %}'>
-    <link rel="stylesheet" href='{% static "css/base.css" %}'>
-    <script>
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                function getCookie(name) {
-                     var cookieValue = null;
-                     if (document.cookie && document.cookie != '') {
-                         var cookies = document.cookie.split(';');
-                         for (var i = 0; i < cookies.length; i++) {
-                             var cookie = jQuery.trim(cookies[i]);
-                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                 break;
-                             }
-                         }
-                     }
-                return cookieValue;
-                }
-                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            }
-        });
-    </script>
+{% load staticfiles %}
+{% load bootstrap %}
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/general.css" %}'>
+<link rel="stylesheet" href='{% static "css/calendar.css" %}'>
+<link rel="stylesheet" href='{% static "css/base.css" %}'>
+<script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
+<script language="JavaScript" src='{% static "js/calendar/scripts.js" %}'></script>
+<script> setup_date({{ now_month_num }}, {{ now_year }}); </script>
 {% endblock %}
 
 {% block content %}
-    <article class="calendar">
-      <section class="mast">
+<article class="calendar">
+    <section class="mast">
         <h1>Календарь</h1>
-      </section>
-      <section class="content">
+    </section>
+    <section class="content">
         <section class="navigation">
-          <nav class="navbar">
-            <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#In-Map">События на карте</button>
-            <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#My">Мои события</button>
-            <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#All">Все события</button>
-            <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Recommend">Рекомендованные</button> 
-            <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Synchronization">
-              <picture>
-                <img src='{% static "icons/sync_icon.png" %}' class="icon">
-              </picture>
-            </button>
-            <div class="alert alert-danger">
-              <small data-toggle="modal" data-target="#All event">Всего событий : 72 </small> <br/>
-              <small data-toggle="modal" data-target="#For-Today event">Событий на сегодня: 4 </small> <br/>
-              <small>Событий за вчера: 2 </small> <br/>
-              <small>Событий за неделю: 7 </small> <br/>
-              <small>Событий за месяц: 27 </small> <br/>
-              <small>Событий за год: 54 </small>
-            </div>
-          </nav>
-          <nav class="navbar">
-            <div class="btn-group btn-group-lg">
-              <button type="button" class="btn btn-danger btn-change" data-num="1">
-                <picture>
-                  <img src='{% static "icons/month_icon.png" %}' class="icon">
-                </picture>
-              </button>
-              <button type="button" class="btn btn-danger btn-change" data-num="2">
-                <picture>
-                  <img src='{% static "icons/week_icon.png" %}' class="icon">
-                </picture>
-              </button>
-              <button type="button" class="btn btn-danger btn-change" data-num="3">
-                <picture>
-                  <img src='{% static "icons/list_icon.png" %}' class="icon">
-                </picture>
-              </button>
-            </div>
-            <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#New">+</button>
-            <div class="btn-group btn-group-lg">
-              <button type="button" class="btn btn-danger">Сначала новые</button>
-              <button type="button" class="btn btn-danger">Сначала старые</button>
-              <button type="button" class="btn btn-danger">А..Я</button>
-              <button type="button" class="btn btn-danger">Я..А</button>
-            </div>
-          </nav>
+            <nav class="navbar">
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#In-Map">События на
+                    карте
+                </button>
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#My">Мои события
+                </button>
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#All">Все события
+                </button>
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Recommend">
+                    Рекомендованные
+                </button>
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Synchronization">
+                    <picture>
+                        <img src='{% static "icons/sync_icon.png" %}' class="icon">
+                    </picture>
+                </button>
+                <div class="alert alert-danger">
+                    <small data-toggle="modal" data-target="#All event">Всего событий : 72</small>
+                    <br/>
+                    <small data-toggle="modal" data-target="#For-Today event">Событий на сегодня: 4</small>
+                    <br/>
+                    <small>Событий за вчера: 2</small>
+                    <br/>
+                    <small>Событий за неделю: 7</small>
+                    <br/>
+                    <small>Событий за месяц: 27</small>
+                    <br/>
+                    <small>Событий за год: 54</small>
+                </div>
+            </nav>
+            <nav class="navbar">
+                <div class="btn-group btn-group-lg">
+                    <button type="button" class="btn btn-danger btn-change" data-num="1">
+                        <picture>
+                            <img src='{% static "icons/month_icon.png" %}' class="icon">
+                        </picture>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-change" data-num="2">
+                        <picture>
+                            <img src='{% static "icons/week_icon.png" %}' class="icon">
+                        </picture>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-change" data-num="3">
+                        <picture>
+                            <img src='{% static "icons/list_icon.png" %}' class="icon">
+                        </picture>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#New-Date">+</button>
+                <div class="btn-group btn-group-lg">
+                    <button type="button" class="btn btn-danger">Сначала новые</button>
+                    <button type="button" class="btn btn-danger">Сначала старые</button>
+                    <button type="button" class="btn btn-danger">А..Я</button>
+                    <button type="button" class="btn btn-danger">Я..А</button>
+                </div>
+            </nav>
         </section>
         <section class="section-mouth">
-          <div class="btn-group btn-group-sm btn-mouth">
-              <a><button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button></a>
-              <h2>&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
-              <a><button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button></a>
-            &nbsp;&nbsp;
-            <a><button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button></a>
-          </div>
-          <table class="table table-danger table-mouth" id="month_calendar">
-            <thead>
-              <tr class="bg-danger">
-                <th></th>
-                <th>Понедельник</th>
-                <th>Вторник</th>
-                <th>Среда</th>
-                <th>Четверг</th>
-                <th>Пятница</th>
-                <th>Суббота</th>
-                <th>Воскресенье</th>
-              </tr>
-            </thead>
-            <tbody>
+            <div class="btn-group btn-group-sm btn-mouth">
+                <a>
+                    <button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
+                </a>
+
+                <h2>&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
+                        id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
+                <a>
+                    <button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>
+                </a>
+                &nbsp;&nbsp;
+                <a>
+                    <button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button>
+                </a>
+            </div>
+            <table class="table table-danger table-mouth" id="month_calendar">
+                <thead>
+                <tr class="bg-danger">
+                    <th></th>
+                    <th>Понедельник</th>
+                    <th>Вторник</th>
+                    <th>Среда</th>
+                    <th>Четверг</th>
+                    <th>Пятница</th>
+                    <th>Суббота</th>
+                    <th>Воскресенье</th>
+                </tr>
+                </thead>
+                <tbody>
                 {% for week in weeks %}
-                    <tr>
-                        <th class="bg-danger">{{ week.week_num }}</th>
-                        {% for day in week.week_days %}
-                            {% if day.class %}
-                                <td class="{{ day.class }}"><small class="date">{{ day.day }}</small></td>
-                            {% else %}
-                                <td><small class="date">{{ day.day }}</small></td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
+                <tr>
+                    <th class="bg-danger">{{ week.week_num }}</th>
+                    {% for day in week.week_days %}
+                    {% if day.class %}
+                    <td class="{{ day.class }}">
+                        <small class="date">{{ day.day }}</small>
+                    </td>
+                    {% else %}
+                    <td>
+                        <small class="date">{{ day.day }}</small>
+                    </td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tbody>
-          </table>
+                </tbody>
+            </table>
         </section>
         <section class="section-week">
-          <div class="btn-group btn-group-sm btn-mouth">
-            <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-            <h2>&nbsp;&nbsp;22.10..28.10&nbsp;&nbsp;</h2>
-            <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-          </div>
-          <table class="table table-danger table-week table-sm" id="table2">
-            <thead>
-              <tr class="bg-danger">
-                <th></th>
-                <th>Понедельник</th>
-                <th>Вторник</th>
-                <th>Среда</th>
-                <th>Четверг</th>
-                <th>Пятница</th>
-                <th>Суббота</th>
-                <th>Воскресенье</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th class="bg-danger"></th>
-                <td><small class="date">22</small></td>
-                <td>
-                  <div class="alert alert-danger event" data-toggle="modal" data-target="#Event">
-                    День рождения
-                  </div>
-                  <small class="date">23</small>
-                </td>
-                <td><small class="date">24</small></td>
-                <td><small class="date">25</small></td>
-                <td class="today"><small class="date">26</small></td>
-                <td><small class="date">27</small></td>
-                <td><small class="date">28</small></td>
-              </tr>
-            </tbody>
-          </table>
+            <div class="btn-group btn-group-sm btn-mouth">
+                <a href="#">
+                    <button type="button" class="btn btn-danger">&laquo;</button>
+                </a>
+
+                <h2>&nbsp;&nbsp;22.10..28.10&nbsp;&nbsp;</h2>
+                <a href="#">
+                    <button type="button" class="btn btn-danger">&raquo;</button>
+                </a>
+            </div>
+            <table class="table table-danger table-week table-sm" id="table2">
+                <thead>
+                <tr class="bg-danger">
+                    <th></th>
+                    <th>Понедельник</th>
+                    <th>Вторник</th>
+                    <th>Среда</th>
+                    <th>Четверг</th>
+                    <th>Пятница</th>
+                    <th>Суббота</th>
+                    <th>Воскресенье</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="bg-danger"></th>
+                    <td>
+                        <small class="date">22</small>
+                    </td>
+                    <td>
+                        <div class="alert alert-danger event" data-toggle="modal" data-target="#Event">
+                            День рождения
+                        </div>
+                        <small class="date">23</small>
+                    </td>
+                    <td>
+                        <small class="date">24</small>
+                    </td>
+                    <td>
+                        <small class="date">25</small>
+                    </td>
+                    <td class="today">
+                        <small class="date">26</small>
+                    </td>
+                    <td>
+                        <small class="date">27</small>
+                    </td>
+                    <td>
+                        <small class="date">28</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </section>
         <section class="section-list">
-          <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Where is my mind? <div class="date-and-place"> <small>29.02.2018</small> | <small><b>Москва</b></small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Sad but True <div class="date-and-place"> <small>13.02.2018</small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Karma Police <div class="date-and-place"> <small>14.02.2018</small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Starway to Heaven <div class="date-and-place"> <small>27.02.2018</small> | <small><b>Королев</b></small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Californication <div class="date-and-place"> <small>27.02.2018</small> | <small><b>Мытищи</b></small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Personal Jesus <div class="date-and-place"> <small>18.02.2018</small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">День рождения <div class="date-and-place"> <small>23.10.2018</small> | <small><b>Королев</b></small> </div></a>
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Let It Be <div class="date-and-place"> <small>22.02.2018</small> </div></a>
-          </div>
-          <nav class="navbar">
-            <div class="btn-group btn-group-lg">
-              <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-              <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-              <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-              <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-              <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Where is my mind?
+                    <div class="date-and-place">
+                        <small>29.02.2018</small>
+                        |
+                        <small><b>Москва</b></small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Sad but True
+                    <div class="date-and-place">
+                        <small>13.02.2018</small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Karma Police
+                    <div class="date-and-place">
+                        <small>14.02.2018</small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Starway to Heaven
+                    <div class="date-and-place">
+                        <small>27.02.2018</small>
+                        |
+                        <small><b>Королев</b></small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Californication
+                    <div class="date-and-place">
+                        <small>27.02.2018</small>
+                        |
+                        <small><b>Мытищи</b></small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Personal Jesus
+                    <div class="date-and-place">
+                        <small>18.02.2018</small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">День рождения
+                    <div class="date-and-place">
+                        <small>23.10.2018</small>
+                        |
+                        <small><b>Королев</b></small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal"
+                   data-target="#Event">Let It Be
+                    <div class="date-and-place">
+                        <small>22.02.2018</small>
+                    </div>
+                </a>
             </div>
-          </nav>
+            <nav class="navbar">
+                <div class="btn-group btn-group-lg">
+                    <a href="#">
+                        <button type="button" class="btn btn-danger">&laquo;</button>
+                    </a>
+                    <a href="#">
+                        <button type="button" class="btn btn-danger disabled">1</button>
+                    </a>
+                    <a href="#">
+                        <button type="button" class="btn btn-danger">2</button>
+                    </a>
+                    <a href="#">
+                        <button type="button" class="btn btn-danger">3</button>
+                    </a>
+                    <a href="#">
+                        <button type="button" class="btn btn-danger">&raquo;</button>
+                    </a>
+                </div>
+            </nav>
         </section>
-      </section>
-      </article>
-    <article class="modals">
-      <div class="modal fade" id="New">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Создание мероприятия</h2>
-            </div>
-            <div class="modal-body">
-              <form id="add_event_form">
-                  {% csrf_token %}
-                  {{ add_event_form.media }}
-                <div class="form-group">
-                  <h3>Название</h3>
-                  {{ add_event_form.title }}
-                </div>
-                <div class="form-group">
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Date">
-                  Выбрать дату
-                  </button>
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Time">
-                  Выбрать время
-                  </button>
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Place">
-                  Выбрать место
-                  </button>
-                  <span><small>Место и время по желанию</small></span>
-                </div>
-                <div class="form-group">
-                  <h3>Описание</h3>
-                  {{ add_event_form.description }}
-                </div>
-                <div class="form-group">
-                  <div class="form-check btn btn-danger">
-                    {{ add_event_form.is_public }}
-                    <label class="form-check-label"> Приватное мероприятие</label>
-                  </div>
-                </div>
-              </form>
-              <h3>Записать аудио</h3>
-            <button type="button" class="btn btn-danger btn-lg btn-block">
-              <picture>
-                <img src='{% static "icons/micro_icon.png" %}'>
-              </picture>
-            </button>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger" onclick="add_event_ajax()">Создать</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Edit">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Редактирование мероприятия</h2>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <h3>Изменить название</h3>
-                  <input type="name" class="form-control" placeholder="Мероприятиеюшка">
-                </div>
-                <div class="form-group">
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Date">
-                  Изменить дату
-                  </button>
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Time">
-                  Изменить время
-                  </button>
-                </div>
-                <div class="form-group">
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Place">
-                  Изменить место
-                  </button>
-                </div>
-                <div class="form-group">
-                  <h3>Изменить описание</h3>
-                  <textarea class="form-control" rows="7"></textarea>
-                  <div class="btn-group btn-group-sm WYSIWYG">
-                    <button type="button" class="btn btn-danger"><strong>B</strong></button>
-                    <button type="button" class="btn btn-danger"><em>I</em></button>
-                    <button type="button" class="btn btn-danger"><del>S</del></button>
-                    <button type="button" class="btn btn-danger"><ins>U</ins></button>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="form-check btn btn-danger">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label"> Приватное мероприятие</label>
-                  </div>
-                </div>
-              </form>
-            <h3>Записать аудио</h3>
-            <button type="button" class="btn btn-danger btn-lg btn-block">
-              <picture>
-                <img src='{% static "icons/micro_icon.png" %}'>
-              </picture>
-            </button>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger">Сохранить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Choose-Date">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Выбор даты</h2>
-            </div>
-            <div class="modal-body">
-                {{ add_event_form.date }}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Choose-Time">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Выбор времени</h2>
-            </div>
-            <div class="modal-body">
-              {{ add_event_form.time }}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Choose-Place">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Выбор места</h2>
-            </div>
-            <div class="modal-body">
-              <form>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger">ОК</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="For-Today">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">События на сегодня</h2>
-            </div>
-            <div class="modal-body">
-              <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Событие, что очень важно мне <small>28.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Просто событие <small>27.02.2018</small> <small>Москва</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">День рождения <small>23.10.2018</small> <small>Королев</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Событие, что напоминает мне о тех деньках <small>28.02.2018</small> <small>Мытищи</small></a>
-              </div>
-              <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                  <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-                </div>
-              </nav>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="In-Map">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">События на карте</h2>
-            </div>
-            <div class="modal-body">
-              <!-- Тут нужен JS -->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="My">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Мои события</h2>
-            </div>
-            <div class="modal-body">
-              <div class="btn-group btn-group-lg">
-                <button type="button" class="btn btn-danger">Сначала новые</button>
-                <button type="button" class="btn btn-danger">Сначала старые</button>
-                <button type="button" class="btn btn-danger">А..Я</button>
-                <button type="button" class="btn btn-danger">Я..А</button>         
-              </div>
-              <br/>
-              <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Событие, что очень важно мне <small>28.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Просто событие <small>27.02.2018</small> <small>Москва</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">День рождения <small>23.10.2018</small> <small>Королев</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Событие, что напоминает мне о тех деньках <small>28.02.2018</small> <small>Мытищи</small></a>
-              </div>
-              <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                  <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-                </div>
-              </nav>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="All">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Все события</h2>
-            </div>
-            <div class="modal-body">
-              <div class="btn-group btn-group-lg">
-                <button type="button" class="btn btn-danger">Сначала новые</button>
-                <button type="button" class="btn btn-danger">Сначала старые</button>
-                <button type="button" class="btn btn-danger">А..Я</button>
-                <button type="button" class="btn btn-danger">Я..А</button>         
-              </div>
-              <br/>
-              <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Where is my mind? <small>29.02.2018</small> <small>Москва</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Sad but True <small>13.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Karma Police <small>14.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Starway to Heaven <small>27.02.2018</small> <small>Королев</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Californication <small>27.02.2018</small> <small>Мытищи</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Personal Jesus <small>18.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">День рождения <small>23.10.2018</small> <small>Королев</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Let It Be <small>22.02.2018</small></a>
-              </div>
-              <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                  <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-                </div>
-              </nav>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Recommend">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Рекомендованные события</h2>
-            </div>
-            <div class="modal-body">
-              <div class="btn-group btn-group-lg">
-                <button type="button" class="btn btn-danger">Сначала новые</button>
-                <button type="button" class="btn btn-danger">Сначала старые</button>
-                <button type="button" class="btn btn-danger">А..Я</button>
-                <button type="button" class="btn btn-danger">Я..А</button>         
-              </div>
-              <br/>
-              <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Dapibus ac facilisis in <small>28.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Morbi leo risus <small>27.02.2018</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Porta ac consectetur ac <small>26.02.2018</small> <small>Мытищи</small></a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger" data-toggle="modal" data-target="#Event">Vestibulum at eros <small>25.02.2018</small></a>
-              </div>
-              <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                  <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-                </div>
-              </nav>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Event">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">День Рождения</h2>
-            </div>
-            <div class="modal-body">
-              <h3>23.10.2018</h3>
-              <hr/>
-              <h3>Весь день</h3>
-              <hr/>
-              <h3>г.Мытищи, МО, Россия</h3>
-              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Watch-in-Map">Посмотреть на карте</button>
-              <hr/>
-              <h4> 
-                А я Никита, ля-ля-ля-ляяяяя
-              </h4>
-              <hr/>
-              <div class="form-group">
-                <div class="like">
-                  <button type="button" class="btn btn-danger btn-sm">:) <span>12</span></button>
-                  <button type="button" class="btn btn-danger btn-sm">:( <span>2</span></button>
-                </div>
-                <textarea class="form-control" rows="3" cols="3" placeholder="Комментарий"></textarea>
-                <div class="btn-group btn-group-sm WYSIWYG">
-                  <button type="button" class="btn btn-danger"><strong>B</strong></button>
-                  <button type="button" class="btn btn-danger"><em>I</em></button>
-                  <button type="button" class="btn btn-danger"><del>S</del></button>
-                  <button type="button" class="btn btn-danger"><ins>U</ins></button>
-                </div>
-                <button type="button" class="btn btn-danger" style="margin-top: 5px;">Отправить</button>
-                <button class="btn btn-danger" style="margin-top: 5px;" type="button" data-toggle="collapse" data-target="#collapseExample">
-                Посмотреть комментарии
-                </button>
-                <div class="collapse" id="collapseExample">
-                  <div class="card bg-danger comment">
-                    <div class="card-header">
-                      <picture><img src='{% static "img/avatar.png" %}'></picture>
-                      <h5>John Doe</h5>
-                      <span class="date-of-comments">28.02.2018</span>
-                    </div>
-                    <div class="card-body">
-                      <p class="card-text">I think, it will be so <i>cool</i>.</p>
-                    </div>
-                  </div>
-                  <div class="card bg-danger comment">
-                    <div class="card-header">
-                      <picture><img src='{% static "img/avatar.png" %}'></picture>
-                      <h5>Alice</h5>
-                      <span class="date-of-comments">27.02.2018</span>
-                    </div>
-                    <div class="card-body">
-                      <p class="card-text">Yep-yep, I thinking about it too.</p>
-                    </div>
-                  </div>
-                  <div class="card bg-danger comment">
-                    <div class="card-header">
-                      <picture><img src='{% static "img/avatar.png" %}'></picture>
-                      <h5>Bob</h5>
-                      <span class="date-of-comments">26.02.2018</span>
-                    </div>
-                    <div class="card-body">
-                      <p class="card-text">I hope.</p>
-                    </div>
-                  </div>
-                  <nav class="navbar">
-                    <div class="btn-group btn-group-sm">
-                      <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-                      <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-                      <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-                      <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-                      <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-                    </div>
-                  </nav>
-                  <button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#collapseExample">Закрыть</button>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" data-toggle="modal" data-target="#Edit">Редактировать</button>
-              <button type="button" class="btn btn-danger">Сохранить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Watch-in-Map">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Карта</h2>
-            </div>
-            <div class="modal-body">
-              <!-- Тут нужен JS -->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">ОК</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Synchronization">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Синхронизация</h2>
-            </div>
-            <div class="modal-body">
-              <button type="button" class="btn btn-danger">Сохранить все события в файл</button>
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Choose-Synchronization">Сохранить часть событий в файл</button>
-              <hr>
-              <div class="form-group btn btn-danger">
-                <label>Загрузить все события из файла</label>
-                <input type="file" class="form-control-file">
-              </div>
-              <div class="form-group btn btn-danger">
-                <label>Загрузить некоторые события из файла</label>
-                <input type="file" class="form-control-file">
-              </div>
-              <button type="button" class="btn btn-danger">Синхронизировать</button>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="Choose-Synchronization">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 class="modal-title">Выберите события для сохранения</h2>
-            </div>
-            <div class="modal-body">
-              <div class="list-group" style="margin-top: 10px;">
-                <div class="form-check list-group-item list-group-item-action list-group-item-danger">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label"> Sad but True </label>
-                </div>
-                <div class="form-check list-group-item list-group-item-action list-group-item-danger">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label"> True but Sad </label>
-                </div>
-                <div class="form-check list-group-item list-group-item-action list-group-item-danger">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label"> but Sad True </label>
-                </div>
-                <div class="form-check list-group-item list-group-item-action list-group-item-danger">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label"> but True Sad</label>
-                </div>
-                <div class="form-check list-group-item list-group-item-action list-group-item-danger">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label"> Sad True but </label>
-                </div>
-                <div class="form-check list-group-item list-group-item-action list-group-item-danger">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label"> True Sad but</label>
-                </div>
-              </div>
-              <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                  <a href="#"><button type="button" class="btn btn-danger">&laquo;</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger disabled">1</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">2</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">3</button></a>
-                  <a href="#"><button type="button" class="btn btn-danger">&raquo;</button></a>
-                </div>
-              </nav>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
-              <button type="button" class="btn btn-danger">ОК</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
     </section>
-    <script>
-        var now_year = {{ now_year }};
-        var now_month = {{ now_month_num }};
-
-        function next_month()
-        {
-            now_month += 1;
-            if (now_month == 13)
-            {
-                now_month = 1;
-                now_year += 1;
-            }
-            $.ajax({
-                type: "POST",
-                url: '/calendar/',
-                data: {'now_date': String(now_year) + '_' + String(now_month)},
-                success: function(response)
-                {
-                    if (response['result'] == "success")
-                    {
-                        $("#month_holder").text(response['month_name']);
-                        $("#year_holder").text(response['now_year']);
-                        $("#month_calendar").find('tbody').each(
-                            function()
-                            {
-                                var weeks = response['weeks'];
-                                result_html = '';
-                                weeks.forEach(function(week, i, weeks)
-                                {
-                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
-                                    var week_days = week['week_days'];
-                                    week_days.forEach(function(day, i, week_days)
-                                    {
-                                        if (day['class'])
-                                        {
-                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
-                                        }
-                                        else
-                                        {
-                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
-                                        }
-                                    });
-                                    result_html += '</tr>\n';
-                                });
-                                $(this).html(result_html);
-                            }
-                        );
-                    }
-                }
-            });
-        };
-
-        function go_to_now_month()
-        {
-            now_month = {{ now_month_num }};
-            now_year = {{ now_year }};
-            $.ajax({
-                type: "POST",
-                url: '/calendar/',
-                data: {'now_date': String(now_year) + '_' + String(now_month)},
-                success: function(response)
-                {
-                    if (response['result'] == "success")
-                    {
-                        $("#month_holder").text(response['month_name']);
-                        $("#year_holder").text(response['now_year']);
-                        $("#month_calendar").find('tbody').each(
-                            function()
-                            {
-                                var weeks = response['weeks'];
-                                result_html = '';
-                                weeks.forEach(function(week, i, weeks)
-                                {
-                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
-                                    var week_days = week['week_days'];
-                                    week_days.forEach(function(day, i, week_days)
-                                    {
-                                        if (day['class'])
-                                        {
-                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
-                                        }
-                                        else
-                                        {
-                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
-                                        }
-                                    });
-                                    result_html += '</tr>\n';
-                                });
-                                $(this).html(result_html);
-                            }
-                        );
-                    }
-                }
-            });
-        };
-
-        function back_month()
-        {
-            now_month -= 1;
-            if (now_month == 0)
-            {
-                now_month = 12;
-                now_year -= 1;
-            }
-            $.ajax({
-                type: "POST",
-                url: '/calendar/',
-                data: {'now_date': String(now_year) + '_' + String(now_month)},
-                success: function(response)
-                {
-                    if (response['result'] == "success")
-                    {
-                        $("#month_holder").text(response['month_name']);
-                        $("#year_holder").text(response['now_year']);
-                        $("#month_calendar").find('tbody').each(
-                            function()
-                            {
-                                var weeks = response['weeks'];
-                                result_html = '';
-                                weeks.forEach(function(week, i, weeks)
-                                {
-                                    result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
-                                    var week_days = week['week_days'];
-                                    week_days.forEach(function(day, i, week_days)
-                                    {
-                                        if (day['class'])
-                                        {
-                                            result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
-                                        }
-                                        else
-                                        {
-                                            result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
-                                        }
-                                    });
-                                    result_html += '</tr>\n';
-                                });
-                                $(this).html(result_html);
-                            }
-                        );
-                    }
-                }
-            });
-        };
-
-        function add_event_ajax()
-        {
-            for (instance in CKEDITOR.instances) {
-				CKEDITOR.instances[instance].updateElement();
-			}
-			var description = CKEDITOR.instances.id_description.getData();
-            form_data = $('#add_event_form').serialize();
-            form_data['description'] = description;
-            $("#add_event_form").find(':input').each(function(){
-                $(this).attr('disabled', 'disabled');
-            });
-            $("#add_event_form").find(':button').each(function(){
-                $(this).attr('disabled', 'disabled');
-            });
-            $.ajax({
-                type: "POST",
-                url: '/calendar/event/add',
-                data: form_data,
-                success: function(response)
-                {
-                    alert(response['result']);
-                    if (response['result'] == "success")
-                    {
-                        window.location.href = '/calendar';
-                    }
-                    $("#add_event_form").find(':input').each(function(){
-                       $(this).removeAttr('disabled');
-                    });
-                    $("#add_event_form").find(':button').each(function(){
-                        $(this).removeAttr('disabled', 'disabled');
-                    });
-                }
-            });
-
-        };
-    </script>
+</article>
+<article class="modals">
+    {% include "modals/calendar_special.html" %}
+    {% include "modals/calendar.html" %}
+    {% include "modals/small_parts.html" %}
+</article>
+</section>
 {% endblock %}
