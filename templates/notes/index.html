@@ -74,8 +74,8 @@
 				<section class="list-view">
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
-							<div id="note_{{item.2}}" onclick="open_note('{{item.2}}');">
-								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open">
+							<div id="note_{{item.2}}" onclick="get_note_data_ajax('{{item.2}}');">
+								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Edit">
 									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
 									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
 								</a>
@@ -88,7 +88,7 @@
 				<section class="card-view" hidden>
 					<div class="row" id="cards_id">
 						{% for item in notes_data %}
-							<div class="col-md-4" data-toggle="modal" data-target="#Open-{{item.2}}">
+							<div class="col-md-4" data-toggle="modal" data-target="#Edit">
 							<div class="card">
 								<div class="card-body">
 									<h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
@@ -150,7 +150,6 @@
 			<div class="modal fade" id="Open">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content">
-						<div id="note_num" hidden></div>
 						<div class="modal-header">
 							<h2 id="open_title"></h2>
 						</div>
@@ -164,33 +163,6 @@
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
 							<button type="button" class="btn btn-danger" data-dismiss="modal" id="delete_btn" >Удалить</button>
 							<button type="button" id="open_btn" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
-							<button type="button" class="btn btn-warning">Прослушать</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal fade" id="Open-Image">
-				<div class="modal-dialog modal modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h2>Fake Plastic Trees</h2>
-						</div>
-						<div class="modal-body">
-							<p>She looks like the real thing <br/>
-								She tastes like the real thing <br/>
-								My fake plastic love <br/>
-							</p>
-							<picture>
-								<img src="/static/img/for_notes.jpg" class="user-image">
-							</picture>
-							<br/>
-							<small>27.02.2018</small> <br/>
-							<small class="text-muted">4.03.2018 (редакт.)</small>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
-							<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#Edit">Редактировать</button>
 							<button type="button" class="btn btn-warning">Прослушать</button>
 						</div>
 					</div>
@@ -219,10 +191,10 @@
 					</div>
 				</div>
 			</div>
-
 			<div class="modal fade" id="Edit">
 				<div class="modal-dialog modal-lg modal-dialog-centered">
 					<div class="modal-content">
+						<div id="note_num" hidden>0</div>
 						<div class="modal-header">
 							<h2>Редактирование заметки</h2>
 						</div>
@@ -251,15 +223,26 @@
 			</div>
 		</article>
     <script>
-    	function open_note(id){
-    		str = $('#note_data_' + id).html();
-			$('#open_title').html($('#note_title_' + id).html());
-			$('#open_data').html(str);
-			$('#open_date').html($('#note_date_' + id).html())
-			$('#open_btn').attr('onClick', 'set_cke_data();');
-			$('#delete_btn').attr('onClick', 'delete_ajax(' + id + ');');
-			$('#note_num').html(id);
-    	};
+    	function get_note_data_ajax(id){
+    		$('#note_num').html(id);
+    		$('#id_data_show').val('loading...');
+			$.ajax({
+				type: "POST",
+				url: '/notes/get_note_data',
+				data: {"id": id},
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						$('#id_title_show').val(response['title']);
+						for (instance in CKEDITOR.instances) {
+							CKEDITOR.instances[instance].updateElement();
+						}
+						CKEDITOR.instances.id_data_show.setData(response['data']);
+					}
+				}
+			});
+		};
 
         function show_cards(){
     		$('.list-view').hide();
@@ -275,9 +258,11 @@
     		$('.list-view').slideDown('slow');
     	};
 
-    	function set_cke_data(){
-    		CKEDITOR.instances.id_data_show.setData($('#open_data').html());
-    		$('#id_title_show').val($('#open_title').html());
+    	function set_cke_data(data){
+    		for (instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+    		CKEDITOR.instances.id_data_show.setData(data);
     	};
 	</script>
 	<script>
@@ -298,7 +283,7 @@
                         {
                         	$("#list_id").html('');
                         	for (var i = 0; i < response['notes_list'].length; i++) {
-								$("#list_id").append('<div onclick="open_note('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+								$("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
 								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
 								+ '</h7><div class="date"> <small id="note_date_'
 								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
@@ -338,7 +323,6 @@
 						$('#note_title_' + id).html($('#id_title_show').val());
 						$('#note_data_' + id).html(data);
 						CKEDITOR.instances.id_data_show.setData(data);
-						open_note(id);
 					}
 					$("#save_form").find(':input').each(function(){
 						$(this).removeAttr('disabled');
@@ -367,7 +351,7 @@
 					if (response['result'] == "Success")
 					{
 						alert('OK, note was added');
-						result_html = '<div onclick="open_note('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+						result_html = '<div onclick="get_note_data_ajax('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
 							+ response['id'] + '">' + $('#id_title').val()
 							+ '</h7><div class="date"> <small id="note_date_'
 							+ response['id'] + '">' + '03.11.18'
@@ -395,7 +379,7 @@
                         {
                             $("#list_id").html('');
                         	for (var i = 0; i < response['notes_list'].length; i++) {
-								$("#list_id").append('<div onclick="open_note('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+								$("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
 								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
 								+ '</h7><div class="date"> <small id="note_date_'
 								+ response['notes_list'][i][2] + '">' + response['notes_list'][i][1]

@@ -60,26 +60,27 @@ def search_notes(substr, user):
 
 
 @login_required
-def show_note(request, id):
-    context = {}
-    if request.POST:
-        note = Notes.get_note_by_id(id)
-        note.data = request.POST['data']
-        note.save()
-        return HttpResponseRedirect('/notes')
-    else:
-        if Notes.get_note_by_id(id) is not None:
-            note = Notes.get_note_by_id(id)
-            context = {
-                'header': "Show note page header",
-                'id': id,
-                'title': note.name
-            }
-            form = ShowNoteForm({'data': note.data})
-            context['form'] = form
+def get_note_data_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            id = request.POST.get('id')
+
+            if len(Notes.objects.filter(id=id)) > 0:
+                note = Notes.objects.filter(id=id).first()
+                response_data = {
+                    'title': note.name,
+                    'data': note.data
+                }
+                result = 'Success'
+            else:
+                result = 'Note does not exist'
         else:
-            context['error'] = True
-        return render(request, "notes/show_note.html", context)
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
 @login_required
@@ -137,12 +138,11 @@ def save_ajax(request):
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:
-            print(request.POST)
             request.POST.get('id')
             id = request.POST.get('id')
             name = request.POST.get('title')
             data = request.POST.get('data')
-            if Notes.objects.filter(id=id).first():
+            if len(Notes.objects.filter(id=id)) > 0:
                 tmp = Notes.objects.filter(id=id).first()
                 tmp.name = name
                 tmp.data = data
