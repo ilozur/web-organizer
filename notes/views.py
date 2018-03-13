@@ -65,7 +65,6 @@ def get_note_data_ajax(request):
     if request.method == "POST":
         if request.user.is_authenticated:
             id = request.POST.get('id')
-
             if len(Notes.objects.filter(id=id)) > 0:
                 note = Notes.objects.filter(id=id).first()
                 response_data = {

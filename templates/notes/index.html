@@ -141,7 +141,7 @@
 							</button>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" id="close_btn">Отменить</button>
 							<button type="button" class="btn btn-warning" data-dismiss="modal" id="add_btn" onclick="add_ajax()">Создать</button>
 						</div>
 					</div>
@@ -358,8 +358,8 @@
 							+ '</small></div></a><div id="note_data_' + response['id']
 							+ '" hidden>' + data + '</div></div>';
 						$("#list_id").html(result_html + $("#list_id").html());
+						$("#close_btn").trigger("click");
 					}
-					open_note(response['id']);
 					$('#add_btn').removeAttr('disabled');
 				}
 			});
