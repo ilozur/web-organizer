@@ -1,0 +1,67 @@
+{% load staticfiles %}
+<div class="modal fade" id="New-Note">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Создание заметки</h2>
+            </div>
+            <div class="modal-body">
+                <form id="add_note_form">
+                    {% csrf_token %}
+                    {{ add_note_form.media }}
+                    <h3>Название</h3>
+                    <div class="form-group">
+                        {{ add_note_form.title }}
+                    </div>
+                    <h3>Текст</h3>
+
+                    <div class="form-group">
+                        {{ add_note_form.data }}
+                    </div>
+                </form>
+                <h3>Записать аудио</h3>
+                <button type="button" class="btn btn-warning btn-lg btn-block">
+                    <picture>
+                        <img src='{% static "icons/micro_icon.png" %}'>
+                    </picture>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_note_btn">Отменить</button>
+                <button type="button" class="btn btn-warning" onclick="add_note_ajax()">Создать</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Edit-Note">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div id="note_num" hidden>0</div>
+            <div class="modal-header">
+                <h2>Редактирование заметки</h2>
+            </div>
+            <div class="modal-body">
+                <form id="save_form">
+                    {% csrf_token %}
+                    {{ show_note_form.media }}
+                    <h3>Изменить название</h3>
+                    {{ show_note_form.title_show }}
+                    <h3>Изменить текст</h3>
+                    {{ show_note_form.data_show }}
+                </form>
+                <h3>Переписать аудио</h3>
+                <button type="button" class="btn btn-warning btn-lg btn-block">
+                    <picture>
+                        <img src='{% static "icons/micro_icon.png" %}'>
+                    </picture>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+                <button class="btn btn-warning" data-dismiss="modal" id="save_note_btn" onclick="save_note_ajax();">Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

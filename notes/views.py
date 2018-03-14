@@ -14,18 +14,18 @@ def index(request):
         'title': "Notes index page",
         'header': "Notes index page header",
     }
-    notes_list = list()
     user = request.user
+    notes_list = []
+    context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+    context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+    context['notes_data'] = Notes.objects.filter(user=request.user)
     notes = Notes.get_notes('title_up', user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
     context['notes_data'] = notes_list
-    search_form = SearchForm()
-    context['search_form'] = search_form
-    form = AddNoteForm()
-    context['add_form'] = form
-    form = ShowNoteForm()
-    context['show_form'] = form
+    context['search_note_form'] = SearchForm()
+    context['add_note_form'] = AddNoteForm()
+    context['show_note_form'] = ShowNoteForm()
     return render(request, "notes/index.html", context)
 
 
@@ -65,7 +65,6 @@ def get_note_data_ajax(request):
     if request.method == "POST":
         if request.user.is_authenticated:
             id = request.POST.get('id')
-
             if len(Notes.objects.filter(id=id)) > 0:
                 note = Notes.objects.filter(id=id).first()
                 response_data = {
@@ -139,15 +138,15 @@ def save_ajax(request):
     if request.method == "POST":
         if request.user.is_authenticated:
             request.POST.get('id')
-            id = request.POST.get('id')
+            note_id = request.POST.get('id')
             name = request.POST.get('title')
             data = request.POST.get('data')
-            if len(Notes.objects.filter(id=id)) > 0:
-                tmp = Notes.objects.filter(id=id).first()
+            if len(Notes.objects.filter(id=note_id)) > 0:
+                tmp = Notes.objects.filter(id=note_id).first()
                 tmp.name = name
                 tmp.data = data
                 tmp.save()
-                result = 'Success'
+                result = 'success'
             else:
                 result = 'No such note'
         else:
@@ -165,7 +164,7 @@ def delete_ajax(request):
         if request.user.is_authenticated:
             id = request.POST.get('id')
             if Notes.delete_note(id):
-                result = "Success"
+                result = "success"
             else:
                 result = "Sorry, Note does not exist"
         else:
