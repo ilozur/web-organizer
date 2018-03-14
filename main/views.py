@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from main.forms import *
@@ -38,9 +39,11 @@ def index(request):
 
 def profile_view(request):
     if request.method == "GET":
+        form = ChangeUserDataForm()
         context = {
             'title': "User profile page",
             'header': "User profile header",
+            'change_user_data_form': form,
         }
         if request.user.is_authenticated:
             return render(request, "main/profile.html", context)
@@ -50,6 +53,7 @@ def profile_view(request):
         return HttpResponseRedirect('/')
 
 
+@login_required
 def change_user_data_ajax(request):
     response_data = {}
     if request.method == "POST":
