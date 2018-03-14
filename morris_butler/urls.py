@@ -33,6 +33,7 @@ urlpatterns = [
     path('sign_in/', sign_in_ajax, name='sign_in'),
     path('sign_out/', sign_out_view, name='sign_out'),
     path('sign_up/', sign_up_view, name='sign_up'),
+    path('profile/', profile_view, name='profile'),
     path('activate/<str:key>', activate_key, name='activate_key'),
     path('ckeditor/upload/', login_required(views.upload), name='ckeditor_upload'),
 ]

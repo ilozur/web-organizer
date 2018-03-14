@@ -36,6 +36,39 @@ def index(request):
         return HttpResponseRedirect('/')
 
 
+def profile_view(request):
+    if request.method == "GET":
+        context = {
+            'title': "User profile page",
+            'header': "User profile header",
+        }
+        if request.user.is_authenticated:
+            return render(request, "main/profile.html", context)
+        else:
+            return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/')
+
+
+def change_user_data_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        form = AddNoteForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            last_name = form.cleaned_data['last_name']
+            first_name = form.cleaned_data['first_name']
+            email = form.cleaned_data['email']
+            first_name = form.cleaned_data['first_name']
+            result = "Success"
+        else:
+            result = 'form not valid'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
 def get_last_notes(user):
     all_notes = Notes.get_notes("date_up", user)
     if all_notes.count() >= 3:
