@@ -138,9 +138,9 @@ CKEDITOR_CONFIGS = {
              '-', 'Maximize',
              '-', 'Table',
              '-', 'Image',
-             '-', 'NumberedList', 'BulletedList'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
-             '-', 'Styles', 'Font', 'FontSize', 'TextColor',
+             '-', 'NumberedList', 'BulletedList',
+             'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['-', 'Styles', 'Font', 'FontSize', 'TextColor',
              '-', 'HorizontalRule',
              '-', 'Blockquote']
         ],
