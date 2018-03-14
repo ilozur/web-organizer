@@ -14,8 +14,11 @@ def index(request):
         'title': "Notes index page",
         'header': "Notes index page header",
     }
-    notes_list = list()
     user = request.user
+    notes_list = []
+    context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+    context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+    context['notes_data'] = Notes.objects.filter(user=request.user)
     notes = Notes.get_notes('title_up', user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
@@ -135,11 +138,11 @@ def save_ajax(request):
     if request.method == "POST":
         if request.user.is_authenticated:
             request.POST.get('id')
-            id = request.POST.get('id')
+            note_id = request.POST.get('id')
             name = request.POST.get('title')
             data = request.POST.get('data')
-            if len(Notes.objects.filter(id=id)) > 0:
-                tmp = Notes.objects.filter(id=id).first()
+            if len(Notes.objects.filter(id=note_id)) > 0:
+                tmp = Notes.objects.filter(id=note_id).first()
                 tmp.name = name
                 tmp.data = data
                 tmp.save()
