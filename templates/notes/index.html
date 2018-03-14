@@ -1,6 +1,5 @@
 {% extends "main/base.html" %}
 
-<<<<<<< HEAD
 {% block meta %}
     {% load staticfiles %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
@@ -59,7 +58,6 @@
 									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
 									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
 								</a>
-								<div id="note_data_{{ item.2}}" hidden>{{ item.3.0 | safe }}</div>
 							</div>
 						{% endfor %}
 					</div>
@@ -94,7 +92,7 @@
 		</article>
 		<article class="modals">
 			{% include "modals/notes.html" %}
-            <div class="modal fade" id="Open-Note">
+			<div class="modal fade" id="Open-Note">
 			    <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">

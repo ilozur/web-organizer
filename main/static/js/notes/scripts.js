@@ -1,6 +1,9 @@
 function get_note_data_ajax(id){
     $('#note_num').html(id);
-    $('#id_data_show').val('loading...');
+    for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement();
+                }
+    CKEDITOR.instances.id_data_show.setData('loading');
     $.ajax({
         type: "POST",
         url: '/notes/get_note_data',
@@ -50,12 +53,11 @@ function search_notes_ajax()
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['notes_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open-Note"><h7 id="note_title_'
                     + response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
                     + '</h7><div class="date"> <small id="note_date_'
                     + response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
-                    + '</small></div></a><div id="note_data_' + response['notes_list'][i][2]
-                    + '" hidden>' + response['notes_list'][i][3][0] + '</div></div>');
+                    + '</small></div></a></div>');
                 }
                 $("#search_note_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
@@ -115,12 +117,11 @@ function add_note_ajax()
             if (response['result'] == "Success")
             {
                 alert('OK, note was added');
-                result_html = '<div onclick="get_note_data_ajax('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+                result_html = '<div onclick="get_note_data_ajax('+ response['id'] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open-Note"><h7 id="note_title_'
                     + response['id'] + '">' + $('#id_title').val()
                     + '</h7><div class="date"> <small id="note_date_'
                     + response['id'] + '">' + '03.11.18'
-                    + '</small></div></a><div id="note_data_' + response['id']
-                    + '" hidden>' + data + '</div></div>';
+                    + '</small></div></a></div>'
                 $("#list_id").html(result_html + $("#list_id").html());
                 $("#close_note_btn").trigger("click");
             }
@@ -139,12 +140,11 @@ function sort_notes_ajax(type){
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['notes_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open"><h7 id="note_title_'
+                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Open-Note"><h7 id="note_title_'
                     + response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
                     + '</h7><div class="date"> <small id="note_date_'
                     + response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
-                    + '</small></div></a><div id="note_data_' + response['notes_list'][i][2]
-                    + '" hidden>' + response['notes_list'][i][3][0] + '</div></div>');
+                    + '</small></div></a></div>');
                 }
                 $("#search_note_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
