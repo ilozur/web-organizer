@@ -131,15 +131,13 @@ def get_month_name(month):
     return result
 
 
-def search(string):
+def search_events(string):
     events = get_events("title_up_all")
     found_events = []
     for i in events:
         if i.title.find(string) != -1:
             found_events.append(i)
     return found_events
-
-
 
 
 def get_events(sorting_type, user=None):

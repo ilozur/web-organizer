@@ -156,19 +156,19 @@ function add_event_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
-    var description = CKEDITOR.instances.id_description.getData();
+    var data = CKEDITOR.instances.id_description.getData();
     form_data = $('#add_event_form').serialize();
-    form_data['description'] = description;
+    form_data['data'] = data;
     $.ajax({
         type: "POST",
-        url: '/calendar/event/add',
+        url: '/calendar/events/add',
         data: form_data,
         success: function(response)
         {
-            alert(response['result']);
             if (response['result'] == "success")
             {
-                window.location.href = '/calendar';
+                alert('OK, event was added');
+                $("#close_calendar_btn").trigger("click");
             }
         }
     });
