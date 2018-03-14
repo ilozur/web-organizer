@@ -134,15 +134,11 @@ CKEDITOR_CONFIGS = {
         'toolbar': [
             ['Undo', 'Redo',
              '-', 'Bold', 'Italic', 'Underline',
-             'Format',
-             '-', 'Maximize',
              '-', 'Table',
              '-', 'Image',
-             '-', 'NumberedList', 'BulletedList'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
-             '-', 'Styles', 'Font', 'FontSize', 'TextColor',
-             '-', 'HorizontalRule',
-             '-', 'Blockquote']
+             '-', 'NumberedList', 'BulletedList',
+             '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+             '-', 'Styles', 'Font', 'FontSize', 'TextColor',]
         ],
         'height': 100,
         'width': '100%',
