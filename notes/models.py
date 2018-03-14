@@ -25,26 +25,26 @@ class Notes(models.Model):
         return sorted_list
 
     @staticmethod
-    def get_notes(sorting_type, user=1):
+    def get_notes ( sorting_type, user=1 ):
         # if aim = 'date' -> 'up' = new-old, 'down' = old-new
         # if aim = 'title' -> 'up' = a-z, 'down' = z-a
-        notes = Notes.objects.filter(user=user)
+        notes = Notes.objects.filter ( user=user )
         if sorting_type != 'all':
-            sort = sorting_type.split('_')
+            sort = sorting_type.split ( '_' )
             aim = sort[0]
             direction = sort[1]
         else:
             return notes
         if aim == "date":
             if direction == "up":
-                notes = notes.order_by('-added_time')
+                notes = notes.order_by ( '-added_time' )
             elif direction == "down":
-                notes = notes.order_by('added_time')
+                notes = notes.order_by ( 'added_time' )
         elif aim == "title":
             if direction == "up":
-                notes = notes.order_by('name')
+                notes = notes.order_by ( 'name' )
             elif direction == "down":
-                notes = notes.order_by('-name')
+                notes = notes.order_by ( '-name' )
         return notes
 
     @staticmethod
@@ -67,3 +67,13 @@ class Notes(models.Model):
             if string in i.name:
                 ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
         return ret_list
+
+    @staticmethod
+    def notes_sort_by_date(datetime, user):  # note: datetime = {1: date_one NOT NULL, 2: date_two}
+        notelist = Notes.objects.filter(user=user)
+        if len(datetime) == 1:
+            date = datetime[0].date()
+            return notelist.filter(pub_date=date)
+        else:
+            return notelist.filter(pub_date__gte=datetime[0].date(),
+                                   pub_date__lte=datetime[1].date()).order_by('-pub_date')
