@@ -41,8 +41,9 @@ class ChangeUserDataForm(forms.Form):
     surname = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
                                                                             'placeholder': 'Enter new surname'}))
     old_password = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                                     'placeholder': 'Enter osd password'}))
+                                                                                     'placeholder': 'Enter old password'}))
     password1 = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                                   'placeholder': 'Enter new password'}))
-    password2 = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                                  'placeholder': 'Enter new password again'}))
+    password2 = forms.CharField(max_length=200,
+                                widget=forms.PasswordInput(attrs={'class': 'form-control',
+                                                                  'placeholder': 'Enter new password again'}))
