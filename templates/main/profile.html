@@ -6,29 +6,7 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/profile.css" %}'>
-    <script>
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                function getCookie(name) {
-                     var cookieValue = null;
-                     if (document.cookie && document.cookie != '') {
-                         var cookies = document.cookie.split(';');
-                         for (var i = 0; i < cookies.length; i++) {
-                             var cookie = jQuery.trim(cookies[i]);
-                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                 break;
-                             }
-                         }
-                     }
-                return cookieValue;
-                }
-                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            }
-        });
-    </script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
 {% endblock %}
 
 {% block content %}

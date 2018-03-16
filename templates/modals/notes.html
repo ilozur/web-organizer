@@ -9,14 +9,12 @@
                 <form id="add_note_form">
                     {% csrf_token %}
                     {{ add_note_form.media }}
-                    <h3>Название</h3>
-
                     <div class="form-group">
+                        <h3>Название</h3>
                         {{ add_note_form.note_title }}
                     </div>
-                    <h3>Текст</h3>
-
                     <div class="form-group">
+                        <h3>Текст</h3>
                         {{ add_note_form.note_data }}
                     </div>
                 </form>
@@ -37,6 +35,7 @@
 
 <div class="modal fade" id="Note-Card">
     <div class="modal-dialog modal-dialog-centered" id="Show-Note-Modal">
+        <div id="note_num" hidden>0</div>
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="note_title_show"></h2>
@@ -49,7 +48,7 @@
                 <small class="text-muted" id="note_last_edit"></small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_note_ajax()">Удалить</button>
                 <button type="button" class="btn btn-warning" onclick="open_note_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal">ОК</button>
             </div>
@@ -57,7 +56,6 @@
     </div>
     <div class="modal-dialog modal-lg modal-dialog-centered" id="Edit-Note-Modal" hidden>
         <div class="modal-content">
-            <div id="note_num" hidden>0</div>
             <div class="modal-header">
                 <h2>Редактирование заметки</h2>
             </div>

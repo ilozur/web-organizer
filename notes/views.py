@@ -161,14 +161,20 @@ def save_ajax(request):
 def delete_ajax(request):
     response_data = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            id = request.POST.get('id')
-            if Notes.delete_note(id):
-                result = "success"
-            else:
-                result = "Sorry, Note does not exist"
+        note_id = request.POST.get('id')
+        should_return_last_note = request.POST.get('return_last_note')
+        if Notes.delete_note(note_id):
+            result = "success"
         else:
-            result = 'user is not authenticated'
+            result = "Sorry, Note does not exist"
+        last_notes = Notes.get_notes("date_up", request.user)
+        last_note = None
+        if last_notes:
+            if last_notes.count() >= 3:
+                last_note = last_notes[0:3][-1]
+        if (last_note is not None) and should_return_last_note:
+            response_data['id'] = last_note.id
+            response_data['name'] = last_note.name
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

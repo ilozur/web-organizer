@@ -151,12 +151,13 @@ function add_note_ajax()
             if (response['result'] == "Success")
             {
                 alert('OK, note was added');
-                result_html = '<div id="note_' + response['id'] + '" onclick="get_note_data_ajax(' + response['id'] + ');">' +
+                result_html = '<div id="note_' + response['id'] + '" style="display: none" onclick="get_note_data_ajax(' + response['id'] + ');">' +
                     '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
                     'data-toggle="modal" data-target="#Note-Card"> <h7 id="note_title_' + response['id'] + '">' +
                     response['name'] + '</h7><div class="date"> <small>' +
                     response['datetime'] + '</small></div></a></div>';
                 $("#list_id").html(result_html + $("#list_id").html());
+                $('#note_' + response['id']).slideDown(duration='slow');
                 $("#close_note_btn").trigger("click");
             }
         }
@@ -189,21 +190,24 @@ function sort_notes_ajax(type){
     });
 };
 
-function delete_note_ajax(id)
+function delete_note_ajax()
 {
-    $('#delete_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/notes/delete',
-        data: {"id": id},
-        success: function(response)
-        {
-            if (response['result'] == "Success")
+    var id = $('#note_num').html();
+    var should_delete = confirm('Вы уверены?');
+    if (should_delete)
+    {
+        $.ajax({
+            type: "POST",
+            url: '/notes/delete',
+            data: {"id": id, 'return_last_note': false},
+            success: function(response)
             {
-                alert('OK, note was deleted');
-                $('#note_' + id).slideUp("Slow");
+                if (response['result'] == "success")
+                {
+                    alert('OK, note was deleted');
+                    $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
+                }
             }
-            $('#delete_btn').removeAttr('disabled');
-        }
-    });
+        });
+    }
 };
