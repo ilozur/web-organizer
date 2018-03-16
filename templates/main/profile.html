@@ -112,7 +112,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-secondary">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" onclick="">Сохранить</button>
 					</div>
 				</div>
 			</div>
@@ -153,6 +153,8 @@
 			$('#id_email').val('{{ user.email }}');
 			$('#id_surname').val('{{ user.last_name }}');
 		};
+
+
 	</script>
 
 {% endblock %}

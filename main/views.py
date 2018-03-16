@@ -64,7 +64,15 @@ def change_user_data_ajax(request):
             last_name = form.cleaned_data['last_name']
             first_name = form.cleaned_data['first_name']
             email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']
+            confirm_email_key = create_confirm_email_up_key(request.user, email)
+            confirm_email_key.svae()
+            if email != request.user.email:
+                mail = create_mail(request.user,
+                                   "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/" +
+                                   confirm_email_key.key,
+                                   "<a href='http://127.0.0.1:8000/activate/" + confirm_email_key.key +
+                                   "'>Go to this link to activate your account</a>")
+                send_mail(mail)
             result = "Success"
         else:
             result = 'form not valid'
