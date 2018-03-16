@@ -78,15 +78,15 @@
 						<form id="change_password_form">
 							<div class="form-group">
 								<label for="inputPassword4">Старый пароль</label>
-								{{ change_user_data_form.old_password }}
+								{{ change_password_form.old_password }}
 							</div>
 							<div class="form-group">
 								<label for="inputPassword4"> Новый пароль</label>
-								{{ change_user_data_form.password1 }}
+								{{ change_password_form.password1 }}
 							</div>
 							<div class="form-group">
 								<label for="inputPassword4">Новый пароль повторить</label>
-								{{ change_user_data_form.password2 }}
+								{{ change_password_form.password2 }}
 							</div>
 						</form>
 					</div>
@@ -158,7 +158,7 @@
                 	$('#save_changes_btn').removeAttr('disabled');
 				}
 			});
-		}; 
+		};
 	</script>
 
 {% endblock %}

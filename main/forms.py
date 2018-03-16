@@ -40,7 +40,7 @@ class ChangeUserDataForm(forms.Form):
                                                                             'placeholder': 'Enter new surname'}))
 
 
-class ChangePassword(forms.Form):
+class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                                      'placeholder': 'Enter old password'}))
     password1 = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',

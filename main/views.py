@@ -42,11 +42,13 @@ def index(request):
 @login_required
 def profile_view(request):
     if request.method == "GET":
-        form = ChangeUserDataForm()
+        change_user_data_form = ChangeUserDataForm()
+        change_password_form = ChangePasswordForm()
         context = {
             'title': "User profile page",
             'header': "User profile header",
-            'change_user_data_form': form,
+            'change_user_data_form': change_user_data_form,
+            'change_password_form': change_password_form
         }
         if request.user.is_authenticated:
             return render(request, "main/profile.html", context)
