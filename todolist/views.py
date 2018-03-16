@@ -28,8 +28,6 @@ def index(request):
 
 @login_required
 def add_todo(request):
-    context = {}
-    context['user'] = request.user
     context = {'user': request.user}
     if request.POST:
         form = AddTodoForm(request.POST)
@@ -62,8 +60,7 @@ def completed_todos(request):
 
 @login_required
 def show_todo(request, id):
-    context = {}
-    context['user'] = request.user
+    context = {'user': request.user}
     todo_now = Todos.objects.get(id=id).first()
     if todo_now is None:
         context['errors'] = ['NOT FOUND']
@@ -73,7 +70,7 @@ def show_todo(request, id):
 
 
 @login_required
-def save_todo(request,id):
+def save_todo(request, id):
     context = {'user': request.user}
     saving_todo = Todos.objects.get(id=id).first()
     f = open('saved_todos/todo.txt', 'wt')
@@ -120,7 +117,6 @@ def status_change(request):
         return HttpResponseRedirect('/')
 
 
-
 @login_required
 def show_todolist(request, id):
     context = {}
@@ -152,7 +148,7 @@ def edit_todolist(request, id):
                 'header': "Show todo page header",
                 'id': id,
                 'title': todo.title,
-                'priority' : todo.priority
+                'priority': todo.priority
             }
             form = ShowTodoForm({'text': todo.text})
             context['form'] = form

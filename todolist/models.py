@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Todos(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
-    added_time = models.DateTimeField(auto_now_add=True)
+    added_date_and_time = models.DateTimeField(auto_now_add=True)
     priority = models.CharField(max_length=100, default="priority")
     status = models.CharField(max_length=128, default="in progress")
     deadline = models.CharField(max_length=128, default="deadline")
@@ -22,7 +22,7 @@ class Todos(models.Model):
         todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
         todo_list = list()
         for item in todos:
-            todo_list.append((item.title, item.added_time.strftime("%I:%M%p on %B %d, %Y"), item.id))
+            todo_list.append((item.title, item.addded_date_and_time.strftime("%I:%M%p on %B %d, %Y"), item.id))
         return todo_list
 
     @staticmethod
