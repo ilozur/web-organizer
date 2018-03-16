@@ -1,12 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from notes.forms import *
-from notes.models import Notes
 import json
 from datetime import datetime
-
+from notes.forms import AddNoteForm, SearchForm
+from notes.models import Notes
 
 @login_required
 def index(request):
@@ -21,12 +20,14 @@ def index(request):
     notes = Notes.get_notes('title_up', user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
+    notes = Notes.get_notes('title_up', user)
+    for i in notes:
+        notes_list.append((i.name, i.added_time, i.id))
     context['notes_data'] = notes_list
     context['search_note_form'] = SearchForm()
     context['add_note_form'] = AddNoteForm()
     context['edit_note_form'] = EditNoteForm()
     return render(request, "notes/index.html", context)
-
 
 @login_required
 def add_note_ajax(request):
@@ -50,9 +51,9 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search_notes(substr, user):
-    obj = Notes.get_notes('all', user)
-    ret_list = list()
+def search(substr):
+    obj = Notes.objects.all()
+    ret_list = []
     for i in obj:
         if substr in i.name:
             ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
@@ -69,7 +70,25 @@ def get_note_data_ajax(request):
             response_data = {
                 'title': note.name,
                 'data': note.data,
-                'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y"),
+                'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y")}
+            response_data.append(i)
+    return response_data
+
+
+def show_note(request, id):
+    context = {}
+    if request.POST:
+        note = Notes.objects.filter(id=id).first()
+        note.data = request.POST['data']
+        note.save()
+        return HttpResponseRedirect('/notes')
+    else:
+        if len(Notes.objects.filter(id=id)) > 0:
+            note = Notes.objects.filter(id=id).first()
+            response_data = {
+                'header': "Show note page header",
+                'id': id,
+                'title': note.name
             }
             if note.last_edit_time is not None:
                 response_data['last_edit_time'] = note.last_edit_time.strftime("%I:%M%p on %B %d, %Y")
@@ -91,7 +110,7 @@ def search_ajax(request):
             if form.is_valid():
                 string = form.data['result']
                 response_data = {
-                    'notes_list': search_notes(string, request.user)
+                    'notes_list': Notes.search_notes(string, request.user)
                 }
                 result = 'Success'
             else:

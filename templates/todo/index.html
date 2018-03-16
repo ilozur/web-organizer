@@ -534,4 +534,39 @@
       }
     </script>
 
+    function sorting(type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/sort',
+                data: {'data': type},
+                success: function(response){
+                    if (response['result'] == "Success"){
+                        $("#todo_list").html('');
+                        for (var i = 0; i < response['todo_list'].length; i++){
+                            $("#todo_list").append("<li><a href="/todo/show/"
+                            + response['todo_list'][i][2] + "'>"
+                            + response['todo_list'][i][0] + "</a> - added at "
+                            + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
+                            + response['todo_list'][i][2] + ',' + ' done' + ')" value="Done"><hr>')
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+
+    <script>
+        function status_change(id, type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/change',
+                data: {'id': id, 'type': type},
+                success: function(response){
+
+                }
+            });
+        };
+    </script>
+
+
 {% endblock %}

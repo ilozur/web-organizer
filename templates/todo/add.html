@@ -1,0 +1,10 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+    <h1>Add new todo</h1>
+    <form action="/todo/add" method="post" id="add_form">
+        {% csrf_token %}
+        {{ add_form.as_p }}
+        <a href="/todo/add"><input name="add_todo" type="submit" value="Submit"></a>
+    </form>
+{% endblock %}

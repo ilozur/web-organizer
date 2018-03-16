@@ -7,7 +7,7 @@ class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
     name = models.CharField(max_length=128, default="title")
-    added_time = models.DateTimeField(default=None)
+    added_time = models.DateTimeField(auto_now_add=True)
     is_voice = models.BooleanField(default=False)
     last_edit_time = models.DateTimeField(default=None)
 
@@ -78,3 +78,4 @@ class Notes(models.Model):
         else:
             return notelist.filter(pub_date__gte=datetime[0].date(),
                                    pub_date__lte=datetime[1].date()).order_by('-pub_date')
+

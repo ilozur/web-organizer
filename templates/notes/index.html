@@ -1,5 +1,6 @@
 {% extends "main/base.html" %}
 
+<<<<<<< HEAD
 {% block meta %}
     {% load staticfiles %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
@@ -9,6 +10,20 @@
     <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
     <script charset="utf-8" language="JavaScript" src='{% static "js/notes/scripts.js" %}'></script>
 {% endblock %}
+=======
+{% block content %}
+    <h1>{{ header }}</h1>
+    <p>Welcome to the notes index page</p>
+    <li><a href='/notes/add'>Add note</a></li>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ search_form }}
+        <input type="submit" value="Search" />
+    </form>
+    {% for item in notes_data %}
+        <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
+    {% endfor %}
+>>>>>>> 86975b571a4bc305bc1a3c69b17ff4dfe259063b
 
 {% block content %}
     <article class="notes">

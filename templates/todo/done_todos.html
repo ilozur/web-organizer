@@ -1,0 +1,71 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+    <h1>{{ header }}</h1>
+    <p>Completed Todos</p>
+    <a href="/todo"><input type="submit" value="Todos"></a>
+    <hr>
+    <aside>
+        <input type="button" value="From A to Z" onclick="sorting('AtoZ')">
+        <input type="button" value="From Z to A" onclick="sorting('ZtoA')">
+        <input type="button" value="Last created" onclick="sorting('new')">
+        <input type="button" value="Oldest created" onclick="sorting('old')">
+    </aside>
+    <hr>
+    <div id="todo_list">
+        {% for item in items %}
+            {% csrf_token %}
+            <li>
+                <a href='/todo/show/{{ item.2 }}'>{{ item.0 }}</a> - added at {{ item.1 }}
+            </li>
+            <input type="submit" onclick="status_change({{ item.2 }}, 'in progress')" value="Reopen">
+            <hr>
+        {% endfor %}
+    </div>
+
+    <script>
+        function view_by_status(status){
+            $.ajax({
+                type: "POST",
+                url: '/todo/view',
+                data: {},
+                success: function(response){
+
+                }
+            });
+        };
+    </script>
+
+    <script>
+        function sorting(type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/sort',
+                data: {'data': type},
+                success: function(response){
+                    if (response['result'] == "Success"){
+                        $("#todo_list").html('');
+                        for (var i = 0; i < response['todo_list'].length; i++){
+                            $("#todo_list").append("<li><a href='/todo/show/"
+                            + response['todo_list'][i][2] + "'>"
+                            + response['todo_list'][i][0] + "</a> - added at "
+                            + response['todo_list'][i][1] + "</li>" + '<input type="submit" onclick="status_change('
+                            + response['todo_list'][i][2] + ',' + ' done' + ')" value="Done"><hr>')
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+
+    <script>
+        function status_change(id, type){
+            $.ajax({
+                type: "POST",
+                url: '/todo/change',
+                data: {'id': id, 'type': type}
+            });
+        };
+    </script>
+
+{% endblock %}
