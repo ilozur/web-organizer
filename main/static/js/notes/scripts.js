@@ -51,17 +51,37 @@ function close_note_edit_mode()
 };
 
 function show_cards(){
-    $('.list-view').hide();
-    $('.card-view').hide();
-    $('.card-view').removeAttr('hidden');
-    $('.card-view').show('slow');
+    if ($('#cards_id').attr('hidden'))
+    {
+        $('#list_id').attr('hidden', '');
+        $('#list_id').attr('style', 'display: none');
+        $('#cards_id').removeAttr('hidden');
+        if ($('#cards_id div').length == 0)
+        {
+            $('#cards_id').removeAttr('style');
+        }
+        else
+        {
+            $('#cards_id').slideDown('slow');
+        }
+    }
 };
 
 function show_list(){
-    $('.card-view').hide();
-    $('.list-view').hide();
-    $('.list-view').removeAttr('hidden');
-    $('.list-view').slideDown('slow');
+    if ($('#list_id').attr('hidden'))
+    {
+        $('#cards_id').attr('hidden', '');
+        $('#cards_id').attr('style', 'display: none');
+        $('#list_id').removeAttr('hidden');
+        if ($('#list_id div').length == 0)
+        {
+            $('#list_id').removeAttr('style');
+        }
+        else
+        {
+            $('#list_id').slideDown('slow');
+        }
+    }
 };
 
 function search_notes_ajax()
@@ -193,7 +213,7 @@ function sort_notes_ajax(type){
 function delete_note_ajax()
 {
     var id = $('#note_num').html();
-    var should_delete = confirm('Βϋ σβεπενϋ?');
+    var should_delete = confirm('Π’Ρ‹ ΡƒΠ²ΠµΡ€ΠµΠ½Ρ‹?');
     if (should_delete)
     {
         $.ajax({

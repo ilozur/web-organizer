@@ -77,7 +77,7 @@ function add_note_ajax()
                 var now_notes_count = $("#last_notes_holder").find('div').length;
                 if (now_notes_count == 0)
                 {
-                    $("#last_notes_holder").html('<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>');
+                    $("#last_notes_holder").html('<p class="lead"><small><a href="' + notes_link + '">РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ</a></small></p></div>');
                     $("#last_notes_holder").parent().find('h5').remove();
                 }
                 var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
@@ -166,7 +166,7 @@ function save_note_ajax()
 function delete_note_ajax()
 {
     var id = $('#note_num').html();
-    var should_delete = confirm('Вы уверены?');
+    var should_delete = confirm('Р’С‹ СѓРІРµСЂРµРЅС‹?');
     if (should_delete)
     {
         $.ajax({
@@ -181,14 +181,14 @@ function delete_note_ajax()
                     if (now_notes_count == 1)
                     {
                         $("#last_notes_holder p:last").remove();
-                        $("#last_notes_holder").append('<h5>Нет заметок</h5>');
+                        $("#last_notes_holder").append('<h5>РќРµС‚ Р·Р°РјРµС‚РѕРє</h5>');
                     }
                     if (response['id'])
                     {
                         var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                             'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
                             '">' + response['name'] + '</a></p></div>';
-                        var show_all_label = '<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>';
+                        var show_all_label = '<p class="lead"><small><a href="' + notes_link + '">РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ</a></small></p></div>';
                         $("#last_notes_holder p:last").remove();
                         $("#last_notes_holder").html($("#last_notes_holder").html() + new_note_html);
                         $("#last_notes_holder").html($("#last_notes_holder").html() + show_all_label);
