@@ -13,6 +13,7 @@ from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import AddNoteForm
 from notes.models import Notes
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -50,34 +51,6 @@ def profile_view(request):
             return render(request, "main/profile.html", context)
         else:
             return HttpResponseRedirect('/')
-    else:
-        return HttpResponseRedirect('/')
-
-
-@login_required
-def change_user_data_ajax(request):
-    response_data = {}
-    if request.method == "POST":
-        form = AddNoteForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            last_name = form.cleaned_data['last_name']
-            first_name = form.cleaned_data['first_name']
-            email = form.cleaned_data['email']
-            confirm_email_key = create_confirm_email_up_key(request.user, email)
-            confirm_email_key.svae()
-            if email != request.user.email:
-                mail = create_mail(request.user,
-                                   "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/" +
-                                   confirm_email_key.key,
-                                   "<a href='http://127.0.0.1:8000/activate/" + confirm_email_key.key +
-                                   "'>Go to this link to activate your account</a>")
-                send_mail(mail)
-            result = "Success"
-        else:
-            result = 'form not valid'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
@@ -156,11 +129,14 @@ def sign_up_view(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def create_mail(user, text, html):
+def create_mail(user, text, html, email=None):
     mail = dict()
     mail['subject'] = 'Dear ' + user.first_name + ' ' + user.last_name + '!'
     mail['from_email'] = EMAIL_HOST_USER
-    mail['to_email'] = user.email
+    if email:
+        mail['to_email'] = email
+    else:
+        mail['to_email'] = user.email
     mail['text_content'] = text
     mail['html_content'] = html
     return mail
@@ -237,16 +213,52 @@ def sign_in_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def confirm_mail(request, key):
-    if len(ConfirmMailKey.objects.filter(request.user).first()) > 0:
-        confirm_key = ConfirmMailKey.objects.filter(request.user).first()
-        user = request.user
-        user.email = confirm_key.email
-        confirm_key.delete()
-    return HttpResponseRedirect('/')
+@login_required
+def change_user_data_ajax(request):
+    response_data = {}
+    user = request.user
+    if request.method == "POST":
+        form = ChangeUserDataForm(request.POST)
+        if form.is_valid():
+            last_name = form.cleaned_data['surname']
+            first_name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            if email != request.user.email:
+                confirm_email_key = create_confirm_email_key(user, email)
+                if confirm_email_key is None:
+                    result = "Email is already used by other user"
+                else:
+                    mail = create_mail(user,
+                                       "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/"
+                                       + str(user.id) + "/" + confirm_email_key.key,
+                                       "<a href='http://127.0.0.1:8000/confirm_mail/"
+                                       + str(user.id) + "/" + confirm_email_key.key +
+                                       "'>Go to this link to confirm this email</a>", email)
+                    send_mail(mail)
+                    result = "Success"
+            else:
+                result = "Success"
+        else:
+            result = 'form not valid'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
-def create_confirm_email_up_key(user, email):
+def confirm_mail(request, id, key):
+    if request.method == "GET":
+        user = User.objects.filter(id=id).first()
+        if ConfirmMailKey.objects.filter(user=user).count() > 0:
+            confirm_key = ConfirmMailKey.objects.filter(user=user).first()
+            if key == confirm_key.key:
+                user.email = confirm_key.email
+                confirm_key.delete()
+                user.save()
+    return HttpResponseRedirect('/profile')
+
+
+def create_confirm_email_key(user, email):
     prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
                                                password=(email).encode('utf-8'),
                                                salt=SECRET_KEY.encode('utf-8'),
@@ -254,7 +266,17 @@ def create_confirm_email_up_key(user, email):
     key = binascii.hexlify(prepared_hash_object)
     key = key.decode('utf-8')
     key += str(user.id)
-    confirm_email_key = ConfirmMailKey(user=user, key=key, email=email)
+    if check_email_uniq(email):
+        if ConfirmMailKey.objects.filter(user=user).count() > 0:
+            confirm_email_key = ConfirmMailKey.objects.filter(user=user).first()
+            confirm_email_key.user = user
+            confirm_email_key.key = key
+            confirm_email_key.email = email
+        else:
+            confirm_email_key = ConfirmMailKey(user=user, key=key, email=email)
+            confirm_email_key.save()
+    else:
+        confirm_email_key = None
     return confirm_email_key
 
 

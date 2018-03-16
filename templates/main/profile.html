@@ -80,7 +80,7 @@
 							<label>Изменить аватар</label>
 							<input type="file" class="form-control-file">
 						</div>
-						<form>
+						<form id="change_user_data_form">
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label for="inputEmail4">Имя</label>
@@ -96,6 +96,8 @@
 								<label for="inputEmail4">Email</label>
 								{{ change_user_data_form.email }}
 							</div>
+						</form>
+						<form id="change_password_form">
 							<div class="form-group">
 								<label for="inputPassword4">Старый пароль</label>
 								{{ change_user_data_form.old_password }}
@@ -112,7 +114,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-secondary" onclick="">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" id="save_changes_btn" onclick="change_user_data()">Сохранить</button>
 					</div>
 				</div>
 			</div>
@@ -155,6 +157,38 @@
 		};
 
 
+	</script>
+
+	<script>
+		function change_user_data()
+		{
+			form_data = $('#change_user_data_form').serialize();
+			$("#change_user_data_form").find(':input').each(function(){
+				$(this).attr('disabled', 'disabled');
+			});
+			$('#save_changes_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/profile/change_user_data',
+				data: form_data,
+				success: function(response)
+				{
+					if (response['result'] == "Success")
+					{
+						alert("please check your email to confirm it);
+					}
+					else
+					{
+						alert(response['result']);
+					}
+					alert(response['result']);
+					$("#change_user_data_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#save_changes_btn').removeAttr('disabled');
+				}
+			});
+		};
 	</script>
 
 {% endblock %}
