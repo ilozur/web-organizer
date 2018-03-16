@@ -7,10 +7,16 @@ class SignUpKey(models.Model):
     key = models.CharField(max_length=256)
     expiration_date = models.DateField(default="2018-01-01")
 
-def modification_of_user_data(user,name=none,surname=none,username=none)
-    if name!=none:
-    user.name = name
-    if surname!=none:
-    user.surname = surname
-    if userename!=none:
-    user.username = username
+
+def modification_of_user_data(user, name=None, surname=None, username=None):
+    if name is not None:
+        user.first_name = name
+    if surname is not None:
+        user.last_name = surname
+    user.save()
+    if username is not None and User.objects.filter(username=username).count() == 0:
+        user.username = username
+        user.save()
+    else:
+        return False
+    return True

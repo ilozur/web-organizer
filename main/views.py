@@ -65,7 +65,6 @@ def change_user_data_ajax(request):
             first_name = form.cleaned_data['first_name']
             email = form.cleaned_data['email']
             first_name = form.cleaned_data['first_name']
-            result = "Success"
         else:
             result = 'form not valid'
         response_data['result'] = result
