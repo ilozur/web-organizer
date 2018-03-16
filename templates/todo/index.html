@@ -258,6 +258,11 @@
     </section>
     </article>
     <article class="modals">
+
+
+
+
+
     <div class="modal fade" id="New">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -399,13 +404,32 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#check">Удалить</button>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit">Редактировать</button>
                     <button type="button" class="btn btn-primary">Прослушать</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="check" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title align-center ">Вы уверины?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="Edit">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -439,12 +463,32 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" data-toggle="modal" data-target="#checkredact" >Отменить</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Сохранить</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="checkredact" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5> Всё содердимое не сохранится.</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal fade" id="Synchronization">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
