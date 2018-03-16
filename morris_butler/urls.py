@@ -36,6 +36,7 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),
     path('profile/change_user_data', change_user_data_ajax, name='change_user_data'),
     path('activate/<str:key>', activate_key, name='activate_key'),
+    path('confirm_mail/<int:id>/<str:key>', confirm_mail, name='confirm_mail'),
     path('ckeditor/upload/', login_required(views.upload), name='ckeditor_upload'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
