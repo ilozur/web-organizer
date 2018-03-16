@@ -37,6 +37,7 @@ def index(request):
         return HttpResponseRedirect('/')
 
 
+@login_required
 def profile_view(request):
     if request.method == "GET":
         form = ChangeUserDataForm()
@@ -226,6 +227,27 @@ def sign_in_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def confirm_mail(request, key):
+    if len(ConfirmMailKey.objects.filter(request.user).first()) > 0:
+        confirm_key = ConfirmMailKey.objects.filter(request.user).first()
+        user = request.user
+        user.email = confirm_key.email
+        confirm_key.delete()
+    return HttpResponseRedirect('/')
+
+
+def create_confirm_email_up_key(user, email):
+    prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
+                                               password=(email).encode('utf-8'),
+                                               salt=SECRET_KEY.encode('utf-8'),
+                                               iterations=100000)
+    key = binascii.hexlify(prepared_hash_object)
+    key = key.decode('utf-8')
+    key += str(user.id)
+    confirm_email_key = ConfirmMailKey(user=user, key=key, email=email)
+    return confirm_email_key
 
 
 def sign_out_view(request):
