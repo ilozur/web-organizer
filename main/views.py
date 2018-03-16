@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
-from notes.forms import AddNoteForm
+from notes.forms import *
 from notes.models import Notes
 
 
@@ -30,6 +30,7 @@ def index(request):
         else:
             context['add_event_form'] = AddingEventForm()
             context['add_note_form'] = AddNoteForm()
+            context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             return render(request, "main/home.html", context)
@@ -76,7 +77,7 @@ def change_user_data_ajax(request):
 def get_last_notes(user):
     all_notes = Notes.get_notes("date_up", user)
     if all_notes.count() >= 3:
-        first_three = all_notes[1:4]
+        first_three = all_notes[0:3]
     else:
         first_three = all_notes
     return first_three

@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/notes.css" %}'>
     <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
-    <script language="JavaScript" src='{% static "js/notes/scripts.js" %}'></script>
+    <script charset="utf-8" language="JavaScript" src='{% static "js/notes/scripts.js" %}'></script>
 {% endblock %}
 
 {% block content %}
@@ -30,7 +30,7 @@
 								</picture>
 							</button>
 						</div>
-						<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New-Note">+</button>
+						<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()">+</button>
 						<div class="btn-group btn-group-lg">
 							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
 							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
@@ -54,7 +54,7 @@
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
 							<div id="note_{{item.2}}" onclick="get_note_data_ajax('{{item.2}}');">
-								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Edit-Note">
+								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
 									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
 									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
 								</a>
@@ -92,30 +92,5 @@
 		</article>
 		<article class="modals">
 			{% include "modals/notes.html" %}
-			<div class="modal fade" id="Open-Note">
-			    <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2 class="modal-title">Creep</h2>
-                        </div>
-                        <div class="modal-body">
-                            <p>I don't care if it hurts <br/>
-                                I want to have control <br/>
-                                I want a perfect body <br/>
-                                I want a perfect soul <br/>
-                                I want you to notice when I'm not around <br/>
-                                You're so fucking special <br/>
-                                I wish I was special
-                            </p>
-                            <small>28.02.2018</small> <br/>
-                            <small class="text-muted">4.03.2018 (редакт.)</small>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
-                            <button type="button" class="btn btn-warning" data-dismiss="modal">ОК</button>
-                        </div>
-                    </div>
-			    </div>
-		    </div>
 		</article>
 {% endblock %}

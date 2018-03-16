@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from notes.forms import *
 from notes.models import Notes
 import json
+from datetime import datetime
 
 
 @login_required
@@ -18,14 +18,13 @@ def index(request):
     notes_list = []
     context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
     context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
-    context['notes_data'] = Notes.objects.filter(user=request.user)
     notes = Notes.get_notes('title_up', user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
     context['notes_data'] = notes_list
     context['search_note_form'] = SearchForm()
     context['add_note_form'] = AddNoteForm()
-    context['show_note_form'] = ShowNoteForm()
+    context['edit_note_form'] = EditNoteForm()
     return render(request, "notes/index.html", context)
 
 
@@ -35,13 +34,14 @@ def add_note_ajax(request):
     if request.method == "POST":
         form = AddNoteForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['title']
-            data = form.cleaned_data['data']
-            tmp = Notes(name=name, data=data, user=request.user)
+            name = form.cleaned_data['note_title']
+            data = form.cleaned_data['note_data']
+            tmp = Notes(name=name, data=data, added_time=datetime.now(), user=request.user)
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
             response_data['name'] = tmp.name
+            response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
         else:
             result = 'form not valid'
         response_data['result'] = result
@@ -63,19 +63,19 @@ def search_notes(substr, user):
 def get_note_data_ajax(request):
     response_data = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            id = request.POST.get('id')
-            if len(Notes.objects.filter(id=id)) > 0:
-                note = Notes.objects.filter(id=id).first()
-                response_data = {
-                    'title': note.name,
-                    'data': note.data
-                }
-                result = 'Success'
-            else:
-                result = 'Note does not exist'
+        note_id = request.POST.get('id')
+        if Notes.objects.filter(id=note_id).count() > 0:
+            note = Notes.objects.filter(id=note_id).first()
+            response_data = {
+                'title': note.name,
+                'data': note.data,
+                'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y"),
+            }
+            if note.last_edit_time is not None:
+                response_data['last_edit_time'] = note.last_edit_time.strftime("%I:%M%p on %B %d, %Y")
+            result = 'Success'
         else:
-            result = 'user is not authenticated'
+            result = 'Note does not exist'
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
@@ -136,21 +136,21 @@ def sort_ajax(request):
 def save_ajax(request):
     response_data = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            request.POST.get('id')
-            note_id = request.POST.get('id')
-            name = request.POST.get('title')
-            data = request.POST.get('data')
-            if len(Notes.objects.filter(id=note_id)) > 0:
+        form = EditNoteForm(request.POST)
+        if form.is_valid():
+            note_id = form.cleaned_data['note_id']
+            if Notes.objects.filter(id=note_id).count() > 0:
                 tmp = Notes.objects.filter(id=note_id).first()
-                tmp.name = name
-                tmp.data = data
+                tmp.name = form.cleaned_data['note_title_edit']
+                tmp.data = form.cleaned_data['note_data_edit']
+                tmp.last_edit_time = datetime.now()
                 tmp.save()
                 result = 'success'
+                response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
             else:
                 result = 'No such note'
         else:
-            result = 'user is not authenticated'
+            result = 'Form not valid'
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

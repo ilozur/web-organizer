@@ -7,8 +7,9 @@ class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
     name = models.CharField(max_length=128, default="title")
-    added_time = models.DateTimeField(auto_now_add=True)
+    added_time = models.DateTimeField(default=None)
     is_voice = models.BooleanField(default=False)
+    last_edit_time = models.DateTimeField(default=None)
 
     @staticmethod
     def get_notes_by_ranged_name(user, name_range=list()):

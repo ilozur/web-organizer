@@ -140,7 +140,7 @@ CKEDITOR_CONFIGS = {
              '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
              '-', 'Styles', 'Font', 'FontSize', 'TextColor',]
         ],
-        'height': 100,
+        'height': 150,
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
