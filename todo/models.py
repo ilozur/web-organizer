@@ -28,3 +28,30 @@ class Todos(models.Model):
     @staticmethod
     def get_todo_by_id(id):
         return Todos.objects.filter(id=id).first()
+
+    @staticmethod
+    def delete_todo(id):
+        if len(Todos.objects.filter(id=id)) > 0:
+            Todos.objects.filter(id=id).delete()
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def search_todos(string, user):
+        obj = Todos.get_todos('all', 'in progress', user)
+        ret_list = list()
+        for i in obj:
+            if string in i.title:
+                ret_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+        return ret_list
+
+    @staticmethod
+    def todos_sort_by_date(datetime, user):  # todos: datetime = {1: date_one NOT NULL, 2: date_two}
+        todolist = Todos.objects.filter(user=user)
+        if len(datetime) == 1:
+            date = datetime[0].date()
+            return todolist.filter(pub_date=date)
+        else:
+            return todolist.filter(pub_date__gte=datetime[0].date(),
+                                   pub_date__lte=datetime[1].date()).order_by('-pub_date')

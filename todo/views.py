@@ -4,12 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
-import os
 from todo.forms import AddTodoForm
-from todo.forms import ShowTodoForm
+from todo.forms import SearchForm
+from todo.forms import EditTodoForm
 from todo.models import Todos
-from django import forms
 import json
+from datetime import datetime
 
 
 @login_required
@@ -19,64 +19,56 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    todo_list = Todos.get_todos('AtoZ', 'in progress', user)
-    context['items'] = todo_list
+    todo_list = []
+    todos = Todos.get_todos('AtoZ', 'in progress', user)
+    for i in todos:
+        todo_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
+    todos = Todos.get_todos('AtoZ', 'in progress', user)
+    for i in todos:
+        todo_list.append((i.title, i.added_date_and_time, i.id))
+    context['todo_data'] = todo_list
+    context['search_todo_form'] = SearchForm()
+    context['add_todo_form'] = AddTodoForm()
+    context['edit_todo_form'] = EditTodoForm()
     return render(request, "todo/index.html", context)
 
 
 @login_required
 def add_todo(request):
-    context = {'user': request.user}
-    if request.POST:
+    response_data = {}
+    if request.method == "POST":
         form = AddTodoForm(request.POST)
         if form.is_valid():
-            user = request.user
-            p = Todos(text=form.data['text'], user=user, title=form.data['title'],
-                      priority=form.data['priority'], deadline=form.data['deadline'])
-            p.save()
-            context['id'] = p.id
+            title = form.cleaned_data['title']
+            text = form.cleaned_data['text']
+            priority = form.cleaned_data['priority']
+            tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
+                        priority=priority)
+            tmp.save()
+            result = "Success"
+            response_data['id'] = tmp.id
+            response_data['title'] = tmp.title
+            response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
         else:
-            context['errors'] = form.errors
-        return render(request, 'todolist/add.html', context)
+            result = 'form not valid'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
-        form = AddTodoForm()
-        context['add_form'] = form
-        return render(request, 'todolist/add.html', context)
+        return HttpResponseRedirect('/')
 
 
 @login_required
-def completed_todos(request):
-    context = {
-        'title': "Todos index page",
-        'header': "Todos index page header",
-    }
-    user = request.user
-    todo_list = Todos.get_todos('AtoZ', 'done', user)
-    context['items'] = todo_list
-    return render(request, "todolist/done_todos.html", context)
-
-
-@login_required
-def show_todo(request, id):
-    context = {'user': request.user}
-    todo_now = Todos.objects.get(id=id).first()
-    if todo_now is None:
-        context['errors'] = ['NOT FOUND']
-    else:
-        context['a'] = todo_now
-        return render(request, 'show.html', context)
-
-
-@login_required
-def save_todo(request, id):
-    context = {'user': request.user}
-    saving_todo = Todos.objects.get(id=id).first()
-    f = open('saved_todos/todo.txt', 'wt')
-    f.write(saving_todo.title)
-    f.write(saving_todo.text)
-    f.close()
-    context['title'] = saving_todo.title
-    return render(request, 'saving.html', context)
+def show_todo(request):
+    response_data = {}
+    if request.method == "POST":
+        todo_id = request.POST.get('id')
+        if Todos.get_todo_by_id(id=todo_id).count() > 0:
+            todo = Todos.get_todo_by_id(id=todo_id)
+            response_data = {
+                'title': todo.title,
+                'text': todo.text,
+                'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y")}
+    return response_data
 
 
 @csrf_exempt
@@ -102,10 +94,10 @@ def status_change(request):
     response = {}
     if request.method == "POST":
         if request.user.is_authenticated:
-            id = request.POST.get('id')
-            type = request.POST.get('type')
-            obj = Todos.get_todo_by_id(id)
-            obj.status = type
+            todo_id = request.POST.get('id')
+            todo_type = request.POST.get('type')
+            obj = Todos.get_todo_by_id(todo_id)
+            obj.status = todo_type
             obj.save()
             response['result'] = "Success"
         else:
@@ -116,52 +108,37 @@ def status_change(request):
 
 
 @login_required
-def show_todolist(request):
-    context = {}
-    if request.POST:
-        form = ShowTodoForm(request)
-        Todo = Todos.get_todo_by_id(id)
-        Todolist = request.POST
-        Todolist.data = request.POST['data']
-        Todolist.text = request.POST['text']
-        Todolist.save()
-        return HttpResponseRedirect('/todolist')
-    return render(request, "todolist/index.html", context)
-
-
-@login_required
-def edit_todolist(request, id):
-    context = {}
-    if request.POST:
-        form = ShowTodoForm(request)
-        Todo = Todos.objects.filter(id=id).first()
-        Todo.data = request.POST['data']
-        Todo.data = request.POST['text']
-        Todo.save()
-        return HttpResponseRedirect('/todolist')
-    else:
-        if len(Todos.objects.filter(id=id)) > 0:
-            todo = Todos.objects.filter(id=id).first()
-            context = {
-                'header': "Show todo page header",
-                'id': id,
-                'title': todo.title,
-                'priority': todo.priority
-            }
-            form = ShowTodoForm({'text': todo.text})
-            context['form'] = form
+def edit_todo(request):
+    response_data = {}
+    if request.method == "POST":
+        form = EditTodoForm(request.POST)
+        if form.is_valid():
+            todo_id = form.cleaned_data['note_id']
+            if Todos.get_todo_by_id(id=todo_id).count() > 0:
+                tmp = Todos.get_todo_by_id(id=todo_id).first()
+                tmp.title = form.cleaned_data['todo_title_edit']
+                tmp.text = form.cleaned_data['todo_text_edit']
+                tmp.last_edit_time = datetime.now()
+                tmp.save()
+                result = 'success'
+                response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+            else:
+                result = 'No such note'
         else:
-            context['error'] = True
-        return render(request, "todolist/show.html", context)
+            result = 'Form not valid'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
 @login_required
-def Read_file(file_name):
+def read_file(file_name):
     s = open(file_name, "r")
     s = s.read()
     a = s.split("\n")
     user = a[0]
-    date, time = time_and_date_for_todo()
+    date, time = '00-00-00', '34'
     if not(a[1]):
         added_time = time
     else:
@@ -181,3 +158,46 @@ def Read_file(file_name):
     p = Todos(text=text, user=user, title=title, added_time=added_time,
               added_date=added_date, priority=priority, deadline=deadline, status=status)
     p.save()
+
+
+@login_required
+def delete_todo(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            id = request.POST.get('id')
+            if Todos.delete_todo(id):
+                result = "success"
+            else:
+                result = "Sorry, Todo does not exist"
+        else:
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+@login_required
+def search(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            form = SearchForm(request.POST)
+            if form.is_valid():
+                string = form.data['result']
+                response_data = {
+                    'todo_list': Todos.search_todos(string, request.user)
+                }
+                result = 'Success'
+            else:
+                response_data = {
+                    'todo_list': Todos.get_todos(request.sorting_type, 'in progress', request.user)
+                }
+                result = 'Form is not valid'
+        else:
+            result = 'user is not authenticated'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')

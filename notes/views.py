@@ -6,6 +6,8 @@ import json
 from datetime import datetime
 from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
+from django.http import HttpResponse, HttpResponseRedirect
+
 
 @login_required
 def index(request):
@@ -71,34 +73,7 @@ def get_note_data_ajax(request):
                 'title': note.name,
                 'data': note.data,
                 'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y")}
-            response_data.append(i)
     return response_data
-
-
-def show_note(request, id):
-    context = {}
-    if request.POST:
-        note = Notes.objects.filter(id=id).first()
-        note.data = request.POST['data']
-        note.save()
-        return HttpResponseRedirect('/notes')
-    else:
-        if len(Notes.objects.filter(id=id)) > 0:
-            note = Notes.objects.filter(id=id).first()
-            response_data = {
-                'header': "Show note page header",
-                'id': id,
-                'title': note.name
-            }
-            if note.last_edit_time is not None:
-                response_data['last_edit_time'] = note.last_edit_time.strftime("%I:%M%p on %B %d, %Y")
-            result = 'Success'
-        else:
-            result = 'Note does not exist'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
 
 
 @login_required
