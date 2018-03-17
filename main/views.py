@@ -238,10 +238,10 @@ def change_user_data_ajax(request):
                     response_data['answer'] = "Email is already used by other user"
                 else:
                     mail = create_mail(user,
-                                       "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/"
-                                       + str(user.id) + "/" + confirm_email_key.key,
-                                       "<a href='http://127.0.0.1:8000/confirm_mail/"
-                                       + str(user.id) + "/" + confirm_email_key.key +
+                                       "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/" +
+                                       str(user.id) + "/" + confirm_email_key.key,
+                                       "<a href='http://127.0.0.1:8000/confirm_mail/" +
+                                       str(user.id) + "/" + confirm_email_key.key +
                                        "'>Go to this link to confirm this email</a>", email)
                     send_mail(mail)
                     result = "Success"
@@ -258,9 +258,9 @@ def change_user_data_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def confirm_mail(request, id, key):
+def confirm_mail(request, user_id, key):
     if request.method == "GET":
-        user = User.objects.filter(id=id).first()
+        user = User.objects.filter(id=user_id).first()
         if ConfirmMailKey.objects.filter(user=user).count() > 0:
             confirm_key = ConfirmMailKey.objects.filter(user=user).first()
             if key == confirm_key.key:
@@ -272,7 +272,7 @@ def confirm_mail(request, id, key):
 
 def create_confirm_email_key(user, email):
     prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
-                                               password=(email).encode('utf-8'),
+                                               password=email.encode('utf-8'),
                                                salt=SECRET_KEY.encode('utf-8'),
                                                iterations=100000)
     key = binascii.hexlify(prepared_hash_object)
@@ -327,6 +327,7 @@ def change_password_ajax(request):
             if new_password1 == new_password2:
                 user.set_password(new_password1)
                 user.save()
+                login(request, user)
                 result = "Success"
             else:
                 result = "New passwords does not match"

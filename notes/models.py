@@ -54,9 +54,9 @@ class Notes(models.Model):
         return Notes.objects.filter(id=note_id).first()
 
     @staticmethod
-    def delete_note(id):
-        if len(Notes.objects.filter(id=id)) > 0:
-            Notes.objects.filter(id=id).delete()
+    def delete_note(note_id):
+        if len(Notes.objects.filter(id=note_id)) > 0:
+            Notes.objects.filter(id=note_id).delete()
             return True
         else:
             return False
