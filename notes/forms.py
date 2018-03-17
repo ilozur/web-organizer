@@ -7,6 +7,7 @@ class AddNoteForm(forms.Form):
     note_title = forms.CharField(max_length=19, widget=forms.TextInput(attrs={'class': 'form-control',
                                                                               'placeholder': 'Заметочка'}))
     note_data = RichTextUploadingFormField(widget=CKEditorUploadingWidget)
+    note_data_part = forms.CharField(max_length=128, widget=forms.HiddenInput())
 
 
 class EditNoteForm(forms.Form):
@@ -14,6 +15,7 @@ class EditNoteForm(forms.Form):
                                                                                    'placeholder': 'Заметочка'}))
     note_data_edit = RichTextUploadingFormField(widget=CKEditorUploadingWidget())
     note_id = forms.IntegerField(widget=forms.HiddenInput())
+    note_data_part_edit = forms.CharField(max_length=128, widget=forms.HiddenInput())
 
 
 class SearchForm(forms.Form):

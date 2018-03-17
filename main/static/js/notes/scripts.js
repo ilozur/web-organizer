@@ -123,6 +123,8 @@ function save_note_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    var clean_text = $('#cke_id_note_data_edit iframe').contents().find('body').text();
+    $('#id_note_data_part_edit').val(clean_text.substr(0, 128));
     var form_data = $('#save_note_form').serialize();
     form_data['note_data_edit'] = CKEDITOR.instances.id_note_data_edit.getData();
     $("#save_note_form").find(':input').each(function(){
@@ -139,6 +141,8 @@ function save_note_ajax()
             {
                 alert('OK, Changes were saved');
                 $('#note_title_' + id).html($('#id_note_title_edit').val());
+                $('#card_note_title_' + id).html($('#id_note_title_edit').val());
+                $('#card_note_description_' + id).html(response['data_part']);
                 close_note_edit_mode();
                 for (instance in CKEDITOR.instances) {
                     CKEDITOR.instances[instance].updateElement();
@@ -160,6 +164,8 @@ function add_note_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    var clean_text = $('#cke_id_note_data iframe').contents().find('body').text();
+    $('#id_note_data_part').val(clean_text.substr(0, 128));
     form_data = $('#add_note_form').serialize();
     form_data['data'] = CKEDITOR.instances.id_note_data.getData();;
     $.ajax({
@@ -171,13 +177,19 @@ function add_note_ajax()
             if (response['result'] == "Success")
             {
                 alert('OK, note was added');
-                result_html = '<div id="note_' + response['id'] + '" style="display: none" onclick="get_note_data_ajax(' + response['id'] + ');">' +
+                var result_html_list = '<div id="note_' + response['id'] + '" style="display: none" onclick="get_note_data_ajax(' + response['id'] + ');">' +
                     '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
                     'data-toggle="modal" data-target="#Note-Card"> <h7 id="note_title_' + response['id'] + '">' +
                     response['name'] + '</h7><div class="date"> <small>' +
                     response['datetime'] + '</small></div></a></div>';
-                $("#list_id").html(result_html + $("#list_id").html());
+                var result_html_card = '<div style="display: none" id="note_card_' + response['id'] + '" onclick="get_note_data_ajax(' +
+                    response['id'] + ');" class="col-md-4" data-toggle="modal" data-target="#Note-Card"><div class="card">' +
+                    '<div class="card-body"><h3 id="card_note_title_' + response['id'] + '">' + response['name'] + '</h3><small class="date">' + response['datetime'] +
+                    '</small><hr/><p id="card_note_description_' + response['id'] + '">' + response['data_part'] + '</p></div></div></div>';
+                $("#list_id").html(result_html_list + $("#list_id").html());
+                $("#cards_id").html(result_html_card + $("#cards_id").html());
                 $('#note_' + response['id']).slideDown(duration='slow');
+                $('#note_card_' + response['id']).slideDown(duration='slow');
                 $("#close_note_btn").trigger("click");
             }
         }
@@ -226,6 +238,7 @@ function delete_note_ajax()
                 {
                     alert('OK, note was deleted');
                     $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
+                    $('#note_card_' + id).slideUp(duration='slow', complete=function(){$('#note_card' + id).remove()});
                 }
             }
         });

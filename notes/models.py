@@ -6,9 +6,10 @@ from django.contrib.auth.models import User
 class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
-    name = models.CharField(max_length=128, default="title")
+    name = models.CharField(max_length=19, default="title")
     added_time = models.DateTimeField(default=None)
     is_voice = models.BooleanField(default=False)
+    data_part = models.TextField(max_length=128, default="...")
     last_edit_time = models.DateTimeField(default=None)
 
     @staticmethod

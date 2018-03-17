@@ -20,7 +20,7 @@ def index(request):
     context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
     notes = Notes.get_notes('title_up', user)
     for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
+        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
     context['notes_data'] = notes_list
     context['search_note_form'] = SearchForm()
     context['add_note_form'] = AddNoteForm()
@@ -36,9 +36,11 @@ def add_note_ajax(request):
         if form.is_valid():
             name = form.cleaned_data['note_title']
             data = form.cleaned_data['note_data']
-            tmp = Notes(name=name, data=data, added_time=datetime.now(), user=request.user)
+            data_part = form.cleaned_data['note_data_part']
+            tmp = Notes(name=name, data=data, added_time=datetime.now(), user=request.user, data_part=data_part)
             tmp.save()
             result = "Success"
+            response_data['data_part'] = tmp.data_part
             response_data['id'] = tmp.id
             response_data['name'] = tmp.name
             response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
@@ -143,10 +145,12 @@ def save_ajax(request):
                 tmp = Notes.objects.filter(id=note_id).first()
                 tmp.name = form.cleaned_data['note_title_edit']
                 tmp.data = form.cleaned_data['note_data_edit']
+                tmp.data_part = form.cleaned_data['note_data_part_edit']
                 tmp.last_edit_time = datetime.now()
                 tmp.save()
                 result = 'success'
                 response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+                response_data['data_part'] = tmp.data_part
             else:
                 result = 'No such note'
         else:
