@@ -27,26 +27,26 @@ class Notes(models.Model):
         return sorted_list
 
     @staticmethod
-    def get_notes ( sorting_type, user=1 ):
+    def get_notes(sorting_type, user=1):
         # if aim = 'date' -> 'up' = new-old, 'down' = old-new
         # if aim = 'title' -> 'up' = a-z, 'down' = z-a
-        notes = Notes.objects.filter ( user=user )
+        notes = Notes.objects.filter(user=user)
         if sorting_type != 'all':
-            sort = sorting_type.split ( '_' )
+            sort = sorting_type.split('_')
             aim = sort[0]
             direction = sort[1]
         else:
             return notes
         if aim == "date":
             if direction == "up":
-                notes = notes.order_by ( '-added_time' )
+                notes = notes.order_by('-added_time')
             elif direction == "down":
-                notes = notes.order_by ( 'added_time' )
+                notes = notes.order_by('added_time')
         elif aim == "title":
             if direction == "up":
-                notes = notes.order_by ( 'name' )
+                notes = notes.order_by('name')
             elif direction == "down":
-                notes = notes.order_by ( '-name' )
+                notes = notes.order_by('-name')
         return notes
 
     @staticmethod

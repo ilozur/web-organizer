@@ -29,7 +29,7 @@
 				</div>
 				<div class="data">
 					<span>Фамилия</span>
-					<h2 class="card-title" id="last_name">{{ user.last_name }}</h2>
+					<h2 class="card-title" id="surname">{{ user.last_name }}</h2>
 				</div>
 				<div class="data">
 					<span>Email</span>
@@ -58,7 +58,7 @@
 							<label>Изменить аватар</label>
 							<input type="file" class="form-control-file">
 						</div>
-						<form>
+						<form id="change_user_data_form">
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label for="inputEmail4">Имя</label>
@@ -74,23 +74,27 @@
 								<label for="inputEmail4">Email</label>
 								{{ change_user_data_form.email }}
 							</div>
+						</form>
+						<hr>
+						<form id="change_password_form">
 							<div class="form-group">
 								<label for="inputPassword4">Старый пароль</label>
-								{{ change_user_data_form.old_password }}
+								{{ change_password_form.old_password }}
 							</div>
 							<div class="form-group">
 								<label for="inputPassword4"> Новый пароль</label>
-								{{ change_user_data_form.password1 }}
+								{{ change_password_form.new_password1 }}
 							</div>
 							<div class="form-group">
 								<label for="inputPassword4">Новый пароль повторить</label>
-								{{ change_user_data_form.password2 }}
+								{{ change_password_form.new_password2 }}
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-secondary">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" id="save_changes_btn" onclick="change_user_data(); get_user_data();">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" id="change_password_btn" onclick="change_password()">Изменить пароль</button>
 					</div>
 				</div>
 			</div>
@@ -127,9 +131,80 @@
 	<script>
 		function get_user_data()
 		{
-			$('#id_name').val('{{ user.first_name }}');
-			$('#id_email').val('{{ user.email }}');
-			$('#id_surname').val('{{ user.last_name }}');
+			$.ajax({
+				type: "POST",
+				url: '/profile/get_user_data',
+				success: function(response)
+				{
+					$('#id_name').val(response['user'].name);
+					$('#id_email').val(response['user'].email);
+					$('#id_surname').val(response['user'].surname);
+					$('#name').html(response['user'].name);
+					$('#email').html(response['user'].email);
+					$('#surname').html(response['user'].surname);
+					$('#username').html(response['user'].username);
+					$("#change_password_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#change_password_btn').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
+
+	<script>
+		function change_password()
+		{
+			form_data = $('#change_password_form').serialize();
+			$("#change_password_form").find(':input').each(function(){
+				$(this).attr('disabled', 'disabled');
+			});
+			$('#change_password_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/profile/change_password',
+				data: form_data,
+				success: function(response)
+				{
+					if (response['result'] == 'Success')
+					{
+						location.href = "/"
+					}
+					else
+					{
+						alert(response['result']);
+					}
+					$("#change_password_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#change_password_btn').removeAttr('disabled');
+
+				}
+			});
+		};
+	</script>
+
+	<script>
+		function change_user_data()
+		{
+			form_data = $('#change_user_data_form').serialize();
+			$("#change_user_data_form").find(':input').each(function(){
+				$(this).attr('disabled', 'disabled');
+			});
+			$('#save_changes_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/profile/change_user_data',
+				data: form_data,
+				success: function(response)
+				{
+					alert(response['answer']);
+					$("#change_user_data_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#save_changes_btn').removeAttr('disabled');
+				}
+			});
 		};
 	</script>
 
