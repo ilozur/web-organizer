@@ -320,19 +320,61 @@ def change_password_ajax(request):
     user = request.user
     if request.method == "POST":
         form = ChangeUserDataForm(request.POST)
-        password = form.data['old_password']
-        new_password1 = form.data['new_password1']
-        new_password2 = form.data['new_password2']
-        if user.check_password(password):
+        if form.is_valid():
+            password = form.data['old_password']
+            new_password1 = form.data['new_password1']
+            new_password2 = form.data['new_password2']
+            if user.check_password(password):
+                if new_password1 == new_password2:
+                    user.set_password(new_password1)
+                    user.save()
+                    result = "Success"
+                else:
+                    result = "New passwords does not match"
+            else:
+                result = "Wrong password"
+        else:
+            result = "Form is not valid"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def recovery_password_view(request, id, key):
+    context = {
+        'title': "Index page",
+        'header': "Recover password page header",
+    }
+    if request.method == "GET":
+        form = RecoverPasswordForm()
+        context['form'] = form
+        context['id'] = id
+        context['key'] = key
+        return render(request, "main/recover_password.html", context)
+    if request.method == "POST":
+        form = RecoverPasswordForm(request)
+        user = User.objects.filter(id=id).first()
+        if form.is_valid():
+            new_password1 = form.data['new_password1']
+            new_password2 = form.data['new_password2']
             if new_password1 == new_password2:
                 user.set_password(new_password1)
                 user.save()
-                result = "Success"
+                return HttpResponseRedirect("/")
             else:
-                result = "New passwords does not match"
+                return HttpResponseRedirect("/recover_password/" + id + "/" + key)
         else:
-            result = "Wrong password"
-        response_data['result'] = result
+            return HttpResponseRedirect("/recover_password/" + id + "/" + key)
+
+
+def recover_password_mail_ajax(request, mail):
+    response_data = {}
+    if request.method == "POST":
+        user = User.objects.filter(email=mail)
+        recovery_key = create_sign_up_key(user, user.username, user.password)
+        tmp = RecoverPasswordKey(recovery_key)
+        tmp.save()
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
