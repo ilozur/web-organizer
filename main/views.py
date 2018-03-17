@@ -292,6 +292,52 @@ def create_confirm_email_key(user, email):
     return confirm_email_key
 
 
+@login_required
+def get_user_data_ajax(request):
+    response_data = {}
+    user = request.user
+    if request.method == "POST":
+        last_name = user.last_name
+        first_name = user.first_name
+        email = user.email
+        user_data = {
+            'name': first_name,
+            'username': user.username,
+            'email': email,
+            'surname': last_name
+        }
+        response_data['user'] = user_data
+        result = "Success"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+@login_required
+def change_password_ajax(request):
+    response_data = {}
+    user = request.user
+    if request.method == "POST":
+        form = ChangeUserDataForm(request.POST)
+        password = form.data['old_password']
+        new_password1 = form.data['new_password1']
+        new_password2 = form.data['new_password2']
+        if user.check_password(password):
+            if new_password1 == new_password2:
+                user.set_password(new_password1)
+                user.save()
+                result = "Success"
+            else:
+                result = "New passwords does not match"
+        else:
+            result = "Wrong password"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
 def sign_out_view(request):
     if request.user.is_authenticated:
         logout(request)
