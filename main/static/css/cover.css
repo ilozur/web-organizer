@@ -42,7 +42,8 @@ body {
 
 .login {
   max-width: 42em;
-  margin: 10px 600px 100px;
+  margin: 10px auto 100px;
+  width: 100%;
 }
 
 section {
