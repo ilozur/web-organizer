@@ -18,7 +18,7 @@
 				{% if user.is_authenticated %}
                     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
                         <img class="logo" src='{% static "img/logo.png" %}'>
-                        <a class="navbar-brand col-2" href="#">Morris Butler</a>
+                        <a class="navbar-brand col-2" href='{% url "index" %}'>Morris Butler</a>
                         <div class="collapse navbar-collapse">
                             <div class="col-3">
                                 <button type="button" class="btn btn-secondary btn-sm base-button">
