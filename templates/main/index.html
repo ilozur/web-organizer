@@ -79,7 +79,7 @@
                                 <input type="checkbox" class="form-check-input">
                                 <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
                             </div>
-                            <a class="btn btn-success btn-block" id="sign_up_btn" onclick="sign_up_ajax()">Зарегестрироваться</a>
+                            <a class="btn btn-success btn-block" id="sign_up_btn" onclick="sign_up_ajax()" data-toggle="modal" data-target="#checkregist">Зарегестрироваться</a>
                         </form>
                     </p>
                     <p class="lead" style="margin-top: 50px;">
@@ -113,4 +113,24 @@
             <a href="#hello" class="scrollup">Наверх</a>
         </div>
     </div>
+
+    <article class="modals">
+			<div class="modal fade" id="checkregist" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Введены не все данные.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Ok</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+		</article>
 {% endblock %}
