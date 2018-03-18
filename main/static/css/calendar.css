@@ -1,0 +1,137 @@
+/*Стили для раздела 'Календарь'*/
+
+/*Цвет фона для сайта и отступ в конце*/
+.calendar {
+  background-color: #f99;
+  padding-bottom: 50px;
+}
+
+/*Цвет фона для модулей*/
+.modals {
+  color: #fff;
+}
+
+/*Мачта*/
+.mast {
+  padding-top: 6em;
+  padding-bottom: 6em;
+  background-color: #f8d7da;
+  text-align: center;
+}
+
+/*Цвет заголовков*/
+h2 {
+  color: #fff;
+}
+
+/*Цвет и распложение текста в таблице*/
+table {
+  color: #fff;
+  text-align: center;
+}
+
+/*Оформление ячейки и ее аимация при наведении*/
+td {
+  border: 1px solid #fdd;
+  transition: 0.2s;
+  width: 150px;
+  height: 150px;
+}
+td:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: #f66;
+  transition: 0.2s;
+  border: 0px;
+}
+
+/*Цвет ячейки 'Сегодня' и ее анимация при наведении*/
+.today {
+  background-color: #c30;
+  transition: 0.2s;
+}
+.today:hover {
+  background-color: #c33;
+  border-radius: 0 0 0 0;
+  transition: 0.2s;
+}
+
+/*Кнопка 'Месяц'*/
+.btn-mouth {
+  text-align: center;
+  padding: 10px;
+}
+
+/*Таблица неделей*/
+.table-week td {
+  height: 50px;
+}
+
+/*Таблица дней*/
+.table-list td {
+  height: 50px;
+}
+
+/*Дата*/
+.date {
+  float: right;
+  bottom: 10px;
+  font-size: 20pt;
+  color: #fff;
+}
+
+/*Даты, не вхолдящие в данный месяц*/
+.future-date {
+  background-color: #f98;
+}
+
+/*Заголовок модуля*/
+.modal-header {
+  background-color: #f99;
+  border-bottom: 0px;
+}
+
+/*'Тело' модуля*/
+.modal-body {
+  background-color: #fcc;
+}
+
+/*Подвал модуля*/
+.modal-footer {
+  background-color: #f99;
+  border-top: 0px;
+}
+
+/*Цвет текста в модулях*/
+.section-modals {
+  color: #fff;
+}
+
+/*Событие*/
+.event {
+  text-align: center;
+  border: 1px solid red;
+  background-color: #f99;
+  color: #fff;
+  cursor: pointer;
+}
+
+/*Расположение лайка*/
+.like {
+  float: right;
+}
+
+/*Комментарий*/
+.comment {
+  margin-top: 15px;
+}
+
+/*Дата в комментарии*/
+.date-of-comments {
+  float: left;
+  font-size: 10pt;
+}
+
+/*Дата в списке*/
+.date-and-place {
+  float: right;
+}

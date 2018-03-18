@@ -1,0 +1,51 @@
+/*Стили для страницы незарегистрированных пользователей*/
+/*Тут все идеально*/
+
+
+.carousel {
+  margin-bottom: 4rem;
+}
+
+.carousel-caption {
+  bottom: 3rem;
+  z-index: 10;
+}
+
+.carousel-item {
+  height: 15rem;
+}
+.carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+
+.btn-cover,
+.btn-cover:hover,
+.btn-cover:focus {
+  color: #333;
+  text-shadow: none;
+  background-color: #fff;
+  border: .05rem solid #fff;
+}
+
+body {
+  color: #fff;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+  background-image: url(../img/bg.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.login {
+  max-width: 42em;
+  margin: 10px auto 100px;
+  width: 100%;
+}
+
+section {
+  margin: 10px 0 100px;
+}

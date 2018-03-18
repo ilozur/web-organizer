@@ -1,0 +1,105 @@
+/*Стили для раздела 'Напоминания'*/
+
+/*Цвет фона для сайта и отступ в конце*/
+.todo {
+  background-color: #99f;
+  padding-bottom: 50px;
+}
+
+/*Оформление 'мачты' сайта*/
+.mast {
+  padding-top: 6em;
+  padding-bottom: 6em;
+  background-color: #ccf;
+  text-align: center;
+}
+
+/*Оформление карты и анимация при наводке*/
+.card {
+  background-color: #66f;
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 10px;
+  margin-bottom: 40px;
+  color: #fff;
+}
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: 0.2s;
+}
+
+/*Оформление последней карты для добавления нового напоминания*/
+.last {
+  border: 5px #99f dotted;
+  text-align: center;
+  background-color: #66f;
+  font-size: 25pt;
+}
+
+/*'Костыль' для белого цвета ссылок*/
+.disabled a {
+  color: #fff;
+}
+.navbar a {
+  color: #fff;
+}
+
+/*Оформление заголовка модуля*/
+.modal-header {
+  background-color: #66f;
+  border-bottom: 0px;
+}
+
+/*Оформление 'тела модуля*/
+.modal-body {
+  background-color: #99f;
+}
+
+/*Оформление подвала модуля*/
+.modal-footer {
+  background-color: #66f;
+  border-top: 0px;
+}
+
+/*Цвет текста в модулях*/
+.modal {
+  color: #fff;
+}
+
+/*Оформление даты в списках*/
+.date {
+  font-size: 8pt;
+  float: right;
+}
+
+/*Позиционирование значков приоритета*/
+.priorities {
+  float: right;
+}
+
+/*Оформление блока приоритета*/
+.priority {
+  border-radius: 50%;
+  background-color: #9cf;
+  font-size: 12pt;
+  color: #66f;
+}
+
+/*Оформление значка с приоритетами*/
+.priority-list {
+  border-radius: 50%;
+  background-color: #9cf;
+  font-size: 12pt;
+  color: #66f;
+  text-align: center;
+}
+
+/*Оформление последнего значка приоритета*/
+.priority-list-last {
+  border-radius: 50%;
+  background-color: #9cf;
+  font-size: 12pt;
+  color: #66f;
+  margin-right: 50px;
+  text-align: center;
+}

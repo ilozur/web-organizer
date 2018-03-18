@@ -1,55 +1,74 @@
 <!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
-
-    <title>{{ title }}</title>
-</head>
-<body>
-    <div class="container">
-        {% block header %}
-        <hr>
-        <h3>Here is page header</h3>
-        <p>And menu too:</p>
-        <ul>
-            <li><a href="{% url "index" %}">Главная</a></li>
-            <li><a href="{% url "notes.index" %}">Заметки</a></li>
-            <li><a href="{% url "calendar.index" %}">Календарь</a></li>
-            <li><a href="{% url "todolist.index" %}">Задачи</a></li>
-        </ul>
-        <hr>
+<html lang="ru">
+	<head>
+		<title>{{ title }}</title>
+        {% load staticfiles %}
+        <script src='{% static "js/jquery-3.2.1.slim.min.js" %}'></script>
+		<script src='{% static "js/popper.min.js" %}'></script>
+		<script src='{% static "js/bootstrap.min.js" %}'></script>
+		<script src='{% static "js/holder.min.js" %}'></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <meta charset="utf-8">
+		{% block meta %}
         {% endblock %}
+	</head>
+	<body>
+		{% block header %}
+			<header>
+				{% if user.is_authenticated %}
+                    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                        <img class="logo" src='{% static "img/logo.png" %}'>
+                        <a class="navbar-brand col-2" href="#">Morris Butler</a>
+                        <div class="collapse navbar-collapse">
+                            <div class="col-3">
+                                <button type="button" class="btn btn-secondary btn-sm base-button">
+                                <img src='{% static "icons/micro_icon.png" %}'>
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm base-button">
+                                <img src='{% static "icons/search_icon.png" %}'>
+                                </button>
+                            </div>
+                            <ul class="navbar-nav">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href='{% url "index" %}'>Главная</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href='{% url "notes.index" %}'>Заметки</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href='{% url "calendar.index" %}'>Календарь</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href='{% url "todo.index" %}'>Напоминания</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ml-auto">
+                                <li class="dropdown">
+                                    <button data-toggle="dropdown" class="btn btn-outline-secondary">{{ request.user.username }}</button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li class="p-3">
+                                            <a href="/profile" class="btn btn-dark btn-block">Личный кабинет</a>
+                                            <a href='{% url "sign_out" %}' class="btn btn-dark btn-block">Выйти</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+				{% endif %}
+			</header>
+		{% endblock %}
 
+		{% block content %} {% endblock %}
 
-        {% block content %}{% endblock %}
-
-
-        {% block footer %}
-        <hr>
-        <h3>Here is page footer</h3>
-        <p>(C) PROM 51, 2018</p>
-        <hr>
-        {% endblock %}
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS, then ajax -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-</body>
+		{% block footer %}
+            {% if user.is_authenticated %}
+                <footer class="base-footer">
+                    <div class="container">
+                        <span class="text-muted"> With <font style="color: #ff2400;">&hearts;</font> MPS51 Team</span>
+                    </div>
+                </footer>
+            {% endif %}
+		{% endblock %}
+	</body>
 </html>

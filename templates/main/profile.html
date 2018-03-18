@@ -1,0 +1,211 @@
+{% extends "main/base.html" %}
+
+{% block meta %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/general.css" %}'>
+	<link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <link rel="stylesheet" href='{% static "css/profile.css" %}'>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+{% endblock %}
+
+{% block content %}
+	<section class="profile">
+		<div class="card text-center">
+			<div class="card-header">
+				<h1> Личный кабинет </h1>
+			</div>
+			<div class="card-body">
+				<picture>
+					<img src='{% static "/img/avatar_user.png" %}' class="avatar">
+				</picture>
+				<div class="data">
+					<span>Ник</span>
+					<h2 class="card-title" id="username">{{ user.username }}</h2>
+				</div>
+				<div class="data" style="margin-top: 25px;">
+					<span>Имя</span>
+					<h2 class="card-title" id="name">{{ user.first_name }}</h2>
+				</div>
+				<div class="data">
+					<span>Фамилия</span>
+					<h2 class="card-title" id="surname">{{ user.last_name }}</h2>
+				</div>
+				<div class="data">
+					<span>Email</span>
+					<h2 class="card-title" id="email">{{ user.email }}</h2>
+				</div>
+			</div>
+			<div class="card-footer">
+				<button type="button" class="btn btn-lg btn-secondary" onclick="get_user_data()" data-toggle="modal" data-target="#Edit">
+					<picture><img src='{% static "/icons/edit_icon.png" %}' class="icon"></picture>
+				</button>
+				<button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#Settings">
+					<picture><img src='{% static "/icons/settings_icon.png" %}' class="icon"></picture>
+				</button>
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="modal fade" id="Edit">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title">Редактировать профиль</h2>
+					</div>
+					<div class="modal-body">
+						<div class="form-group btn btn-secondary change-avatar">
+							<label>Изменить аватар</label>
+							<input type="file" class="form-control-file">
+						</div>
+						<form id="change_user_data_form">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="inputEmail4">Имя</label>
+									{{ change_user_data_form.name }}
+								</div>
+								<div class="form-group col-md-6">
+									<label for="inputPassword4">Фамилия</label>
+									{{ change_user_data_form.surname }}
+								</div>
+							</div>
+							<hr>
+							<div class="form-group">
+								<label for="inputEmail4">Email</label>
+								{{ change_user_data_form.email }}
+							</div>
+						</form>
+						<hr>
+						<form id="change_password_form">
+							<div class="form-group">
+								<label for="inputPassword4">Старый пароль</label>
+								{{ change_password_form.old_password }}
+							</div>
+							<div class="form-group">
+								<label for="inputPassword4"> Новый пароль</label>
+								{{ change_password_form.new_password1 }}
+							</div>
+							<div class="form-group">
+								<label for="inputPassword4">Новый пароль повторить</label>
+								{{ change_password_form.new_password2 }}
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+						<button type="submit" class="btn btn-secondary" id="save_changes_btn" onclick="change_user_data(); get_user_data();">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" id="change_password_btn" onclick="change_password()">Изменить пароль</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="Settings">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title">Настройки</h2>
+					</div>
+					<div class="modal-body">
+						<span> Выберите тембр голоса Морриса:</span>
+						<div class="btn-group btn-group-lg" style="margin-left: 50px;">
+							<button type="button" class="btn btn-secondary">Низкий</button>
+							<button type="button" class="btn btn-secondary active">Средний</button>
+							<button type="button" class="btn btn-secondary">Высокий</button>
+						</div>
+						<hr/>
+						<span>Выберите язык:</span>
+						<div class="btn-group btn-group-lg" style="margin-left: 185px;">
+							<button type="button" class="btn btn-secondary active">Русский</button>
+							<button type="button" class="btn btn-secondary">Английский</button>
+							<button type="button" class="btn btn-secondary" disabled>Немецкий</button>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+						<button type="submit" class="btn btn-secondary">Сохранить</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script>
+		function get_user_data()
+		{
+			$.ajax({
+				type: "POST",
+				url: '/profile/get_user_data',
+				success: function(response)
+				{
+					$('#id_name').val(response['user'].name);
+					$('#id_email').val(response['user'].email);
+					$('#id_surname').val(response['user'].surname);
+					$('#name').html(response['user'].name);
+					$('#email').html(response['user'].email);
+					$('#surname').html(response['user'].surname);
+					$('#username').html(response['user'].username);
+					$("#change_password_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#change_password_btn').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
+
+	<script>
+		function change_password()
+		{
+			form_data = $('#change_password_form').serialize();
+			$("#change_password_form").find(':input').each(function(){
+				$(this).attr('disabled', 'disabled');
+			});
+			$('#change_password_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/profile/change_password',
+				data: form_data,
+				success: function(response)
+				{
+					if (response['result'] == 'Success')
+					{
+						location.href = "/profile"
+					}
+					else
+					{
+						alert(response['result']);
+					}
+					$("#change_password_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#change_password_btn').removeAttr('disabled');
+
+				}
+			});
+		};
+	</script>
+
+	<script>
+		function change_user_data()
+		{
+			form_data = $('#change_user_data_form').serialize();
+			$("#change_user_data_form").find(':input').each(function(){
+				$(this).attr('disabled', 'disabled');
+			});
+			$('#save_changes_btn').attr('disabled', 'disabled');
+			$.ajax({
+				type: "POST",
+				url: '/profile/change_user_data',
+				data: form_data,
+				success: function(response)
+				{
+					alert(response['answer']);
+					$("#change_user_data_form").find(':input').each(function(){
+                    	$(this).removeAttr('disabled');
+                	});
+                	$('#save_changes_btn').removeAttr('disabled');
+				}
+			});
+		};
+	</script>
+
+{% endblock %}

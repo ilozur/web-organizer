@@ -1,0 +1,93 @@
+{% load staticfiles %}
+<div class="modal fade" id="New-Note">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Создание заметки</h2>
+            </div>
+            <div class="modal-body">
+                <form id="add_note_form">
+                    {% csrf_token %}
+                    {{ add_note_form.media }}
+                    <div class="form-group">
+                        <h3>Название</h3>
+                        {{ add_note_form.note_title }}
+                    </div>
+                    <div class="form-group">
+                        <h3>Текст</h3>
+                        {{ add_note_form.note_data }}
+                        {{ add_note_form.note_data_part }}
+                    </div>
+                </form>
+                <h3>Записать аудио</h3>
+                <button type="button" class="btn btn-warning btn-lg btn-block">
+                    <picture>
+                        <img src='{% static "icons/micro_icon.png" %}'>
+                    </picture>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_note_btn">Отменить</button>
+                <button type="button" class="btn btn-warning" onclick="add_note_ajax()">Создать</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Note-Card">
+    <div class="modal-dialog modal-dialog-centered" id="Show-Note-Modal">
+        <div id="note_num" hidden>0</div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="note_title_show"></h2>
+            </div>
+            <div class="modal-body">
+                <div id="note_data_show" style="overflow-x: scroll; overflow-y: scroll; height: 200px">
+                </div>
+                <small id="note_added_time"></small>
+                <br/>
+                <small class="text-muted" id="note_last_edit"></small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_note_ajax()">Удалить</button>
+                <button type="button" class="btn btn-warning" onclick="open_note_edit_mode()">Редактировать</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">ОК</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered" id="Edit-Note-Modal" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Редактирование заметки</h2>
+            </div>
+            <div class="modal-body">
+                <form id="save_note_form">
+                    {% csrf_token %}
+                    {{ edit_note_form.media }}
+                    {{ edit_note_form.note_id }}
+                    <div class="form-group">
+                        <h3>Изменить название</h3>
+                        {{ edit_note_form.note_title_edit }}
+                    </div>
+                    <div class="form-group">
+                        <h3>Изменить текст</h3>
+                        {{ edit_note_form.note_data_edit }}
+                        {{ edit_note_form.note_data_part_edit }}
+                    </div>
+                </form>
+                <h3>Переписать аудио</h3>
+                <button type="button" class="btn btn-warning btn-lg btn-block">
+                    <picture>
+                        <img src='{% static "icons/micro_icon.png" %}'>
+                    </picture>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="close_note_edit_mode()">Отменить</button>
+                <button class="btn btn-warning" onclick="save_note_ajax();">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
