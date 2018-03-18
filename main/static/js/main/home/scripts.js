@@ -62,6 +62,8 @@ function add_note_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    var clean_text = $('#cke_id_note_data iframe').contents().find('body').text();
+    $('#id_note_data_part').val(clean_text.substr(0, 128));
     var data = CKEDITOR.instances.id_note_data.getData();
     form_data = $('#add_note_form').serialize();
     form_data['data'] = data;
@@ -126,6 +128,8 @@ function save_note_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    var clean_text = $('#cke_id_note_data_edit iframe').contents().find('body').text();
+    $('#id_note_data_part_edit').val(clean_text.substr(0, 128));
     var form_data = $('#save_note_form').serialize();
     form_data['note_data_edit'] = CKEDITOR.instances.id_note_data_edit.getData();
     $("#save_note_form").find(':input').each(function(){
