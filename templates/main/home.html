@@ -5,8 +5,8 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/index.css" %}'>
     <link rel="stylesheet" href='{% static "css/base.css" %}'>
-    <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
-    <script language="JavaScript" src='{% static "js/main/home/scripts.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/main/home/scripts.js" %}'></script>
     <script>setup_link({% url "notes.index" %});</script>
 {% endblock %}
 
@@ -15,7 +15,7 @@
         <div class="carousel-item active">
             <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">
             <div class="carousel-caption text-left">
-                <h1>Добрый день, Иван</h1>
+                <h1>Добрый день, {{ request.user.first_name }}</h1>
                 <h3>Ближайшее мероприятие: </h3>
                 <p><a href="#" class="link-section">Дедлайн</a><br/>
                     <small><i>25.10.2018 10:00 AM | Школа Анализа Данных</i></small>
@@ -41,7 +41,7 @@
                         {% else %}
                             <div id="last_notes_holder">
                                 {% for note in last_notes %}
-                                    <p class="lead"> <a href="#" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ note.id }})" id="note_title_{{ note.id }}">{{ note.name }}</a></p>
+                                    <div id="note_{{ note.id }}"><p class="lead"> <a href="#" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ note.id }})" id="note_title_{{ note.id }}">{{ note.name }}</a></p></div>
                                 {% endfor %}
                                 <p class="lead"> <small><a href='{% url "notes.index" %}'>Показать все</a></small></p>
                             </div>

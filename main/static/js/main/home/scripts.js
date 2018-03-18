@@ -62,6 +62,8 @@ function add_note_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    var clean_text = $('#cke_id_note_data iframe').contents().find('body').text();
+    $('#id_note_data_part').val(clean_text.substr(0, 128));
     var data = CKEDITOR.instances.id_note_data.getData();
     form_data = $('#add_note_form').serialize();
     form_data['data'] = data;
@@ -74,20 +76,22 @@ function add_note_ajax()
             if (response['result'] == "Success")
             {
                 alert('OK, note was added');
-                var now_notes_count = $("#last_notes_holder").find('p').length - 1;
-                if (now_notes_count == -1)
+                var now_notes_count = $("#last_notes_holder").find('div').length;
+                if (now_notes_count == 0)
                 {
-                    $("#last_notes_holder").html('<p class="lead"> <small><a href="' + notes_link + '">�������� ���</a></small></p>');
+                    $("#last_notes_holder").html('<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>');
                     $("#last_notes_holder").parent().find('h5').remove();
                 }
+                var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
+                    'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
+                    '">' + response['name'] + '</a></p></div>';
+                $("#last_notes_holder").html(new_note_html + $("#last_notes_holder").html());
                 if (now_notes_count >= 3)
                 {
-                    $("#last_notes_holder").find('p')[2].remove();
+                    var id = $("#last_notes_holder div:last").attr('id');
+                    $('#' + id).slideUp(duration='slow', complete=function(){$('#' + id).remove()});
                 }
-                var new_note_html = '<p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
-                    'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
-                    '">' + response['name'] + '</a></p>';
-                $("#last_notes_holder").html(new_note_html + $("#last_notes_holder").html());
+                $('#note_' + response['id']).slideDown('slow');
                 $("#close_note_btn").trigger("click");
             }
         }
@@ -124,6 +128,8 @@ function save_note_ajax()
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    var clean_text = $('#cke_id_note_data_edit iframe').contents().find('body').text();
+    $('#id_note_data_part_edit').val(clean_text.substr(0, 128));
     var form_data = $('#save_note_form').serialize();
     form_data['note_data_edit'] = CKEDITOR.instances.id_note_data_edit.getData();
     $("#save_note_form").find(':input').each(function(){
@@ -159,4 +165,42 @@ function save_note_ajax()
             $('#save_note_btn').removeAttr('disabled');
         }
     });
+};
+
+function delete_note_ajax()
+{
+    var id = $('#note_num').html();
+    var should_delete = confirm('Вы уверены?');
+    if (should_delete)
+    {
+        $.ajax({
+            type: "POST",
+            url: '/notes/delete',
+            data: {"id": id, "return_last_note": true},
+            success: function(response)
+            {
+                if (response['result'] == "success")
+                {
+                    var now_notes_count = $("#last_notes_holder").find('div').length;
+                    if (now_notes_count == 1)
+                    {
+                        $("#last_notes_holder p:last").remove();
+                        $("#last_notes_holder").append('<h5>Нет заметок</h5>');
+                    }
+                    if (response['id'])
+                    {
+                        var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
+                            'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
+                            '">' + response['name'] + '</a></p></div>';
+                        var show_all_label = '<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>';
+                        $("#last_notes_holder p:last").remove();
+                        $("#last_notes_holder").html($("#last_notes_holder").html() + new_note_html);
+                        $("#last_notes_holder").html($("#last_notes_holder").html() + show_all_label);
+                        $('#note_' + response['id']).slideDown('slow');
+                    }
+                    $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
+                }
+            }
+        });
+    }
 };
