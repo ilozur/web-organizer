@@ -13,16 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from ckeditor_uploader import views
 import calendars.urls
 import notes.urls
 import todo.urls
+import profile.urls
 from main.views import *
 from django.conf.urls.static import static
 from morris_butler import settings
 from django.contrib.auth.decorators import login_required
+
+from profile.views import confirm_mail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,13 +34,10 @@ urlpatterns = [
     path('notes/', include(notes.urls)),
     path('calendar/', include(calendars.urls)),
     path('todo/', include(todo.urls)),
+    path('profile/', include(profile.urls)),
     path('sign_in/', sign_in_ajax, name='sign_in'),
     path('sign_out/', sign_out_view, name='sign_out'),
     path('sign_up/', sign_up_view, name='sign_up'),
-    path('profile/', profile_view, name='profile'),
-    path('profile/change_user_data', change_user_data_ajax, name='change_user_data'),
-    path('profile/change_password', change_password_ajax, name='change_password'),
-    path('profile/get_user_data', get_user_data_ajax, name='get_user_data'),
     path('activate/<str:key>', activate_key, name='activate_key'),
     path('confirm_mail/<str:key>', confirm_mail, name='confirm_mail'),
     path('ckeditor/upload/', login_required(views.upload), name='ckeditor_upload'),
