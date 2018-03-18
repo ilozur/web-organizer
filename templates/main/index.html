@@ -57,52 +57,67 @@
 		          <span class="carousel-control-next-icon" aria-hidden="true"></span>
 		        </a>
 		      </section>
-                <section id="login" class="login">
+                <div id="login" class="login">
                     <h2 class="cover-heading">Добро пожаловать</h2>
+                    <div class="text-center" >
+                        <ul class="nav nav-tabs text-center rounded-top" id="myTab" role="tablist" >
+                            <li class="nav-item" style="flex: 1">
+                                <a class="nav-link " id="log-tab" data-toggle="tab" href="#log" role="tab" aria-controls="log" aria-selected="true">Login</a>
+                            </li>
+                            <li class="nav-item" style="flex: 1">
+                                <a class="nav-link active " id="reg-tab" data-toggle="tab" href="#reg" role="tab" aria-controls="reg" aria-selected="false">Registration</a>
+                            </li>
+                        </ul>
+                    </div>
                     <p class="lead">
-                        <form id="sign_up_form">
-                            {% csrf_token %}
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    {{ sign_up_form.username|bootstrap }}
+                    <div class="tab-content " id="myTabContent">
+                        <div class="tab-pane fade show active mt-5" id="reg" role="tabpanel" aria-labelledby="reg-tab">
+                            <form id="sign_up_form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.username|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.email|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.name|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.surname|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.password1|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_up_form.password2|bootstrap }}
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_up_form.email|bootstrap }}
+                                <div class="form-check" style="margin-bottom: 20px;">
+                                    <input type="checkbox" class="form-check-input">
+                                    <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_up_form.name|bootstrap }}
+                                <a class="btn btn-success btn-block" id="sign_up_btn" onclick="sign_up_ajax()" style="text-shadow: 0 0.01rem 0.1rem">Зарегистрироваться</a>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade mt-5" id="log" role="tabpanel" aria-labelledby="log-tab">
+                            <form id="sign_in_form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ sign_in_form.username|bootstrap }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ sign_in_form.password|bootstrap }}
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_up_form.surname|bootstrap }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_up_form.password1|bootstrap }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_up_form.password2|bootstrap }}
-                                </div>
-                            </div>
-                            <div class="form-check" style="margin-bottom: 20px;">
-                                <input type="checkbox" class="form-check-input">
-                                <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики конфиденциальности</label>
-                            </div>
-                            <a class="btn btn-success btn-block" id="sign_up_btn" onclick="sign_up_ajax()">Зарегистрироваться</a>
-                        </form>
-                    <p class="lead" style="margin-top: 50px;">
-                        <h3 class="cover-heading">Уже с нами?</h3>
-                        <form id="sign_in_form">
-                            {% csrf_token %}
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    {{ sign_in_form.username|bootstrap }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ sign_in_form.password|bootstrap }}
-                                </div>
-                            </div>
-                            <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
-                        </form>
-                </section>
+                                <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()" style="text-shadow: 0 0.01rem 0.1rem">Войти</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+              </section>
             </main>
             <footer class="mastfoot mt-auto">
                 <div class="inner">
