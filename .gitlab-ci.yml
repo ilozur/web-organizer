@@ -9,6 +9,16 @@ documentation:
   - doxygen Doxyfile_CI
   only:
   - develop
+  
+pages:
+  script:
+  - doxygen Doxyfile
+  - mv docs/ public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
 
 code_style:
   before_script:
