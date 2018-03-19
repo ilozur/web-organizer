@@ -11,6 +11,10 @@ documentation:
   - develop
   
 pages:
+  before_script:
+  - apk update
+  - apk add doxygen
+  - apk add ttf-freefont graphviz
   script:
   - doxygen Doxyfile
   - mv docs/ public/
