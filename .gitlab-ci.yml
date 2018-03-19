@@ -18,7 +18,7 @@ pages:
     paths:
     - public
   only:
-  - master
+  - develop
 
 code_style:
   before_script:
