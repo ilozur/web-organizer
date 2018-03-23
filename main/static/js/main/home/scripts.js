@@ -75,7 +75,6 @@ function add_note_ajax()
         {
             if (response['result'] == "Success")
             {
-                alert('OK, note was added');
                 var now_notes_count = $("#last_notes_holder").find('div').length;
                 if (now_notes_count == 0)
                 {
@@ -93,6 +92,7 @@ function add_note_ajax()
                 }
                 $('#note_' + response['id']).slideDown('slow');
                 $("#close_note_btn").trigger("click");
+                voice_text('Заметка добавлена');
             }
         }
     });
@@ -144,7 +144,6 @@ function save_note_ajax()
         {
             if (response['result'] == "success")
             {
-                alert('OK, Changes were saved');
                 $('#note_title_' + id).html($('#id_note_title_edit').val());
                 close_note_edit_mode();
                 for (instance in CKEDITOR.instances) {
@@ -158,6 +157,7 @@ function save_note_ajax()
                 $('#note_data_show').html(CKEDITOR.instances.id_note_data_edit.getData());
                 $('#note_title_show').html($('#id_note_title_edit').val());
                 $('#note_last_edit').html(response['edited_time']);
+                voice_text('Заметка сохранена');
             }
             $("#save_note_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
@@ -199,6 +199,7 @@ function delete_note_ajax()
                         $('#note_' + response['id']).slideDown('slow');
                     }
                     $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
+                    voice_text('Заметка удалена');
                 }
             }
         });

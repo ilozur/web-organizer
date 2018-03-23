@@ -14,7 +14,7 @@ function init_speechkit()
 
 function hello_user(user_name)
 {
-    speaker.speak("Добрый день, " + user_name + "!");
+    speaker.speak("Добрый день, " + user_name);
 };
 
 function voice_text(text)

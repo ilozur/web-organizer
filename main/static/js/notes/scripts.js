@@ -139,7 +139,6 @@ function save_note_ajax()
         {
             if (response['result'] == "success")
             {
-                alert('OK, Changes were saved');
                 $('#note_title_' + id).html($('#id_note_title_edit').val());
                 $('#card_note_title_' + id).html($('#id_note_title_edit').val());
                 $('#card_note_description_' + id).html(response['data_part']);
@@ -150,6 +149,7 @@ function save_note_ajax()
                 $('#note_data_show').html(CKEDITOR.instances.id_note_data_edit.getData());
                 $('#note_title_show').html($('#id_note_title_edit').val());
                 $('#note_last_edit').html(response['edited_time']);
+                voice_text('Заметка сохранена');
             }
             $("#save_note_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
@@ -176,7 +176,6 @@ function add_note_ajax()
         {
             if (response['result'] == "Success")
             {
-                alert('OK, note was added');
                 var result_html_list = '<div id="note_' + response['id'] + '" style="display: none" onclick="get_note_data_ajax(' + response['id'] + ');">' +
                     '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
                     'data-toggle="modal" data-target="#Note-Card"> <h7 id="note_title_' + response['id'] + '">' +
@@ -191,6 +190,7 @@ function add_note_ajax()
                 $('#note_' + response['id']).slideDown(duration='slow');
                 $('#note_card_' + response['id']).slideDown(duration='slow');
                 $("#close_note_btn").trigger("click");
+                voice_text('Заметка добавлена');
             }
         }
     });
@@ -236,9 +236,9 @@ function delete_note_ajax()
             {
                 if (response['result'] == "success")
                 {
-                    alert('OK, note was deleted');
                     $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
                     $('#note_card_' + id).slideUp(duration='slow', complete=function(){$('#note_card' + id).remove()});
+                    voice_text('Заметка удалена');
                 }
             }
         });
