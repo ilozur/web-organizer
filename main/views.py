@@ -89,7 +89,7 @@ def sign_up_view(request):
                             user = User(email=email, username=username, first_name=name, last_name=surname, is_active=0)
                             user.set_password(pass1)
                             user.save()
-                            sign_up_key = create_sign_up_key(user, username, pass1)
+                            sign_up_key = create_unic_key(user, username, pass1)
                             sign_up_key.save()
                             mail = create_mail(user,
                                                "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
@@ -126,7 +126,7 @@ def create_mail(user, text, html, email=None):
     return mail
 
 
-def create_sign_up_key(user, username, password):
+def create_unic_key(user, username, password):
     key = create_key(username + password, user)
     expiration_date = datetime.now().date()
     expiration_date += timedelta(days=3)

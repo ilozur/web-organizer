@@ -20,3 +20,12 @@ class ChangePasswordForm(forms.Form):
     new_password2 = forms.CharField(max_length=200,
                                     widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                       'placeholder': 'Enter new password again'}))
+
+
+class RecoverPasswordForm(forms.Form):
+    password1 = forms.CharField(max_length=200,
+                                    widget=forms.PasswordInput(attrs={'class': 'form-control',
+                                                                      'placeholder': 'Enter new password'}))
+    password2 = forms.CharField(max_length=200,
+                                    widget=forms.PasswordInput(attrs={'class': 'form-control',
+                                                                      'placeholder': 'Enter new password again'}))

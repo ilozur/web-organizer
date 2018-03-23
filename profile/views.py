@@ -6,8 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from profile.forms import *
 from main.models import *
-from main.views import create_mail, send_mail, create_key, check_email_uniq
-
+from main.views import create_mail, send_mail, create_key, check_email_uniq, create_unic_key
 
 
 @login_required
@@ -138,6 +137,71 @@ def change_password_ajax(request):
                     result = "New passwords does not match"
             else:
                 result = "Wrong password"
+        else:
+            result = "Form is not valid"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def create_recovery_key(request, email):
+    if request.method == "POST":
+        response_data = {}
+        user = User.objects.filter(email=email)
+        if user.is_active():
+            key = create_unic_key(user, user.username, user.password)
+            key.save()
+            mail = create_mail(user,
+                               "Go to this link to recover your password: 127.0.0.1:8000/recover_password/" +
+                               key.key,
+                               "<a href='http://127.0.0.1:8000/recover_password/" + key.key +
+                               "'>Go to this link to recover your password</a>")
+            send_mail(mail)
+            result = "Success"
+        else:
+            result = 'User is not active'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def recover_password_view(request, key):
+    if request.method == "GET":
+        recover_form = RecoverPasswordForm()
+        context = {
+            'title': "Recover password page",
+            'header': "Recover password header",
+            'recover_form': recover_form,
+            'key': key
+        }
+        return render(request, "main/recover_password.html", context)
+    else:
+        return HttpResponseRedirect('/')
+
+
+def recover_password_ajax(request, key):
+    if request.method == "POST":
+        response_data = {}
+        recover_form = RecoverPasswordForm(request.POST)
+        print(request.POST)
+        if recover_form.is_valid:
+            if recover_form.data['password1'] == recover_form.data['password2']:
+                if ConfirmKey.objects.filter(key=key).count() >= 1:
+                    user = ConfirmKey.objects.filter(key=key).first()
+                    if user.is_active():
+                        password = recover_form.cleaned_data('password1')
+                        user.set_password(password)
+                        user.save()
+                        login(request, user)
+                        result = "Success"
+                    else:
+                        result = "This user is not activated"
+                else:
+                    result = "Wrong key"
+            else:
+                result = "Passwords does not match"
         else:
             result = "Form is not valid"
         response_data['result'] = result
