@@ -244,3 +244,9 @@ function delete_note_ajax()
         });
     }
 };
+
+function voice_note()
+{
+    var clean_text = $('#note_data_show').text();
+    voice_text(clean_text);
+};
