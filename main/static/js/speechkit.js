@@ -1,4 +1,4 @@
-var speaker;
+﻿var speaker;
 
 function init_speechkit()
 {

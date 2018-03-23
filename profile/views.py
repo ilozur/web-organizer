@@ -4,9 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from main.forms import *
+from profile.forms import *
 from main.models import *
 from main.views import create_mail, send_mail, create_key, check_email_uniq
+
 
 
 @login_required
