@@ -30,6 +30,10 @@ def index(request):
 
 @login_required
 def add_note_ajax(request):
+    '''
+    @bried
+    this function search notes
+    '''
     response_data = {}
     if request.method == "POST":
         form = AddNoteForm(request.POST)
@@ -51,6 +55,10 @@ def add_note_ajax(request):
 
 
 def search_notes(substr, user):
+    '''
+    @brief
+    this function search notes
+    '''
     obj = Notes.get_notes('all', user)
     ret_list = list()
     for i in obj:
