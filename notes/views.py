@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from notes.forms import *
-from notes.models import Notes
 import json
 from datetime import datetime
+from notes.forms import AddNoteForm, SearchForm
+from notes.models import Notes
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 @login_required
@@ -26,7 +27,6 @@ def index(request):
     context['add_note_form'] = AddNoteForm()
     context['edit_note_form'] = EditNoteForm()
     return render(request, "notes/index.html", context)
-
 
 @login_required
 def add_note_ajax(request):
@@ -53,9 +53,9 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search_notes(substr, user):
-    obj = Notes.get_notes('all', user)
-    ret_list = list()
+def search(substr):
+    obj = Notes.objects.all()
+    ret_list = []
     for i in obj:
         if substr in i.name:
             ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
@@ -72,17 +72,8 @@ def get_note_data_ajax(request):
             response_data = {
                 'title': note.name,
                 'data': note.data,
-                'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y"),
-            }
-            if note.last_edit_time is not None:
-                response_data['last_edit_time'] = note.last_edit_time.strftime("%I:%M%p on %B %d, %Y")
-            result = 'Success'
-        else:
-            result = 'Note does not exist'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
+                'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y")}
+    return response_data
 
 
 @login_required
@@ -94,7 +85,7 @@ def search_ajax(request):
             if form.is_valid():
                 string = form.data['result']
                 response_data = {
-                    'notes_list': search_notes(string, request.user)
+                    'notes_list': Notes.search_notes(string, request.user)
                 }
                 result = 'Success'
             else:
