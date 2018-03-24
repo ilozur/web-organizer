@@ -146,22 +146,16 @@ def create_mail(user, text, html, email=None):
 
 
 def create_sign_up_key(user, username, password):
-    prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
-                                               password=(username + password).encode('utf-8'),
-                                               salt=SECRET_KEY.encode('utf-8'),
-                                               iterations=100000)
-    key = binascii.hexlify(prepared_hash_object)
-    key = key.decode('utf-8')
-    key += str(user.id)
+    key = create_key(username + password, user)
     expiration_date = datetime.now().date()
     expiration_date += timedelta(days=3)
-    sign_up_key = SignUpKey(user=user, key=key, expiration_date=expiration_date)
+    sign_up_key = ConfirmKey(user=user, key=key, expiration_date=expiration_date)
     return sign_up_key
 
 
 def activate_key(request, key):
     if request.method == "GET":
-        keys = SignUpKey.objects.filter(key=key)
+        keys = ConfirmKey.objects.filter(key=key)
         if keys.count() > 0:
             if keys.first().expiration_date >= datetime.now().date():
                 user = keys.first().user
@@ -239,10 +233,8 @@ def change_user_data_ajax(request):
                 else:
                     mail = create_mail(user,
                                        "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/" +
-                                       str(user.id) + "/" + confirm_email_key.key,
-                                       "<a href='http://127.0.0.1:8000/confirm_mail/" +
-                                       str(user.id) + "/" + confirm_email_key.key +
-                                       "'>Go to this link to confirm this email</a>", email)
+                                       confirm_email_key.key, "<a href='http://127.0.0.1:8000/confirm_mail/" +
+                                       confirm_email_key.key + "'>Go to this link to confirm this email</a>", email)
                     send_mail(mail)
                     result = "Success"
                     response_data['answer'] = "Please check your new email to confirm it"
@@ -258,38 +250,42 @@ def change_user_data_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def confirm_mail(request, user_id, key):
+def confirm_mail(request, key):
     if request.method == "GET":
-        user = User.objects.filter(id=user_id).first()
-        if ConfirmMailKey.objects.filter(user=user).count() > 0:
-            confirm_key = ConfirmMailKey.objects.filter(user=user).first()
-            if key == confirm_key.key:
-                user.email = confirm_key.email
-                confirm_key.delete()
+        keys = ConfirmMailKey.objects.filter(key=key)
+        if keys.count() > 0:
+                user = keys.first().user
+                user.email = keys.first().email
+                keys.first().delete()
                 user.save()
     return HttpResponseRedirect('/profile')
 
 
 def create_confirm_email_key(user, email):
-    prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
-                                               password=email.encode('utf-8'),
-                                               salt=SECRET_KEY.encode('utf-8'),
-                                               iterations=100000)
-    key = binascii.hexlify(prepared_hash_object)
-    key = key.decode('utf-8')
-    key += str(user.id)
+    key = create_key(user.username + user.password, user)
     if check_email_uniq(email):
         if ConfirmMailKey.objects.filter(user=user).count() > 0:
             confirm_email_key = ConfirmMailKey.objects.filter(user=user).first()
-            confirm_email_key.user = user
             confirm_email_key.key = key
             confirm_email_key.email = email
+            confirm_email_key.save()
         else:
             confirm_email_key = ConfirmMailKey(user=user, key=key, email=email)
             confirm_email_key.save()
     else:
         confirm_email_key = None
     return confirm_email_key
+
+
+def create_key(text, user):
+    prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
+                                               password=text.encode('utf-8'),
+                                               salt=SECRET_KEY.encode('utf-8'),
+                                               iterations=100000)
+    key = binascii.hexlify(prepared_hash_object)
+    key = key.decode('utf-8')
+    key += str(user.id)
+    return key
 
 
 @login_required

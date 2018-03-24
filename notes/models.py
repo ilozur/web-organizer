@@ -10,7 +10,7 @@ class Notes(models.Model):
     added_time = models.DateTimeField(default=None)
     is_voice = models.BooleanField(default=False)
     data_part = models.TextField(max_length=128, default="...")
-    last_edit_time = models.DateTimeField(default=None)
+    last_edit_time = models.DateTimeField(default=None, null=True)
 
     @staticmethod
     def get_notes_by_ranged_name(user, name_range=list()):

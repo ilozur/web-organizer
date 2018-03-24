@@ -32,6 +32,7 @@ def index(request):
 def add_note_ajax(request):
     response_data = {}
     if request.method == "POST":
+        print(request.POST)
         form = AddNoteForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['note_title']
