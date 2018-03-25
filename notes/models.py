@@ -79,3 +79,9 @@ class Notes(models.Model):
         else:
             return notelist.filter(pub_date__gte=datetime[0].date(),
                                    pub_date__lte=datetime[1].date()).order_by('-pub_date')
+
+    def Paginate(self, Page_number):
+        List_Note = []
+        First_id = (Page_number - 1) * 20
+        for item in range(First_id, First_id + 20):
+            List_Note.append(Notes.object.filter(id == item))
