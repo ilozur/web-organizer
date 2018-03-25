@@ -31,6 +31,7 @@ code_style:
 
 test:
   script:
-  - python manage.py test --settings=ci.settings_ci
+  - coverage run manage.py test --settings=ci.settings_ci
+  - coverage report main/*.py notes/*.py calendars/*.py todo/*.py
   only:
   - develop
