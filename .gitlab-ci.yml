@@ -7,14 +7,14 @@ cache:
 before_script:
   - apt-get update
   - apt-get install -y python3-pip
-  - pip3 install -r requirements.txt
+  - pip3 install -r ci/requirements.txt
 
 documentation:
   before_script:
   - apt-get update
   - apt-get install -y doxygen ttf-freefont graphviz
   script:
-  - doxygen Doxyfile_CI
+  - doxygen ci/Doxyfile_CI
   only:
   - develop
   
@@ -39,6 +39,6 @@ code_style:
 
 test:
   script:
-  - python manage.py test --settings=morris_butler.settings_ci
+  - python manage.py test --settings=ci.settings_ci
   only:
   - develop
