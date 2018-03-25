@@ -1,19 +1,19 @@
-image: alpine
+image: ubuntu
 
 cache:
   paths:
   - ~/.cache/pip/
 
 before_script:
-  - apk update
-  - apk add py-pip
-  - pip install -r requirements.txt
+  - apt-get update
+  - apt-get install add python3-pip
+  - pip3 install -r requirements.txt
 
 documentation:
   before_script:
-  - apk update
-  - apk add doxygen
-  - apk add ttf-freefont graphviz
+  - apt-get update
+  - apt-get install doxygen
+  - apt-get install ttf-freefont graphviz
   script:
   - doxygen Doxyfile_CI
   only:
@@ -21,9 +21,9 @@ documentation:
   
 pages:
   before_script:
-  - apk update
-  - apk add doxygen
-  - apk add ttf-freefont graphviz
+  - apt-get update
+  - apt-get install doxygen
+  - apt-get install ttf-freefont graphviz
   script:
   - doxygen Doxyfile
   - mv docs/ public/
@@ -41,6 +41,6 @@ code_style:
 
 test:
   script:
-  - python manage.py test
+  - python manage.py test --settings=morris_butler.settings_ci
   only:
   - develop
