@@ -7,7 +7,7 @@ cache:
 before_script:
   - apt-get update
   - apt-get install -y python3-pip
-  - pip3 install -r ci/requirements.txt
+  - pip3 install -r ci/requirements_ci.txt
 
 documentation:
   before_script:
