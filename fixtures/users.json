@@ -1,0 +1,58 @@
+[
+  {
+    "id" : "1",
+    "password":" ",
+    "username" : "testuser1",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  },
+  {
+    "id" : "2",
+    "password":" ",
+    "username" : "testuser2",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  },
+  {
+    "id" : "3",
+    "password":" ",
+    "username" : "testuser3",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  },
+  {
+    "id" : "4",
+    "password":" ",
+    "username" : "testuser4",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  },
+  {
+    "id" : "5",
+    "password":" ",
+    "username" : "testuser5",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  },
+  {
+    "id" : "6",
+    "password":" ",
+    "username" : "testuser6",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  },
+  {
+    "id" : "7",
+    "password":" ",
+    "username" : "testuser7",
+    "email" : "john_appleseedsky@totallynotyandex.su",
+    "is_active" : 1
+
+  }
+]
