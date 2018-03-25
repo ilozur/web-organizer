@@ -16,14 +16,15 @@
             <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">
             <div class="carousel-caption text-left">
                 <h1>Добрый день, {{ request.user.first_name }}</h1>
+                <h3>Последняя заметка: </h3>
+                <p><a href='{% url "notes.latest" %}' class="link-section">Резервные коды</a></p>
                 <h3>Ближайшее мероприятие: </h3>
-                <p><a href="/ivent_near" class="link-section">Дедлайн</a><br/>
+                <p><a href='{% url "calendar.nearest" %}' class="link-section">Дедлайн</a><br/>
                     <small><i>25.10.2018 10:00 AM | Школа Анализа Данных</i></small>
                 </p>
                 <h3>Скорейшее напоминание: </h3>
                 <p><a href="/todo_near" class="link-section">Отдать Бобу диски</a></p>
-                <h3>Закрепленная заметка: </h3>
-                <p><a href="/notes_latest" class="link-section">Резервные коды</a></p>
+
             </div>
         </div>
     </div>

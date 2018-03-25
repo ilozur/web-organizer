@@ -1,9 +1,11 @@
+from django.urls import reverse
+
 from calendars.models import *
 from django.shortcuts import render
 from django.contrib.auth.decorators import *
 from datetime import datetime, timedelta
 from calendars.forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import json
 
 
@@ -186,3 +188,9 @@ def event_view(request):
         else:
             response_data['result'] = "Form not valid"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def get_near_event(request):
+    url = reverse('calendar.index')
+    # получить последнюю заметку и записать её id
+    url += '?id={}'.format(1)
+    return HttpResponseRedirect(url)

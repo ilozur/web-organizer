@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
+
 from notes.forms import *
 from notes.models import Notes
 import json
@@ -184,3 +186,10 @@ def delete_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def get_latest_note(request):
+    url = reverse('notes.index')
+    # получить последнюю заметку и записать её id
+    url += '?id={}'.format(1)
+    return HttpResponseRedirect(url)
