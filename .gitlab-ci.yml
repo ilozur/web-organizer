@@ -1,5 +1,14 @@
 image: alpine
 
+cache:
+  paths:
+  - ~/.cache/pip/
+
+before_script:
+  - apk update
+  - apk add py-pip
+  - pip install -r requirements.txt
+
 documentation:
   before_script:
   - apk update
@@ -25,11 +34,13 @@ pages:
   - develop
 
 code_style:
-  before_script:
-  - apk update
-  - apk add py-pip
-  - pip install pycodestyle
   script:
-  - pycodestyle --ignore=E501 main calendars notes todo
+  - pycodestyle --ignore=E501,E265 main calendars notes todo
+  only:
+  - develop
+
+test:
+  script:
+  - python manage.py test
   only:
   - develop

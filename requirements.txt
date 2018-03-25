@@ -3,3 +3,5 @@ mysqlclient
 django-ckeditor
 django-bootstrap-form
 Pillow
+coverage==4.5.1
+pycodestyle==2.3.1
