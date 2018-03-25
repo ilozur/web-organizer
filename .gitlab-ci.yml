@@ -1,27 +1,19 @@
-image: ubuntu
+image: srx64/prom:v1
 
 cache:
   paths:
   - ~/.cache/pip/
 
 before_script:
-  - apt-get update
-  - apt-get install -y python3-pip
-  - pip3 install -r ci/requirements_ci.txt
+  - pip install -r ci/requirements_ci.txt
 
 documentation:
-  before_script:
-  - apt-get update
-  - apt-get install -y doxygen ttf-freefont graphviz
   script:
   - doxygen ci/Doxyfile_CI
   only:
   - develop
   
 pages:
-  before_script:
-  - apt-get update
-  - apt-get install -y doxygen ttf-freefont graphviz
   script:
   - doxygen Doxyfile
   - mv docs/ public/
