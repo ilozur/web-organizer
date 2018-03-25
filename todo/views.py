@@ -19,14 +19,7 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    todo_list = []
-    todos = Todos.get_todos('AtoZ', 'in progress', user)
-    for i in todos:
-        todo_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
-    todos = Todos.get_todos('AtoZ', 'in progress', user)
-    for i in todos:
-        todo_list.append((i.title, i.added_date_and_time, i.id))
-    context['todo_data'] = todo_list
+    context['todo_data'] = Todos.get_todos('AtoZ', 'in progress', user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()

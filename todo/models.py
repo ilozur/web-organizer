@@ -16,13 +16,13 @@ class Todos(models.Model):
         mode = {
             'AtoZ': 'title',
             'ZtoA': '-title',
-            'old': 'added_time',
-            'new': '-added_time'
+            'old': 'added_date_and_time',
+            'new': '-added_date_and_time'
         }
         todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
         todo_list = list()
         for item in todos:
-            todo_list.append((item.title, item.addded_date_and_time.strftime("%I:%M%p on %B %d, %Y"), item.id))
+            todo_list.append((item.title, item.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), item.id))
         return todo_list
 
     @staticmethod

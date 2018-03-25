@@ -8,89 +8,65 @@
     <link rel="stylesheet" href='{% static "css/todolist.css" %}'>
     <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
     <script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
-    <script>
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                function getCookie(name) {
-                     var cookieValue = null;
-                     if (document.cookie && document.cookie != '') {
-                         var cookies = document.cookie.split(';');
-                         for (var i = 0; i < cookies.length; i++) {
-                             var cookie = jQuery.trim(cookies[i]);
-                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                 break;
-                             }
-                         }
-                     }
-                return cookieValue;
-                }
-                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            }
-        });
-    </script>
 {% endblock %}
 
 {% block content %}
 
-<article class="todo">
-    <section class="mast">
-        <h1>Напоминания</h1>
-    </section>
-    <section class="content">
-        <section class="navigation">
-            <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary" onclick="ShowCard()">
-                        <picture>
-                            <img src='{% static "/icons/card_icon.png" %}' class="icon">
-                        </picture>
-                    </button>
-                    <button type="button" class="btn btn-primary" onclick="ShowList()">
-                        <picture>
-                            <img src='{% static "/icons/list_icon.png" %}' class="icon">
-                        </picture>
-                    </button>
-                </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo">+</button>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Complite">&#10003;</button>
-                <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary" onclick="sorting('new')">Сначала новые</button>
-                    <button type="button" class="btn btn-primary" onclick="sorting('old')">Сначала старые</button>
-                    <button type="button" class="btn btn-primary" onclick="sorting('AtoZ')">А..Я</button>
-                    <button type="button" class="btn btn-primary" onclick="sorting('ZtoA')">Я..А</button>
-                </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
-                    <picture>
-                        <img src='{% static "/icons/sync_icon.png" %}' class="icon">
-                    </picture>
-                </button>
-                <div class="alert alert-primary">
-                    <small>Всего напоминаний: 42</small> <br/>
-                    <small>Активных: 24</small> <br/>
-                    <small>Завершенных: 18</small> <br/>
-                </div>
-                <form id="search_todo_form" onsubmit="return false;">
-							{% load bootstrap %}
-							{% csrf_token %}
-							{{ search_todo_form.result | bootstrap }}
-                </form>
-                <input id="search_todo_btn" type="button" value="Search" class="btn btn-warning"
-                       onclick="search_todo_ajax()">
-            </nav>
+    <article class="todo">
+        <section class="mast">
+            <h1>Напоминания</h1>
         </section>
-        <section class="list-view" id="ViewList" hidden>
-            < class="list-group">
+        <section class="content">
+            <section class="navigation">
+                <nav class="navbar">
+                    <div class="btn-group btn-group-lg">
+                        <button type="button" class="btn btn-primary" onclick="ShowCard()">
+                            <picture>
+                                <img src='{% static "/icons/card_icon.png" %}' class="icon">
+                            </picture>
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="ShowList()">
+                            <picture>
+                                <img src='{% static "/icons/list_icon.png" %}' class="icon">
+                            </picture>
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo">+</button>
+                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Complite">&#10003;</button>
+                    <div class="btn-group btn-group-lg">
+                        <button type="button" class="btn btn-primary" onclick="sorting('new')">Сначала новые</button>
+                        <button type="button" class="btn btn-primary" onclick="sorting('old')">Сначала старые</button>
+                        <button type="button" class="btn btn-primary" onclick="sorting('AtoZ')">А..Я</button>
+                        <button type="button" class="btn btn-primary" onclick="sorting('ZtoA')">Я..А</button>
+                    </div>
+                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
+                        <picture>
+                            <img src='{% static "/icons/sync_icon.png" %}' class="icon">
+                        </picture>
+                    </button>
+                    <div class="alert alert-primary">
+                        <small>Всего напоминаний: 42</small> <br/>
+                        <small>Активных: 24</small> <br/>
+                        <small>Завершенных: 18</small> <br/>
+                    </div>
+                    <form id="search_todo_form" onsubmit="return false;">
+                                {% load bootstrap %}
+                                {% csrf_token %}
+                                {{ search_todo_form.result | bootstrap }}
+                    </form>
+                    <input id="search_todo_btn" type="button" value="Search" class="btn btn-warning"
+                           onclick="search_todo_ajax()">
+                </nav>
+            </section>
+            <section class="list-view list-group" id="ViewList">
                 {% for item in todo_data %}
-							<div id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');">
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-warning"
-                               data-toggle="modal" data-target="#Open-Todo">
-									<h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
-									<div class="date"> <small id="todo_date_{{item.1}}">{{ item.1 }}</small></div>
-                            </a>
-							</div>
+                    <div id="todo_body" onclick="get_todo_data_ajax('{{item.2}}')">
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-warning"
+                           data-toggle="modal" data-target="#Open-Todo">
+                            <h7 id="todo_title">{{ item.0 }}</h7>
+                            <div class="date"><small id="todo_date">{{ item.1 }}</small></div>
+                        </a>
+                    </div>
                     <div class="priorities">
                         <span class="badge badge-pill priority-list">!</span>
                         <span class="badge badge-pill priority-list">!</span>
@@ -100,50 +76,49 @@
                         <button type="button" class="btn btn-info">&#10003;</button>
                     </div>
                 {% endfor %}
-                </a>
-            </div>
-        </section>
-        <section class="card-view" id="ViewCard">
-            <div class="row">
-                <div class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
-                            <p></p>
+            </section>
+            <section class="card-view" id="ViewCard">
+                {% for item in todo_data %}
+                    <div class="row">
+                        <div class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="badge badge-pill priority">!</span>
+                                    <span class="badge badge-pill priority">!</span>
+                                    <span class="badge badge-pill priority">!</span>
+                                    <span class="badge badge-pill priority">!</span>
+                                    <span class="badge badge-pill priority">!</span>
+                                    <div class="priorities">
+                                        <button type="button" class="btn btn-info">&#10003;</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
+                        <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
+                            <div class="card last">
+                                <div class="card-body">
+                                    <p>
+                                        +
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
-                    <div class="card last">
-                        <div class="card-body">
-                            <p>
-                                +
-                            </p>
-                        </div>
+                {% endfor %}
+            </section>
+                <nav class="navbar">
+                    <div class="btn-group btn-group-lg">
+                        <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
+                        <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
+                        <a href="#"><button type="button" class="btn btn-primary">2</button></a>
+                        <a href="#"><button type="button" class="btn btn-primary">3</button></a>
+                        <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
                     </div>
-                </div>
-            </div>
+                </nav>
         </section>
-            <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
-                </div>
-            </nav>
-    </section>
     </article>
     <div class="modal fade" id="Complite">
         <div class="modal-dialog modal modal-dialog-centered">
@@ -253,19 +228,8 @@
             </div>
         </div>
     </div>
-        <article class="modals">
-			{% include "modals/todo.html" %}
-		</article>
-    <script>
-      function ShowCard(){
-        $("#ViewList").hide("slow");
-        $("#ViewCard").show("slow");
-      }
-      function ShowList(){
-        $("#ViewList").show("slow");
-        $("#ViewCard").hide("slow");
-      }
-      </script>
-
+    <article class="modals">
+        {% include "modals/todo.html" %}
+    </article>
 
 {% endblock %}
