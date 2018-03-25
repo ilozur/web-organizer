@@ -11,39 +11,37 @@ class TestMainPage(TestCase):
         u.save()
         self.c = Client()
 
-    def test_redirect(self):
-        response = self.c.post('/',
-                          {'user': 'test',
-                           'pass': 'ppp'})
-
+    def test_post_redirect(self):
+        response = self.c.post('/', {'this': 'is', 'dummy': 'context'})
         self.assertRedirects(response, '/')
 
-    def test_non_auth_template(self):
+    def test_index_non_auth(self):
         response = self.c.get('/')
-        self.assertTemplateUsed(response,
-                                'main/index.html')
+        # check status code
         self.assertEqual(response.status_code, 200)
 
-    def test_auth_template(self):
-        self.c.login(username='testuser', password='pass')
-        response = self.c.get('/')
-        self.assertTemplateUsed(response,
-                                'main/home.html')
-        self.assertEqual(response.status_code, 200)
+        # check template
+        self.assertTemplateUsed(response, 'main/index.html')
 
-    def test_non_auth_html(self):
-        response = self.c.get('/')
+        # check html
         self.assertContains(response, 'Добро пожаловать')
         self.assertContains(response, "Enter your password")
 
-    def test_auth_html(self):
+    def test_index_with_auth(self):
         self.c.login(username='testuser', password='pass')
         response = self.c.get('/')
+
+        # check status code
+        self.assertEqual(response.status_code, 200)
+
+        # check template
+        self.assertTemplateUsed(response, 'main/home.html')
+
+        # check context. Assuming db is empty.
+        # TODO: fill db and check
+        self.assertEqual(response.context['last_notes_count'], 0)
+
+        # check html
         self.assertContains(response, 'Добрый день')
         self.assertContains(response, 'Последние заметки')
         self.assertContains(response, 'Ближайшие события календаря')
-
-    def test_auth_context(self):
-        self.c.login(username='testuser', password='pass')
-        response = self.c.get('/')
-        self.assertEqual(response.context['last_notes_count'], 0)
