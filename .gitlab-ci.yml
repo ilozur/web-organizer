@@ -6,14 +6,13 @@ cache:
 
 before_script:
   - apt-get update
-  - apt-get install add python3-pip
+  - apt-get install -y python3-pip
   - pip3 install -r requirements.txt
 
 documentation:
   before_script:
   - apt-get update
-  - apt-get install doxygen
-  - apt-get install ttf-freefont graphviz
+  - apt-get install -y doxygen ttf-freefont graphviz
   script:
   - doxygen Doxyfile_CI
   only:
@@ -22,8 +21,7 @@ documentation:
 pages:
   before_script:
   - apt-get update
-  - apt-get install doxygen
-  - apt-get install ttf-freefont graphviz
+  - apt-get install -y doxygen ttf-freefont graphviz
   script:
   - doxygen Doxyfile
   - mv docs/ public/
