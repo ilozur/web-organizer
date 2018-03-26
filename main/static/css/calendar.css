@@ -28,11 +28,14 @@ h2 {
 table {
   color: #fff;
   text-align: center;
+  border: 0px;
 }
-
+th:hover {
+    border: 0px;
+}
 /*Оформление ячейки и ее аимация при наведении*/
 td {
-  border: 1px solid #fdd;
+  border: 0px solid #fdd;
   transition: 0.2s;
   width: 150px;
   height: 150px;
@@ -134,4 +137,12 @@ td:hover {
 /*Дата в списке*/
 .date-and-place {
   float: right;
+}
+
+.bg-test{
+     background-color: #f99;
+}
+
+.test{
+    float: right;
 }
