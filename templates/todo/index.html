@@ -60,7 +60,7 @@
             </section>
             <section class="list-view list-group" id="ViewList">
                 {% for item in todo_data %}
-                    <div id="todo_body" onclick="get_todo_data_ajax('{{item.2}}')">
+                    <div id="todo_body" onclick="get_todo_data_ajax({{ item.2 }})">
                         <a href="#" class="list-group-item list-group-item-action list-group-item-warning"
                            data-toggle="modal" data-target="#Open-Todo">
                             <h7 id="todo_title">{{ item.0 }}</h7>
@@ -77,7 +77,7 @@
                     </div>
                 {% endfor %}
             </section>
-            <section class="card-view" id="ViewCard">
+            <section class="card-view" id="ViewCard" style="display: None">
                 {% for item in todo_data %}
                     <div class="row">
                         <div class="col-md-4" data-toggle="modal" data-target="#Open-Todo">

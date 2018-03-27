@@ -7,8 +7,14 @@ function sorting(type){
         {
             if (response['result'] == "Success")
             {
-                $("#list_id").html('');
+                $("#ViewList > #todo_body").each(function(index) {
+                    $(this).attr("onclick", 'get_todo_data_ajax(' + response['todo_list'][index][2] + ')');
+                    $($(".date > small").get(index)).html(response['todo_list'][index][1]);
+                    $($("a.list-group-item > #todo_title").get(index)).html(response['todo_list'][index][0]);
+                });
+                for (var i = 0; i < response['todo_list'].length; i++) {
 
+                }
                 $("#search_todo_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
                 });
