@@ -20,6 +20,7 @@ def index(request):
     }
     user = request.user
     context['todo_data'] = Todos.get_todos('AtoZ', 'in progress', user)
+    context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
@@ -90,6 +91,8 @@ def status_change(request):
             todo_id = request.POST.get('id')
             todo_type = request.POST.get('type')
             obj = Todos.get_todo_by_id(todo_id)
+            response['new_status'] = obj.status;
+            print(response['new_status'])
             obj.status = todo_type
             obj.save()
             response['result'] = "Success"

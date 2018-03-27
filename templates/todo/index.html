@@ -32,7 +32,7 @@
                         </button>
                     </div>
                     <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo">+</button>
-                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Complite">&#10003;</button>
+                    <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Complete">&#10003;</button>
                     <div class="btn-group btn-group-lg">
                         <button type="button" class="btn btn-primary" onclick="sorting('new')">Сначала новые</button>
                         <button type="button" class="btn btn-primary" onclick="sorting('old')">Сначала старые</button>
@@ -44,10 +44,10 @@
                             <img src='{% static "/icons/sync_icon.png" %}' class="icon">
                         </picture>
                     </button>
-                    <div class="alert alert-primary">
-                        <small>Всего напоминаний: 42</small> <br/>
-                        <small>Активных: 24</small> <br/>
-                        <small>Завершенных: 18</small> <br/>
+                    <div id="amounts" class="alert alert-primary">
+                        <small>Всего напоминаний: {{ amount_of_todos.0 }}</small> <br/>
+                        <small>Активных: {{ amount_of_todos.1 }}</small> <br/>
+                        <small>Завершенных: {{ amount_of_todos.2 }}</small> <br/>
                     </div>
                     <form id="search_todo_form" onsubmit="return false;">
                                 {% load bootstrap %}
@@ -73,7 +73,7 @@
                         <span class="badge badge-pill priority-list">!</span>
                         <span class="badge badge-pill priority-list">!</span>
                         <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
+                        <button type="button" class="btn btn-info" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
                     </div>
                 {% endfor %}
             </section>
@@ -120,7 +120,7 @@
                 </nav>
         </section>
     </article>
-    <div class="modal fade" id="Complite">
+    <div class="modal fade" id="Complete">
         <div class="modal-dialog modal modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">

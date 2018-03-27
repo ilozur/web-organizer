@@ -47,11 +47,7 @@ class Todos(models.Model):
         return ret_list
 
     @staticmethod
-    def todos_sort_by_date(datetime, user):  # todos: datetime = {1: date_one NOT NULL, 2: date_two}
-        todolist = Todos.objects.filter(user=user)
-        if len(datetime) == 1:
-            date = datetime[0].date()
-            return todolist.filter(pub_date=date)
-        else:
-            return todolist.filter(pub_date__gte=datetime[0].date(),
-                                   pub_date__lte=datetime[1].date()).order_by('-pub_date')
+    def get_amounts(user):
+        every = Todos.objects.filter(user=user).count()
+        undone = Todos.objects.filter(status='in progress', user=user).count()
+        return [every, undone, (every - undone)]

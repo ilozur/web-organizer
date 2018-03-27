@@ -30,7 +30,10 @@ function status_change(id, type){
         url: '/todo/change',
         data: {'id': id, 'type': type},
         success: function(response){
+            if (response['result'] == 'Success')
+            {
 
+            };
         }
     });
 };
