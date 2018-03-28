@@ -13,6 +13,7 @@ from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
 from notes.models import Notes
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -34,42 +35,6 @@ def index(request):
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             return render(request, "main/home.html", context)
-    else:
-        return HttpResponseRedirect('/')
-
-
-def profile_view(request):
-    if request.method == "GET":
-        form = ChangeUserDataForm()
-        context = {
-            'title': "User profile page",
-            'header': "User profile header",
-            'change_user_data_form': form,
-        }
-        if request.user.is_authenticated:
-            return render(request, "main/profile.html", context)
-        else:
-            return HttpResponseRedirect('/')
-    else:
-        return HttpResponseRedirect('/')
-
-
-@login_required
-def change_user_data_ajax(request):
-    response_data = {}
-    if request.method == "POST":
-        form = AddNoteForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            last_name = form.cleaned_data['last_name']
-            first_name = form.cleaned_data['first_name']
-            email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']
-            result = "Success"
-        else:
-            result = 'form not valid'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
@@ -124,7 +89,7 @@ def sign_up_view(request):
                             user = User(email=email, username=username, first_name=name, last_name=surname, is_active=0)
                             user.set_password(pass1)
                             user.save()
-                            sign_up_key = create_sign_up_key(user, username, pass1)
+                            sign_up_key = create_unic_key(user, username, pass1)
                             sign_up_key.save()
                             mail = create_mail(user,
                                                "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
@@ -148,33 +113,30 @@ def sign_up_view(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def create_mail(user, text, html):
+def create_mail(user, text, html, email=None):
     mail = dict()
     mail['subject'] = 'Dear ' + user.first_name + ' ' + user.last_name + '!'
     mail['from_email'] = EMAIL_HOST_USER
-    mail['to_email'] = user.email
+    if email:
+        mail['to_email'] = email
+    else:
+        mail['to_email'] = user.email
     mail['text_content'] = text
     mail['html_content'] = html
     return mail
 
 
-def create_sign_up_key(user, username, password):
-    prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
-                                               password=(username + password).encode('utf-8'),
-                                               salt=SECRET_KEY.encode('utf-8'),
-                                               iterations=100000)
-    key = binascii.hexlify(prepared_hash_object)
-    key = key.decode('utf-8')
-    key += str(user.id)
+def create_unic_key(user, username, password):
+    key = create_key(username + password, user)
     expiration_date = datetime.now().date()
     expiration_date += timedelta(days=3)
-    sign_up_key = SignUpKey(user=user, key=key, expiration_date=expiration_date)
+    sign_up_key = ConfirmKey(user=user, key=key, expiration_date=expiration_date)
     return sign_up_key
 
 
 def activate_key(request, key):
     if request.method == "GET":
-        keys = SignUpKey.objects.filter(key=key)
+        keys = ConfirmKey.objects.filter(key=key)
         if keys.count() > 0:
             if keys.first().expiration_date >= datetime.now().date():
                 user = keys.first().user
@@ -227,6 +189,17 @@ def sign_in_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def create_key(text, user):
+    prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
+                                               password=text.encode('utf-8'),
+                                               salt=SECRET_KEY.encode('utf-8'),
+                                               iterations=100000)
+    key = binascii.hexlify(prepared_hash_object)
+    key = key.decode('utf-8')
+    key += str(user.id)
+    return key
 
 
 def sign_out_view(request):

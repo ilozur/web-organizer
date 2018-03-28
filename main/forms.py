@@ -29,21 +29,3 @@ class SignUpForm(forms.Form):
     password2 = forms.CharField(label='Password again', max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                   'placeholder': 'Enter your password again'}))
-
-
-class ChangeUserDataForm(forms.Form):
-    email = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                           'placeholder': 'Enter new e-mail'}))
-    username = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                             'placeholder': 'Enter new username'}))
-    name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                         'placeholder': 'Enter new name'}))
-    surname = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                            'placeholder': 'Enter new surname'}))
-    old_password = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                                     'placeholder': 'Enter old password'}))
-    password1 = forms.CharField(max_length=200, widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                                  'placeholder': 'Enter new password'}))
-    password2 = forms.CharField(max_length=200,
-                                widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'placeholder': 'Enter new password again'}))

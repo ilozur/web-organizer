@@ -6,29 +6,8 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/profile.css" %}'>
-    <script>
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                function getCookie(name) {
-                     var cookieValue = null;
-                     if (document.cookie && document.cookie != '') {
-                         var cookies = document.cookie.split(';');
-                         for (var i = 0; i < cookies.length; i++) {
-                             var cookie = jQuery.trim(cookies[i]);
-                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                 break;
-                             }
-                         }
-                     }
-                return cookieValue;
-                }
-                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            }
-        });
-    </script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+	<script charset='utf-8' type="text/javascript" src='{% static "js/main/profile/scripts.js" %}'></script>
 {% endblock %}
 
 {% block content %}
@@ -51,7 +30,7 @@
 				</div>
 				<div class="data">
 					<span>Фамилия</span>
-					<h2 class="card-title" id="last_name">{{ user.last_name }}</h2>
+					<h2 class="card-title" id="surname">{{ user.last_name }}</h2>
 				</div>
 				<div class="data">
 					<span>Email</span>
@@ -80,7 +59,7 @@
 							<label>Изменить аватар</label>
 							<input type="file" class="form-control-file">
 						</div>
-						<form>
+						<form id="change_user_data_form">
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label for="inputEmail4">Имя</label>
@@ -96,23 +75,27 @@
 								<label for="inputEmail4">Email</label>
 								{{ change_user_data_form.email }}
 							</div>
+						</form>
+						<hr>
+						<form id="change_password_form">
 							<div class="form-group">
 								<label for="inputPassword4">Старый пароль</label>
-								{{ change_user_data_form.old_password }}
+								{{ change_password_form.old_password }}
 							</div>
 							<div class="form-group">
 								<label for="inputPassword4"> Новый пароль</label>
-								{{ change_user_data_form.password1 }}
+								{{ change_password_form.new_password1 }}
 							</div>
 							<div class="form-group">
 								<label for="inputPassword4">Новый пароль повторить</label>
-								{{ change_user_data_form.password2 }}
+								{{ change_password_form.new_password2 }}
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-secondary">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" id="save_changes_btn" onclick="change_user_data(); get_user_data();">Сохранить</button>
+						<button type="submit" class="btn btn-secondary" id="change_password_btn" onclick="change_password()">Изменить пароль</button>
 					</div>
 				</div>
 			</div>
@@ -145,14 +128,5 @@
 				</div>
 			</div>
 		</div>
-	</section>
-	<script>
-		function get_user_data()
-		{
-			$('#id_name').val('{{ user.first_name }}');
-			$('#id_email').val('{{ user.email }}');
-			$('#id_surname').val('{{ user.last_name }}');
-		};
-	</script>
-
+	</section> 
 {% endblock %}

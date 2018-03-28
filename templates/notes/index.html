@@ -6,8 +6,8 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/notes.css" %}'>
-    <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
-    <script charset="utf-8" language="JavaScript" src='{% static "js/notes/scripts.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
 {% endblock %}
 
 {% block content %}
@@ -53,29 +53,29 @@
 				<section class="list-view">
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
-							<div id="note_{{item.2}}" onclick="get_note_data_ajax('{{item.2}}');">
+							<div id="note_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');">
 								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
-									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
-									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
+									<h7 id="note_title_{{ item.2 }}">{{ item.0 }}</h7>
+									<div class="date"> <small id="note_date_{{ item.1 }}">{{ item.1 }}</small></div>
 								</a>
 							</div>
 						{% endfor %}
 					</div>
 				</section>
-				<section class="card-view" hidden>
-					<div class="row" id="cards_id">
+				<section class="card-view">
+					<div class="row" id="cards_id" style="display: none" hidden>
 						{% for item in notes_data %}
-							<div class="col-md-4" data-toggle="modal" data-target="#Open-Note">
-							<div class="card">
-								<div class="card-body">
-									<h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
-									<hr/>
-									<p>
-										...
-									</p>
+							<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-md-4" data-toggle="modal" data-target="#Note-Card">
+								<div class="card">
+									<div class="card-body">
+										<h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3> <small class="date">{{ item.1 }}</small>
+										<hr/>
+										<p id="card_note_description_{{ item.2 }}">
+											{{ item.3 }}
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
 						{% endfor %}
 					</div>
 				</section>
