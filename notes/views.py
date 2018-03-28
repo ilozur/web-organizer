@@ -30,10 +30,10 @@ def index(request):
 
 @login_required
 def add_note_ajax(request):
-    '''
+    """
     @brief
     This function adds notes
-    '''
+    """
     response_data = {}
     if request.method == "POST":
         form = AddNoteForm(request.POST)
@@ -55,10 +55,10 @@ def add_note_ajax(request):
 
 
 def search_notes(substr, user):
-    '''
+    """
     @brief
     This function searches notes
-    '''
+    """
     obj = Notes.get_notes('all', user)
     ret_list = list()
     for i in obj:
@@ -69,12 +69,12 @@ def search_notes(substr, user):
 
 @login_required
 def get_note_data_ajax(request):
-    '''
+    """
     @brief
     This function receives information about notes
     @detailed
     This function receives information about notes such as date, time, name
-    '''
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
@@ -98,10 +98,10 @@ def get_note_data_ajax(request):
 
 @login_required
 def search_ajax(request):
-    '''
+    """
     @brief
     This function looks for the notes
-    '''
+    """
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -127,12 +127,12 @@ def search_ajax(request):
 
 @login_required
 def sort_ajax(request):
-    '''
+    """
     @brief
     This function sorts notes
     @detailed
     This function sorts notes by time and alphabetically
-    '''
+    """
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -158,10 +158,10 @@ def sort_ajax(request):
 
 @login_required
 def save_ajax(request):
-    '''
+    """
     @brief
     This function saves the notes
-    '''
+    """
     response_data = {}
     if request.method == "POST":
         form = EditNoteForm(request.POST)
@@ -187,10 +187,10 @@ def save_ajax(request):
 
 @login_required
 def delete_ajax(request):
-    '''
+    """
     @brief
     This function deletes notes
-    '''
+    """
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:

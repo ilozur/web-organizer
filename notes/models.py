@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
@@ -27,12 +26,12 @@ class Notes(models.Model):
 
     @staticmethod
     def get_notes ( sorting_type, user=1 ):
-    '''
-    @brief
-    This function get notes
-    '''
-        # if aim = 'date' -> 'up' = new-old, 'down' = old-new
-        # if aim = 'title' -> 'up' = a-z, 'down' = z-a
+        """
+        @brief
+        This function get notes
+        if aim = 'date' -> 'up' = new-old, 'down' = old-new
+        if aim = 'title' -> 'up' = a-z, 'down' = z-a
+        """
         notes = Notes.objects.filter ( user=user )
         if sorting_type != 'all':
             sort = sorting_type.split ( '_' )
@@ -54,22 +53,22 @@ class Notes(models.Model):
 
     @staticmethod
     def get_note_by_id(note_id):
-    '''
-    @param
-    This is ID of Notes
-    @brief
-    This function get notes by id
-    '''
+        """
+        @param
+        This is ID of Notes
+        @brief
+        This function get notes by id
+        """
         return Notes.objects.filter(id=note_id).first()
 
     @staticmethod
     def delete_note(id):
-    '''
-    @param
-    This is ID of Notes
-    @brief
-    This function delete note
-    '''
+        """
+        @param
+        This is ID of Notes
+        @brief
+        This function delete note
+        """
         if len(Notes.objects.filter(id=id)) > 0:
             Notes.objects.filter(id=id).delete()
             return True
@@ -78,10 +77,10 @@ class Notes(models.Model):
 
     @staticmethod
     def search_notes(string, user):
-    '''
-    @brief
-    This function serches for the notes
-    '''
+        """
+        @brief
+        This function serches for the notes
+        """
         obj = Notes.get_notes('all', user)
         ret_list = list()
         for i in obj:
@@ -91,12 +90,12 @@ class Notes(models.Model):
 
     @staticmethod
     def notes_sort_by_date(datetime, user):  # note: datetime = {1: date_one NOT NULL, 2: date_two}
-    '''
-    @brief
-    This function sorts notes by date
-    "detailed
-    This function sorts notes by date and alphabetically and aslo from new to old and conversely
-    '''
+        """
+        @brief
+        This function sorts notes by date
+        "detailed
+        This function sorts notes by date and alphabetically and aslo from new to old and conversely
+        """
         notelist = Notes.objects.filter(user=user)
         if len(datetime) == 1:
             date = datetime[0].date()
