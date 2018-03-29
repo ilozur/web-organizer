@@ -12,6 +12,10 @@ function sorting(type){
                     $($(".date > small").get(index)).html(response['todo_list'][index][1]);
                     $($("a.list-group-item > #todo_title").get(index)).html(response['todo_list'][index][0]);
                 });
+                $("#ViewCard > div.row").each(function(index) {
+                    $($(".card-body > h3").get(index)).html(response['todo_list'][index][0]);
+                    $($(".card-body > .date").get(index)).html(response['todo_list'][index][1]);
+                });
                 for (var i = 0; i < response['todo_list'].length; i++) {
 
                 }

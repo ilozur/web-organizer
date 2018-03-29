@@ -83,7 +83,8 @@
                         <div class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
                             <div class="card">
                                 <div class="card-body">
-                                    <h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
+                                    <h3> {{ item.0 }} </h3>
+                                    <small class="date">{{ item.1 }}</small>
                                 </div>
                                 <div class="card-footer">
                                     <span class="badge badge-pill priority">!</span>
@@ -97,17 +98,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
-                            <div class="card last">
-                                <div class="card-body">
-                                    <p>
-                                        +
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 {% endfor %}
+                <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
+                    <div class="card last">
+                        <div class="card-body">
+                            <p>+</p>
+                        </div>
+                    </div>
+                </div>
             </section>
                 <nav class="navbar">
                     <div class="btn-group btn-group-lg">
