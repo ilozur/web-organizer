@@ -105,7 +105,7 @@ def get_weeks(date_time):
 def get_month_name(month):
     m = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
          "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь", ]
-    return m[month-1]
+    return m[month - 1]
 
 
 def search_events(string):
