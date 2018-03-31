@@ -59,7 +59,7 @@ def send_mail(mail):
     msg.send()
 
 
-def sign_up_view(request):
+def sign_up_ajax(request):
     context = {}
     if request.method == "GET":
         if not request.user.is_authenticated:
@@ -97,18 +97,17 @@ def sign_up_view(request):
                                                "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
                                                "'>Go to this link to activate your account</a>")
                             send_mail(mail)
-                            result = "success"
+                            result = "100"
                         else:
-                            result = "Passwords do not match"
+                            result = "101"
                     else:
-                        result = "This username is already taken"
+                        result = "102"
                 else:
-                    result = "This email is already used"
-
+                    result = "103"
             else:
-                result = "Form not valid"
+                result = "104"
         else:
-            result = "User has already signed in"
+            result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -167,7 +166,7 @@ def sign_in_ajax(request):
                 found_user = (len(User.objects.filter(username=name)) > 0) or \
                              (len(User.objects.filter(email=name)) > 0)
                 if not found_user:
-                    result = "User not found"
+                    result = "106"
                 else:
                     user = User.objects.filter(email=name).first()
                     if user is None:
@@ -175,16 +174,16 @@ def sign_in_ajax(request):
                     if user.is_active:
                         loginned_user = authenticate(request, username=user.username, password=password)
                         if loginned_user is None:
-                            result = "Wrong password"
+                            result = "107"
                         else:
                             login(request, loginned_user)
-                            result = "success"
+                            result = "100"
                     else:
-                        result = "User was not activated with email"
+                        result = "108"
             else:
-                result = "Form not valid"
+                result = "104"
         else:
-            result = "User has already signed in"
+            result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

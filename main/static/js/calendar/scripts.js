@@ -25,7 +25,7 @@ function next_month()
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
                 $("#month_holder").text(response['month_name']);
                 $("#year_holder").text(response['now_year']);
@@ -55,6 +55,10 @@ function next_month()
                     }
                 );
             }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
         }
     });
 };
@@ -69,7 +73,7 @@ function go_to_now_month()
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
                 $("#month_holder").text(response['month_name']);
                 $("#year_holder").text(response['now_year']);
@@ -98,6 +102,10 @@ function go_to_now_month()
                         $(this).html(result_html);
                     }
                 );
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -117,7 +125,7 @@ function back_month()
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
                 $("#month_holder").text(response['month_name']);
                 $("#year_holder").text(response['now_year']);
@@ -147,6 +155,10 @@ function back_month()
                     }
                 );
             }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
         }
     });
 };
@@ -165,10 +177,13 @@ function add_event_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                alert('OK, event was added');
                 $("#close_calendar_btn").trigger("click");
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });

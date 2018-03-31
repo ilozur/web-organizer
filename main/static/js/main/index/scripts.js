@@ -53,19 +53,22 @@ function sign_in_ajax()
         data: form_data,
         success: function(response)
         {
-            alert(response['result']);
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                window.location.href = '/';
+                voice_text('Добро пожаловать!', function(){ window.location.href = '/'; });
             }
-            $("#sign_in_form").find(':input').each(function(){
-               $(this).removeAttr('disabled');
-            });
-            $('#sign_in_btn').removeAttr('disabled');
-            $("#sign_up_form").find(':input').each(function(){
-                $(this).removeAttr('disabled');
-            });
-            $('#sign_up_btn').removeAttr('disabled');
+            else
+            {
+                voice_ajax_result(response['result']);
+                $("#sign_in_form").find(':input').each(function(){
+                   $(this).removeAttr('disabled');
+                });
+                $('#sign_in_btn').removeAttr('disabled');
+                $("#sign_up_form").find(':input').each(function(){
+                    $(this).removeAttr('disabled');
+                });
+                $('#sign_up_btn').removeAttr('disabled');
+            }
         }
     });
 };
@@ -87,19 +90,22 @@ function sign_up_ajax()
         data: form_data,
         success: function(response)
         {
-            alert(response['result']);
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                window.location.href = '/';
+                voice_text('Вы успешно зарегестрировались. Вам отправлено письмо для подтверждения почты.', function(){ window.location.href = '/'; });
             }
-            $("#sign_up_form").find(':input').each(function(){
+            else
+            {
+                voice_ajax_result(response['result']);
+                $("#sign_up_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
-            });
-            $('#sign_up_btn').removeAttr('disabled');
-            $("#sign_in_form").find(':input').each(function(){
-               $(this).removeAttr('disabled');
-            });
-            $('#sign_in_btn').removeAttr('disabled');
+                });
+                $('#sign_up_btn').removeAttr('disabled');
+                $("#sign_in_form").find(':input').each(function(){
+                   $(this).removeAttr('disabled');
+                });
+                $('#sign_in_btn').removeAttr('disabled');
+            }
         }
     });
 };
