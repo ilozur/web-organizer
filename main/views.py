@@ -15,6 +15,8 @@ from notes.forms import *
 from notes.models import Notes
 from django.contrib.auth.models import User
 
+from profile.forms import RecoverPasswordUserData
+
 
 def index(request):
     if request.method == "GET":
@@ -27,6 +29,8 @@ def index(request):
             context['sign_in_form'] = sign_in_form
             sign_up_form = SignUpForm()
             context['sign_up_form'] = sign_up_form
+            recover_password_user_data_form = RecoverPasswordUserData()
+            context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
             context['add_event_form'] = AddingEventForm()
