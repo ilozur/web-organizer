@@ -38,10 +38,10 @@
 				</div>
 			</div>
 			<div class="card-footer">
-				<button type="button" class="btn btn-lg btn-secondary" onclick="get_user_data()" data-toggle="modal" data-target="#Edit">
+				<button type="button" class="btn btn-lg btn-light" onclick="get_user_data()" data-toggle="modal" data-target="#Edit">
 					<picture><img src='{% static "/icons/edit_icon.png" %}' class="icon"></picture>
 				</button>
-				<button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#Settings">
+				<button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Settings">
 					<picture><img src='{% static "/icons/settings_icon.png" %}' class="icon"></picture>
 				</button>
 			</div>
@@ -55,7 +55,7 @@
 						<h2 class="modal-title">Редактировать профиль</h2>
 					</div>
 					<div class="modal-body">
-						<div class="form-group btn btn-secondary change-avatar">
+						<div class="form-group btn btn-light change-avatar">
 							<label>Изменить аватар</label>
 							<input type="file" class="form-control-file">
 						</div>
@@ -93,9 +93,9 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-secondary" id="save_changes_btn" onclick="change_user_data(); get_user_data();">Сохранить</button>
-						<button type="submit" class="btn btn-secondary" id="change_password_btn" onclick="change_password()">Изменить пароль</button>
+						<button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+						<button type="submit" class="btn btn-light" id="save_changes_btn" onclick="change_user_data(); get_user_data();">Сохранить</button>
+						<button type="submit" class="btn btn-light" id="change_password_btn" onclick="change_password()">Изменить пароль</button>
 					</div>
 				</div>
 			</div>
@@ -109,21 +109,21 @@
 					<div class="modal-body">
 						<span> Выберите тембр голоса Морриса:</span>
 						<div class="btn-group btn-group-lg" style="margin-left: 50px;">
-							<button type="button" class="btn btn-secondary">Низкий</button>
-							<button type="button" class="btn btn-secondary active">Средний</button>
-							<button type="button" class="btn btn-secondary">Высокий</button>
+							<button type="button" class="btn btn-light">Низкий</button>
+							<button type="button" class="btn btn-light active">Средний</button>
+							<button type="button" class="btn btn-light">Высокий</button>
 						</div>
 						<hr/>
 						<span>Выберите язык:</span>
 						<div class="btn-group btn-group-lg" style="margin-left: 185px;">
-							<button type="button" class="btn btn-secondary active">Русский</button>
-							<button type="button" class="btn btn-secondary">Английский</button>
-							<button type="button" class="btn btn-secondary" disabled>Немецкий</button>
+							<button type="button" class="btn btn-light active">Русский</button>
+							<button type="button" class="btn btn-light">Английский</button>
+							<button type="button" class="btn btn-light" disabled>Немецкий</button>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-secondary">Сохранить</button>
+						<button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+						<button type="submit" class="btn btn-light">Сохранить</button>
 					</div>
 				</div>
 			</div>
