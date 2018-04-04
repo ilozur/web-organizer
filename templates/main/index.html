@@ -110,7 +110,14 @@
                     </div>
                     <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
                 </form>
-            </section>
+                <h3>Забыли пароль?</h3>
+                <form id="recover_password_form">
+                    {% csrf_token %}
+                    {{ recover_password_form.recover_name|bootstrap }}
+                    {{ recover_password_form.recover_email|bootstrap }}
+                    <a class="btn btn-primary btn-block" id="recover_password_btn" onclick="create_recover_key()">Получить ключ восстановления пароля</a>
+                </form>
+                            </section>
         </main>
         <footer class="mastfoot mt-auto">
             <div class="inner">
@@ -120,4 +127,50 @@
     </div>
 </div>
 <script>voice_text('Привет! Меня зовут Ева.');</script>
+<script>
+function create_recover_key()
+{
+    $("#sign_up_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#sign_up_btn').attr('disabled', 'disabled');
+    $("#sign_in_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#sign_in_btn').attr('disabled', 'disabled');
+    form_data = $('#recover_password_form').serialize();
+    $("#recover_password_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#recover_password_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/profile/recover_password_key',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                voice_text('Вам отправлено письмо для восствновления пароля.', function(){ window.location.href = '/'; });
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
+            $("#sign_up_form").find(':input').each(function(){
+            $(this).removeAttr('disabled');
+            });
+            $('#sign_up_btn').removeAttr('disabled');
+            $("#sign_in_form").find(':input').each(function(){
+               $(this).removeAttr('disabled');
+            });
+            $('#sign_in_btn').removeAttr('disabled');
+            $("#recover_password_form").find(':input').each(function(){
+               $(this).removeAttr('disabled');
+            });
+            $('#recover_password_btn').removeAttr('disabled');
+        }
+    });
+};
+</script>
 {% endblock %}

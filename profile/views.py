@@ -185,7 +185,6 @@ def recover_password_ajax(request, key):
     if request.method == "POST":
         response_data = {}
         recover_form = RecoverPasswordForm(request.POST)
-        print(request.POST)
         if recover_form.is_valid:
             if recover_form.data['password1'] == recover_form.data['password2']:
                 if ConfirmKey.objects.filter(key=key).count() >= 1:
@@ -204,6 +203,29 @@ def recover_password_ajax(request, key):
                 result = "Passwords does not match"
         else:
             result = "Form is not valid"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def create_recover_password_key_ajax(request):
+    if request.method == "POST":
+        response_data = {}
+        recover_form = RecoverPasswordUserData(request.POST)
+        if recover_form.is_valid:
+            name = recover_form.data['recover_name']
+            email = recover_form.data['recover_email']
+            user = User.objects.filter(username=name).first()
+            if user is not None:
+                if user.email == email:
+                    result = "100"
+                else:
+                    result = "113"
+            else:
+                result = "106"
+        else:
+            result = "104"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
