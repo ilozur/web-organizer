@@ -15,6 +15,10 @@
     {% block meta %}
     {% endblock %}
     <script>init_speechkit();</script>
+    {% if user.is_authenticated %}
+        <script src='{% static "js/live_recognizing.js" %}'></script>
+        <script>start_background_listening();</script>
+    {% endif %}
 </head>
 <body>
 {% block header %}
