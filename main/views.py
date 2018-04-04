@@ -165,7 +165,7 @@ def sign_in_ajax(request):
         if not request.user.is_authenticated:
             form = SignInForm(request.POST)
             if form.is_valid():
-                name = form.data['username'].lower()
+                name = form.data['username_sign_in'].lower()
                 password = form.data['password']
                 found_user = (len(User.objects.filter(username=name)) > 0) or \
                              (len(User.objects.filter(email=name)) > 0)
