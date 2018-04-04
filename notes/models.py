@@ -92,6 +92,8 @@ class Notes(models.Model):
     @staticmethod
     def notes_sort_by_date(datetime, user):  # note: datetime = {1: date_one NOT NULL, 2: date_two}
         """
+        @param
+        This is the time at which the notes are sorted
         @brief
         This function sorts notes by date
         "detailed
