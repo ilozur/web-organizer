@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 import datetime
 from notes.models import Notes
-
+from calendars.models import Event
 
 class Command ( BaseCommand ):
     args = "there's no args"
@@ -19,6 +19,7 @@ class Command ( BaseCommand ):
             users.append ( self.create_user ( username='test_user_{}'.format ( i ), password=" ", email=None ) )
             for j in range ( 0, i ):
                 self.create_note ( text=self.Lopsum, name="Lorem Ipsum", user=users[i], time=datetime.time )
+                self.create_calendar(date = "2108-01-01", content=self.Lopsum, user=users[i])
 
     def create_user ( self, username, password, email ):
         u = User.objects.create_user ( username, email, password )
@@ -27,3 +28,7 @@ class Command ( BaseCommand ):
     def create_note ( self, text, name, user, time ):
         n = Notes ( data=text, user=user, added_time=time, name=name )
         n.save ()
+
+    def create_calendar( self, date, content, user ):
+        e = Event(user=user, date=date, description=content)
+        e.save()
