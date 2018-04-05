@@ -13,7 +13,7 @@ class Command ( BaseCommand ):
                  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, \
                  sunt in culpa qui officia deserunt mollit anim id est laborum."
 
-    def creation ( self ):
+    def handle(self, *args, **options):
         users = []
         for i in range ( 0, 50 ):
             users.append ( self.create_user ( username='test_user_{}'.format ( i ), password=" ", email=None ) )
