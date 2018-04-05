@@ -104,7 +104,7 @@
                         <div class="tab-pane fade mt-5" id="log" role="tabpanel" aria-labelledby="log-tab">
                             <form id="sign_in_form">
                                 {% csrf_token %}
-                                <div class="form-row">
+                                <div class="form-row" style="margin-bot: 296px;">
                                     <div class="form-group col-md-6">
                                         {{ sign_in_form.username|bootstrap }}
                                     </div>
@@ -112,7 +112,7 @@
                                         {{ sign_in_form.password|bootstrap }}
                                     </div>
                                 </div>
-                                <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()" style="text-shadow: 0 0.01rem 0.1rem">Войти</a>
+                                <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()" style="text-shadow: 0 0.01rem 0.1rem; margin: 0px 0px 296px;">Войти</a>
                             </form>
                         </div>
                     </div>
