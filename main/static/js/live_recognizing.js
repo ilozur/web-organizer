@@ -63,5 +63,6 @@ function detail_listening()
         console.log("Процесс распознавания команды запущен.");
     },
     utteranceSilence: 200,
+    partialResult: false,
 });
 };

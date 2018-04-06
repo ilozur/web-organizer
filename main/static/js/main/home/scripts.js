@@ -230,3 +230,22 @@ function voice_note()
     var clean_text = $('#note_data_show').text();
     voice_text(clean_text);
 };
+
+function listen_note(param)
+{
+    $('#New-Note').find('img').attr('src', '/static/icons/listening_icon.png');
+    voice_to_text(function (text) {
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        if (param == "add")
+        {
+            CKEDITOR.instances.id_note_data.setData(text);
+        }
+        else if (param == 'edit')
+        {
+            CKEDITOR.instances.id_note_data_edit.setData(text);
+        }
+        $('#New-Note').find('img').attr('src', '/static/icons/micro_icon.png');
+    });
+};
