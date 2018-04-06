@@ -13,6 +13,10 @@ class Notes(models.Model):
 
     @staticmethod
     def get_notes_by_ranged_name(user, name_range=list()):
+        """
+        @brief
+        This function get notes by ranged_name
+        """
         notes = Notes.objects.filter(user=user)
         sorted_list = []
         if len(name_range) == 1:
