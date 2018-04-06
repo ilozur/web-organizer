@@ -11,6 +11,7 @@
     <script src='{% static "js/bootstrap.min.js" %}'></script>
     <script src='{% static "js/holder.min.js" %}'></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/main/base/scripts.js" %}'></script>
     <meta charset="utf-8">
     {% block meta %}
     {% endblock %}
@@ -24,12 +25,16 @@
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mb-2 logo"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
         <a class="navbar-brand col-2" href='{% url "index" %}'>EVA</a>
         <div class="collapse navbar-collapse">
-            <div class="col-3">
-                <button type="button" class="btn btn-light btn-sm base-button">
+			<input class="place_for_search" type="text" id="text-to-find" value="" placeholder="Искать" autofocus>
+			<div class="col-3">
+				<button class="btn btn-light btn-sm base-button" type="button" onclick="javascript: FindOnPage('text-to-find',false); return false;" value=" ">
+					<img src='{% static "icons/cancel_icon.png" %}'>
+				</button>
+				<button class="btn btn-light btn-sm base-button" type="submit" onclick="javascript: FindOnPage('text-to-find',true); return false;" value=" ">
+					<img src='{% static "icons/search_icon.png" %}'>
+				</button>
+				<button type="button" class="btn btn-light btn-sm base-button">
                     <img src='{% static "icons/micro_icon.png" %}'>
-                </button>
-                <button type="button" class="btn btn-light btn-sm base-button">
-                    <img src='{% static "icons/search_icon.png" %}'>
                 </button>
             </div>
             <ul class="navbar-nav">
