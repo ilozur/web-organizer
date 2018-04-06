@@ -24,8 +24,15 @@ class ChangePasswordForm(forms.Form):
 
 class RecoverPasswordForm(forms.Form):
     password1 = forms.CharField(max_length=200,
-                                    widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                      'placeholder': 'Enter new password'}))
+                                widget=forms.PasswordInput(attrs={'class': 'form-control',
+                                                                  'placeholder': 'Enter new password'}))
     password2 = forms.CharField(max_length=200,
-                                    widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                      'placeholder': 'Enter new password again'}))
+                                widget=forms.PasswordInput(attrs={'class': 'form-control',
+                                                                  'placeholder': 'Enter new password again'}))
+
+
+class RecoverPasswordUserData(forms.Form):
+    recover_email = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                           'placeholder': 'Enter your e-mail'}))
+    recover_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                         'placeholder': 'Enter your name'}))

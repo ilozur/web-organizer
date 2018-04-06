@@ -3,6 +3,7 @@
 <head>
     <title>{{ title }}</title>
     {% load staticfiles %}
+    <script src="https://webasr.yandex.net/jsapi/v1/webspeechkit-settings.js" type="text/javascript"></script>
     <script src="https://webasr.yandex.net/jsapi/v1/webspeechkit.js" type="text/javascript"></script>
     <script src='{% static "js/speechkit.js" %}'></script>
     <script src='{% static "js/jquery-3.2.1.slim.min.js" %}'></script>
@@ -13,21 +14,21 @@
     <meta charset="utf-8">
     {% block meta %}
     {% endblock %}
+    <script>init_speechkit();</script>
 </head>
 <body>
 {% block header %}
 <header>
     {% if user.is_authenticated %}
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <img class="logo" src='{% static "img/logo.png" %}'>
-        <a class="navbar-brand col-2" href='{% url "index" %}'>Morris Butler</a>
-
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mb-2 logo"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+        <a class="navbar-brand col-2" href='{% url "index" %}'>EVA</a>
         <div class="collapse navbar-collapse">
             <div class="col-3">
-                <button type="button" class="btn btn-secondary btn-sm base-button">
+                <button type="button" class="btn btn-light btn-sm base-button">
                     <img src='{% static "icons/micro_icon.png" %}'>
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm base-button">
+                <button type="button" class="btn btn-light btn-sm base-button">
                     <img src='{% static "icons/search_icon.png" %}'>
                 </button>
             </div>
@@ -47,12 +48,12 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="dropdown">
-                    <button data-toggle="dropdown" class="btn btn-outline-secondary">{{ request.user.username }}
+                    <button data-toggle="dropdown" class="btn btn-outline-light">{{ request.user.username }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
                         <li class="p-3">
-                            <a href="/profile" class="btn btn-dark btn-block">Личный кабинет</a>
-                            <a href='{% url "sign_out" %}' class="btn btn-dark btn-block">Выйти</a>
+                            <a href="/profile" class="btn btn-light btn-block">Личный кабинет</a>
+                            <a href='{% url "sign_out" %}' class="btn btn-light btn-block">Выйти</a>
                         </li>
                     </ul>
                 </li>
@@ -67,16 +68,52 @@
 
 {% block footer %}
 {% if user.is_authenticated %}
-<footer class="base-footer">
-    <div class="container">
-        <span class="text-muted"> With <font style="color: #ff2400;">&hearts;</font> MPS51 Team</span>
-    </div>
-</footer>
+<footer class="container py-5">
+      <div class="row">
+        <div class="col-12 col-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mb-2"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+          <small class="d-block mb-3 text-muted">MPS51 Team</small>
+          <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Навигация</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href='{% url "index" %}'>Главная</a></li>
+            <li><a class="text-muted" href='{% url "notes.index" %}'>Заметки</a></li>
+            <li><a class="text-muted" href='{% url "calendar.index" %}'>Календарь</a></li>
+            <li><a class="text-muted" href='{% url "todo.index" %}'>Напоминания</a></li>
+            <li><a class="text-muted" href="/profile">Личный кабинет</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Ресурсы</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Яндекс API</a></li>
+            <li><a class="text-muted" href="#">Bootstrap 4</a></li>
+            <li><a class="text-muted" href="#">jQuery</a></li>
+            <li><a class="text-muted" href="#">Django</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Cоц.сети</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">VK</a></li>
+            <li><a class="text-muted" href="#">Telegram</a></li>
+            <li><a class="text-muted" href="#">GitLab</a></li>
+            <li><a class="text-muted" href="#">Instagram</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Справка</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">О нас</a></li>
+            <li><a class="text-muted" href="#">О сайте</a></li>
+            <li><a class="text-muted" href="#">Контакты</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
 {% endif %}
-{% endblock %}
-
-<script>init_speechkit();</script>
-{% block pre_scripts %}
 {% endblock %}
 </body>
 </html>

@@ -1,4 +1,4 @@
-$(document).ready(function(){
+﻿$(document).ready(function(){
     $(window).scroll(function(){
         if ($(this).scrollTop() > 100) {
             $('.scrollup').fadeIn();
@@ -53,19 +53,22 @@ function sign_in_ajax()
         data: form_data,
         success: function(response)
         {
-            alert(response['result']);
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                window.location.href = '/';
+                voice_text('Добро пожаловать!', function(){ window.location.href = '/'; });
             }
-            $("#sign_in_form").find(':input').each(function(){
-               $(this).removeAttr('disabled');
-            });
-            $('#sign_in_btn').removeAttr('disabled');
-            $("#sign_up_form").find(':input').each(function(){
-                $(this).removeAttr('disabled');
-            });
-            $('#sign_up_btn').removeAttr('disabled');
+            else
+            {
+                voice_ajax_result(response['result']);
+                $("#sign_in_form").find(':input').each(function(){
+                   $(this).removeAttr('disabled');
+                });
+                $('#sign_in_btn').removeAttr('disabled');
+                $("#sign_up_form").find(':input').each(function(){
+                    $(this).removeAttr('disabled');
+                });
+                $('#sign_up_btn').removeAttr('disabled');
+            }
         }
     });
 };
@@ -87,19 +90,68 @@ function sign_up_ajax()
         data: form_data,
         success: function(response)
         {
-            alert(response['result']);
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                window.location.href = '/';
+                voice_text('Вы успешно зарегестрировались. Вам отправлено письмо для подтверждения почты.', function(){ window.location.href = '/'; });
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+                $("#sign_up_form").find(':input').each(function(){
+                $(this).removeAttr('disabled');
+                });
+                $('#sign_up_btn').removeAttr('disabled');
+                $("#sign_in_form").find(':input').each(function(){
+                   $(this).removeAttr('disabled');
+                });
+                $('#sign_in_btn').removeAttr('disabled');
+            }
+        }
+    });
+};
+
+
+function create_recover_key()
+{
+    $("#sign_up_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#sign_up_btn').attr('disabled', 'disabled');
+    $("#sign_in_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#sign_in_btn').attr('disabled', 'disabled');
+    form_data = $('#recover_password_form').serialize();
+    $("#recover_password_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#recover_password_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/profile/recover_password_key',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                voice_text('Вам отправлено письмо для восствновления пароля.', function(){ window.location.href = '/'; });
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
             $("#sign_up_form").find(':input').each(function(){
-                $(this).removeAttr('disabled');
+            $(this).removeAttr('disabled');
             });
             $('#sign_up_btn').removeAttr('disabled');
             $("#sign_in_form").find(':input').each(function(){
                $(this).removeAttr('disabled');
             });
             $('#sign_in_btn').removeAttr('disabled');
+            $("#recover_password_form").find(':input').each(function(){
+               $(this).removeAttr('disabled');
+            });
+            $('#recover_password_btn').removeAttr('disabled');
         }
     });
 };

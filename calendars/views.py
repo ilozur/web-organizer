@@ -103,32 +103,9 @@ def get_weeks(date_time):
 
 
 def get_month_name(month):
-    result = ""
-    if month == 1:
-        result = "Январь"
-    elif month == 2:
-        result = "Февраль"
-    elif month == 3:
-        result = "Март"
-    elif month == 4:
-        result = "Апрель"
-    elif month == 5:
-        result = "Май"
-    elif month == 6:
-        result = "Июнь"
-    elif month == 7:
-        result = "Июль"
-    elif month == 8:
-        result = "Август"
-    elif month == 9:
-        result = "Сентябрь"
-    elif month == 10:
-        result = "Октябрь"
-    elif month == 11:
-        result = "Ноябрь"
-    elif month == 12:
-        result = "Декабрь"
-    return result
+    m = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь", ]
+    return m[month - 1]
 
 
 def search_events(string):
@@ -153,10 +130,10 @@ def add_event(request, data):
     data['user'] = request.user
     if time_now > datetime(data['date'].year, data['date'].month, data['date'].day, data['time'].hour,
                            data['time'].minute, data['time'].second):
-        return "Wrong date"
+        return "109"
     else:
         if (data['should_notify_hours'] < 0) or (data['should_notify_minutes'] < 0) or (data['should_notify_days'] < 0):
-            return "Wrong notification params"
+            return "110"
         else:
             event = Event(user=data['user'], date=data['date'], time=data['time'], title=data['title'],
                           description=data['description'], is_public=data['is_public'],
@@ -165,7 +142,7 @@ def add_event(request, data):
                           should_notify_minutes=data['should_notify_minutes'],
                           should_notify_days=data['should_notify_days'])
             event.save()
-            return "success"
+            return "100"
 
 
 @login_required
@@ -184,5 +161,5 @@ def event_view(request):
             result = add_event(request, form.cleaned_data)
             response_data['result'] = result
         else:
-            response_data['result'] = "Form not valid"
+            response_data['result'] = "104"
         return HttpResponse(json.dumps(response_data), content_type="application/json")

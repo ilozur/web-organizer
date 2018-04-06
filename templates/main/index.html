@@ -102,7 +102,7 @@
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            {{ sign_in_form.username|bootstrap }}
+                            {{ sign_in_form.username_sign_in|bootstrap }}
                         </div>
                         <div class="form-group col-md-6">
                             {{ sign_in_form.password|bootstrap }}
@@ -110,7 +110,14 @@
                     </div>
                     <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
                 </form>
-            </section>
+                <h3>Забыли пароль?</h3>
+                <form id="recover_password_form">
+                    {% csrf_token %}
+                    {{ recover_password_form.recover_name|bootstrap }}
+                    {{ recover_password_form.recover_email|bootstrap }}
+                    <a class="btn btn-primary btn-block" id="recover_password_btn" onclick="create_recover_key()">Получить ключ восстановления пароля</a>
+                </form>
+                            </section>
         </main>
         <footer class="mastfoot mt-auto">
             <div class="inner">
@@ -119,4 +126,5 @@
         </footer>
     </div>
 </div>
+<script>voice_text('Привет! Меня зовут Ева.');</script>
 {% endblock %}
