@@ -252,7 +252,7 @@ function get_event_data_ajax(id){
     $('#event_description_show').html('loading');
     $.ajax({
         type: "POST",
-        url: '/calendar/get_event_data',
+        url: '/calendar/events/get_event_data',
         data: {"id": id},
         success: function(response)
         {
@@ -269,4 +269,30 @@ function get_event_data_ajax(id){
 
         }
     });
+};
+
+function delete_event_ajax()
+{
+    var id = $('#event_num').html();
+    var should_delete = confirm('Вы уверены?');
+    if (should_delete)
+    {
+        $.ajax({
+            type: "POST",
+            url: '/calendar/events/delete',
+            data: {"id": id},
+            success: function(response)
+            {
+                if (response['result'] == "100")
+                {
+                    voice_text('Событие удалено.');
+                    go_to_now_month();
+                }
+                else
+                {
+                    voice_ajax_result(response['result']);
+                }
+            }
+        });
+    }
 };

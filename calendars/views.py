@@ -190,3 +190,18 @@ def get_event_data_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+@login_required
+def delete_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        event_id = request.POST.get('id')
+        if Event.delete_event(event_id):
+            result = "100"
+        else:
+            result = "114"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
