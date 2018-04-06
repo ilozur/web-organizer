@@ -36,17 +36,35 @@ function next_month()
                         result_html = '';
                         weeks.forEach(function(week, i, weeks)
                         {
-                            result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                            result_html += '<tr>\n<th class="bg-light">' + String(week['week_num']) + '</th>\n';
                             var week_days = week['week_days'];
                             week_days.forEach(function(day, i, week_days)
                             {
                                 if (day['class'])
                                 {
-                                    result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                    result_html += '<td class="' + day['class'] + '">\n';
+                                    if (day['event'])
+                                    {
+                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                            'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
+                                        result_html += day['event']['caption'];
+                                        result_html += '\n</div>\n';
+                                    }
+                                    result_html += '<small class="date">' + String(day['day']) + '</small>\n';
+                                    result_html += '</td>\n';
                                 }
                                 else
                                 {
-                                    result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                    result_html += '<td>\n';
+                                    if (day['event'])
+                                    {
+                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                            'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
+                                        result_html += day['event']['caption'];
+                                        result_html += '\n</div>\n';
+                                    }
+                                    result_html += '<small class="date">' + String(day['day']) + '</small>\n';
+                                    result_html += '</td>\n';
                                 }
                             });
                             result_html += '</tr>\n';
@@ -84,17 +102,35 @@ function go_to_now_month()
                         result_html = '';
                         weeks.forEach(function(week, i, weeks)
                         {
-                            result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                            result_html += '<tr>\n<th class="bg-light">' + String(week['week_num']) + '</th>\n';
                             var week_days = week['week_days'];
                             week_days.forEach(function(day, i, week_days)
                             {
                                 if (day['class'])
                                 {
-                                    result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                    result_html += '<td class="' + day['class'] + '">\n';
+                                    if (day['event'])
+                                    {
+                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                            'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
+                                        result_html += day['event']['caption'];
+                                        result_html += '\n</div>\n';
+                                    }
+                                    result_html += '<small class="date">' + String(day['day']) + '</small>\n';
+                                    result_html += '</td>\n';
                                 }
                                 else
                                 {
-                                    result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                    result_html += '<td>\n';
+                                    if (day['event'])
+                                    {
+                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                            'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
+                                        result_html += day['event']['caption'];
+                                        result_html += '\n</div>\n';
+                                    }
+                                    result_html += '<small class="date">' + String(day['day']) + '</small>\n';
+                                    result_html += '</td>\n';
                                 }
                             });
                             result_html += '</tr>\n';
@@ -136,17 +172,35 @@ function back_month()
                         result_html = '';
                         weeks.forEach(function(week, i, weeks)
                         {
-                            result_html += '<tr>\n<th class="bg-danger">' + String(week['week_num']) + '</th>\n';
+                            result_html += '<tr>\n<th class="bg-light">' + String(week['week_num']) + '</th>\n';
                             var week_days = week['week_days'];
                             week_days.forEach(function(day, i, week_days)
                             {
                                 if (day['class'])
                                 {
-                                    result_html += '<td class="' + day['class'] + '"><small class="date">' + String(day['day']) + '</small></td>\n';
+                                    result_html += '<td class="' + day['class'] + '">\n';
+                                    if (day['event'])
+                                    {
+                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                            'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
+                                        result_html += day['event']['caption'];
+                                        result_html += '\n</div>\n';
+                                    }
+                                    result_html += '<small class="date">' + String(day['day']) + '</small>\n';
+                                    result_html += '</td>\n';
                                 }
                                 else
                                 {
-                                    result_html += '<td><small class="date">' + String(day['day']) + '</small></td>\n';
+                                    result_html += '<td>\n';
+                                    if (day['event'])
+                                    {
+                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                            'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
+                                        result_html += day['event']['caption'];
+                                        result_html += '\n</div>\n';
+                                    }
+                                    result_html += '<small class="date">' + String(day['day']) + '</small>\n';
+                                    result_html += '</td>\n';
                                 }
                             });
                             result_html += '</tr>\n';
@@ -180,11 +234,39 @@ function add_event_ajax()
             if (response['result'] == "100")
             {
                 $("#close_calendar_btn").trigger("click");
+                voice_text('Событие добавлено.');
+                go_to_now_month();
             }
             else
             {
                 voice_ajax_result(response['result']);
             }
+        }
+    });
+};
+
+function get_event_data_ajax(id){
+    $('#event_num').html(id);
+    $('#event_title_show').html('loading');
+    $('#event_date_show').html('loading');
+    $('#event_description_show').html('loading');
+    $.ajax({
+        type: "POST",
+        url: '/calendar/get_event_data',
+        data: {"id": id},
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                $('#event_title_show').html(response['title']);
+                $('#event_date_show').html(response['date']);
+                $('#event_description_show').html(response['description']);
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
+
         }
     });
 };

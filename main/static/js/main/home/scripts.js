@@ -123,6 +123,7 @@ function add_event_ajax()
             if (response['result'] == "100")
             {
                 $("#close_calendar_btn").trigger("click");
+                voice_text('Событие добавлено.');
             }
             else
             {
