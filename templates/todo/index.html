@@ -27,17 +27,17 @@
                     </button>
                     <button type="button" class="btn btn-light" onclick="ShowList()">
                         <picture>
-                            <img src='{% static "/icons/sync_icon.png" %}' class="icon">
+                            <img src='{% static "/icons/list_icon.png" %}' class="icon">
                         </picture>
                     </button>
                 </div>
                 <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#New">+</button>
                 <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Complite">&#10003;</button>
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('new')">Сначала новые</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('old')">Сначала старые</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('AtoZ')">А..Я</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('ZtoA')">Я..А</button>
                 </div>
                 <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Synchronization">
                     <picture>
