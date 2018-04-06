@@ -43,12 +43,12 @@
         <section class="navigation">
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary" onclick="ShowCard()">
+                    <button type="button" class="btn btn-light" onclick="ShowCard()">
                         <picture>
                             <img src='{% static "/icons/card_icon.png" %}' class="icon">
                         </picture>
                     </button>
-                    <button type="button" class="btn btn-primary" onclick="ShowList()">
+                    <button type="button" class="btn btn-light" onclick="ShowList()">
                         <picture>
                             <img src='{% static "/icons/list_icon.png" %}' class="icon">
                         </picture>
@@ -62,12 +62,12 @@
                     <button type="button" class="btn btn-primary" onclick="sorting('AtoZ')">А..Я</button>
                     <button type="button" class="btn btn-primary" onclick="sorting('ZtoA')">Я..А</button>
                 </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
+                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Synchronization">
                     <picture>
                         <img src='{% static "/icons/sync_icon.png" %}' class="icon">
                     </picture>
                 </button>
-                <div class="alert alert-primary">
+                <div class="alert alert-light">
                     <small>Всего напоминаний: 42</small> <br/>
                     <small>Активных: 24</small> <br/>
                     <small>Завершенных: 18</small> <br/>
@@ -97,9 +97,69 @@
                         <span class="badge badge-pill priority-list">!</span>
                         <span class="badge badge-pill priority-list">!</span>
                         <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
+                        <button type="button" class="btn btn-light">&#10003;</button>
                     </div>
                 {% endfor %}
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Сделать домашнюю
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Напомнить Сане про сотку
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Зайти к сыну маминой подруги
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Убраться в комнате
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Починить наушники
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Лечь пораньше
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                    Доделать проект
+                    <div class="priorities">
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list">!</span>
+                        <span class="badge badge-pill priority-list-last">!</span>
+                        <button type="button" class="btn btn-light">&#10003;</button>
+                    </div>
                 </a>
             </div>
         </section>
@@ -118,12 +178,83 @@
                             <span class="badge badge-pill priority">!</span>
                             <span class="badge badge-pill priority">!</span>
                             <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
+                                <button type="button" class="btn btn-light">&#10003;</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
+                </div>
+                <div class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3> Лечь пораньше </h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10003;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3> Починить наушники</h3>
+                            <p> Да уж, надо бы </p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-pill priority">!</span>
+                            <span class="badge badge-pill priority">!</span>
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10003;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3> Убраться в комнате</h3>
+                            <p> Да уж, надо бы </p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-pill priority">!</span>
+                            <span class="badge badge-pill priority">!</span>
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10003;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3> Сделать домашнюю</h3>
+                            <p> Да уж, надо бы </p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10003;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3> Купить хлеб</h3>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-pill priority">!</span>
+                            <span class="badge badge-pill priority">!</span>
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10003;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-toggle="modal" data-target="#New">
                     <div class="card last">
                         <div class="card-body">
                             <p>
@@ -136,15 +267,61 @@
         </section>
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
+                    <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                    <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
+                    <a href="#"><button type="button" class="btn btn-light">2</button></a>
+                    <a href="#"><button type="button" class="btn btn-light">3</button></a>
+                    <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
                 </div>
             </nav>
     </section>
     </article>
+    <article class="modals">
+    <div class="modal fade" id="New">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Создание напоминания</h2>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <h3>Название</h3>
+                            <input class="form-control" placeholder="Напоминалочка">
+                        </div>
+                        <div class="form-group">
+                            <h3>Текст</h3>
+                            <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
+                            <div class="btn-group btn-group-sm WYSIWYG">
+                                <button type="button" class="btn btn-light"><strong>B</strong></button>
+                                <button type="button" class="btn btn-light"><em>I</em></button>
+                                <button type="button" class="btn btn-light"><del>S</del></button>
+                                <button type="button" class="btn btn-light"><ins>U</ins></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h3> Приоритет </h3>
+                            <button type="button" class="btn btn-light btn-sm">1</button>
+                            <button type="button" class="btn btn-light btn-sm">2</button>
+                            <button type="button" class="btn btn-light btn-sm">3</button>
+                            <button type="button" class="btn btn-light btn-sm">4</button>
+                            <button type="button" class="btn btn-light btn-sm">5</button>
+                        </div>
+                    </form>
+                    <h3>Записать аудио</h3>
+                    <button type="button" class="btn btn-light btn-lg btn-block">
+                        <picture>
+                            <img src='{% static "/icons/micro_icon.png" %}'>
+                        </picture>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Создать</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="Complite">
         <div class="modal-dialog modal modal-dialog-centered">
             <div class="modal-content">
@@ -153,30 +330,140 @@
                 </div>
                 <div class="modal-body">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
                             Купить хлеб
                             <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10007;</button>
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Сделать домашнюю
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Напомнить Сане про сотку
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Зайти к сыну маминой подруги
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Убраться в комнате
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Починить наушники
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Лечь пораньше
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10007;</button>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            Доделать проект
+                            <div class="priorities">
+                                <button type="button" class="btn btn-light">&#10003;</button>
                             </div>
                         </a>
                     </div>
                     <nav class="navbar">
                         <div class="btn-group btn-group-lg">
-                            <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                            <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">2</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">3</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
                         </div>
                     </nav>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="Open">
+        <div class="modal-dialog modal modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Доделать проект</h2>
+                </div>
+                <div class="modal-body">
+                    <p> Да уж, надо бы</p>
+                    <small>28.02.2018 | 18:14 </small>
+                    <hr>
+                    <div class="form-group">
+                        <h3> Приоритет </h3>
+                        <span class="badge badge-pill priority">!</span>
+                        <span class="badge badge-pill priority">!</span>
+                        <span class="badge badge-pill priority">!</span>
+                    </div>
+                    <hr>
+                    <h3> Cтатус </h3>
+                    <p> Не выполнено </p>
+                    <button type="button" class="btn btn-light">&#10003;</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Удалить</button>
+                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Edit">Редактировать</button>
+                    <button type="button" class="btn btn-light">Прослушать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="Edit">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Редактирование напоминания</h2>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <h3>Изменить название</h3>
+                            <input class="form-control" placeholder="Напоминалочка">
+                        </div>
+                        <div class="form-group">
+                            <h3>Изменить текст</h3>
+                            <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
+                            <div class="btn-group btn-group-sm WYSIWYG">
+                                <button type="button" class="btn btn-light"><strong>B</strong></button>
+                                <button type="button" class="btn btn-light"><em>I</em></button>
+                                <button type="button" class="btn btn-light"><del>S</del></button>
+                                <button type="button" class="btn btn-light"><ins>U</ins></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h3> Изменить приоритет </h3>
+                            <button type="button" class="btn btn-light btn-sm">1</button>
+                            <button type="button" class="btn btn-light btn-sm">2</button>
+                            <button type="button" class="btn btn-light btn-sm">3</button>
+                            <button type="button" class="btn btn-light btn-sm">4</button>
+                            <button type="button" class="btn btn-light btn-sm">5</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="Synchronization">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -184,21 +471,21 @@
                     <h2>Синхронизация</h2>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-primary">Сохранить все напоминания в файл</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Choose">Сохранить часть напоминаний в файл</button>
+                    <button type="button" class="btn btn-light">Сохранить все напоминания в файл</button>
+                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose">Сохранить часть напоминаний в файл</button>
                     <hr>
-                    <div class="form-group btn btn-primary">
+                    <div class="form-group btn btn-light">
                         <label>Загрузить все напоминания из файла</label>
                         <input type="file" class="form-control-file">
                     </div>
-                    <div class="form-group btn btn-primary">
+                    <div class="form-group btn btn-light">
                         <label>Загрузить некоторые напоминания из файла</label>
                         <input type="file" class="form-control-file">
                     </div>
-                    <button type="button" class="btn btn-primary">Синхронизировать</button>
+                    <button type="button" class="btn btn-light">Синхронизировать</button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
                 </div>
             </div>
         </div>
@@ -211,44 +498,44 @@
                 </div>
                 <div class="modal-body">
                     <div class="list-group">
-                        <div class="form-check list-group-item list-group-item-action list-group-item-primary">
+                        <div class="form-check list-group-item list-group-item-light">
                             <input class="form-check-input" type="checkbox">
                             <label class="form-check-label"> Sad but True </label>
                         </div>
-                        <div class="form-check list-group-item list-group-item-action list-group-item-primary">
+                        <div class="form-check list-group-item list-group-item-light">
                             <input class="form-check-input" type="checkbox">
                             <label class="form-check-label"> True but Sad </label>
                         </div>
-                        <div class="form-check list-group-item list-group-item-action list-group-item-primary">
+                        <div class="form-check list-group-item list-group-item-light">
                             <input class="form-check-input" type="checkbox">
                             <label class="form-check-label"> but Sad True </label>
                         </div>
-                        <div class="form-check list-group-item list-group-item-action list-group-item-primary">
+                        <div class="form-check list-group-item list-group-item-light">
                             <input class="form-check-input" type="checkbox">
                             <label class="form-check-label"> but True Sad</label>
                         </div>
-                        <div class="form-check list-group-item list-group-item-action list-group-item-primary">
+                        <div class="form-check list-group-item list-group-item-light">
                             <input class="form-check-input" type="checkbox">
                             <label class="form-check-label"> Sad True but </label>
                         </div>
-                        <div class="form-check list-group-item list-group-item-action list-group-item-primary">
+                        <div class="form-check list-group-item list-group-item-light">
                             <input class="form-check-input" type="checkbox">
                             <label class="form-check-label"> True Sad but</label>
                         </div>
                     </div>
-                    <nav class="navbar">
+                    <nav class=" navbar navbar-pag">
                         <div class="btn-group btn-group-lg">
-                            <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                            <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                            <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">2</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">3</button></a>
+                            <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
                         </div>
                     </nav>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
                 </div>
             </div>
         </div>
@@ -266,6 +553,4 @@
         $("#ViewCard").hide("slow");
       }
       </script>
-
-
 {% endblock %}

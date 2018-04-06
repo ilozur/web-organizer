@@ -15,6 +15,8 @@ from notes.forms import *
 from notes.models import Notes
 from django.contrib.auth.models import User
 
+from profile.forms import RecoverPasswordUserData
+
 
 def index(request):
     if request.method == "GET":
@@ -27,6 +29,8 @@ def index(request):
             context['sign_in_form'] = sign_in_form
             sign_up_form = SignUpForm()
             context['sign_up_form'] = sign_up_form
+            recover_password_user_data_form = RecoverPasswordUserData()
+            context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
             context['add_event_form'] = AddingEventForm()
@@ -35,25 +39,6 @@ def index(request):
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             return render(request, "main/home.html", context)
-    else:
-        return HttpResponseRedirect('/')
-
-
-@login_required
-def profile_view(request):
-    if request.method == "GET":
-        change_user_data_form = ChangeUserDataForm()
-        change_password_form = ChangePasswordForm()
-        context = {
-            'title': "User profile page",
-            'header': "User profile header",
-            'change_user_data_form': change_user_data_form,
-            'change_password_form': change_password_form
-        }
-        if request.user.is_authenticated:
-            return render(request, "main/profile.html", context)
-        else:
-            return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect('/')
 
@@ -78,7 +63,7 @@ def send_mail(mail):
     msg.send()
 
 
-def sign_up_view(request):
+def sign_up_ajax(request):
     context = {}
     if request.method == "GET":
         if not request.user.is_authenticated:
@@ -108,7 +93,7 @@ def sign_up_view(request):
                             user = User(email=email, username=username, first_name=name, last_name=surname, is_active=0)
                             user.set_password(pass1)
                             user.save()
-                            sign_up_key = create_sign_up_key(user, username, pass1)
+                            sign_up_key = create_unic_key(user, username, pass1)
                             sign_up_key.save()
                             mail = create_mail(user,
                                                "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
@@ -116,18 +101,17 @@ def sign_up_view(request):
                                                "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
                                                "'>Go to this link to activate your account</a>")
                             send_mail(mail)
-                            result = "success"
+                            result = "100"
                         else:
-                            result = "Passwords do not match"
+                            result = "101"
                     else:
-                        result = "This username is already taken"
+                        result = "102"
                 else:
-                    result = "This email is already used"
-
+                    result = "103"
             else:
-                result = "Form not valid"
+                result = "104"
         else:
-            result = "User has already signed in"
+            result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -145,7 +129,7 @@ def create_mail(user, text, html, email=None):
     return mail
 
 
-def create_sign_up_key(user, username, password):
+def create_unic_key(user, username, password):
     key = create_key(username + password, user)
     expiration_date = datetime.now().date()
     expiration_date += timedelta(days=3)
@@ -181,12 +165,12 @@ def sign_in_ajax(request):
         if not request.user.is_authenticated:
             form = SignInForm(request.POST)
             if form.is_valid():
-                name = form.data['username'].lower()
+                name = form.data['username_sign_in'].lower()
                 password = form.data['password']
                 found_user = (len(User.objects.filter(username=name)) > 0) or \
                              (len(User.objects.filter(email=name)) > 0)
                 if not found_user:
-                    result = "User not found"
+                    result = "106"
                 else:
                     user = User.objects.filter(email=name).first()
                     if user is None:
@@ -194,87 +178,20 @@ def sign_in_ajax(request):
                     if user.is_active:
                         loginned_user = authenticate(request, username=user.username, password=password)
                         if loginned_user is None:
-                            result = "Wrong password"
+                            result = "107"
                         else:
                             login(request, loginned_user)
-                            result = "success"
+                            result = "100"
                     else:
-                        result = "User was not activated with email"
+                        result = "108"
             else:
-                result = "Form not valid"
+                result = "104"
         else:
-            result = "User has already signed in"
+            result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
-
-
-@login_required
-def change_user_data_ajax(request):
-    response_data = {}
-    user = request.user
-    if request.method == "POST":
-        form = ChangeUserDataForm(request.POST)
-        if form.is_valid():
-            last_name = form.cleaned_data['surname']
-            first_name = form.cleaned_data['name']
-            if not modification_of_user_data(request.user, name=first_name, surname=last_name):
-                result = "Error"
-                response_data['answer'] = "This username is already taken"
-                response_data['result'] = result
-                return HttpResponse(json.dumps(response_data), content_type="application/json")
-            email = form.cleaned_data['email']
-            if email != request.user.email:
-                confirm_email_key = create_confirm_email_key(user, email)
-                if confirm_email_key is None:
-                    result = "Error"
-                    response_data['answer'] = "Email is already used by other user"
-                else:
-                    mail = create_mail(user,
-                                       "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/" +
-                                       confirm_email_key.key, "<a href='http://127.0.0.1:8000/confirm_mail/" +
-                                       confirm_email_key.key + "'>Go to this link to confirm this email</a>", email)
-                    send_mail(mail)
-                    result = "Success"
-                    response_data['answer'] = "Please check your new email to confirm it"
-            else:
-                result = "Success"
-                response_data['answer'] = "Ok, data were changed "
-        else:
-            result = 'Error'
-            response_data['answer'] = "Form is not valid"
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
-
-
-def confirm_mail(request, key):
-    if request.method == "GET":
-        keys = ConfirmMailKey.objects.filter(key=key)
-        if keys.count() > 0:
-                user = keys.first().user
-                user.email = keys.first().email
-                keys.first().delete()
-                user.save()
-    return HttpResponseRedirect('/profile')
-
-
-def create_confirm_email_key(user, email):
-    key = create_key(user.username + user.password, user)
-    if check_email_uniq(email):
-        if ConfirmMailKey.objects.filter(user=user).count() > 0:
-            confirm_email_key = ConfirmMailKey.objects.filter(user=user).first()
-            confirm_email_key.key = key
-            confirm_email_key.email = email
-            confirm_email_key.save()
-        else:
-            confirm_email_key = ConfirmMailKey(user=user, key=key, email=email)
-            confirm_email_key.save()
-    else:
-        confirm_email_key = None
-    return confirm_email_key
 
 
 def create_key(text, user):
@@ -286,53 +203,6 @@ def create_key(text, user):
     key = key.decode('utf-8')
     key += str(user.id)
     return key
-
-
-@login_required
-def get_user_data_ajax(request):
-    response_data = {}
-    user = request.user
-    if request.method == "POST":
-        last_name = user.last_name
-        first_name = user.first_name
-        email = user.email
-        user_data = {
-            'name': first_name,
-            'username': user.username,
-            'email': email,
-            'surname': last_name
-        }
-        response_data['user'] = user_data
-        result = "Success"
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
-
-
-@login_required
-def change_password_ajax(request):
-    response_data = {}
-    user = request.user
-    if request.method == "POST":
-        form = ChangeUserDataForm(request.POST)
-        password = form.data['old_password']
-        new_password1 = form.data['new_password1']
-        new_password2 = form.data['new_password2']
-        if user.check_password(password):
-            if new_password1 == new_password2:
-                user.set_password(new_password1)
-                user.save()
-                login(request, user)
-                result = "Success"
-            else:
-                result = "New passwords does not match"
-        else:
-            result = "Wrong password"
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
 
 
 def sign_out_view(request):

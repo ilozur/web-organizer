@@ -10,7 +10,7 @@ function get_note_data_ajax(id){
         data: {"id": id},
         success: function(response)
         {
-            if (response['result'] == "Success")
+            if (response['result'] == "100")
             {
                 $('#note_title_show').html(response['title']);
                 $('#note_data_show').html(response['data']);
@@ -19,6 +19,10 @@ function get_note_data_ajax(id){
                 {
                     $('#note_last_edit').html(response['last_edit_time'] + '(edited)');
                 }
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -97,7 +101,7 @@ function search_notes_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "Success")
+            if (response['result'] == "100")
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['notes_list'].length; i++) {
@@ -111,6 +115,10 @@ function search_notes_ajax()
                     $(this).removeAttr('disabled');
                 });
                 $('#sign_up_btn').removeAttr('disabled');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -137,9 +145,8 @@ function save_note_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                alert('OK, Changes were saved');
                 $('#note_title_' + id).html($('#id_note_title_edit').val());
                 $('#card_note_title_' + id).html($('#id_note_title_edit').val());
                 $('#card_note_description_' + id).html(response['data_part']);
@@ -150,6 +157,11 @@ function save_note_ajax()
                 $('#note_data_show').html(CKEDITOR.instances.id_note_data_edit.getData());
                 $('#note_title_show').html($('#id_note_title_edit').val());
                 $('#note_last_edit').html(response['edited_time']);
+                voice_text('Заметка сохранена.');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
             $("#save_note_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
@@ -174,9 +186,8 @@ function add_note_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "Success")
+            if (response['result'] == "100")
             {
-                alert('OK, note was added');
                 var result_html_list = '<div id="note_' + response['id'] + '" style="display: none" onclick="get_note_data_ajax(' + response['id'] + ');">' +
                     '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
                     'data-toggle="modal" data-target="#Note-Card"> <h7 id="note_title_' + response['id'] + '">' +
@@ -191,6 +202,11 @@ function add_note_ajax()
                 $('#note_' + response['id']).slideDown(duration='slow');
                 $('#note_card_' + response['id']).slideDown(duration='slow');
                 $("#close_note_btn").trigger("click");
+                voice_text('Заметка добавлена.');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -203,7 +219,7 @@ function sort_notes_ajax(type){
         data: {"data": type},
         success: function(response)
         {
-            if (response['result'] == "Success")
+            if (response['result'] == "100")
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['notes_list'].length; i++) {
@@ -217,6 +233,10 @@ function sort_notes_ajax(type){
                     $(this).removeAttr('disabled');
                 });
                 $('#sign_up_btn').removeAttr('disabled');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -234,13 +254,23 @@ function delete_note_ajax()
             data: {"id": id, 'return_last_note': false},
             success: function(response)
             {
-                if (response['result'] == "success")
+                if (response['result'] == "100")
                 {
-                    alert('OK, note was deleted');
                     $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
                     $('#note_card_' + id).slideUp(duration='slow', complete=function(){$('#note_card' + id).remove()});
+                    voice_text('Заметка удалена.');
+                }
+                else
+                {
+                    voice_ajax_result(response['result']);
                 }
             }
         });
     }
+};
+
+function voice_note()
+{
+    var clean_text = $('#note_data_show').text();
+    voice_text(clean_text);
 };
