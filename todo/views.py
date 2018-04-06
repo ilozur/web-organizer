@@ -55,16 +55,20 @@ def add_todo(request):
 
 @login_required
 def show_todo(request):
-    response_data = {}
     if request.method == "POST":
+        response_data = {}
         todo_id = request.POST.get('id')
-        if Todos.get_todo_by_id(id=todo_id).count() > 0:
-            todo = Todos.get_todo_by_id(id=todo_id)
-            response_data = {
-                'title': todo.title,
-                'text': todo.text,
-                'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y")}
-    return response_data
+        if Todos.get_todo_by_id(todo_id):
+            todo = Todos.get_todo_by_id(todo_id)
+            response_data = {'title': todo.title, 'text': todo.text,
+                             'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
+                             'result': "Success"
+                             }
+        else:
+            response_data['result'] = "Todo does not exist"
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
 @csrf_exempt
@@ -135,16 +139,16 @@ def read_file(file_name):
     a = s.split("\n")
     user = a[0]
     date, time = '00-00-00', '34'
-    if not(a[1]):
+    if not (a[1]):
         added_time = time
     else:
         added_time = a[1]
-    if not(a[2]):
+    if not (a[2]):
         added_date = date
     else:
         added_date = a[2]
     priority = a[3]
-    if not(a[4]):
+    if not (a[4]):
         status = "in progress"
     else:
         status = a[4]

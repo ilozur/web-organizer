@@ -24,7 +24,10 @@ class Todos(models.Model):
 
     @staticmethod
     def get_todo_by_id(id):
-        return Todos.objects.filter(id=id).first()
+        if Todos.objects.filter(id=id).count() > 0:
+            return Todos.objects.filter(id=id).first()
+        else:
+            return False
 
     @staticmethod
     def delete_todo(id):
