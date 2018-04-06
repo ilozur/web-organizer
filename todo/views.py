@@ -22,10 +22,7 @@ def index(request):
     todo_list = []
     todos = Todos.get_todos('AtoZ', 'in progress', user)
     for i in todos:
-        todo_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
-    todos = Todos.get_todos('AtoZ', 'in progress', user)
-    for i in todos:
-        todo_list.append((i.title, i.added_date_and_time, i.id))
+        todo_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
     context['todo_data'] = todo_list
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
@@ -41,9 +38,8 @@ def add_todo(request):
         if form.is_valid():
             title = form.cleaned_data['title']
             text = form.cleaned_data['text']
-            priority = form.cleaned_data['priority']
             tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
-                        priority=priority)
+                        priority=3)
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
