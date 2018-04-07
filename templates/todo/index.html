@@ -73,7 +73,6 @@
                         </div>
                     </a>
                 {% endfor %}
-
             </div>
         </section>
         <section class="card-view" id="ViewCard">
@@ -192,36 +191,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="Open-Todo">
-            <div class="modal-dialog modal modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Доделать проект</h2>
-                    </div>
-                    <div class="modal-body">
-                        <p> Да уж, надо бы</p>
-                        <small>28.02.2018 | 18:14 </small>
-                        <hr>
-                        <div class="form-group">
-                            <h3> Приоритет </h3>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                        </div>
-                        <hr>
-                        <h3> Cтатус </h3>
-                        <p> Не выполнено </p>
-                        <button type="button" class="btn btn-light">&#10003;</button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Удалить</button>
-                        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Edit">Редактировать</button>
-                        <button type="button" class="btn btn-light">Прослушать</button>
                     </div>
                 </div>
             </div>
@@ -367,13 +336,18 @@ function sorting(type){
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');"><a'+
-                    'href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal"'+
-                     'data-target="#Open-Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['notes_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
+                    $("#list_id").append('<a href="#" id="todo_' + response['todo_list'][i][2] + '" onclick="get_todo_data_ajax(' + response['todo_list'][i][2] + ');" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open-Todo">'
+                        +'<h7 id="todo_title_' + response['todo_list'][i][2] + '">' + response['todo_list'][i][0] + '</h7>'
+                        +'<div class="priorities">'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list-last">!</span>'
+                            +'<button type="button" class="btn btn-light">&#10003;</button>'
+                            +'<div class="date"> <small id="todo_date_' + response['todo_list'][i][1] + '">' + response['todo_list'][i][1] + '</small></div>'
+                        +'</div>'
+                    +'</a>');
                 }
                 $("#search_todo_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
@@ -415,7 +389,8 @@ function get_todo_data_ajax(id){
                     $('#todo_last_edit').html(response['last_edit_time'] + '(edited)');
                 }
             }
-            else{
+            else
+            {
                 alert(response['result']);
             }
         }
@@ -458,15 +433,21 @@ function search_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-                $("#list_id").html('');
+                alert(response['result']);
+                $("#ViewList").html('');
                 for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');'
-                    +'><a href="#" class="list-group-item list-group-item-action list-group-item-warning'+
-                    'data-toggle="modal" data-target="#Opne_Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
+                    $("#ViewList").append('<a href="#" id="todo_' + response['todo_list'][i][2] + '" onclick="get_todo_data_ajax(' + response['todo_list'][i][2] + ');" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open-Todo">'
+                        +'<h7 id="todo_title_' + response['todo_list'][i][2] + '">' + response['todo_list'][i][0] + '</h7>'
+                        +'<div class="priorities">'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list-last">!</span>'
+                            +'<button type="button" class="btn btn-light">&#10003;</button>'
+                            +'<div class="date"> <small id="todo_date_' + response['todo_list'][i][1] + '">' + response['todo_list'][i][1] + '</small></div>'
+                        +'</div>'
+                    +'</a>');
                 }
                 $("#search_todo_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
