@@ -478,10 +478,6 @@ function save_todo_ajax()
                 alert('OK, Changes were saved');
                 $('#todo_title_' + id).html($('#id_todo_title_edit').val());
                 close_todo_edit_mode();
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
-                $('#todo_text_show').html(CKEDITOR.instances.id_todo_data_edit.getData());
                 $('#todo_title_show').html($('#id_todo_title_edit').val());
                 $('#todo_last_edit').html(response['edited_time']);
             }
@@ -505,12 +501,19 @@ function add_todo_ajax()
             if (response['result'] == "Success")
             {
                 alert('OK, todo was added');
-                result_html = '<div id="todo_' + response['id'] + '" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
-                    '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
-                    'data-toggle="modal" data-target="#Open-Todo"> <h7 id="todo_title_' + response['id'] + '">' +
-                    response['title'] + '</h7><div class="date"> <small>' +
-                    response['datetime'] + '</small></div></a></div>';
-                $("#list_id").html(result_html + $("#list_id").html());
+                result_html = '<a href="#" id="todo_' + response['id'] + '" onclick="get_todo_data_ajax(' + response['id'] + ');" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open-Todo">'
+                        +'<h7 id="todo_title_' + response['id'] + '">' + response['title'] + '</h7>'
+                        +'<div class="priorities">'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list">!</span>'
+                            +'<span class="badge badge-pill priority-list-last">!</span>'
+                            +'<button type="button" class="btn btn-light">&#10003;</button>'
+                            +'<div class="date"> <small id="todo_date_' + response['datetime'] + '">' + response['datetime'] + '</small></div>'
+                        +'</div>'
+                    +'</a>'
+                $("#ViewList").html(result_html + $("#ViewList").html());
                 $("#close_todo_btn").trigger("click");
             }
         }
