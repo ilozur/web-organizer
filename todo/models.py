@@ -19,7 +19,12 @@ class Todos(models.Model):
             'old': 'added_time',
             'new': '-added_time'
         }
-        todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
+        if sorting_type == 'all':
+            todos = Todos.objects.filter(user=user)
+        elif sorting_type in mode.keys():
+            todos = Todos.objects.filter(user=user).order_by(mode.get(sorting_type))
+        if status is not None:
+            todos.filter(status=status)
         return todos
 
     @staticmethod
@@ -39,7 +44,7 @@ class Todos(models.Model):
 
     @staticmethod
     def search_todos(string, user):
-        obj = Todos.get_todos('all', 'in progress', user)
+        obj = Todos.get_todos('all', None, user)
         ret_list = list()
         for i in obj:
             if string in i.title:
