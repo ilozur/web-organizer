@@ -110,11 +110,18 @@
                     </div>
                     <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
                 </form>
-                <h3>Забыли пароль?</h3>
+                <p class="lead" style="margin-top: 50px;">
+                <h3 class="cover-heading">Забыли пароль?</h3>
                 <form id="recover_password_form">
                     {% csrf_token %}
-                    {{ recover_password_form.recover_name|bootstrap }}
-                    {{ recover_password_form.recover_email|bootstrap }}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            {{ recover_password_form.recover_name|bootstrap }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ recover_password_form.recover_email|bootstrap }}
+                        </div>
+                    </div>
                     <a class="btn btn-primary btn-block" id="recover_password_btn" onclick="create_recover_key()">Получить ключ восстановления пароля</a>
                 </form>
                             </section>
