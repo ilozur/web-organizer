@@ -45,9 +45,9 @@
                     </picture>
                 </button>
                 <div id="amounts" class="alert alert-primary">
-                    <small>Всего напоминаний: {{ amount_of_todos.0 }}</small> <br/>
-                    <small>Активных: {{ amount_of_todos.1 }}</small> <br/>
-                    <small>Завершенных: {{ amount_of_todos.2 }}</small> <br/>
+                    <small>Всего напоминаний: </small><small>{{ amount_of_todos.0 }}</small> <br/>
+                    <small>Активных: </small><small>{{ amount_of_todos.1 }}</small> <br/>
+                    <small>Завершенных: </small><small>{{ amount_of_todos.2 }}</small> <br/>
                 </div>
                 <form id="search_todo_form" onsubmit="return false;">
                             {% load bootstrap %}
@@ -59,27 +59,27 @@
             </nav>
         </section>
         <section class="list-view list-group" id="ViewList">
-            {% for item in todo_data %}
-                <div id="todo_body" onclick="get_todo_data_ajax({{ item.2 }})">
-                    <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+            <div class="list-group">
+                {% for item in todo_data %}
+                    <a href="#" onclick="get_todo_data_ajax({{ item.2 }})" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
                         <h7 id="todo_title">{{ item.0 }}</h7>
-                        <div class="date"><small id="todo_date">{{ item.1 }}</small></div>
+                        <div class="priorities">
+                            <span class="badge badge-pill priority-list">!</span>
+                            <span class="badge badge-pill priority-list">!</span>
+                            <span class="badge badge-pill priority-list">!</span>
+                            <span class="badge badge-pill priority-list">!</span>
+                            <span class="badge badge-pill priority-list-last">!</span>
+                            <button type="button" class="btn btn-info" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
+                            <div class="date"><small id="todo_date">{{ item.1 }}</small></div>
+                        </div>
                     </a>
-                </div>
-                <div class="priorities">
-                    <span class="badge badge-pill priority-list">!</span>
-                    <span class="badge badge-pill priority-list">!</span>
-                    <span class="badge badge-pill priority-list">!</span>
-                    <span class="badge badge-pill priority-list">!</span>
-                    <span class="badge badge-pill priority-list-last">!</span>
-                    <button type="button" class="btn btn-info" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </section>
         <section class="card-view" id="ViewCard" style="display: None">
-            {% for item in todo_data %}
-                <div class="row">
-                    <div class="col-md-4" data-toggle="modal" data-target="#Open">
+            <div class="row">
+                {% for item in todo_data %}
+                    <a href="#" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open">
                         <div class="card">
                             <div class="card-body">
                                 <h3> {{ item.0 }} </h3>
@@ -96,9 +96,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            {% endfor %}
+                    </a>
+                {% endfor %}
+            </div>
             <div class="col-md-4" data-toggle="modal" data-target="#New">
                 <div class="card last">
                     <div class="card-body">

@@ -7,14 +7,14 @@ function sorting(type){
         {
             if (response['result'] == "Success")
             {
-                $("#ViewList > #todo_body").each(function(index) {
+                $("#ViewList").find("a.list-group-item").each(function(index) {
                     $(this).attr("onclick", 'get_todo_data_ajax(' + response['todo_list'][index][2] + ')');
-                    $($(".date > small").get(index)).html(response['todo_list'][index][1]);
-                    $($("a.list-group-item > #todo_title").get(index)).html(response['todo_list'][index][0]);
+                    $(this).find("h7").html(response['todo_list'][index][0]);
+                    $(this).find("small").html(response['todo_list'][index][1]);
                 });
-                $("#ViewCard > div.row").each(function(index) {
-                    $($(".card-body > h3").get(index)).html(response['todo_list'][index][0]);
-                    $($(".card-body > .date").get(index)).html(response['todo_list'][index][1]);
+                $("#ViewCard").find("a.col-md-4").each(function(index) {
+                    $(this).find("h3").html(response['todo_list'][index][0]);
+                    $(this).find("small").html(response['todo_list'][index][1]);
                 });
             }
         }
