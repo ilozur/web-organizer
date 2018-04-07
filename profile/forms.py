@@ -3,36 +3,36 @@ from django import forms
 
 class ChangeUserDataForm(forms.Form):
     email = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                           'placeholder': 'Enter new e-mail'}))
+                                                                           'placeholder': 'Введите новый адрес эл.почты'}))
     name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                         'placeholder': 'Enter new name'}))
+                                                                         'placeholder': 'Введите новое имя'}))
     surname = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                            'placeholder': 'Enter new surname'}))
+                                                                            'placeholder': 'Введите новую фамилию'}))
 
 
 class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(max_length=200,
                                    widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                     'placeholder': 'Enter old password'}))
+                                                                     'placeholder': 'Введите старый пароль'}))
     new_password1 = forms.CharField(max_length=200,
                                     widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                      'placeholder': 'Enter new password'}))
+                                                                      'placeholder': 'Введите новый пароль'}))
     new_password2 = forms.CharField(max_length=200,
                                     widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                      'placeholder': 'Enter new password again'}))
+                                                                      'placeholder': 'Введите новый пароль еще раз'}))
 
 
 class RecoverPasswordForm(forms.Form):
     password1 = forms.CharField(max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'placeholder': 'Enter new password'}))
+                                                                  'placeholder': 'Введите новый пароль'}))
     password2 = forms.CharField(max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'placeholder': 'Enter new password again'}))
+                                                                  'placeholder': 'Введите новый пароль еще раз'}))
 
 
 class RecoverPasswordUserData(forms.Form):
     recover_email = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                           'placeholder': 'Enter your e-mail'}))
+                                                                           'placeholder': 'Введите адрес эл.почты'}))
     recover_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                         'placeholder': 'Enter your name'}))
+                                                                         'placeholder': 'Введите ваше имя'}))

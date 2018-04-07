@@ -61,7 +61,7 @@ def change_user_data_ajax(request):
             first_name = form.cleaned_data['name']
             if not modification_of_user_data(request.user, name=first_name, surname=last_name):
                 result = "Error"
-                response_data['answer'] = "This username is already taken"
+                response_data['answer'] = "Это имя пользователя уже используется"
                 response_data['result'] = result
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
             email = form.cleaned_data['email']
@@ -69,21 +69,21 @@ def change_user_data_ajax(request):
                 confirm_email_key = create_confirm_email_key(user, email)
                 if confirm_email_key is None:
                     result = "Error"
-                    response_data['answer'] = "Email is already used by other user"
+                    response_data['answer'] = "Эта эл. почта уже используется другим пользователем"
                 else:
                     mail = create_mail(user,
-                                       "Go to this link to confirm this email: 127.0.0.1:8000/confirm_mail/" +
+                                       "Перейдите по этой ссылке для подтверждения почты: 127.0.0.1:8000/confirm_mail/" +
                                        confirm_email_key.key, "<a href='http://127.0.0.1:8000/confirm_mail/" +
-                                       confirm_email_key.key + "'>Go to this link to confirm this email</a>", email)
+                                       confirm_email_key.key + "'>Перейдите по этой ссылке для подтверждения почты</a>", email)
                     send_mail(mail)
-                    result = "Success"
-                    response_data['answer'] = "Please check your new email to confirm it"
+                    result = "Готово!"
+                    response_data['answer'] = "Проверьте эл.почту для подтверждения"
             else:
-                result = "Success"
-                response_data['answer'] = "Ok, data were changed "
+                result = "Готово!"
+                response_data['answer'] = "Данные были изменены"
         else:
             result = 'Error'
-            response_data['answer'] = "Form is not valid"
+            response_data['answer'] = "Форма недействительна"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
@@ -132,13 +132,13 @@ def change_password_ajax(request):
                     user.set_password(new_password1)
                     user.save()
                     login(request, user)
-                    result = "Success"
+                    result = "Готово"
                 else:
-                    result = "New passwords does not match"
+                    result = "Новые пароли не совпадают"
             else:
-                result = "Wrong password"
+                result = "Неверный пароль"
         else:
-            result = "Form is not valid"
+            result = "Поле недействительно"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
@@ -172,15 +172,15 @@ def recover_password_ajax(request, key):
                         user.set_password(password)
                         user.save()
                         login(request, user)
-                        result = "Success"
+                        result = "Готово!"
                     else:
-                        result = "This user is not activated"
+                        result = "Этот пользователь не активирован"
                 else:
-                    result = "Wrong key"
+                    result = "Неверный ключ"
             else:
-                result = "Passwords does not match"
+                result = "Пароли не совпадают"
         else:
-            result = "Form is not valid"
+            result = "Поле недействительно"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
@@ -201,10 +201,10 @@ def create_recover_password_key_ajax(request):
                         key = create_unic_key(user, user.username, user.password)
                         key.save()
                         mail = create_mail(user,
-                                           "Go to this link to recover your password: 127.0.0.1:8000/profile/recover_password/" +
+                                           "Перейдите по этой ссылке для восстановления пароля: 127.0.0.1:8000/profile/recover_password/" +
                                            key.key,
                                            "<a href='http://127.0.0.1:8000/profile/recover_password/" + key.key +
-                                           "'>Go to this link to recover your password</a>")
+                                           "'>Перейдите по этой ссылке для восстановления пароля</a>")
                         send_mail(mail)
                     result = "100"
                 else:

@@ -2,30 +2,30 @@ from django import forms
 
 
 class SignInForm(forms.Form):
-    username_sign_in = forms.CharField(label='Email or username', max_length=200,
+    username_sign_in = forms.CharField(label='Эл.почта или имя пользователя', max_length=200,
                                widget=forms.TextInput(attrs={'class': 'form-control',
-                                                             'placeholder': 'Enter your e-mail or username'}))
-    password = forms.CharField(label='Password', max_length=200,
+                                                             'placeholder': 'Введите эл.почту или имя пользователя'}))
+    password = forms.CharField(label='Пароль', max_length=200,
                                widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                 'placeholder': 'Enter your password'}))
+                                                                 'placeholder': 'Введите пароль'}))
 
 
 class SignUpForm(forms.Form):
-    email = forms.EmailField(label='E-mail', max_length=200,
+    email = forms.EmailField(label='Эл.почта', max_length=200,
                              widget=forms.TextInput(attrs={'class': 'form-control',
-                                                           'placeholder': 'Enter your e-mail'}))
-    username = forms.CharField(label='Username', max_length=200,
+                                                           'placeholder': 'Введите адрес эл.почты'}))
+    username = forms.CharField(label='Имя пользователя', max_length=200,
                                widget=forms.TextInput(attrs={'class': 'form-control',
-                                                             'placeholder': 'Enter your username'}))
-    name = forms.CharField(label='Name', max_length=200,
+                                                             'placeholder': 'Введите имя пользователя'}))
+    name = forms.CharField(label='Имя', max_length=200,
                            widget=forms.TextInput(attrs={'class': 'form-control',
-                                                         'placeholder': 'Enter your name'}))
-    surname = forms.CharField(label='Surname', max_length=200,
+                                                         'placeholder': 'Введите ваше имя'}))
+    surname = forms.CharField(label='Фамилия', max_length=200,
                               widget=forms.TextInput(attrs={'class': 'form-control',
-                                                            'placeholder': 'Enter your surname'}))
-    password1 = forms.CharField(label='Password', max_length=200,
+                                                            'placeholder': 'Ввеждите вашу фамилию'}))
+    password1 = forms.CharField(label='Пароль', max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'placeholder': 'Enter your password'}))
-    password2 = forms.CharField(label='Password again', max_length=200,
+                                                                  'placeholder': 'Введите пароль'}))
+    password2 = forms.CharField(label='Пароль еще раз', max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'placeholder': 'Enter your password again'}))
+                                                                  'placeholder': 'Ввелиие пароль еще раз'}))
