@@ -3,30 +3,24 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Создание напоминания</h2>
+                <h2>Создание напоминания</h2>
             </div>
             <div class="modal-body">
-                <form id="add_todo_form">
-                        {% csrf_token %}
-                        {{ add_todo_form.media }}
+                <form>
+                    <div class="form-group">
                         <h3>Название</h3>
-                    <div class="form-group">
-                        {{ add_todo_form.title }}
+                        <input class="form-control" placeholder="Напоминалочка">
                     </div>
+                    <div class="form-group">
                         <h3>Текст</h3>
-                    <div class="form-group">
-                        {{ add_todo_form.text }}
-                    </div>
-                        <h3>Срок</h3>
-                    <div class="form-group">
-                        {{ add_todo_form.deadline }}
-                    </div>
+                        <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
                         <div class="btn-group btn-group-sm WYSIWYG">
                             <button type="button" class="btn btn-light"><strong>B</strong></button>
                             <button type="button" class="btn btn-light"><em>I</em></button>
                             <button type="button" class="btn btn-light"><del>S</del></button>
                             <button type="button" class="btn btn-light"><ins>U</ins></button>
                         </div>
+                    </div>
                     <div class="form-group">
                         <h3> Приоритет </h3>
                         <button type="button" class="btn btn-light btn-sm">1</button>
@@ -39,18 +33,17 @@
                 <h3>Записать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
-                        <img src='{% static "icons/micro_icon.png" %}'>
+                        <img src='{% static "/icons/micro_icon.png" %}'>
                     </picture>
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_todo_btn" >Отменить</button>
-                <button type="button" class="btn btn-light" onclick="add_todo_ajax()">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Создать</button>
             </div>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="Open">
     <div class="modal-dialog modal modal-dialog-centered">
         <div class="modal-content">
@@ -91,46 +84,35 @@
                     <h2>Редактирование напоминания</h2>
                 </div>
                 <div class="modal-body">
-                    <form id="save_todo_form">
-                        {% csrf_token %}
-                        {{ edit_todo_form.media }}
-                        {{ edit_todo_form.todo_id }}
+                    <form>
                         <div class="form-group">
                             <h3>Изменить название</h3>
-                           {{ edit_todo_form.todo_title_edit }}
+                            <input class="form-control" placeholder="Напоминалочка">
                         </div>
                         <div class="form-group">
                             <h3>Изменить текст</h3>
-                            {{ edit_todo_form.todo_text_edit }}
+                            <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
                             <div class="btn-group btn-group-sm WYSIWYG">
-                                <button type="button" class="btn btn-primary"><strong>B</strong></button>
-                                <button type="button" class="btn btn-primary"><em>I</em></button>
-                                <button type="button" class="btn btn-primary"><del>S</del></button>
-                                <button type="button" class="btn btn-primary"><ins>U</ins></button>
+                                <button type="button" class="btn btn-light"><strong>B</strong></button>
+                                <button type="button" class="btn btn-light"><em>I</em></button>
+                                <button type="button" class="btn btn-light"><del>S</del></button>
+                                <button type="button" class="btn btn-light"><ins>U</ins></button>
                             </div>
                         </div>
                         <div class="form-group">
                             <h3> Изменить приоритет </h3>
-                            <button type="button" class="btn btn-primary btn-sm">1</button>
-                            <button type="button" class="btn btn-primary btn-sm">2</button>
-                            <button type="button" class="btn btn-primary btn-sm">3</button>
-                            <button type="button" class="btn btn-primary btn-sm">4</button>
-                            <button type="button" class="btn btn-primary btn-sm">5</button>
+                            <button type="button" class="btn btn-light btn-sm">1</button>
+                            <button type="button" class="btn btn-light btn-sm">2</button>
+                            <button type="button" class="btn btn-light btn-sm">3</button>
+                            <button type="button" class="btn btn-light btn-sm">4</button>
+                            <button type="button" class="btn btn-light btn-sm">5</button>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="close_todo_edit_mode()">Отменить</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_todo_ajax();">Сохранить</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Сохранить</button>
                 </div>
-                <hr>
-                <h3> Cтатус </h3>
-                <p> Выполнено </p>
-                <button type="button" class="btn btn-light">&#10007;</button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Удалить</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
             </div>
         </div>
     </div>
