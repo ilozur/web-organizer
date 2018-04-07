@@ -20,15 +20,15 @@
                     </div>
                 </form>
                 <h3>Записать аудио</h3>
-                <button type="button" class="btn btn-warning btn-lg btn-block">
+                <button type="button" class="btn btn-light btn-lg btn-block" onclick="listen_note('add')">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
                     </picture>
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_note_btn">Отменить</button>
-                <button type="button" class="btn btn-warning" onclick="add_note_ajax()">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_note_btn">Отменить</button>
+                <button type="button" class="btn btn-light" onclick="add_note_ajax()">Создать</button>
             </div>
         </div>
     </div>
@@ -49,10 +49,10 @@
                 <small class="text-muted" id="note_last_edit"></small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_note_ajax()">Удалить</button>
-                <button type="button" class="btn btn-warning" onclick="voice_note()">Прослушать</button>
-                <button type="button" class="btn btn-warning" onclick="open_note_edit_mode()">Редактировать</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal">ОК</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_note_ajax()">Удалить</button>
+                <button type="button" class="btn btn-light" onclick="voice_note()">Прослушать</button>
+                <button type="button" class="btn btn-light" onclick="open_note_edit_mode()">Редактировать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
             </div>
         </div>
     </div>
@@ -77,15 +77,15 @@
                     </div>
                 </form>
                 <h3>Переписать аудио</h3>
-                <button type="button" class="btn btn-warning btn-lg btn-block">
+                <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
                     </picture>
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onclick="close_note_edit_mode()">Отменить</button>
-                <button class="btn btn-warning" onclick="save_note_ajax();">
+                <button type="button" class="btn btn-light" onclick="close_note_edit_mode()">Отменить</button>
+                <button class="btn btn-light" onclick="save_note_ajax();">
                     Сохранить
                 </button>
             </div>

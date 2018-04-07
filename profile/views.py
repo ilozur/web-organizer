@@ -145,28 +145,6 @@ def change_password_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def create_recovery_key(request, email):
-    if request.method == "POST":
-        response_data = {}
-        user = User.objects.filter(email=email)
-        if user.is_active():
-            key = create_unic_key(user, user.username, user.password)
-            key.save()
-            mail = create_mail(user,
-                               "Go to this link to recover your password: 127.0.0.1:8000/recover_password/" +
-                               key.key,
-                               "<a href='http://127.0.0.1:8000/recover_password/" + key.key +
-                               "'>Go to this link to recover your password</a>")
-            send_mail(mail)
-            result = "Success"
-        else:
-            result = 'User is not active'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
-
-
 def recover_password_view(request, key):
     if request.method == "GET":
         recover_form = RecoverPasswordForm()
@@ -185,13 +163,12 @@ def recover_password_ajax(request, key):
     if request.method == "POST":
         response_data = {}
         recover_form = RecoverPasswordForm(request.POST)
-        print(request.POST)
         if recover_form.is_valid:
             if recover_form.data['password1'] == recover_form.data['password2']:
                 if ConfirmKey.objects.filter(key=key).count() >= 1:
-                    user = ConfirmKey.objects.filter(key=key).first()
-                    if user.is_active():
-                        password = recover_form.cleaned_data('password1')
+                    user = ConfirmKey.objects.filter(key=key).first().user
+                    if user.is_active:
+                        password = recover_form.data['password1']
                         user.set_password(password)
                         user.save()
                         login(request, user)
@@ -204,6 +181,38 @@ def recover_password_ajax(request, key):
                 result = "Passwords does not match"
         else:
             result = "Form is not valid"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def create_recover_password_key_ajax(request):
+    if request.method == "POST":
+        response_data = {}
+        recover_form = RecoverPasswordUserData(request.POST)
+        if recover_form.is_valid:
+            name = recover_form.data['recover_name']
+            email = recover_form.data['recover_email']
+            user = User.objects.filter(username=name).first()
+            if user is not None:
+                if user.email == email:
+                    if user.is_active:
+                        key = create_unic_key(user, user.username, user.password)
+                        key.save()
+                        mail = create_mail(user,
+                                           "Go to this link to recover your password: 127.0.0.1:8000/profile/recover_password/" +
+                                           key.key,
+                                           "<a href='http://127.0.0.1:8000/profile/recover_password/" + key.key +
+                                           "'>Go to this link to recover your password</a>")
+                        send_mail(mail)
+                    result = "100"
+                else:
+                    result = "113"
+            else:
+                result = "106"
+        else:
+            result = "104"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

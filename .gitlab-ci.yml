@@ -1,20 +1,19 @@
-image: alpine
+image: srx64/prom:v1
+
+cache:
+  paths:
+  - ~/.cache/pip/
+
+before_script:
+  - pip install -r ci/requirements_ci.txt
 
 documentation:
-  before_script:
-  - apk update
-  - apk add doxygen
-  - apk add ttf-freefont graphviz
   script:
-  - doxygen Doxyfile_CI
+  - doxygen ci/Doxyfile_CI
   only:
   - develop
   
 pages:
-  before_script:
-  - apk update
-  - apk add doxygen
-  - apk add ttf-freefont graphviz
   script:
   - doxygen Doxyfile
   - mv docs/ public/
@@ -25,11 +24,14 @@ pages:
   - develop
 
 code_style:
-  before_script:
-  - apk update
-  - apk add py-pip
-  - pip install pycodestyle
   script:
-  - pycodestyle --ignore=E501 main calendars notes todo
+  - pycodestyle --ignore=E501,E265 main calendars notes todo
+  only:
+  - develop
+
+test:
+  script:
+  - coverage run manage.py test --settings=ci.settings_ci
+  - coverage report main/*.py notes/*.py calendars/*.py todo/*.py
   only:
   - develop

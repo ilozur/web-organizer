@@ -1,18 +1,12 @@
 /*Стили для главной страницы*/
 
-/*Цвет фона и текста с отступом*/
-body {
-  color: #5a5a5a;
-  background-color: #f1f1f1;
-  margin-bottom: 1.5rem;
-}
 
-/*Ссылки в баннере и костыль*/
-.link-section {
-  color: #fff;
+.link-section{
+	color: #fff;
 }
-.link-section:hover {
-  color: #fff;
+.link-section:hover{
+	color: #fff;
+	text-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
 /*Отступ от баннера*/
@@ -23,28 +17,23 @@ body {
 /*Текст на баннере*/
 .carousel-caption {
   bottom: 3rem;
+  color: #fff;
   z-index: 10;
 }
 
 /*Баннер*/
 .carousel-item {
   height: 32rem;
-  background-color: #777;
 }
 
 /*Изображеение на баннере*/
-.carousel-item>img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  height: 32rem;
-}
+
 
 /*Карточка*/
 .card {
   width: 350px;
   margin-top: 30px;
+  color: #333;
 }
 
 /*Кнопка добавления нового и анимация при наведении */
@@ -53,32 +42,28 @@ body {
   width: 50px;
   height: 50px;
   font-size: 23pt;
-  color: #fff;
   transition: 0.2s;
 }
 .add-new:hover {
   border-radius: 100%;
   transition: 0.2s;
-  color: #fff;
 }
 
-/*Костыль к цвету кнопки добавления*/
-.plus {
-  color: #fff;
-}
 
 /*Секция и ее анимация при наведении*/
 .section {
   height: 150px;
   width: 350px;
   font-size: 25pt;
-  color: #fff;
   transition: 0.2s;
   text-align: center;
   padding-top: 50px;
+  color: #333;
 }
-.section:hover {
-  color: #fff;
+
+.plus {
+	  color: #333;
+	  font-size: 25pt;
 }
 
 /*Расположение лайка*/
@@ -89,7 +74,6 @@ body {
 /*Комментарий*/
 .comment {
   margin-top: 15px;
-  color: #fff;
 }
 
 /*Дата комментария*/

@@ -47,3 +47,11 @@ class Event(models.Model):
         elif modificator == 'private':
             events = events.filter(is_public=0)
         return events
+
+    @staticmethod
+    def delete_event(event_id):
+        if len(Event.objects.filter(id=event_id)) > 0:
+            Event.objects.filter(id=event_id).delete()
+            return True
+        else:
+            return False

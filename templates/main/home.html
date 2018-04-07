@@ -15,7 +15,13 @@
         <div class="carousel-item active">
             <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">
             <div class="carousel-caption text-left">
-                <h1>Добрый день, {{ request.user.first_name }}</h1>
+                <script> 
+                var h=(new Date()).getHours(); 
+                    if (h > 23 || h < 7) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>"); 
+                    if (h > 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>"); 
+                    if (h > 11 && h < 19) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>"); 
+                    if (h > 18 && h < 24) document. write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>"); 
+                </script> 
                 <h3>Ближайшее мероприятие: </h3>
                 <p><a href="#" class="link-section">Дедлайн</a><br/>
                     <small><i>25.10.2018 10:00 AM | Школа Анализа Данных</i></small>
@@ -30,7 +36,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <h2><a class="btn btn-warning btn-lg btn-block section" href='{% url "notes.index" %}'>Заметки</a></h2>
+                <h2><a class="btn btn-light btn-lg btn-block section" href='{% url "notes.index" %}'>Заметки</a></h2>
                 <div class="card">
                     <div class="card-body">
                         <h4>Последние заметки:</h4>
@@ -46,7 +52,7 @@
                                 <p class="lead"> <small><a href='{% url "notes.index" %}'>Показать все</a></small></p>
                             </div>
                         {% endif %}
-                        <a href="#" class="badge badge-warning add-new" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()"><font class="plus">+</font></a>
+                        <a href="#" class="badge badge-light add-new" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
@@ -58,13 +64,13 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <h2><a class="btn btn-danger btn-lg btn-block section" href='{% url "calendar.index" %}'>Календарь</a></h2>
+                <h2><a class="btn btn-light btn-lg btn-block section" href='{% url "calendar.index" %}'>Календарь</a></h2>
                 <div class="card">
                     <div class="card-body">
                         <h4>Ближайшие события календаря:</h4>
                         <p class="lead"> На день: <span class="text-muted">Ничего не запланированно</span></p>
                         <p class="lead"> На неделю: <a href="#" data-toggle="modal" data-target="#Event">Дедлайн</a> <a href="#" data-toggle="modal" data-target="#Event">День рождения Алисы</a></p>
-                        <a href="#" class="badge badge-danger add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
+                        <a href="#" class="badge badge-light add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
@@ -79,18 +85,18 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <h2><a class="btn btn-primary btn-lg btn-block section" href='{% url "todo.index" %}'>Напоминания</a></h2>
+                <h2><a class="btn btn-light btn-lg btn-block section" href='{% url "todo.index" %}'>Напоминания</a></h2>
                 <div class="card">
                     <div class="card-body">
                         <h4>Последние напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Отдать Бобу диски</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Напомнить Саше про сотку</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Забрать заказ</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Отдать Бобу диски</a> <a href="#" class="badge badge-light">&#10003;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Напомнить Саше про сотку</a> <a href="#" class="badge badge-light">&#10003;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Забрать заказ</a> <a href="#" class="badge badge-light">&#10003;</a> </p>
                         <h4>Завершенные напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-danger">&#10007;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-danger">&#10007;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-light">&#10007;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-light">&#10007;</a> </p>
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>
-                        <a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
+                        <a href="#" class="badge badge-light add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
@@ -108,7 +114,4 @@
     {% include "modals/calendar.html" %}
     {% include "modals/small_parts.html" %}
     {% include "modals/todo.html" %}
-{% endblock %}
-{% block pre_scripts %}
-    <script>hello_user('{{ request.user.first_name }}');</script>
 {% endblock %}
