@@ -16,16 +16,14 @@ class Todos(models.Model):
         mode = {
             'AtoZ': 'title',
             'ZtoA': '-title',
-            'old': 'added_time',
-            'new': '-added_time'
+            'old': 'added_date_and_time',
+            'new': '-added_date_and_time'
         }
-        if sorting_type == 'all':
-            todos = Todos.objects.filter(user=user)
-        elif sorting_type in mode.keys():
-            todos = Todos.objects.filter(user=user).order_by(mode.get(sorting_type))
-        if status is not None:
-            todos.filter(status=status)
-        return todos
+        todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
+        todo_list = list()
+        for item in todos:
+            todo_list.append((item.title, item.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), item.id))
+        return todo_list
 
     @staticmethod
     def get_todo_by_id(id):
@@ -52,11 +50,7 @@ class Todos(models.Model):
         return ret_list
 
     @staticmethod
-    def todos_sort_by_date(datetime, user):  # todos: datetime = {1: date_one NOT NULL, 2: date_two}
-        todolist = Todos.objects.filter(user=user)
-        if len(datetime) == 1:
-            date = datetime[0].date()
-            return todolist.filter(pub_date=date)
-        else:
-            return todolist.filter(pub_date__gte=datetime[0].date(),
-                                   pub_date__lte=datetime[1].date()).order_by('-pub_date')
+    def get_amounts(user):
+        every = Todos.objects.filter(user=user).count()
+        undone = Todos.objects.filter(status='in progress', user=user).count()
+        return [every, undone, (every - undone)]

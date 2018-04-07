@@ -19,11 +19,9 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    todo_list = []
-    todos = Todos.get_todos('AtoZ', 'in progress', user)
-    for i in todos:
-        todo_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
-    context['todo_data'] = todo_list
+    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
+    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
+    context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
@@ -56,17 +54,26 @@ def add_todo(request):
 @login_required
 def show_todo(request):
     if request.method == "POST":
-        response_data = {}
         todo_id = request.POST.get('id')
-        if Todos.get_todo_by_id(todo_id):
+        if Todos.objects.filter(id=todo_id).exists():
             todo = Todos.get_todo_by_id(todo_id)
-            response_data = {'title': todo.title, 'text': todo.text,
-                             'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
-                             'result': "Success"
-                             }
+            if todo.status == "in progress":
+                current_status = "'done'"
+            else:
+                current_status = "'in progress'"
+            response = {
+                'title': todo.title,
+                'text': todo.text,
+                'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
+                'status': todo.status,
+                'result': "Success",
+                'current_status': current_status
+            }
         else:
-            response_data['result'] = "Todo does not exist"
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            response = {
+                'result': "User is not authenticated"
+            }
+        return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
@@ -100,6 +107,7 @@ def status_change(request):
             obj.status = todo_type
             obj.save()
             response['result'] = "Success"
+            response['amount_of_todos'] = Todos.get_amounts(request.user)
         else:
             response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type='application/json')
@@ -109,25 +117,22 @@ def status_change(request):
 
 @login_required
 def edit_todo(request):
-    response_data = {}
+    response = {}
     if request.method == "POST":
         form = EditTodoForm(request.POST)
         if form.is_valid():
-            todo_id = form.cleaned_data['note_id']
-            if Todos.get_todo_by_id(id=todo_id).count() > 0:
-                tmp = Todos.get_todo_by_id(id=todo_id).first()
+            todo_id = form.cleaned_data['todo_id']
+            if Todos.objects.filter(id=todo_id).exists():
+                tmp = Todos.get_todo_by_id(todo_id)
                 tmp.title = form.cleaned_data['todo_title_edit']
                 tmp.text = form.cleaned_data['todo_text_edit']
-                tmp.last_edit_time = datetime.now()
                 tmp.save()
-                result = 'success'
-                response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+                response['result'] = "Success"
             else:
-                result = 'No such note'
+                response['result'] = 'No such todo'
         else:
-            result = 'Form not valid'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            response['result'] = 'Form is not valid'
+        return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
