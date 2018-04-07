@@ -78,7 +78,7 @@
         <section class="card-view" id="ViewCard" style="display: None">
             <div class="row">
                 {% for item in undone_todos %}
-                    <a href="#" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <a href="#" id="card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open">
                         <div class="card">
                             <div class="card-body">
                                 <h3> {{ item.0 }} </h3>
@@ -91,7 +91,7 @@
                                 <span class="badge badge-pill priority">!</span>
                                 <span class="badge badge-pill priority">!</span>
                                 <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10003;</button>
+                                    <button type="button" onclick="status_change({{ item.2 }}, 'done')" class="btn btn-light">&#10003;</button>
                                 </div>
                             </div>
                         </div>

@@ -30,6 +30,7 @@ function status_change(id, type){
             if (response['result'] == 'Success')
             {
                 $("#todo_" + id).remove();
+                $("#card_" + id).remove();
                 $("#amounts small:eq(1)").html(response['amount_of_todos'][0]);
                 $("#amounts small:eq(3)").html(response['amount_of_todos'][1]);
                 $("#amounts small:eq(5)").html(response['amount_of_todos'][2]);
