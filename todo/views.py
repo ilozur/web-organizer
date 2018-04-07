@@ -19,7 +19,8 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    context['todo_data'] = Todos.get_todos('AtoZ', 'in progress', user)
+    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
+    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
@@ -56,12 +57,17 @@ def show_todo(request):
         todo_id = request.POST.get('id')
         if Todos.objects.filter(id=todo_id).exists():
             todo = Todos.get_todo_by_id(todo_id)
+            if todo.status == "in progress":
+                current_status = "'done'"
+            else:
+                current_status = "'in progress'"
             response = {
                 'title': todo.title,
                 'text': todo.text,
                 'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
                 'status': todo.status,
-                'result': "Success"
+                'result': "Success",
+                'current_status': current_status
             }
         else:
             response = {
@@ -101,6 +107,7 @@ def status_change(request):
             obj.status = todo_type
             obj.save()
             response['result'] = "Success"
+            response['amount_of_todos'] = Todos.get_amounts(request.user)
         else:
             response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type='application/json')
