@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import *
 from datetime import datetime, timedelta
 from calendars.forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import json
 
 
@@ -39,7 +39,7 @@ def index(request):
         response_data['weeks'] = get_weeks(now_date)
         response_data['month_name'] = get_month_name(now_date.month)
         response_data['now_year'] = now_date.year
-        response_data['result'] = "success"
+        response_data['result'] = "100"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
@@ -73,6 +73,9 @@ def get_weeks(date_time):
                 if date.month != date_time.month:
                     day_class = "future-date"
             tmp_day['class'] = day_class
+            tmp_day_events = Event.objects.filter(date=date)
+            if tmp_day_events.count() > 0:
+                tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
             week_days.append(tmp_day)
             date += timedelta(days=1)
         tmp['week_days'] = week_days
@@ -95,6 +98,9 @@ def get_weeks(date_time):
                 if date.month != date_time.month:
                     day_class = "future-date"
             tmp_day['class'] = day_class
+            tmp_day_events = Event.objects.filter(date=date)
+            if tmp_day_events.count() > 0:
+                tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
             week_days.append(tmp_day)
             date += timedelta(days=1)
         tmp['week_days'] = week_days
@@ -163,3 +169,39 @@ def event_view(request):
         else:
             response_data['result'] = "104"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+@login_required
+def get_event_data_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        event_id = request.POST.get('id')
+        if Event.objects.filter(id=event_id).count() > 0:
+            event = Event.objects.filter(id=event_id).first()
+            response_data = {
+                'title': event.title,
+                'description': event.description,
+                'date': datetime.combine(event.date, event.time).strftime("%I:%M%p on %B %d, %Y"),
+            }
+            result = '100'
+        else:
+            result = '114'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+@login_required
+def delete_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        event_id = request.POST.get('id')
+        if Event.delete_event(event_id):
+            result = "100"
+        else:
+            result = "114"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')

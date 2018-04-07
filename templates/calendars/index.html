@@ -109,15 +109,25 @@
                 <tr>
                     <th class="bg-light">{{ week.week_num }}</th>
                     {% for day in week.week_days %}
-                    {% if day.class %}
-                    <td class="{{ day.class }}">
-                        <small class="date">{{ day.day }}</small>
-                    </td>
-                    {% else %}
-                    <td>
-                        <small class="date">{{ day.day }}</small>
-                    </td>
-                    {% endif %}
+                        {% if day.class %}
+                            <td class="{{ day.class }}">
+                                {% if day.event %}
+                                    <div class="alert alert-light event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                        {{ day.event.caption }}
+                                    </div>
+                                {% endif %}
+                                <small class="date">{{ day.day }}</small>
+                            </td>
+                        {% else %}
+                            <td>
+                                {% if day.event %}
+                                    <div class="alert alert-light event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                        {{ day.event.caption }}
+                                    </div>
+                                {% endif %}
+                                <small class="date">{{ day.day }}</small>
+                            </td>
+                        {% endif %}
                     {% endfor %}
                 </tr>
                 {% endfor %}
