@@ -78,11 +78,11 @@
         </section>
         <section class="card-view" id="ViewCard">
             <div class="row">
-                <div class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
+                {% for item in todo_data %}
+                <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
                     <div class="card">
                         <div class="card-body">
                             <h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
-                            <p></p>
                         </div>
                         <div class="card-footer">
                             <span class="badge badge-pill priority">!</span>
@@ -95,78 +95,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Лечь пораньше </h3>
-                        </div>
-                        <div class="card-footer">
-                            <div class="priorities">
-                                <button type="button" class="btn btn-light">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Починить наушники</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-light">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Убраться в комнате</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-light">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Сделать домашнюю</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="priorities">
-                                <button type="button" class="btn btn-light">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Купить хлеб</h3>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-light">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </a>
+                {% endfor %}
                 <div class="col-md-4" data-toggle="modal" data-target="#New">
                     <div class="card last">
                         <div class="card-body">
@@ -249,48 +179,6 @@
                                     <button type="button" class="btn btn-light">&#10007;</button>
                                 </div>
                             </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Сделать домашнюю
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Напомнить Сане про сотку
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Зайти к сыну маминой подруги
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Убраться в комнате
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Починить наушники
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Лечь пораньше
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Доделать проект
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10003;</button>
-                                </div>
-                            </a>
                         </div>
                         <nav class="navbar">
                             <div class="btn-group btn-group-lg">
@@ -308,7 +196,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="Open">
+        <div class="modal fade" id="Open-Todo">
             <div class="modal-dialog modal modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -555,7 +443,7 @@ function show_list(){
     $('.list-view').slideDown('slow');
 };
 
-function search_notes_ajax()
+function search_todo_ajax()
 {
     form_data = $('#search_todo_form').serialize();
     $("#search_todo_form").find(':input').each(function(){
@@ -649,7 +537,7 @@ function add_todo_ajax()
 };
 
 
-function delete_note_ajax(id)
+function delete_todo_ajax(id)
 {
     $('#delete_btn').attr('disabled', 'disabled');
     $.ajax({

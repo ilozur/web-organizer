@@ -104,7 +104,7 @@ function show_list(){
     $('.list-view').slideDown('slow');
 };
 
-function search_notes_ajax()
+function search_todo_ajax()
 {
     form_data = $('#search_todo_form').serialize();
     $("#search_todo_form").find(':input').each(function(){
@@ -206,7 +206,7 @@ function add_todo_ajax()
 };
 
 
-function delete_note_ajax(id)
+function delete_todo_ajax(id)
 {
     $('#delete_btn').attr('disabled', 'disabled');
     $.ajax({
