@@ -42,7 +42,7 @@ class Todos(models.Model):
 
     @staticmethod
     def search_todos(string, user):
-        obj = Todos.get_todos('all', 'in progress', user)
+        obj = Todos.get_todos('all', None, user)
         ret_list = list()
         for i in obj:
             if string in i.title:
