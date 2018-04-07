@@ -112,7 +112,7 @@
                         {% if day.class %}
                             <td class="{{ day.class }}">
                                 {% if day.event %}
-                                    <div class="alert alert-light event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                    <div class="alert alert-primary event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
                                         {{ day.event.caption }}
                                     </div>
                                 {% endif %}
@@ -121,7 +121,7 @@
                         {% else %}
                             <td>
                                 {% if day.event %}
-                                    <div class="alert alert-light event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                    <div class="alert alert-primary event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
                                         {{ day.event.caption }}
                                     </div>
                                 {% endif %}
