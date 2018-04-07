@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from notes.forms import *
-from notes.models import Notes
 import json
 from datetime import datetime
+from notes.forms import AddNoteForm, SearchForm
+from notes.models import Notes
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 @login_required
@@ -26,7 +27,6 @@ def index(request):
     context['add_note_form'] = AddNoteForm()
     context['edit_note_form'] = EditNoteForm()
     return render(request, "notes/index.html", context)
-
 
 @login_required
 def add_note_ajax(request):
@@ -53,9 +53,9 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search_notes(substr, user):
-    obj = Notes.get_notes('all', user)
-    ret_list = list()
+def search(substr):
+    obj = Notes.objects.all()
+    ret_list = []
     for i in obj:
         if substr in i.name:
             ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))

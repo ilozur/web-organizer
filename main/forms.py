@@ -3,8 +3,8 @@ from django import forms
 
 class SignInForm(forms.Form):
     username_sign_in = forms.CharField(label='Email or username', max_length=200,
-                               widget=forms.TextInput(attrs={'class': 'form-control',
-                                                             'placeholder': 'Enter your e-mail or username'}))
+                                       widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                     'placeholder': 'Enter your e-mail or username'}))
     password = forms.CharField(label='Password', max_length=200,
                                widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                  'placeholder': 'Enter your password'}))
