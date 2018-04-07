@@ -53,16 +53,24 @@ def add_todo(request):
 
 @login_required
 def show_todo(request):
-    response_data = {}
     if request.method == "POST":
         todo_id = request.POST.get('id')
-        if Todos.get_todo_by_id(id=todo_id).count() > 0:
-            todo = Todos.get_todo_by_id(id=todo_id)
-            response_data = {
+        if Todos.objects.filter(id=todo_id).exists():
+            todo = Todos.get_todo_by_id(todo_id)
+            response = {
                 'title': todo.title,
                 'text': todo.text,
-                'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y")}
-    return response_data
+                'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
+                'status': todo.status,
+                'result': "Success"
+            }
+        else:
+            response = {
+                'result': "User is not authenticated"
+            }
+        return HttpResponse(json.dumps(response), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
 @csrf_exempt
@@ -92,7 +100,6 @@ def status_change(request):
             todo_type = request.POST.get('type')
             obj = Todos.get_todo_by_id(todo_id)
             response['new_status'] = obj.status;
-            print(response['new_status'])
             obj.status = todo_type
             obj.save()
             response['result'] = "Success"
@@ -105,25 +112,22 @@ def status_change(request):
 
 @login_required
 def edit_todo(request):
-    response_data = {}
+    response = {}
     if request.method == "POST":
         form = EditTodoForm(request.POST)
         if form.is_valid():
-            todo_id = form.cleaned_data['note_id']
-            if Todos.get_todo_by_id(id=todo_id).count() > 0:
-                tmp = Todos.get_todo_by_id(id=todo_id).first()
+            todo_id = form.cleaned_data['todo_id']
+            if Todos.objects.filter(id=todo_id).exists():
+                tmp = Todos.get_todo_by_id(todo_id)
                 tmp.title = form.cleaned_data['todo_title_edit']
                 tmp.text = form.cleaned_data['todo_text_edit']
-                tmp.last_edit_time = datetime.now()
                 tmp.save()
-                result = 'success'
-                response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+                response['result'] = "Success"
             else:
-                result = 'No such note'
+                response['result'] = 'No such todo'
         else:
-            result = 'Form not valid'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            response['result'] = 'Form is not valid'
+        return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 

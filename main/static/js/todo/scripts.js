@@ -16,13 +16,6 @@ function sorting(type){
                     $($(".card-body > h3").get(index)).html(response['todo_list'][index][0]);
                     $($(".card-body > .date").get(index)).html(response['todo_list'][index][1]);
                 });
-                for (var i = 0; i < response['todo_list'].length; i++) {
-
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
             }
         }
     });
@@ -44,11 +37,6 @@ function status_change(id, type){
 
 
 function get_todo_data_ajax(id){
-    $('#note_num').html(id);
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-    $('#todo_title_show').html('loading');
-    $('#todo_text_show').html('loading');
     $.ajax({
         type: "POST",
         url: '/todo/show_todo',
@@ -57,13 +45,10 @@ function get_todo_data_ajax(id){
         {
             if (response['result'] == "Success")
             {
-                $('#todo_title_show').html(response['title']);
-                $('#todo_text_show').html(response['text']);
-                $('#todo_added_time').html(response['added_date_and_time']);
-                if ('last_edit_time' in response)
-                {
-                    $('#todo_last_edit').html(response['last_edit_time'] + '(edited)');
-                }
+                $("#Open").find("h2").html(response['title']);
+                $("#Open").find("p:first").html(response['text']);
+                $("#Open").find("small").html(response['added_date_and_time']);
+                $("#Open").find("p:eq(1)").html(response['status']);
             }
         }
     });
