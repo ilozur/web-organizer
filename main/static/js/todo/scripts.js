@@ -160,7 +160,7 @@ function add_todo_ajax()
 };
 
 
-function delete_note_ajax(id)
+function delete_todo_ajax(id)
 {
     $('#delete_btn').attr('disabled', 'disabled');
     $.ajax({

@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="modal fade" id="New-Todo">
+<div class="modal fade" id="New">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -44,8 +44,8 @@
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                <button type="button" class="btn btn-light">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_todo_btn" >Отменить</button>
+                <button type="button" class="btn btn-light" onclick="add_todo_ajax()">Создать</button>
             </div>
         </div>
     </div>
@@ -75,8 +75,10 @@
                 <button type="button" class="btn btn-light">&#10003;</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Удалить</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit"
+                        onclick="open_todo_edit_mode()">Редактировать</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>
             </div>
         </div>
     </div>

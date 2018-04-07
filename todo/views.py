@@ -35,9 +35,8 @@ def add_todo(request):
         if form.is_valid():
             title = form.cleaned_data['title']
             text = form.cleaned_data['text']
-            priority = form.cleaned_data['priority']
             tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
-                        priority=priority)
+                        priority=3)
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
@@ -139,16 +138,16 @@ def read_file(file_name):
     a = s.split("\n")
     user = a[0]
     date, time = '00-00-00', '34'
-    if not(a[1]):
+    if not (a[1]):
         added_time = time
     else:
         added_time = a[1]
-    if not(a[2]):
+    if not (a[2]):
         added_date = date
     else:
         added_date = a[2]
     priority = a[3]
-    if not(a[4]):
+    if not (a[4]):
         status = "in progress"
     else:
         status = a[4]
