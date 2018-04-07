@@ -43,12 +43,18 @@ function get_todo_data_ajax(id){
         data: {"id": id},
         success: function(response)
         {
+            if (response['status'] == 'in progress') {
+                var new_status = "'done'";
+            } else {
+                var new_status = "'in progress'";
+            }
             if (response['result'] == "Success")
             {
-                $("#Open").find("h2").html(response['title']);
-                $("#Open").find("p:first").html(response['text']);
-                $("#Open").find("small").html(response['added_date_and_time']);
-                $("#Open").find("p:eq(1)").html(response['status']);
+                $("#Open").find("#todo_title_show").html(response['title']);
+                $("#Open").find("#todo_text_show").html(response['text']);
+                $("#Open").find("#todo_added_time").html(response['added_date_and_time']);
+                $("#Open").find("p:first").html(response['status']);
+                $("#Open").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + new_status + ")");
             }
         }
     });

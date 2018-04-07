@@ -98,7 +98,6 @@ def status_change(request):
             todo_id = request.POST.get('id')
             todo_type = request.POST.get('type')
             obj = Todos.get_todo_by_id(todo_id)
-            response['new_status'] = obj.status;
             obj.status = todo_type
             obj.save()
             response['result'] = "Success"
