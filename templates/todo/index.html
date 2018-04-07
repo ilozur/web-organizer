@@ -79,7 +79,7 @@
         <section class="card-view" id="ViewCard">
             <div class="row">
                 {% for item in todo_data %}
-                <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
+                <a href="#" id="todo_card_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
                     <div class="card">
                         <div class="card-body">
                             <h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
