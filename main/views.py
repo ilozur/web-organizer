@@ -19,6 +19,9 @@ from profile.forms import RecoverPasswordUserData
 
 
 def index(request):
+    """!
+            @brief Function that renders home page if user is authenticated and index page if not
+    """
     if request.method == "GET":
         context = {
             'title': "Index page",
@@ -44,6 +47,9 @@ def index(request):
 
 
 def get_last_notes(user):
+    """!
+            @brief Function that get last three notes out all
+    """
     all_notes = Notes.get_notes("date_up", user)
     if all_notes.count() >= 3:
         first_three = all_notes[0:3]
@@ -53,6 +59,9 @@ def get_last_notes(user):
 
 
 def send_mail(mail):
+    """!
+            @brief Function that sends emails
+    """
     subject = mail['subject']
     text_content = mail['text_content']
     from_email = mail['from_email']
@@ -64,6 +73,9 @@ def send_mail(mail):
 
 
 def sign_up_ajax(request):
+    """!
+            @brief Function that signs user up (with ajax)
+    """
     context = {}
     if request.method == "GET":
         if not request.user.is_authenticated:
@@ -117,6 +129,9 @@ def sign_up_ajax(request):
 
 
 def create_mail(user, text, html, email=None):
+    """!
+            @brief Function that creates mail
+    """
     mail = dict()
     mail['subject'] = 'Dear ' + user.first_name + ' ' + user.last_name + '!'
     mail['from_email'] = EMAIL_HOST_USER
@@ -130,6 +145,9 @@ def create_mail(user, text, html, email=None):
 
 
 def create_unic_key(user, username, password):
+    """!
+            @brief Function creates sign up key
+    """
     key = create_key(username + password, user)
     expiration_date = datetime.now().date()
     expiration_date += timedelta(days=3)
@@ -138,6 +156,9 @@ def create_unic_key(user, username, password):
 
 
 def activate_key(request, key):
+    """!
+            @brief Function that activates key if it is valid
+    """
     if request.method == "GET":
         keys = ConfirmKey.objects.filter(key=key)
         if keys.count() > 0:
@@ -152,14 +173,23 @@ def activate_key(request, key):
 
 
 def check_email_uniq(email):
+    """!
+            @brief Function that checks if email is unique
+    """
     return User.objects.filter(email=email).count() == 0
 
 
 def check_username_uniq(username):
+    """!
+            @brief Function that checks if username is unique
+    """
     return User.objects.filter(username=username).count() == 0
 
 
 def sign_in_ajax(request):
+    """!
+            @brief Function that signs user in (with ajax)
+    """
     response_data = {}
     if request.method == "POST":
         if not request.user.is_authenticated:
@@ -195,6 +225,9 @@ def sign_in_ajax(request):
 
 
 def create_key(text, user):
+    """!
+            @brief Function that creates key
+    """
     prepared_hash_object = hashlib.pbkdf2_hmac(hash_name='sha256',
                                                password=text.encode('utf-8'),
                                                salt=SECRET_KEY.encode('utf-8'),
@@ -206,6 +239,9 @@ def create_key(text, user):
 
 
 def sign_out_view(request):
+    """!
+            @brief Function that signs user out
+    """
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect('/')
