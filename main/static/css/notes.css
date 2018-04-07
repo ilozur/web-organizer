@@ -1,34 +1,129 @@
+/*Стили для раздела заметок*/
+
+/*Главные стили*/
+body {
+	text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+	box-shadow: inset 0 0 5rem #fff3cd;
+	background-image: url(../img/bg_notes.jpg);
+	background-repeat: repeat;
+	background-attachment: fixed;
+	color: #856404;
+}
+
+/*Заголовок*/
+h1 {
+	color: #856404;
+}
+
+/*Элементы навигационной панели*/
+.nav-item:hover {
+  background-color: #fff3cd;
+  color: #856404;
+}
+nav .active {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+}
+
+/*Шапка*/
+.mast {
+	padding-top: 3em;
+	padding-bottom: 3em;
+	text-align: center;
+	color: #856404;
+	border: 1px solid #ffeeba;
+	border-top: 0px;
+	background-color: #fff3cd;
+	border-radius: 0 0 15px 15px;
+}
+
+/*Кнопки*/
+.btn,
+.btn:focus,
+.btn:active {
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+.btn:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+
+/*Карточки*/
 .card {
-  background-color: #fff;
+  background-color: #fff3cd;
   height: 500px;
   transition: 0.5s;
   margin: 10px;
   margin-bottom: 40px;
   cursor: pointer;
 }
-
 .card:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
   transition: 0.5s;
 }
 
-.last {
-  height: 340px;
-  width: 340px;
-  border: 5px #333 dotted;
-  text-align: center;
-  background-color: #fff;
-  font-size: 50pt;
-  padding-top: 20%;
-  color: #333;
-}
-
+/*Дата*/
 .date {
   font-size: 10pt;
   float: right;
 }
 
+/*Лого*/
+.logo {
+	color: #856404;
+}
+
+/*Изображение пользователя*/
 .user-image {
   width: 200px;
   height: 200px;
+}
+
+/*Модуль*/
+.modal {
+  background-image: url(../img/bg_notes.jpg);
+  background-repeat: repeat;
+  background-attachment: scroll;
+}
+
+/*Заголовок у модуля*/
+.modal-header {
+  background-color: #ffeeba;
+  border-bottom: 0px;
+}
+
+/*Тело у модуля*/
+.modal-body {
+  background-color: #fff3cd;
+}
+
+/*Подвал у модуля*/
+.modal-footer {
+  background-color: #ffeeba;
+  border-top: 0px;
+}
+
+/*Список*/
+.list-group-item {
+	color: #856404;	
+	transition: 0.5s;
+}
+.list-group-item:hover {
+	color: #856404;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	transition: 0.5s;
+}
+
+/*Подвал*/
+footer {
+	color: #fff3cd;
 }

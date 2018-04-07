@@ -19,14 +19,14 @@
         <section class="navigation">
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light" onclick="ShowCard()">
+                    <button type="button" class="btn btn-primary" onclick="ShowCard()">
                         <picture>
-                            <img src='{% static "/icons/card_icon.png" %}' class="icon">
+                            <img src='{% static "/icons/card_icon_todo.png" %}' class="icon">
                         </picture>
                     </button>
-                    <button type="button" class="btn btn-light" onclick="ShowList()">
+                    <button type="button" class="btn btn-primary" onclick="ShowList()">
                         <picture>
-                            <img src='{% static "/icons/list_icon.png" %}' class="icon">
+                            <img src='{% static "/icons/list_icon_todo.png" %}' class="icon">
                         </picture>
                     </button>
                 </div>
@@ -38,12 +38,12 @@
                     <button type="button" class="btn btn-primary" onclick="sorting('AtoZ')">А..Я</button>
                     <button type="button" class="btn btn-primary" onclick="sorting('ZtoA')">Я..А</button>
                 </div>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Synchronization">
+                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
                     <picture>
-                        <img src='{% static "/icons/sync_icon.png" %}' class="icon">
+                        <img src='{% static "/icons/sync_icon_todo.png" %}' class="icon">
                     </picture>
                 </button>
-                <div class="alert alert-light">
+                <div class="alert alert-primary">
                     <small>Всего напоминаний: 42</small> <br/>
                     <small>Активных: 24</small> <br/>
                     <small>Завершенных: 18</small> <br/>
@@ -60,7 +60,7 @@
         <section class="list-view" id="ViewList">
             <div class="list-group">
                 {% for item in todo_data %}
-                    <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open-Todo">
+                    <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
                         <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
                         <div class="priorities">
                             <span class="badge badge-pill priority-list">!</span>
@@ -68,7 +68,7 @@
                             <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list-last">!</span>
-                            <button type="button" class="btn btn-light">&#10003;</button>
+                            <button type="button" class="btn btn-primary">&#10003;</button>
                             <div class="date"> <small id="todo_date_{{item.1}}">{{ item.1 }}</small></div>
                         </div>
                     </a>
@@ -90,7 +90,7 @@
                             <span class="badge badge-pill priority">!</span>
                             <span class="badge badge-pill priority">!</span>
                             <div class="priorities">
-                                <button type="button" class="btn btn-light">&#10003;</button>
+                                <button type="button" class="btn btn-primary">&#10003;</button>
                             </div>
                         </div>
                     </div>
@@ -109,11 +109,11 @@
         </section>
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-light">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-light">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
                 </div>
             </nav>
     </section>

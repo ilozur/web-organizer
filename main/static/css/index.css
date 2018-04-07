@@ -1,12 +1,202 @@
 /*Стили для главной страницы*/
 
-
-.link-section{
-	color: #fff;
+/*Главные стили*/
+body {
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+  background-image: url(../img/bg.jpg);
+  background-repeat: repeat;
+  background-attachment: fixed;
+  color: #333;
 }
-.link-section:hover{
-	color: #fff;
-	text-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+
+/*Ссылки*/
+a,
+a:focus,
+a:hover {
+  color: #333;
+}
+
+/*Ссылки на баннере*/
+.link-section {
+  color: #fff;
+}
+.link-section:hover {
+  color: #fff;
+}
+
+/*Белые кнопки*/
+.btn,
+.btn:focus,
+.btn:active {
+  color: #333;
+  text-shadow: none;
+  background-color: #fff;
+  border: .05rem solid #fff;
+  transition: 0.5s;
+}
+.btn:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  transition: 0.5s;
+}
+
+
+/*Желтые кнопки*/
+.btn-warning,
+.btn-warning:focus,
+.btn-warning:active {
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+.btn-warning:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+
+/*Красные кнопки*/
+.btn-danger,
+.btn-danger:focus,
+.btn-danger:active {
+  color: #721c24;
+  text-shadow: none;
+  background-color: #f8d7da;
+  border: .05rem solid #f5c6cb;
+  transition: 0.5s;
+}
+.btn-danger:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #721c24;
+  text-shadow: none;
+  background-color: #f8d7da;
+  border: .05rem solid #f5c6cb;
+  transition: 0.5s;
+}
+
+/*Синие кнопки*/
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:active {
+  color: #004085;
+  text-shadow: none;
+  background-color: #cce5ff;
+  border: .05rem solid #b8daff;
+  transition: 0.5s;
+}
+.btn-primary:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #004085;
+  text-shadow: none;
+  background-color: #cce5ff;
+  border: .05rem solid #b8daff;
+  transition: 0.5s;
+}
+
+/*Белая кнопка +*/
+.badge,
+.badge:focus {
+  color: #333;
+  text-shadow: none;
+  background-color: #fff;
+  border: .05rem solid #fff;
+  transition: 0.5s;
+}
+.badge:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  transition: 0.5s;
+}
+
+/*Желтая кнопка +*/
+.badge-warning,
+.badge-warning:focus,
+.badge-warning:active {
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+.badge-warning:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+
+/*Красная кнопка +*/
+.badge-danger,
+.badge-danger:focus,
+.badge-danger:active {
+  color: #721c24;
+  text-shadow: none;
+  background-color: #f8d7da;
+  border: .05rem solid #f5c6cb;
+  transition: 0.5s;
+}
+.badge-danger:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #721c24;
+  text-shadow: none;
+  background-color: #f8d7da;
+  border: .05rem solid #f5c6cb;
+  transition: 0.5s;
+}
+
+/*Синяя кнопка +*/
+.badge-primary,
+.badge-primary:focus,
+.badge-primary:active {
+  color: #004085;
+  text-shadow: none;
+  background-color: #cce5ff;
+  border: .05rem solid #b8daff;
+  transition: 0.5s;
+}
+.badge-primary:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #004085;
+  text-shadow: none;
+  background-color: #cce5ff;
+  border: .05rem solid #b8daff;
+  transition: 0.5s;
+}
+
+/*Модуль*/
+.modal {
+  background-image: url(../img/bg.jpg);
+  background-repeat: repeat;
+  background-attachment: scroll;
+}
+
+/*Отступ у контента*/
+.content {
+  padding-bottom: 50px;
+  padding: 0 20%;
+}
+
+/*Заголовок у модуля*/
+.modal-header {
+  background-color: #e2e6ea;
+  border-bottom: 0px;
+}
+
+/*Тело у модуля*/
+.modal-body {
+  background-color: #f8f9fa;
+}
+
+/*Подвал у модуля*/
+.modal-footer {
+  background-color: #e2e6ea;
+  border-top: 0px;
 }
 
 /*Отступ от баннера*/
@@ -25,9 +215,6 @@
 .carousel-item {
   height: 32rem;
 }
-
-/*Изображеение на баннере*/
-
 
 /*Карточка*/
 .card {
@@ -49,7 +236,6 @@
   transition: 0.2s;
 }
 
-
 /*Секция и ее анимация при наведении*/
 .section {
   height: 150px;
@@ -61,6 +247,7 @@
   color: #333;
 }
 
+/*Кнопка +*/
 .plus {
 	  color: #333;
 	  font-size: 25pt;
