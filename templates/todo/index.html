@@ -60,16 +60,16 @@
         <section class="list-view list-group" id="ViewList">
             <div class="list-group">
                 {% for item in undone_todos %}
-                    <a href="#" id="todo_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                        <h7>{{ item.0 }}</h7>
+                    <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
+                        <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
                         <div class="priorities">
                             <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list-last">!</span>
-                            <button  type="button" class="btn btn-info" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
-                            <div class="date"><small>{{ item.1 }}</small></div>
+                            <button  type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
+                            <div class="date"><small id="todo_date_{{item.1}}">{{ item.1 }}</small></div>
                         </div>
                     </a>
                 {% endfor %}
@@ -78,7 +78,7 @@
         <section class="card-view" id="ViewCard" style="display: None">
             <div class="row">
                 {% for item in undone_todos %}
-                    <a href="#" id="card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open">
+                    <a href="#" id="todo_card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
                         <div class="card">
                             <div class="card-body">
                                 <h3> {{ item.0 }} </h3>

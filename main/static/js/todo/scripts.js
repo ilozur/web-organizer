@@ -59,6 +59,26 @@ function get_todo_data_ajax(id){
     });
 };
 
+function clean_add_note_fields()
+{
+    for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
+    CKEDITOR.instances.id_note_data.setData("");
+    $("#id_note_title").val("");
+};
+
+function open_todo_edit_mode()
+{
+    $('#Show-Todo-Modal').attr('hidden', '');
+    $('#Edit-Todo-Modal').removeAttr('hidden');
+    for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
+    CKEDITOR.instances.id_todo_data_edit.setData($('#todo_text_show').html());
+    $('#id_todo_title_edit').val($('#todo_title_show').html());
+};
+
 function close_todo_edit_mode()
 {
     $('#Edit-Todo-Modal').attr('hidden', '');
@@ -120,13 +140,19 @@ function add_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-                alert('OK, todo was added');
-                result_html = '<div id="todo_' + response['id'] + '" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
+                var result_html_list = '<div id="todo_' + response['id'] + '" style="display: none" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
                     '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
                     'data-toggle="modal" data-target="#Open-Todo"> <h7 id="todo_title_' + response['id'] + '">' +
                     response['title'] + '</h7><div class="date"> <small>' +
                     response['datetime'] + '</small></div></a></div>';
-                $("#list_id").html(result_html + $("#list_id").html());
+                var result_html_card = '<div style="display: none" id="todo_card_' + response['id'] + '" onclick="get_todo_data_ajax(' +
+                    response['id'] + ');" class="col-md-4" data-toggle="modal" data-target="#Open-Todo"><div class="card">' +
+                    '<div class="card-body"><h3 id="card_todo_title_' + response['id'] + '">' + response['title'] + '</h3><small class="date">' + response['datetime'] +
+                    '</small><hr/></div></div></div>';
+                $("#list_id").html(result_html_list + $("#list_id").html());
+                $("#cards_id").html(result_html_card + $("#cards_id").html());
+                $('#todo_' + response['id']).slideDown(duration='slow');
+                $('#todo_card_' + response['id']).slideDown(duration='slow');
                 $("#close_todo_btn").trigger("click");
             }
         }
@@ -145,8 +171,8 @@ function delete_todo_ajax(id)
         {
             if (response['result'] == "Success")
             {
-                alert('OK, todo was deleted');
-                $('#todo_' + id).slideUp("Slow");
+                $('#todo_' + id).slideUp(duration='slow', complete=function(){$('#todo_' + id).remove()});
+                    $('#todo_card_' + id).slideUp(duration='slow', complete=function(){$('#todo_card' + id).remove()});
             }
             $('#delete_btn').removeAttr('disabled');
         }
