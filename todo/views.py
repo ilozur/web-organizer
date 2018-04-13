@@ -170,9 +170,9 @@ def delete_todo(request):
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:
-            id = request.POST.get('id')
-            if Todos.delete_todo(id):
-                result = "success"
+            todo_id = request.POST.get('id')
+            if Todos.delete_todo(todo_id):
+                result = "Success"
             else:
                 result = "Sorry, Todo does not exist"
         else:
