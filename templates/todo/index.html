@@ -6,11 +6,11 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/todolist.css" %}'>
-    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+    <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
+    <script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
 {% endblock %}
 
 {% block content %}
-
 <article class="todo">
     <section class="mast">
         <h1>Напоминания</h1>
@@ -30,34 +30,34 @@
                         </picture>
                     </button>
                 </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo">+</button>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Complite">&#10003;</button>
+                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#New">+</button>
+                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Complete">&#10003;</button>
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary" onclick="sorting('new')">Сначала новые</button>
-                    <button type="button" class="btn btn-primary" onclick="sorting('old')">Сначала старые</button>
-                    <button type="button" class="btn btn-primary" onclick="sorting('AtoZ')">А..Я</button>
-                    <button type="button" class="btn btn-primary" onclick="sorting('ZtoA')">Я..А</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('new')">Сначала новые</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('old')">Сначала старые</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('AtoZ')">А..Я</button>
+                    <button type="button" class="btn btn-light" onclick="sorting('ZtoA')">Я..А</button>
                 </div>
                 <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
                     <picture>
                         <img src='{% static "/icons/sync_icon_todo.png" %}' class="icon">
                     </picture>
                 </button>
-                <div class="alert alert-primary">
-                    <small>Всего напоминаний: 42</small> <br/>
-                    <small>Активных: 24</small> <br/>
-                    <small>Завершенных: 18</small> <br/>
+                <div id="amounts" class="alert alert-primary">
+                    <small>Всего напоминаний: </small><small>{{ amount_of_todos.0 }}</small> <br/>
+                    <small>Активных: </small><small>{{ amount_of_todos.1 }}</small> <br/>
+                    <small>Завершенных: </small><small>{{ amount_of_todos.2 }}</small> <br/>
                 </div>
                 <form id="search_todo_form" onsubmit="return false;">
-							{% load bootstrap %}
-							{% csrf_token %}
-							{{ search_todo_form.result | bootstrap }}
+                            {% load bootstrap %}
+                            {% csrf_token %}
+                            {{ search_todo_form.result | bootstrap }}
                 </form>
                 <input id="search_todo_btn" type="button" value="Search" class="btn btn-warning"
                        onclick="search_todo_ajax()">
             </nav>
         </section>
-        <section class="list-view" id="ViewList">
+        <section class="list-view list-group" id="ViewList">
             <div class="list-group">
                 {% for item in todo_data %}
                     <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
@@ -75,7 +75,7 @@
                 {% endfor %}
             </div>
         </section>
-        <section class="card-view" id="ViewCard">
+        <section class="card-view" id="ViewCard" style="display: None">
             <div class="row">
                 {% for item in todo_data %}
                 <a href="#" id="todo_card_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
@@ -93,16 +93,14 @@
                                 <button type="button" class="btn btn-primary">&#10003;</button>
                             </div>
                         </div>
-                    </div>
-                </a>
-                {% endfor %}
-                <div class="col-md-4" data-toggle="modal" data-target="#New">
-                    <div class="card last">
-                        <div class="card-body">
-                            <p>
-                                +
-                            </p>
                         </div>
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="col-md-4" data-toggle="modal" data-target="#New">
+                <div class="card last">
+                    <div class="card-body">
+                        <p>+</p>
                     </div>
                 </div>
             </div>
@@ -119,423 +117,6 @@
     </section>
     </article>
     <article class="modals">
-        <div class="modal fade" id="New">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Создание напоминания</h2>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <h3>Название</h3>
-                                <input class="form-control" placeholder="Напоминалочка">
-                            </div>
-                            <div class="form-group">
-                                <h3>Текст</h3>
-                                <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
-                                <div class="btn-group btn-group-sm WYSIWYG">
-                                    <button type="button" class="btn btn-light"><strong>B</strong></button>
-                                    <button type="button" class="btn btn-light"><em>I</em></button>
-                                    <button type="button" class="btn btn-light"><del>S</del></button>
-                                    <button type="button" class="btn btn-light"><ins>U</ins></button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h3> Приоритет </h3>
-                                <button type="button" class="btn btn-light btn-sm">1</button>
-                                <button type="button" class="btn btn-light btn-sm">2</button>
-                                <button type="button" class="btn btn-light btn-sm">3</button>
-                                <button type="button" class="btn btn-light btn-sm">4</button>
-                                <button type="button" class="btn btn-light btn-sm">5</button>
-                            </div>
-                        </form>
-                        <h3>Записать аудио</h3>
-                        <button type="button" class="btn btn-light btn-lg btn-block">
-                            <picture>
-                                <img src='{% static "/icons/micro_icon.png" %}'>
-                            </picture>
-                        </button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Создать</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="Complite">
-            <div class="modal-dialog modal modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Выполненные задачи</h2>
-                    </div>
-                    <div class="modal-body">
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
-                                Купить хлеб
-                                <div class="priorities">
-                                    <button type="button" class="btn btn-light">&#10007;</button>
-                                </div>
-                            </a>
-                        </div>
-                        <nav class="navbar">
-                            <div class="btn-group btn-group-lg">
-                                <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
-                                <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">2</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">3</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="Edit">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Редактирование напоминания</h2>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <h3>Изменить название</h3>
-                                <input class="form-control" placeholder="Напоминалочка">
-                            </div>
-                            <div class="form-group">
-                                <h3>Изменить текст</h3>
-                                <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
-                                <div class="btn-group btn-group-sm WYSIWYG">
-                                    <button type="button" class="btn btn-light"><strong>B</strong></button>
-                                    <button type="button" class="btn btn-light"><em>I</em></button>
-                                    <button type="button" class="btn btn-light"><del>S</del></button>
-                                    <button type="button" class="btn btn-light"><ins>U</ins></button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h3> Изменить приоритет </h3>
-                                <button type="button" class="btn btn-light btn-sm">1</button>
-                                <button type="button" class="btn btn-light btn-sm">2</button>
-                                <button type="button" class="btn btn-light btn-sm">3</button>
-                                <button type="button" class="btn btn-light btn-sm">4</button>
-                                <button type="button" class="btn btn-light btn-sm">5</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Сохранить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="Synchronization">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Синхронизация</h2>
-                    </div>
-                    <div class="modal-body">
-                        <button type="button" class="btn btn-light">Сохранить все напоминания в файл</button>
-                        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose">Сохранить часть напоминаний в файл</button>
-                        <hr>
-                        <div class="form-group btn btn-light">
-                            <label>Загрузить все напоминания из файла</label>
-                            <input type="file" class="form-control-file">
-                        </div>
-                        <div class="form-group btn btn-light">
-                            <label>Загрузить некоторые напоминания из файла</label>
-                            <input type="file" class="form-control-file">
-                        </div>
-                        <button type="button" class="btn btn-light">Синхронизировать</button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="Choose">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Выберите напоминания для сохранения</h2>
-                    </div>
-                    <div class="modal-body">
-                        <div class="list-group">
-                            <div class="form-check list-group-item list-group-item-light">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> Sad but True </label>
-                            </div>
-                            <div class="form-check list-group-item list-group-item-light">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> True but Sad </label>
-                            </div>
-                            <div class="form-check list-group-item list-group-item-light">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> but Sad True </label>
-                            </div>
-                            <div class="form-check list-group-item list-group-item-light">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> but True Sad</label>
-                            </div>
-                            <div class="form-check list-group-item list-group-item-light">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> Sad True but </label>
-                            </div>
-                            <div class="form-check list-group-item list-group-item-light">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label"> True Sad but</label>
-                            </div>
-                        </div>
-                        <nav class=" navbar navbar-pag">
-                            <div class="btn-group btn-group-lg">
-                                <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
-                                <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">2</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">3</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
-                        <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include "modals/todo.html" %}
     </article>
-        <article class="modals">
-			{% include "modals/todo.html" %}
-		</article>
-        <script>
-            function ShowCard(){
-            $("#ViewList").hide("slow");
-            $("#ViewCard").show("slow");
-            }
-            function ShowList(){
-            $("#ViewList").show("slow");
-            $("#ViewCard").hide("slow");
-            }
-        </script>
-<script>
-function sorting(type){
-    $.ajax({
-        type: "POST",
-        url: '/todo/sort',
-        data: {"data": type},
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<a href="#" id="todo_' + response['todo_list'][i][2] + '" onclick="get_todo_data_ajax(' + response['todo_list'][i][2] + ');" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open-Todo">'
-                        +'<h7 id="todo_title_' + response['todo_list'][i][2] + '">' + response['todo_list'][i][0] + '</h7>'
-                        +'<div class="priorities">'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list-last">!</span>'
-                            +'<button type="button" class="btn btn-light">&#10003;</button>'
-                            +'<div class="date"> <small id="todo_date_' + response['todo_list'][i][1] + '">' + response['todo_list'][i][1] + '</small></div>'
-                        +'</div>'
-                    +'</a>');
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
-            }
-        }
-    });
-};
-
-function status_change(id, type){
-    $.ajax({
-        type: "POST",
-        url: '/todo/change',
-        data: {'id': id, 'type': type},
-        success: function(response){
-
-        }
-    });
-};
-
-
-function get_todo_data_ajax(id){
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-    $.ajax({
-        type: "POST",
-        url: '/todo/show_todo',
-        data: {"id": id},
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                $('#todo_title_show').html(response['title']);
-                $('#todo_text_show').html(response['text']);
-                $('#todo_added_time').html(response['added_date_and_time']);
-                if ('last_edit_time' in response)
-                {
-                    $('#todo_last_edit').html(response['last_edit_time'] + '(edited)');
-                }
-            }
-            else
-            {
-                alert(response['result']);
-            }
-        }
-    });
-};
-
-
-function close_todo_edit_mode()
-{
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-};
-
-function show_cards(){
-    $('.list-view').hide();
-    $('.card-view').hide();
-    $('.card-view').removeAttr('hidden');
-    $('.card-view').show('slow');
-};
-
-function show_list(){
-    $('.card-view').hide();
-    $('.list-view').hide();
-    $('.list-view').removeAttr('hidden');
-    $('.list-view').slideDown('slow');
-};
-
-function search_todo_ajax()
-{
-    form_data = $('#search_todo_form').serialize();
-    $("#search_todo_form").find(':input').each(function(){
-        $(this).attr('disabled', 'disabled');
-    });
-    $('#sign_up_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/search',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                alert(response['result']);
-                $("#ViewList").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#ViewList").append('<a href="#" id="todo_' + response['todo_list'][i][2] + '" onclick="get_todo_data_ajax(' + response['todo_list'][i][2] + ');" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open-Todo">'
-                        +'<h7 id="todo_title_' + response['todo_list'][i][2] + '">' + response['todo_list'][i][0] + '</h7>'
-                        +'<div class="priorities">'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list">!</span>'
-                            +'<span class="badge badge-pill priority-list-last">!</span>'
-                            +'<button type="button" class="btn btn-light">&#10003;</button>'
-                            +'<div class="date"> <small id="todo_date_' + response['todo_list'][i][1] + '">' + response['todo_list'][i][1] + '</small></div>'
-                        +'</div>'
-                    +'</a>');
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
-            }
-        }
-    });
-};
-
-function save_todo_ajax()
-{
-    var id = $('#todo_num').html();
-    $("#id_todo_id").val(id)
-    var form_data = $('#save_todo_form').serialize();
-    $("#save_todo_form").find(':input').each(function(){
-        $(this).attr('disabled', 'disabled');
-    });
-    $('#save_todo_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/edit',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "success")
-            {
-                alert('OK, Changes were saved');
-                $('#todo_title_' + id).html($('#id_todo_title_edit').val());
-                close_todo_edit_mode();
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
-                $('#todo_text_show').html(CKEDITOR.instances.id_todo_data_edit.getData());
-                $('#todo_title_show').html($('#id_todo_title_edit').val());
-                $('#todo_last_edit').html(response['edited_time']);
-            }
-            $("#save_todo_form").find(':input').each(function(){
-                $(this).removeAttr('disabled');
-            });
-            $('#save_todo_btn').removeAttr('disabled');
-        }
-    });
-};
-
-function add_todo_ajax()
-{
-    form_data = $('#add_todo_form').serialize();
-    $.ajax({
-        type: "POST",
-        url: '/todo/add',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                alert('OK, todo was added');
-                result_html = '<div id="todo_' + response['id'] + '" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
-                    '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
-                    'data-toggle="modal" data-target="#Open-Todo"> <h7 id="todo_title_' + response['id'] + '">' +
-                    response['title'] + '</h7><div class="date"> <small>' +
-                    response['datetime'] + '</small></div></a></div>';
-                $("#list_id").html(result_html + $("#list_id").html());
-                $("#close_todo_btn").trigger("click");
-            }
-        }
-    });
-};
-
-
-function delete_todo_ajax(id)
-{
-    $('#delete_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/delete',
-        data: {"id": id},
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                alert('OK, todo was deleted');
-                $('#todo_' + id).slideUp("Slow");
-            }
-            $('#delete_btn').removeAttr('disabled');
-        }
-    });
-};
-</script>
-
 {% endblock %}

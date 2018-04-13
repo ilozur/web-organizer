@@ -53,7 +53,7 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search(substr):
+def search_notes(substr):
     obj = Notes.objects.all()
     ret_list = []
     for i in obj:

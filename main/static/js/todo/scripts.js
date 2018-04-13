@@ -7,20 +7,15 @@ function sorting(type){
         {
             if (response['result'] == "Success")
             {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');"><a
-                    href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal"
-                     data-target="#Open-Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['notes_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
+                $("#ViewList").find("a.list-group-item").each(function(index) {
+                    $(this).attr("onclick", 'get_todo_data_ajax(' + response['todo_list'][index][2] + ')');
+                    $(this).find("h7").html(response['todo_list'][index][0]);
+                    $(this).find("small").html(response['todo_list'][index][1]);
                 });
-                $('#sign_up_btn').removeAttr('disabled');
+                $("#ViewCard").find("a.col-md-4").each(function(index) {
+                    $(this).find("h3").html(response['todo_list'][index][0]);
+                    $(this).find("small").html(response['todo_list'][index][1]);
+                });
             }
         }
     });
@@ -32,18 +27,20 @@ function status_change(id, type){
         url: '/todo/change',
         data: {'id': id, 'type': type},
         success: function(response){
-
+            if (response['result'] == 'Success')
+            {
+                $("#todo_" + id).remove();
+                $("#card_" + id).remove();
+                $("#amounts small:eq(1)").html(response['amount_of_todos'][0]);
+                $("#amounts small:eq(3)").html(response['amount_of_todos'][1]);
+                $("#amounts small:eq(5)").html(response['amount_of_todos'][2]);
+            };
         }
     });
 };
 
 
 function get_todo_data_ajax(id){
-    $('#note_num').html(id);
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-    $('#todo_title_show').html('loading');
-    $('#todo_text_show').html('loading');
     $.ajax({
         type: "POST",
         url: '/todo/show_todo',
@@ -52,13 +49,11 @@ function get_todo_data_ajax(id){
         {
             if (response['result'] == "Success")
             {
-                $('#todo_title_show').html(response['title']);
-                $('#todo_text_show').html(response['text']);
-                $('#todo_added_time').html(response['added_date_and_time']);
-                if ('last_edit_time' in response)
-                {
-                    $('#todo_last_edit').html(response['last_edit_time'] + '(edited)');
-                }
+                $("#Open").find("#todo_title_show").html(response['title']);
+                $("#Open").find("#todo_text_show").html(response['text']);
+                $("#Open").find("#todo_added_time").html(response['added_date_and_time']);
+                $("#Open").find("p:first").html(response['status']);
+                $("#Open").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
             }
         }
     });
@@ -90,52 +85,16 @@ function close_todo_edit_mode()
     $('#Show-Todo-Modal').removeAttr('hidden');
 };
 
-function show_cards(){
-    $('.list-view').hide();
-    $('.card-view').hide();
-    $('.card-view').removeAttr('hidden');
-    $('.card-view').show('slow');
-};
-
-function show_list(){
-    $('.card-view').hide();
-    $('.list-view').hide();
-    $('.list-view').removeAttr('hidden');
-    $('.list-view').slideDown('slow');
-};
-
-function search_todo_ajax()
+function ShowCard()
 {
-    form_data = $('#search_todo_form').serialize();
-    $("#search_todo_form").find(':input').each(function(){
-        $(this).attr('disabled', 'disabled');
-    });
-    $('#sign_up_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/search',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');
-                    "><a href="#" class="list-group-item list-group-item-action list-group-item-warning"
-                    data-toggle="modal" data-target="#Opne_Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
-            }
-        }
-    });
+    $("#ViewList").hide("slow");
+    $("#ViewCard").show("slow");
+};
+
+function ShowList()
+{
+    $("#ViewList").show("slow");
+    $("#ViewCard").hide("slow");
 };
 
 function save_todo_ajax()
