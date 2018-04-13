@@ -19,14 +19,14 @@
         <section class="navigation">
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light" onclick="ShowCard()">
+                    <button type="button" class="btn btn-primary" onclick="ShowCard()">
                         <picture>
-                            <img src='{% static "/icons/card_icon.png" %}' class="icon">
+                            <img src='{% static "/icons/card_icon_todo.png" %}' class="icon">
                         </picture>
                     </button>
-                    <button type="button" class="btn btn-light" onclick="ShowList()">
+                    <button type="button" class="btn btn-primary" onclick="ShowList()">
                         <picture>
-                            <img src='{% static "/icons/list_icon.png" %}' class="icon">
+                            <img src='{% static "/icons/list_icon_todo.png" %}' class="icon">
                         </picture>
                     </button>
                 </div>
@@ -38,9 +38,9 @@
                     <button type="button" class="btn btn-light" onclick="sorting('AtoZ')">А..Я</button>
                     <button type="button" class="btn btn-light" onclick="sorting('ZtoA')">Я..А</button>
                 </div>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Synchronization">
+                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
                     <picture>
-                        <img src='{% static "/icons/sync_icon.png" %}' class="icon">
+                        <img src='{% static "/icons/sync_icon_todo.png" %}' class="icon">
                     </picture>
                 </button>
                 <div id="amounts" class="alert alert-primary">
@@ -108,11 +108,11 @@
         </section>
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-light">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-light">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
                 </div>
             </nav>
     </section>

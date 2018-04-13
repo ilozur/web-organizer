@@ -19,22 +19,22 @@
     <section class="content">
         <section class="navigation">
             <nav class="navbar">
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#In-Map">События на
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#In-Map">События на
                     карте
                 </button>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#My">Мои события
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#My">Мои события
                 </button>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#All">Все события
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#All">Все события
                 </button>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Recommend">
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Recommend">
                     Рекомендованные
                 </button>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Synchronization">
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Synchronization">
                     <picture>
-                        <img src='{% static "icons/sync_icon.png" %}' class="icon">
+                        <img src='{% static "icons/sync_icon_calendar.png" %}' class="icon">
                     </picture>
                 </button>
-                <div class="alert alert-light">
+                <div class="alert alert-danger">
                     <small data-toggle="modal" data-target="#All event">Всего событий : 72</small>
                     <br/>
                     <small data-toggle="modal" data-target="#For-Today event">Событий на сегодня: 4</small>
@@ -50,50 +50,50 @@
             </nav>
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light btn-change" data-num="1">
+                    <button type="button" class="btn btn-danger btn-change" data-num="1">
                         <picture>
                             <img src='{% static "icons/month_icon.png" %}' class="icon">
                         </picture>
                     </button>
-                    <button type="button" class="btn btn-light btn-change" data-num="2">
+                    <button type="button" class="btn btn-danger btn-change" data-num="2">
                         <picture>
                             <img src='{% static "icons/week_icon.png" %}' class="icon">
                         </picture>
                     </button>
-                    <button type="button" class="btn btn-light btn-change" data-num="3">
+                    <button type="button" class="btn btn-danger btn-change" data-num="3">
                         <picture>
-                            <img src='{% static "icons/list_icon.png" %}' class="icon">
+                            <img src='{% static "icons/list_icon_calendar.png" %}' class="icon">
                         </picture>
                     </button>
                 </div>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#New-Date">+</button>
+                <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#New-Date">+</button>
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" class="btn btn-danger">Сначала новые</button>
+                    <button type="button" class="btn btn-danger">Сначала старые</button>
+                    <button type="button" class="btn btn-danger">А..Я</button>
+                    <button type="button" class="btn btn-danger">Я..А</button>
                 </div>
             </nav>
         </section>
         <section class="section-mouth">
             <div class="btn-group btn-group-sm btn-mouth">
                 <a>
-                    <button type="button" class="btn btn-light" onclick="back_month()">&laquo;</button>
+                    <button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
                 </a>
 
                 <h2>&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
                         id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
                 <a>
-                    <button type="button" class="btn btn-light" onclick="next_month()">&raquo;</button>
+                    <button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>
                 </a>
                 &nbsp;&nbsp;
                 <a>
-                    <button type="button" class="btn btn-light" onclick="go_to_now_month()">Сегодня</button>
+                    <button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button>
                 </a>
             </div>
-            <table class="table table-light table-mouth" id="month_calendar">
+            <table class="table table-danger table-mouth" id="month_calendar">
                 <thead>
-                <tr class="bg-light">
+                <tr>
                     <th></th>
                     <th>Понедельник</th>
                     <th>Вторник</th>
@@ -107,12 +107,12 @@
                 <tbody>
                 {% for week in weeks %}
                 <tr>
-                    <th class="bg-light">{{ week.week_num }}</th>
+                    <th>{{ week.week_num }}</th>
                     {% for day in week.week_days %}
                         {% if day.class %}
                             <td class="{{ day.class }}">
                                 {% if day.event %}
-                                    <div class="alert alert-light event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                    <div class="alert alert-primary event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
                                         {{ day.event.caption }}
                                     </div>
                                 {% endif %}
@@ -121,7 +121,7 @@
                         {% else %}
                             <td>
                                 {% if day.event %}
-                                    <div class="alert alert-light event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                    <div class="alert alert-primary event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
                                         {{ day.event.caption }}
                                     </div>
                                 {% endif %}
@@ -137,17 +137,17 @@
         <section class="section-week">
             <div class="btn-group btn-group-sm btn-mouth">
                 <a href="#">
-                    <button type="button" class="btn btn-light">&laquo;</button>
+                    <button type="button" class="btn btn-danger">&laquo;</button>
                 </a>
 
                 <h2>&nbsp;&nbsp;22.10  28.10&nbsp;&nbsp;</h2>
                 <a href="#">
-                    <button type="button" class="btn btn-light">&raquo;</button>
+                    <button type="button" class="btn btn-danger">&raquo;</button>
                 </a>
             </div>
-            <table class="table table-light table-week table-sm" id="table2">
+            <table class="table table-danger table-week table-sm" id="table2">
                 <thead>
-                <tr class="bg-light">
+                <tr>
                     <th></th>
                     <th>Понедельник</th>
                     <th>Вторник</th>
@@ -160,12 +160,12 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <th class="bg-light"></th>
+                    <th></th>
                     <td>
                         <small class="date">22</small>
                     </td>
                     <td>
-                        <div class="alert alert-light event" data-toggle="modal" data-target="#Event">
+                        <div class="alert alert-danger event" data-toggle="modal" data-target="#Event">
                             День рождения
                         </div>
                         <small class="date">23</small>
@@ -191,7 +191,7 @@
         </section>
         <section class="section-list">
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Where is my mind?
                     <div class="date-and-place">
                         <small>29.02.2018</small>
@@ -199,19 +199,19 @@
                         <small><b>Москва</b></small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Sad but True
                     <div class="date-and-place">
                         <small>13.02.2018</small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Karma Police
                     <div class="date-and-place">
                         <small>14.02.2018</small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Starway to Heaven
                     <div class="date-and-place">
                         <small>27.02.2018</small>
@@ -219,7 +219,7 @@
                         <small><b>Королев</b></small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Californication
                     <div class="date-and-place">
                         <small>27.02.2018</small>
@@ -227,13 +227,13 @@
                         <small><b>Мытищи</b></small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Personal Jesus
                     <div class="date-and-place">
                         <small>18.02.2018</small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">День рождения
                     <div class="date-and-place">
                         <small>23.10.2018</small>
@@ -241,7 +241,7 @@
                         <small><b>Королев</b></small>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                    data-target="#Event">Let It Be
                     <div class="date-and-place">
                         <small>22.02.2018</small>
@@ -251,19 +251,19 @@
             <nav class="navbar navbar-pag">
                 <div class="btn-group btn-group-lg">
                     <a href="#">
-                        <button type="button" class="btn btn-light">&laquo;</button>
+                        <button type="button" class="btn btn-danger">&laquo;</button>
                     </a>
                     <a href="#">
-                        <button type="button" class="btn btn-light disabled">1</button>
+                        <button type="button" class="btn btn-danger disabled">1</button>
                     </a>
                     <a href="#">
-                        <button type="button" class="btn btn-light">2</button>
+                        <button type="button" class="btn btn-danger">2</button>
                     </a>
                     <a href="#">
-                        <button type="button" class="btn btn-light">3</button>
+                        <button type="button" class="btn btn-danger">3</button>
                     </a>
                     <a href="#">
-                        <button type="button" class="btn btn-light">&raquo;</button>
+                        <button type="button" class="btn btn-danger">&raquo;</button>
                     </a>
                 </div>
             </nav>

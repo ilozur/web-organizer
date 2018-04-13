@@ -59,26 +59,6 @@ function get_todo_data_ajax(id){
     });
 };
 
-function clean_add_note_fields()
-{
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_note_data.setData("");
-    $("#id_note_title").val("");
-};
-
-function open_note_edit_mode()
-{
-    $('#Show-Todo-Modal').attr('hidden', '');
-    $('#Edit-Todo-Modal').removeAttr('hidden');
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_todo_data_edit.setData($('#todo_text_show').html());
-    $('#id_todo_title_edit').val($('#todo_title_show').html());
-};
-
 function close_todo_edit_mode()
 {
     $('#Edit-Todo-Modal').attr('hidden', '');
@@ -101,11 +81,7 @@ function save_todo_ajax()
 {
     var id = $('#todo_num').html();
     $("#id_todo_id").val(id)
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
     var form_data = $('#save_todo_form').serialize();
-    form_data['todo_text_edit'] = CKEDITOR.instances.id_todo_data_edit.getData();
     $("#save_todo_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');
     });
@@ -121,9 +97,6 @@ function save_todo_ajax()
                 alert('OK, Changes were saved');
                 $('#todo_title_' + id).html($('#id_todo_title_edit').val());
                 close_todo_edit_mode();
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
                 $('#todo_text_show').html(CKEDITOR.instances.id_todo_data_edit.getData());
                 $('#todo_title_show').html($('#id_todo_title_edit').val());
                 $('#todo_last_edit').html(response['edited_time']);
@@ -138,11 +111,7 @@ function save_todo_ajax()
 
 function add_todo_ajax()
 {
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
     form_data = $('#add_todo_form').serialize();
-    form_data['data'] = CKEDITOR.instances.id_todo_data.getData();;
     $.ajax({
         type: "POST",
         url: '/todo/add',

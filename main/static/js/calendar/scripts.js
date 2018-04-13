@@ -36,7 +36,7 @@ function next_month()
                         result_html = '';
                         weeks.forEach(function(week, i, weeks)
                         {
-                            result_html += '<tr>\n<th class="bg-light">' + String(week['week_num']) + '</th>\n';
+                            result_html += '<tr>\n<th>' + String(week['week_num']) + '</th>\n';
                             var week_days = week['week_days'];
                             week_days.forEach(function(day, i, week_days)
                             {
@@ -45,7 +45,7 @@ function next_month()
                                     result_html += '<td class="' + day['class'] + '">\n';
                                     if (day['event'])
                                     {
-                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                        result_html += '<div class="alert alert-primary event" data-toggle="modal"' +
                                             'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
                                         result_html += day['event']['caption'];
                                         result_html += '\n</div>\n';
@@ -58,7 +58,7 @@ function next_month()
                                     result_html += '<td>\n';
                                     if (day['event'])
                                     {
-                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                        result_html += '<div class="alert alert-primary event" data-toggle="modal"' +
                                             'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
                                         result_html += day['event']['caption'];
                                         result_html += '\n</div>\n';
@@ -102,7 +102,7 @@ function go_to_now_month()
                         result_html = '';
                         weeks.forEach(function(week, i, weeks)
                         {
-                            result_html += '<tr>\n<th class="bg-light">' + String(week['week_num']) + '</th>\n';
+                            result_html += '<tr>\n<th>' + String(week['week_num']) + '</th>\n';
                             var week_days = week['week_days'];
                             week_days.forEach(function(day, i, week_days)
                             {
@@ -111,7 +111,7 @@ function go_to_now_month()
                                     result_html += '<td class="' + day['class'] + '">\n';
                                     if (day['event'])
                                     {
-                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                        result_html += '<div class="alert alert-primary event" data-toggle="modal"' +
                                             'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
                                         result_html += day['event']['caption'];
                                         result_html += '\n</div>\n';
@@ -124,7 +124,7 @@ function go_to_now_month()
                                     result_html += '<td>\n';
                                     if (day['event'])
                                     {
-                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                        result_html += '<div class="alert alert-primary event" data-toggle="modal"' +
                                             'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
                                         result_html += day['event']['caption'];
                                         result_html += '\n</div>\n';
@@ -172,7 +172,7 @@ function back_month()
                         result_html = '';
                         weeks.forEach(function(week, i, weeks)
                         {
-                            result_html += '<tr>\n<th class="bg-light">' + String(week['week_num']) + '</th>\n';
+                            result_html += '<tr>\n<th>' + String(week['week_num']) + '</th>\n';
                             var week_days = week['week_days'];
                             week_days.forEach(function(day, i, week_days)
                             {
@@ -181,7 +181,7 @@ function back_month()
                                     result_html += '<td class="' + day['class'] + '">\n';
                                     if (day['event'])
                                     {
-                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                        result_html += '<div class="alert alert-primary event" data-toggle="modal"' +
                                             'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
                                         result_html += day['event']['caption'];
                                         result_html += '\n</div>\n';
@@ -194,7 +194,7 @@ function back_month()
                                     result_html += '<td>\n';
                                     if (day['event'])
                                     {
-                                        result_html += '<div class="alert alert-light event" data-toggle="modal"' +
+                                        result_html += '<div class="alert alert-primary event" data-toggle="modal"' +
                                             'data-target="#Event-Card" onclick="get_event_data_ajax(' + day['event']['id'] + ')">\n';
                                         result_html += day['event']['caption'];
                                         result_html += '\n</div>\n';
