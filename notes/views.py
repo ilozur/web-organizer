@@ -104,6 +104,8 @@ def search_ajax(request):
     """
     @brief
     This function looks for the notes
+    @detailed
+    This function searches for a note among those that exist
     """
     response_data = {}
     if request.method == "POST":
@@ -164,6 +166,8 @@ def save_ajax(request):
     """
     @brief
     This function saves the notes
+    @detailed
+    This function saves the written note
     """
     response_data = {}
     if request.method == "POST":
