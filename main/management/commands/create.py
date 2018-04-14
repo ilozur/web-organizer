@@ -15,9 +15,9 @@ class Command ( BaseCommand ):
                  sunt in culpa qui officia deserunt mollit anim id est laborum."
 
     def handle ( self, *args, **options ):
-
+        self.deleteusers()
         for i in range ( 0, 50 ):
-            self.create_user ( username='test_user_{}'.format ( i + len ( self.us ) ), password=" ", email=None )
+            self.create_user ( username='test_user_{}'.format ( i ), password=" ", email=None )
             for j in self.us:
                 self.create_note ( text=self.Lopsum, name="Lorem Ipsum", user=j, time=datetime.datetime.now() )
                 self.create_calendar ( date="2108-01-01", content=self.Lopsum, user=j )
@@ -33,3 +33,7 @@ class Command ( BaseCommand ):
     def create_calendar ( self, date, content, user ):
         e = Event ( user=user, date=date, description=content )
         e.save ()
+        
+    def deleteusers(self):
+        for i in self.us:
+            i.delete()
