@@ -1,5 +1,6 @@
 from django.urls import path
 from todo import views
+from todo.views import *
 
 urlpatterns = [
     path('', views.index, name='todo.index'),
@@ -9,4 +10,5 @@ urlpatterns = [
     path('search', views.search, name='todo.search'),
     path('sort', views.sorting, name='todo.sort'),
     path('delete', views.delete_todo, name='todo.delete_todo'),
+    path('latest',get_latest_todo, name= 'todo.latest')
 ]

@@ -177,3 +177,8 @@ def delete_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+def get_latest_note(request):
+    url = reverse('notes.index')
+    url += '?id={}'.format(1)
+    return HttpResponseRedirect(url)

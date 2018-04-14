@@ -201,3 +201,8 @@ def search(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+def get_latest_todo(request):
+    url = reverse('todo.index')
+    url += '?id={}'.format(1)
+    return HttpResponseRedirect(url)
