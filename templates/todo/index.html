@@ -13,35 +13,42 @@
 {% block content %}
 <article class="todo">
     <script>
-function search_todo_ajax()
+function save_todo_ajax()
 {
-    form_data = $('#search_todo_form').serialize();
-    $("#search_todo_form").find(':input').each(function(){
+    var id = $('#todo_num').html();
+    $("#id_todo_id").val(id);
+    var form_data = $('#edit_todo_form').serialize();
+    $("#edit_todo_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');
     });
-    $('#search_todo_btn').attr('disabled', 'disabled');
+    $('#save_todo_btn').attr('disabled', 'disabled');
     $.ajax({
         type: "POST",
-        url: '/todo/search',
+        url: '/todo/edit',
         data: form_data,
         success: function(response)
         {
             if (response['result'] == "Success")
             {
-                alert(response['result']);
-                $("#ViewList").html('');
-                for(var i = 0; i < response['todo_list'].length; i++){
-                    add_to_list(response['todo_list'][i]);
-                }
-		        $("#CardList").html('');
-		        for(var i = 0; i < response['todo_list'].length; i++){
-                    add_todo_card(response['todo_list'][i]);
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#search_todo_btn').removeAttr('disabled');
+                alert('OK, Changes were saved');
+                $('#todo_title_' + id).html($('#id_todo_edit_title').val());
+                $('#todo_card_' + id).html($('#id_todo_edit_title').val());
+                get_priorities(response['priority'], id);
+                $('#todo_date_' + id).html(response['deadline_date']);
+                close_todo_edit_mode();
+                $('#todo_text_show').html($('#id_todo_edit_text').val());
+                $('#todo_title_show').html($('#id_todo_edit_title').val());
+		        set_priority_edit($('#id_todo_edit_priority').val());
+
+                $('#todo_last_edit').html(response['edited_time']);
             }
+            else{
+                alert(response['result']);
+            }
+            $("#edit_todo_form").find(':input').each(function(){
+                $(this).removeAttr('disabled');
+            });
+            $('#save_todo_btn').removeAttr('disabled');
         }
     });
 };
@@ -101,7 +108,7 @@ function search_todo_ajax()
                             <div class="priorities" id="list_priorities_{{ item.2}}"></div>
                             <script>get_priorities({{ item.3 }}, {{ item.2 }});</script>
                             <button  type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
-                            <div class="date"><small id="todo_date_{{item.1}}">{{ item.1 }}</small></div>
+                            <div class="date"><small id="todo_date_{{item.2}}">{{ item.1 }}</small></div>
                         </div>
                     </a>
                 {% endfor %}
@@ -114,7 +121,7 @@ function search_todo_ajax()
                         <div class="card">
                             <div class="card-body">
                                 <h3> {{ item.0 }} </h3>
-                                <small class="date">{{ item.1 }}</small>
+                                <small class="date" id="card_date_{{item.2}}">{{ item.1 }}</small>
                             </div>
                             <div class="card-footer">
                                 <div class="priorities" id="card_priorities_{{ item.2}}">
@@ -146,10 +153,11 @@ function search_todo_ajax()
     </section>
     </article>
     <script>
-        var priority = 0;
         function set_priority(value){
-            priority = value;
             $("#id_todo_priority").val(value);
+        }
+        function set_priority_edit(value){
+            $("#id_todo_edit_priority").val(value);
         }
     </script>
     <article class="modals">

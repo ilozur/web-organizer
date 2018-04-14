@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="modal fade" id="New">
+<div class="modal fade" id="New" xmlns="http://www.w3.org/1999/html">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -57,11 +57,8 @@
                 Выполнить к <small id="todo_deadline"></small>
                 <br/>
                 <small class="text-muted" id="todo_last_edit"></small>
-                <div class="form-group">
-                    <h3> Приоритет </h3>
-                    <span class="badge badge-pill priority">!</span>
-                    <span class="badge badge-pill priority">!</span>
-                    <span class="badge badge-pill priority">!</span>
+                <h3> Приоритет </h3>
+                <div class="form-group" id="todo_priority">
                 </div>
                 <hr>
                 <h3> Cтатус </h3>
@@ -74,6 +71,7 @@
                         onclick="open_todo_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>
             </div>
+            <div hidden id="todo_num"></div>
         </div>
     </div>
 </div>
@@ -82,37 +80,38 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Редактирование напоминания</h2>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="edit_todo_form">
+                    {% csrf_token %}
+                    {{ edit_todo_form.media }}
                     <div class="form-group">
                         <h3>Изменить название</h3>
-                        <input class="form-control" placeholder="Напоминалочка">
+                        {{ edit_todo_form.todo_edit_title }}
                     </div>
                     <div class="form-group">
                         <h3>Изменить текст</h3>
-                        <textarea class="form-control" rows="7" placeholder="Текст"></textarea>
-                        <div class="btn-group btn-group-sm WYSIWYG">
-                            <button type="button" class="btn btn-light"><strong>B</strong></button>
-                            <button type="button" class="btn btn-light"><em>I</em></button>
-                            <button type="button" class="btn btn-light"><del>S</del></button>
-                            <button type="button" class="btn btn-light"><ins>U</ins></button>
-                        </div>
+                        {{ edit_todo_form.todo_edit_text }}
+                        <h3>Изменить дедлайн</h3>
+                        {{ edit_todo_form.todo_edit_deadline }}
+                        </br>
+                        {{ edit_todo_form.todo_edit_time }}
+                        {{ edit_todo_form.todo_edit_priority }}
+                        {{ edit_todo_form.todo_id }}
                     </div>
                     <div class="form-group">
                         <h3> Изменить приоритет </h3>
-                        <button type="button" class="btn btn-light btn-sm">1</button>
-                        <button type="button" class="btn btn-light btn-sm">2</button>
-                        <button type="button" class="btn btn-light btn-sm">3</button>
-                        <button type="button" class="btn btn-light btn-sm">4</button>
-                        <button type="button" class="btn btn-light btn-sm">5</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(1)">1</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(2)">2</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(3)">3</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(4)">4</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(5)">5</button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">Сохранить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="save_todo_ajax()">Сохранить</button>
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@ function add_todo_card(item){
                     '<div class="card">' +
                         '<div class="card-body">' +
                             '<h3>' + item[0] + '</h3>' +
-                            '<small class="date">' + item[1] + '</small>' +
+                            '<small class="date id="card_date_' + item[2] + '">' + item[1] + '</small>' +
                         '</div>' +
                         '<div class="card-footer">' +
                             '<div class="priorities" id="card_priorities_' + item[2] + '">' +
@@ -24,7 +24,7 @@ function add_to_list(item){
                 '<div class="priorities">' +
                     '<div class="priorities" id="list_priorities_' + item[2] + '"></div>'+
                     '<button  type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ',' + str + ')">&#10003;</button>'+
-                    '<div class="date"><small id="todo_date_' + item[1] + '">' + item[1] + '</small></div>'+
+                    '<div class="date"><small id="todo_date_' + item[2] + '">' + item[1] + '</small></div>'+
                 '</div>'+
             '</a>';
     $("#ViewList").html(tmp + $("#ViewList").html());
@@ -65,6 +65,39 @@ function sorting(type){
     });
 };
 
+function search_todo_ajax()
+{
+    form_data = $('#search_todo_form').serialize();
+    $("#search_todo_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#search_todo_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/todo/search',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "Success")
+            {
+                alert(response['result']);
+                $("#ViewList").html('');
+                for(var i = 0; i < response['todo_list'].length; i++){
+                    add_to_list(response['todo_list'][i]);
+                }
+		        $("#CardList").html('');
+		        for(var i = 0; i < response['todo_list'].length; i++){
+                    add_todo_card(response['todo_list'][i]);
+                }
+                $("#search_todo_form").find(':input').each(function(){
+                    $(this).removeAttr('disabled');
+                });
+                $('#search_todo_btn').removeAttr('disabled');
+            }
+        }
+    });
+};
+
 function status_change(id, type){
     $.ajax({
         type: "POST",
@@ -73,6 +106,7 @@ function status_change(id, type){
         success: function(response){
             if (response['result'] == 'Success')
             {
+		sorting('new');
                 $("#todo_" + id).remove();
                 $("#card_" + id).remove();
                 $("#amounts small:eq(1)").html(response['amount_of_todos'][0]);
@@ -95,10 +129,18 @@ function get_todo_data_ajax(id){
             {
                 $("#Open-Todo").find("#todo_title_show").html(response['title']);
                 $("#Open-Todo").find("#todo_text_show").html(response['text']);
+		$("#Open-Todo").find("#todo_id").html(response['id']);
                 $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
                 $("#Open-Todo").find("p:first").html(response['status']);
                 $("#Open-Todo").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
 		$("#Open-Todo").find("#todo_deadline").html(response['deadline']);
+		$("#Open-Todo").find("#todo_num").html(response['id']);
+		$("#Open-Todo").find("#todo_priority").html('');
+		for (var i = 0; i < response['priority']; i++){
+		    $("#Open-Todo").find("#todo_priority").html($("#Open-Todo").find("#todo_priority").html() + '<span class="badge badge-pill priority">!</span>');
+		$('#id_todo_edit_time').val(response['time'][0] + ':' + response['time'][1]);
+		$('#id_todo_edit_deadline').val(response['date'][0] + '-' + response['date'][1] + '-' + response['date'][2]);
+		}
             }
         }
     });
@@ -108,8 +150,8 @@ function open_todo_edit_mode()
 {
     $('#Show-Todo-Modal').attr('hidden', '');
     $('#Edit-Todo-Modal').removeAttr('hidden');
-    $('#id_todo_data_edit').val($('#todo_text_show').html());
-    $('#id_todo_title_edit').val($('#todo_title_show').html());
+    $('#id_todo_edit_title').val($('#todo_title_show').html());
+    $('#id_todo_edit_text').val($('#todo_text_show').html());
 };
 
 function close_todo_edit_mode()
@@ -132,8 +174,8 @@ function ShowList()
 
 function save_todo_ajax()
 {
-    var id = $('#todo_num').html();
-    $("#id_todo_id").val(id)
+    var id = $('#todo_id').html();
+    $("#id_todo_id").val(id);
     var form_data = $('#save_todo_form').serialize();
     $("#save_todo_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');
@@ -148,12 +190,15 @@ function save_todo_ajax()
             if (response['result'] == "success")
             {
                 alert('OK, Changes were saved');
-                $('#todo_title_' + id).html($('#id_todo_title_edit').val());
+                $('#todo_title_' + id).html($('#id_todo_edit_title').val());
                 close_todo_edit_mode();
-                $('#todo_text_show').html(CKEDITOR.instances.id_todo_data_edit.getData());
+                $('#todo_text_show').html($('#id_todo_edit_text').val());
+		set_priority_edit($('#id_todo_edit_priority').val());
                 $('#todo_title_show').html($('#id_todo_title_edit').val());
                 $('#todo_last_edit').html(response['edited_time']);
-            }
+            } else{
+		alert(response['result']);
+	    }
             $("#save_todo_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
             });
@@ -164,8 +209,8 @@ function save_todo_ajax()
 
 function add_todo_ajax()
 {
+    alert($('#id_todo_deadline').val());
     form_data = $('#add_todo_form').serialize();
-    form_data['ptiority'] = priority;
     $.ajax({
         type: "POST",
         url: '/todo/add',
