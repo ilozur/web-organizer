@@ -17,10 +17,10 @@
             <div class="carousel-caption text-left">
                 <script> 
                 var h=(new Date()).getHours(); 
-                    if (h > 23 || h < 7) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>"); 
-                    if (h > 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>"); 
-                    if (h > 11 && h < 19) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>"); 
-                    if (h > 18 && h < 24) document. write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>"); 
+                    if (h >= 23 || h < 6) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>");
+                    if (h >= 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>");
+                    if (h >= 12 && h < 17) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>");
+                    if (h >= 17 && h < 23) document.write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>");
                 </script> 
                 <h3>Ближайшее мероприятие: </h3>
                 <p><a href="#" class="link-section">Дедлайн</a><br/>
@@ -28,7 +28,7 @@
                 </p>
                 <h3>Скорейшее напоминание: </h3>
                 <p><a href="#" class="link-section">Отдать Бобу диски</a></p>
-                <h3>Закрепленная заметка: </h3>
+                <h3>Последняя заметка: </h3>
                 <p><a href="#" class="link-section">Резервные коды</a></p>
             </div>
         </div>
@@ -36,7 +36,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <h2><a class="btn btn-light btn-lg btn-block section" href='{% url "notes.index" %}'>Заметки</a></h2>
+                <h2><a class="btn btn-warning btn-lg btn-block section" href='{% url "notes.index" %}'>Заметки</a></h2>
                 <div class="card">
                     <div class="card-body">
                         <h4>Последние заметки:</h4>
@@ -52,7 +52,7 @@
                                 <p class="lead"> <small><a href='{% url "notes.index" %}'>Показать все</a></small></p>
                             </div>
                         {% endif %}
-                        <a href="#" class="badge badge-light add-new" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()"><font class="plus">+</font></a>
+                        <a href="#" class="badge badge-warning add-new" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
@@ -64,39 +64,39 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <h2><a class="btn btn-light btn-lg btn-block section" href='{% url "calendar.index" %}'>Календарь</a></h2>
+                <h2><a class="btn btn-danger btn-lg btn-block section" href='{% url "calendar.index" %}'>Календарь</a></h2>
                 <div class="card">
                     <div class="card-body">
                         <h4>Ближайшие события календаря:</h4>
-                        <p class="lead"> На день: <span class="text-muted">Ничего не запланированно</span></p>
+                        <p class="lead"> На день: <span class="text-muted">{% if today_event_exists %}<a href="#" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ today_event_id }})">{{ today_event_name }}</a>{% else %}Ничего не запланировано{% endif %}</span></p>
                         <p class="lead"> На неделю: <a href="#" data-toggle="modal" data-target="#Event">Дедлайн</a> <a href="#" data-toggle="modal" data-target="#Event">День рождения Алисы</a></p>
-                        <a href="#" class="badge badge-light add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
+                        <a href="#" class="badge badge-danger add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего событий : 72</h4>
-                        <p class="lead">Событий за сегодня: 0 </p>
-                        <p class="lead">Событий за вчера: 2 </p>
-                        <p class="lead">Событий за неделю: 7 </p>
-                        <p class="lead">Событий за месяц: 27 </p>
-                        <p class="lead">Событий за год: 54 </p>
+                        <h4>Всего событий : {{ all_events_count }}</h4>
+                        <p class="lead">Событий за сегодня: {{ today_events_count }}</p>
+                        <p class="lead">Событий за вчера: {{ yesterday_events_count }}</p>
+                        <p class="lead">Событий за неделю: {{ week_events_count }}</p>
+                        <p class="lead">Событий за месяц: {{ month_events_count }}</p>
+                        <p class="lead">Событий за год: {{ year_events_count }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <h2><a class="btn btn-light btn-lg btn-block section" href='{% url "todo.index" %}'>Напоминания</a></h2>
+                <h2><a class="btn btn-primary btn-lg btn-block section" href='{% url "todo.index" %}'>Напоминания</a></h2>
                 <div class="card">
                     <div class="card-body">
                         <h4>Последние напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Отдать Бобу диски</a> <a href="#" class="badge badge-light">&#10003;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Напомнить Саше про сотку</a> <a href="#" class="badge badge-light">&#10003;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Забрать заказ</a> <a href="#" class="badge badge-light">&#10003;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Отдать Бобу диски</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Напомнить Саше про сотку</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Забрать заказ</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                         <h4>Завершенные напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-light">&#10007;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-light">&#10007;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>
-                        <a href="#" class="badge badge-light add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
+                        <a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
