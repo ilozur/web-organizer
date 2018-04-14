@@ -8,6 +8,8 @@ from calendars.models import Event
 class Command ( BaseCommand ):
     args = "there's no args"
     us = User.objects.all ()
+    notes = Notes.objects.all()
+    events = Event.objects.all()
     Lopsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor \
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco\
                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate \
@@ -15,7 +17,7 @@ class Command ( BaseCommand ):
                  sunt in culpa qui officia deserunt mollit anim id est laborum."
 
     def handle ( self, *args, **options ):
-        self.deleteusers()
+        self.deleteall()
         for i in range ( 0, 50 ):
             self.create_user ( username='test_user_{}'.format ( i ), password=" ", email=None )
             for j in self.us:
@@ -31,9 +33,14 @@ class Command ( BaseCommand ):
         n.save ()
 
     def create_calendar ( self, date, content, user ):
-        e = Event ( user=user, date=date, description=content )
+        e = Event ( user=user, date=date, description=content, is_public=True )
         e.save ()
         
-    def deleteusers(self):
+    def deleteall(self):
         for i in self.us:
             i.delete()
+        for e in self.events:
+            e.delete()
+        for n in self.notes:
+            n.delete()
+
