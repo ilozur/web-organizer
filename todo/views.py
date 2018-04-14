@@ -70,7 +70,11 @@ def show_todo(request):
                 'text': todo.text,
                 'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
                 'deadline': todo.deadline.strftime("%I:%M%p on %B %d, %Y"),
+                'priority': todo.priority,
                 'status': todo.status,
+                'time': [todo.deadline.hour, todo.deadline.minute],
+                'date': [todo.deadline.year, todo.deadline.month, todo.deadline.day],
+                'id': todo.id,
                 'result': "Success",
                 'current_status': current_status
             }
@@ -127,14 +131,24 @@ def edit_todo(request):
         form = EditTodoForm(request.POST)
         if form.is_valid():
             todo_id = form.cleaned_data['todo_id']
-            if Todos.objects.filter(id=todo_id).exists():
-                tmp = Todos.get_todo_by_id(todo_id)
-                tmp.title = form.cleaned_data['todo_title_edit']
-                tmp.text = form.cleaned_data['todo_text_edit']
-                tmp.save()
-                response['result'] = "Success"
+            deadline_date = form.cleaned_data['todo_edit_deadline']
+            deadline_time = form.cleaned_data['todo_edit_time']
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
+            if deadline_date > datetime.now():
+                if Todos.objects.filter(id=todo_id).exists():
+                    tmp = Todos.get_todo_by_id(todo_id)
+                    tmp.title = form.cleaned_data['todo_edit_title']
+                    tmp.text = form.cleaned_data['todo_edit_text']
+                    tmp.priority = form.cleaned_data['todo_edit_priority']
+                    tmp.deadline = deadline_date
+                    tmp.save()
+                    response['result'] = "Success"
+                    response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
+                    response['priority'] = tmp.priority
+                else:
+                    response['result'] = 'No such todo'
             else:
-                response['result'] = 'No such todo'
+                response['result'] = 'Date has already passed'
         else:
             response['result'] = 'Form is not valid'
         return HttpResponse(json.dumps(response), content_type="application/json")
