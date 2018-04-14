@@ -17,10 +17,10 @@
             <div class="carousel-caption text-left">
                 <script> 
                 var h=(new Date()).getHours(); 
-                    if (h > 23 || h < 7) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>"); 
-                    if (h > 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>"); 
-                    if (h > 11 && h < 19) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>"); 
-                    if (h > 18 && h < 24) document. write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>"); 
+                    if (h >= 23 || h < 6) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>");
+                    if (h >= 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>");
+                    if (h >= 12 && h < 17) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>");
+                    if (h >= 17 && h < 23) document.write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>");
                 </script> 
                 <h3>Ближайшее мероприятие: </h3>
                 <p><a href="#" class="link-section">Дедлайн</a><br/>
@@ -68,19 +68,19 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>Ближайшие события календаря:</h4>
-                        <p class="lead"> На день: <span class="text-muted">Ничего не запланированно</span></p>
+                        <p class="lead"> На день: <span class="text-muted">{% if today_event_exists %}<a href="#" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ today_event_id }})">{{ today_event_name }}</a>{% else %}Ничего не запланировано{% endif %}</span></p>
                         <p class="lead"> На неделю: <a href="#" data-toggle="modal" data-target="#Event">Дедлайн</a> <a href="#" data-toggle="modal" data-target="#Event">День рождения Алисы</a></p>
                         <a href="#" class="badge badge-danger add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего событий : 72</h4>
-                        <p class="lead">Событий за сегодня: 0 </p>
-                        <p class="lead">Событий за вчера: 2 </p>
-                        <p class="lead">Событий за неделю: 7 </p>
-                        <p class="lead">Событий за месяц: 27 </p>
-                        <p class="lead">Событий за год: 54 </p>
+                        <h4>Всего событий : {{ all_events_count }}</h4>
+                        <p class="lead">Событий за сегодня: {{ today_events_count }}</p>
+                        <p class="lead">Событий за вчера: {{ yesterday_events_count }}</p>
+                        <p class="lead">Событий за неделю: {{ week_events_count }}</p>
+                        <p class="lead">Событий за месяц: {{ month_events_count }}</p>
+                        <p class="lead">Событий за год: {{ year_events_count }}</p>
                     </div>
                 </div>
             </div>

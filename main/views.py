@@ -12,7 +12,8 @@ from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
-from notes.models import Notes
+from notes.models import *
+from calendars.models import *
 from django.contrib.auth.models import User
 
 from profile.forms import RecoverPasswordUserData
@@ -33,6 +34,21 @@ def index(request):
             context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
+            date = datetime.now()
+            if Event.objects.filter(user=request.user, date=date.date()).first():
+                context['today_event_exists'] = True
+                context['today_event_name'] = Event.objects.filter(user=request.user, date=date.date()).first().title
+                context['today_event_id'] = Event.objects.filter(user=request.user, date=date.date()).first().id
+            context['all_events_count'] = Event.objects.filter(user=request.user).count()
+            context['today_events_count'] = Event.objects.filter(user=request.user, date=date.date()).count()
+            context['yesterday_events_count'] = Event.objects.filter(user=request.user,
+                                                                     date=date.date() - timedelta(1)).count()
+            context['week_events_count'] = Event.get_events_in_range(date.date() - timedelta(7),
+                                                                     date.date(), request.user).count()
+            context['month_events_count'] = Event.get_events_in_range(date.date() - timedelta(30),
+                                                                      date.date(), request.user).count()
+            context['year_events_count'] = Event.get_events_in_range(date.date() - timedelta(365),
+                                                                     date.date(), request.user).count()
             context['add_event_form'] = AddingEventForm()
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
