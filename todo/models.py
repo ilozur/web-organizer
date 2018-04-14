@@ -44,11 +44,11 @@ class Todos(models.Model):
 
     @staticmethod
     def search_todos(string, user):
-        obj = Todos.get_todos('all', None, user)
+        obj = Todos.objects.filter(user=user)
         ret_list = list()
         for i in obj:
             if string in i.title:
-                ret_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+                ret_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.priority))
         return ret_list
 
     @staticmethod

@@ -34,18 +34,19 @@ def add_todo(request):
     if request.method == "POST":
         form = AddTodoForm(request.POST)
         if form.is_valid():
-            title = form.cleaned_data['title']
-            text = form.cleaned_data['text']
-            deadline_date = form.cleaned_data['deadline']
-            deadline_time = form.cleaned_data['time']
+            title = form.cleaned_data['todo_title']
+            text = form.cleaned_data['todo_text']
+            deadline_date = form.cleaned_data['todo_deadline']
+            deadline_time = form.cleaned_data['todo_time']
             deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
             tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
-                        priority=form.cleaned_data['priority'], deadline=deadline_date)
+                        priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
             response_data['title'] = tmp.title
             response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+            response_data['priority'] = tmp.priority
         else:
             result = 'form not valid'
         response_data['result'] = result
@@ -200,9 +201,6 @@ def search(request):
                 }
                 result = 'Success'
             else:
-                response_data = {
-                    'todo_list': Todos.get_todos(request.sorting_type, 'in progress', request.user)
-                }
                 result = 'Form is not valid'
         else:
             result = 'user is not authenticated'

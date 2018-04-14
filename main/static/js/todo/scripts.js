@@ -1,3 +1,48 @@
+function add_todo_card(item){
+    var str = "'done'";
+    tmp = '<a href="#" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
+                    '<div class="card">' +
+                        '<div class="card-body">' +
+                            '<h3>' + item[0] + '</h3>' +
+                            '<small class="date">' + item[1] + '</small>' +
+                        '</div>' +
+                        '<div class="card-footer">' +
+                            '<div class="priorities" id="card_priorities_' + item[2] + '">' +
+                            '</div>' +
+                            '<button type="button" onclick="status_change(' + item[2] + ',' + str + ')" class="btn btn-light">&#10003;</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</a>';
+    $("#CardList").html(tmp + $("#CardList").html());
+    get_priorities(item[3], item[2]);
+};
+
+function add_to_list(item){
+    var str = "'done'";
+    tmp = '<a href="#" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
+                '<h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7>' +
+                '<div class="priorities">' +
+                    '<div class="priorities" id="list_priorities_' + item[2] + '"></div>'+
+                    '<button  type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ',' + str + ')">&#10003;</button>'+
+                    '<div class="date"><small id="todo_date_' + item[1] + '">' + item[1] + '</small></div>'+
+                '</div>'+
+            '</a>';
+    $("#ViewList").html(tmp + $("#ViewList").html());
+    get_priorities(item[3], item[2]);
+};
+
+function get_priorities(value, id){
+    $("#list_priorities_" + id).html('');
+    for (var i = 1; i < value; i++){
+        $("#list_priorities_" + id).html("<span class='badge badge-pill priority-list'>!</span>" + $("#list_priorities_" + id).html());
+    }
+    $("#list_priorities_" + id).html($("#list_priorities_" + id).html() + "<span class='badge badge-pill priority-list-last'>!</span>");
+    $("#card_priorities_" + id).html('');
+    for (var i = 0; i < value; i++){
+        $("#card_priorities_" + id).html($("#card_priorities_" + id).html() + "<span class='badge badge-pill priority'>!</span>");
+    }
+};
+
 function sorting(type){
     $.ajax({
         type: "POST",
@@ -7,15 +52,14 @@ function sorting(type){
         {
             if (response['result'] == "Success")
             {
-                $("#ViewList").find("a.list-group-item").each(function(index) {
-                    $(this).attr("onclick", 'get_todo_data_ajax(' + response['todo_list'][index][2] + ')');
-                    $(this).find("h7").html(response['todo_list'][index][0]);
-                    $(this).find("small").html(response['todo_list'][index][1]);
-                });
-                $("#ViewCard").find("a.col-md-4").each(function(index) {
-                    $(this).find("h3").html(response['todo_list'][index][0]);
-                    $(this).find("small").html(response['todo_list'][index][1]);
-                });
+                $("#ViewList").html('');
+                for(var i = 0; i < response['todo_list'].length; i++){
+                    add_to_list(response['todo_list'][i]);
+                }
+		$("#CardList").html('');
+		for(var i = 0; i < response['todo_list'].length; i++){
+                    add_todo_card(response['todo_list'][i]);
+                }
             }
         }
     });
@@ -130,17 +174,8 @@ function add_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-                var result_html_list = '<div id="todo_' + response['id'] + '" style="display: none" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
-                    '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
-                    'data-toggle="modal" data-target="#Open-Todo"> <h7 id="todo_title_' + response['id'] + '">' +
-                    response['title'] + '</h7><div class="date"> <small>' +
-                    response['datetime'] + '</small></div></a></div>';
-                var result_html_card = '<div style="display: none" id="todo_card_' + response['id'] + '" onclick="get_todo_data_ajax(' +
-                    response['id'] + ');" class="col-md-4" data-toggle="modal" data-target="#Open-Todo"><div class="card">' +
-                    '<div class="card-body"><h3 id="card_todo_title_' + response['id'] + '">' + response['title'] + '</h3><small class="date">' + response['datetime'] +
-                    '</small><hr/></div></div></div>';
-                $("#list_id").html(result_html_list + $("#list_id").html());
-                $("#cards_id").html(result_html_card + $("#cards_id").html());
+		var array = [response['title'], response['date'], response['id'], response['priority']];
+		add_to_list(array);
                 $('#todo_' + response['id']).slideDown(duration='slow');
                 $('#todo_card_' + response['id']).slideDown(duration='slow');
                 $("#close_todo_btn").trigger("click");

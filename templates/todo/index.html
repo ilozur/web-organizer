@@ -13,12 +13,40 @@
 {% block content %}
 <article class="todo">
     <script>
-        function get_priorities(value, id){
-            $("#priorities_" + id).html('');
-            for (var i = 0; i < value; i++){
-                $("#card_priorities_" + id).html($("#card_priorities_" + id).html() + "<span class='badge badge-pill priority'>!</span>");
+function search_todo_ajax()
+{
+    form_data = $('#search_todo_form').serialize();
+    $("#search_todo_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#search_todo_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/todo/search',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "Success")
+            {
+                alert(response['result']);
+                $("#ViewList").html('');
+                for(var i = 0; i < response['todo_list'].length; i++){
+                    add_to_list(response['todo_list'][i]);
+                }
+		        $("#CardList").html('');
+		        for(var i = 0; i < response['todo_list'].length; i++){
+                    add_todo_card(response['todo_list'][i]);
+                }
+                $("#search_todo_form").find(':input').each(function(){
+                    $(this).removeAttr('disabled');
+                });
+                $('#search_todo_btn').removeAttr('disabled');
             }
-        };</script>
+        }
+    });
+};
+
+    </script>
     <section class="mast">
         <h1>Напоминания</h1>
     </section>
@@ -64,13 +92,14 @@
                        onclick="search_todo_ajax()">
             </nav>
         </section>
-        <section class="list-view list-group" id="ViewList">
-            <div class="list-group">
+        <section class="list-view list-group" >
+            <div class="list-group" id="ViewList">
                 {% for item in undone_todos %}
                     <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
                         <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
                         <div class="priorities">
-                            <span class="badge badge-pill priority-list-last">!</span>
+                            <div class="priorities" id="list_priorities_{{ item.2}}"></div>
+                            <script>get_priorities({{ item.3 }}, {{ item.2 }});</script>
                             <button  type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
                             <div class="date"><small id="todo_date_{{item.1}}">{{ item.1 }}</small></div>
                         </div>
@@ -78,8 +107,8 @@
                 {% endfor %}
             </div>
         </section>
-        <section class="card-view" id="ViewCard" style="display: None">
-            <div class="row">
+        <section class="card-view"  style="display: None" id="ViewCard">
+            <div class="row" id="CardList">
                 {% for item in undone_todos %}
                     <a href="#" id="todo_card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
                         <div class="card">
@@ -120,7 +149,7 @@
         var priority = 0;
         function set_priority(value){
             priority = value;
-            $("#id_priority").val(value);
+            $("#id_todo_priority").val(value);
         }
     </script>
     <article class="modals">
