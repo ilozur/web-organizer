@@ -8,5 +8,6 @@ urlpatterns = [
     path('add', views.add_todo, name='todo.add_todo'),
     path('search', views.search, name='todo.search'),
     path('sort', views.sorting, name='todo.sort'),
+    path('change', views.status_change, name='todo.change'),
     path('delete', views.delete_todo, name='todo.delete_todo'),
 ]

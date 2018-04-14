@@ -1,3 +1,48 @@
+function add_todo_card(item){
+    var str = "'done'";
+    tmp = '<a href="#" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
+                    '<div class="card">' +
+                        '<div class="card-body">' +
+                            '<h3>' + item[0] + '</h3>' +
+                            '<small class="date">' + item[1] + '</small>' +
+                        '</div>' +
+                        '<div class="card-footer">' +
+                            '<div class="priorities" id="card_priorities_' + item[2] + '">' +
+                            '</div>' +
+                            '<button type="button" onclick="status_change(' + item[2] + ',' + str + ')" class="btn btn-light">&#10003;</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</a>';
+    $("#CardList").html(tmp + $("#CardList").html());
+    get_priorities(item[3], item[2]);
+};
+
+function add_to_list(item){
+    var str = "'done'";
+    tmp = '<a href="#" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
+                '<h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7>' +
+                '<div class="priorities">' +
+                    '<div class="priorities" id="list_priorities_' + item[2] + '"></div>'+
+                    '<button  type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ',' + str + ')">&#10003;</button>'+
+                    '<div class="date"><small id="todo_date_' + item[1] + '">' + item[1] + '</small></div>'+
+                '</div>'+
+            '</a>';
+    $("#ViewList").html(tmp + $("#ViewList").html());
+    get_priorities(item[3], item[2]);
+};
+
+function get_priorities(value, id){
+    $("#list_priorities_" + id).html('');
+    for (var i = 1; i < value; i++){
+        $("#list_priorities_" + id).html("<span class='badge badge-pill priority-list'>!</span>" + $("#list_priorities_" + id).html());
+    }
+    $("#list_priorities_" + id).html($("#list_priorities_" + id).html() + "<span class='badge badge-pill priority-list-last'>!</span>");
+    $("#card_priorities_" + id).html('');
+    for (var i = 0; i < value; i++){
+        $("#card_priorities_" + id).html($("#card_priorities_" + id).html() + "<span class='badge badge-pill priority'>!</span>");
+    }
+};
+
 function sorting(type){
     $.ajax({
         type: "POST",
@@ -7,20 +52,14 @@ function sorting(type){
         {
             if (response['result'] == "Success")
             {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');"><a
-                    href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal"
-                     data-target="#Open-Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['notes_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
+                $("#ViewList").html('');
+                for(var i = 0; i < response['todo_list'].length; i++){
+                    add_to_list(response['todo_list'][i]);
                 }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
+		$("#CardList").html('');
+		for(var i = 0; i < response['todo_list'].length; i++){
+                    add_todo_card(response['todo_list'][i]);
+                }
             }
         }
     });
@@ -32,18 +71,20 @@ function status_change(id, type){
         url: '/todo/change',
         data: {'id': id, 'type': type},
         success: function(response){
-
+            if (response['result'] == 'Success')
+            {
+                $("#todo_" + id).remove();
+                $("#card_" + id).remove();
+                $("#amounts small:eq(1)").html(response['amount_of_todos'][0]);
+                $("#amounts small:eq(3)").html(response['amount_of_todos'][1]);
+                $("#amounts small:eq(5)").html(response['amount_of_todos'][2]);
+            };
         }
     });
 };
 
 
 function get_todo_data_ajax(id){
-    $('#note_num').html(id);
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-    $('#todo_title_show').html('loading');
-    $('#todo_text_show').html('loading');
     $.ajax({
         type: "POST",
         url: '/todo/show_todo',
@@ -52,35 +93,22 @@ function get_todo_data_ajax(id){
         {
             if (response['result'] == "Success")
             {
-                $('#todo_title_show').html(response['title']);
-                $('#todo_text_show').html(response['text']);
-                $('#todo_added_time').html(response['added_date_and_time']);
-                if ('last_edit_time' in response)
-                {
-                    $('#todo_last_edit').html(response['last_edit_time'] + '(edited)');
-                }
+                $("#Open-Todo").find("#todo_title_show").html(response['title']);
+                $("#Open-Todo").find("#todo_text_show").html(response['text']);
+                $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
+                $("#Open-Todo").find("p:first").html(response['status']);
+                $("#Open-Todo").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
+		$("#Open-Todo").find("#todo_deadline").html(response['deadline']);
             }
         }
     });
 };
 
-function clean_add_note_fields()
-{
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_note_data.setData("");
-    $("#id_note_title").val("");
-};
-
-function open_note_edit_mode()
+function open_todo_edit_mode()
 {
     $('#Show-Todo-Modal').attr('hidden', '');
     $('#Edit-Todo-Modal').removeAttr('hidden');
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_todo_data_edit.setData($('#todo_text_show').html());
+    $('#id_todo_data_edit').val($('#todo_text_show').html());
     $('#id_todo_title_edit').val($('#todo_title_show').html());
 };
 
@@ -90,63 +118,23 @@ function close_todo_edit_mode()
     $('#Show-Todo-Modal').removeAttr('hidden');
 };
 
-function show_cards(){
-    $('.list-view').hide();
-    $('.card-view').hide();
-    $('.card-view').removeAttr('hidden');
-    $('.card-view').show('slow');
-};
-
-function show_list(){
-    $('.card-view').hide();
-    $('.list-view').hide();
-    $('.list-view').removeAttr('hidden');
-    $('.list-view').slideDown('slow');
-};
-
-function search_todo_ajax()
+function ShowCard()
 {
-    form_data = $('#search_todo_form').serialize();
-    $("#search_todo_form").find(':input').each(function(){
-        $(this).attr('disabled', 'disabled');
-    });
-    $('#sign_up_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/search',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');
-                    "><a href="#" class="list-group-item list-group-item-action list-group-item-warning"
-                    data-toggle="modal" data-target="#Opne_Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
-            }
-        }
-    });
+    $("#ViewList").hide("slow");
+    $("#ViewCard").show("slow");
+};
+
+function ShowList()
+{
+    $("#ViewList").show("slow");
+    $("#ViewCard").hide("slow");
 };
 
 function save_todo_ajax()
 {
     var id = $('#todo_num').html();
     $("#id_todo_id").val(id)
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
     var form_data = $('#save_todo_form').serialize();
-    form_data['todo_text_edit'] = CKEDITOR.instances.id_todo_data_edit.getData();
     $("#save_todo_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');
     });
@@ -162,9 +150,6 @@ function save_todo_ajax()
                 alert('OK, Changes were saved');
                 $('#todo_title_' + id).html($('#id_todo_title_edit').val());
                 close_todo_edit_mode();
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
                 $('#todo_text_show').html(CKEDITOR.instances.id_todo_data_edit.getData());
                 $('#todo_title_show').html($('#id_todo_title_edit').val());
                 $('#todo_last_edit').html(response['edited_time']);
@@ -179,11 +164,8 @@ function save_todo_ajax()
 
 function add_todo_ajax()
 {
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
     form_data = $('#add_todo_form').serialize();
-    form_data['data'] = CKEDITOR.instances.id_todo_data.getData();;
+    form_data['ptiority'] = priority;
     $.ajax({
         type: "POST",
         url: '/todo/add',
@@ -192,13 +174,10 @@ function add_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-                alert('OK, todo was added');
-                result_html = '<div id="todo_' + response['id'] + '" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
-                    '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
-                    'data-toggle="modal" data-target="#Open-Todo"> <h7 id="todo_title_' + response['id'] + '">' +
-                    response['title'] + '</h7><div class="date"> <small>' +
-                    response['datetime'] + '</small></div></a></div>';
-                $("#list_id").html(result_html + $("#list_id").html());
+		var array = [response['title'], response['date'], response['id'], response['priority']];
+		add_to_list(array);
+                $('#todo_' + response['id']).slideDown(duration='slow');
+                $('#todo_card_' + response['id']).slideDown(duration='slow');
                 $("#close_todo_btn").trigger("click");
             }
         }
@@ -217,8 +196,8 @@ function delete_todo_ajax(id)
         {
             if (response['result'] == "Success")
             {
-                alert('OK, todo was deleted');
-                $('#todo_' + id).slideUp("Slow");
+                $('#todo_' + id).slideUp(duration='slow', complete=function(){$('#todo_' + id).remove()});
+                    $('#todo_card_' + id).slideUp(duration='slow', complete=function(){$('#todo_card' + id).remove()});
             }
             $('#delete_btn').removeAttr('disabled');
         }
