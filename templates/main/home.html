@@ -23,7 +23,7 @@
                     if (h > 18 && h < 24) document. write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>"); 
                 </script> 
                 <h3>Ближайшее мероприятие: </h3>
-                <p><a href="/ivent_near" class="link-section">Дедлайн</a><br/>
+                <p><a href='{% url "calendar.nearest" %}' class="link-section">Дедлайн</a><br/>
                     <small><i>25.10.2018 10:00 AM | Школа Анализа Данных</i></small>
                 </p>
                 <h3>Скорейшее напоминание: </h3>

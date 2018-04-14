@@ -1,5 +1,6 @@
 from calendars.models import *
 from django.shortcuts import render
+from django.urls import reverse
 from django.contrib.auth.decorators import *
 from datetime import datetime, timedelta
 from calendars.forms import *
@@ -205,3 +206,8 @@ def delete_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+def get_near_event(request):
+    url = reverse('calendar.index')
+    url += '?id={}'.format(1)
+    return HttpResponseRedirect(url)
