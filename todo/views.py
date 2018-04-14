@@ -30,22 +30,18 @@ def index(request):
 
 @login_required
 def add_todo(request):
-    print("ok 0")
     response_data = {}
     if request.method == "POST":
         form = AddTodoForm(request.POST)
-        print("ok 1")
         if form.is_valid():
-            print("ok 2")
             title = form.cleaned_data['title']
             text = form.cleaned_data['text']
             deadline_date = form.cleaned_data['deadline']
             deadline_time = form.cleaned_data['time']
             deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
             tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
-                        priority=3, deadline=deadline_date)
+                        priority=form.cleaned_data['priority'], deadline=deadline_date)
             tmp.save()
-            print("ok")
             result = "Success"
             response_data['id'] = tmp.id
             response_data['title'] = tmp.title
@@ -72,6 +68,7 @@ def show_todo(request):
                 'title': todo.title,
                 'text': todo.text,
                 'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
+                'deadline': todo.deadline.strftime("%I:%M%p on %B %d, %Y"),
                 'status': todo.status,
                 'result': "Success",
                 'current_status': current_status

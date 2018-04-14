@@ -24,7 +24,7 @@ class Todos(models.Model):
         todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
         todo_list = list()
         for item in todos:
-            todo_list.append((item.title, item.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), item.id))
+            todo_list.append((item.title, item.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), item.id, item.priority))
         return todo_list
 
     @staticmethod

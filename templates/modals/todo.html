@@ -18,14 +18,15 @@
                         {{ add_todo_form.text }}
                         {{ add_todo_form.deadline }}
                         {{ add_todo_form.time }}
+                        {{ add_todo_form.priority }}
                     </div>
                     <div class="form-group">
                         <h3> Приоритет </h3>
-                        <button type="button" class="btn btn-light btn-sm">1</button>
-                        <button type="button" class="btn btn-light btn-sm">2</button>
-                        <button type="button" class="btn btn-light btn-sm">3</button>
-                        <button type="button" class="btn btn-light btn-sm">4</button>
-                        <button type="button" class="btn btn-light btn-sm">5</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(1)">1</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(2)">2</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(3)">3</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(4)">4</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(5)">5</button>
                     </div>
                 </form>
                 <h3>Записать аудио</h3>
@@ -52,6 +53,8 @@
                 <div id="todo_text_show" style="overflow-x: scroll; overflow-y: scroll; height: 200px">
                 </div>
                 <small id="todo_added_time"></small>
+                <br/>
+                Выполнить к <small id="todo_deadline"></small>
                 <br/>
                 <small class="text-muted" id="todo_last_edit"></small>
                 <div class="form-group">

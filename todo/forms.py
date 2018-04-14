@@ -10,6 +10,7 @@ class AddTodoForm(forms.Form):
                            widget=forms.Textarea(attrs={'form': 'add_todo_form', 'class': 'form-control', 'placeholder': 'Текст'}))
     time = forms.TimeField(widget=forms.TimeInput(attrs={'form': 'add_todo_form', 'class': 'form-control', 'type': 'time'}))
     deadline = forms.DateField(widget=forms.DateInput(attrs={'form': 'add_todo_form', 'class': 'form-control', 'type': 'date'}))
+    priority = forms.IntegerField(widget=forms.HiddenInput())
 
 
 class EditTodoForm(forms.Form):

@@ -49,33 +49,22 @@ function get_todo_data_ajax(id){
         {
             if (response['result'] == "Success")
             {
-                $("#Open").find("#todo_title_show").html(response['title']);
-                $("#Open").find("#todo_text_show").html(response['text']);
-                $("#Open").find("#todo_added_time").html(response['added_date_and_time']);
-                $("#Open").find("p:first").html(response['status']);
-                $("#Open").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
+                $("#Open-Todo").find("#todo_title_show").html(response['title']);
+                $("#Open-Todo").find("#todo_text_show").html(response['text']);
+                $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
+                $("#Open-Todo").find("p:first").html(response['status']);
+                $("#Open-Todo").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
+		$("#Open-Todo").find("#todo_deadline").html(response['deadline']);
             }
         }
     });
-};
-
-function clean_add_note_fields()
-{
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_note_data.setData("");
-    $("#id_note_title").val("");
 };
 
 function open_todo_edit_mode()
 {
     $('#Show-Todo-Modal').attr('hidden', '');
     $('#Edit-Todo-Modal').removeAttr('hidden');
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_todo_data_edit.setData($('#todo_text_show').html());
+    $('#id_todo_data_edit').val($('#todo_text_show').html());
     $('#id_todo_title_edit').val($('#todo_title_show').html());
 };
 
@@ -132,6 +121,7 @@ function save_todo_ajax()
 function add_todo_ajax()
 {
     form_data = $('#add_todo_form').serialize();
+    form_data['ptiority'] = priority;
     $.ajax({
         type: "POST",
         url: '/todo/add',

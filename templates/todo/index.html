@@ -12,6 +12,13 @@
 
 {% block content %}
 <article class="todo">
+    <script>
+        function get_priorities(value, id){
+            $("#priorities_" + id).html('');
+            for (var i = 0; i < value; i++){
+                $("#card_priorities_" + id).html($("#card_priorities_" + id).html() + "<span class='badge badge-pill priority'>!</span>");
+            }
+        };</script>
     <section class="mast">
         <h1>Напоминания</h1>
     </section>
@@ -63,10 +70,6 @@
                     <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
                         <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
                         <div class="priorities">
-                            <span class="badge badge-pill priority-list">!</span>
-                            <span class="badge badge-pill priority-list">!</span>
-                            <span class="badge badge-pill priority-list">!</span>
-                            <span class="badge badge-pill priority-list">!</span>
                             <span class="badge badge-pill priority-list-last">!</span>
                             <button  type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
                             <div class="date"><small id="todo_date_{{item.1}}">{{ item.1 }}</small></div>
@@ -85,14 +88,10 @@
                                 <small class="date">{{ item.1 }}</small>
                             </div>
                             <div class="card-footer">
-                                <span class="badge badge-pill priority">!</span>
-                                <span class="badge badge-pill priority">!</span>
-                                <span class="badge badge-pill priority">!</span>
-                                <span class="badge badge-pill priority">!</span>
-                                <span class="badge badge-pill priority">!</span>
-                                <div class="priorities">
-                                    <button type="button" onclick="status_change({{ item.2 }}, 'done')" class="btn btn-light">&#10003;</button>
+                                <div class="priorities" id="card_priorities_{{ item.2}}">
                                 </div>
+                                <script>get_priorities({{ item.3 }}, {{ item.2 }});</script>
+                                <button type="button" onclick="status_change({{ item.2 }}, 'done')" class="btn btn-light">&#10003;</button>
                             </div>
                         </div>
                     </a>
@@ -117,6 +116,13 @@
             </nav>
     </section>
     </article>
+    <script>
+        var priority = 0;
+        function set_priority(value){
+            priority = value;
+            $("#id_priority").val(value);
+        }
+    </script>
     <article class="modals">
         {% include "modals/todo.html" %}
     </article>
