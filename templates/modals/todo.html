@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="modal fade" id="New" xmlns="http://www.w3.org/1999/html">
+<div class="modal fade" id="New-Todo" xmlns="http://www.w3.org/1999/html">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -67,7 +67,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_todo_ajax('{{item.2}}')">Удалить</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit"
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-Todo"
                         onclick="open_todo_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>
             </div>
@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Edit">
+<div class="modal fade" id="Edit-Todo">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

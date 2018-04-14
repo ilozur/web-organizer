@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+
+from main.views import create_mail, send_mail
 from todo.forms import AddTodoForm
 from todo.forms import SearchForm
 from todo.forms import EditTodoForm
@@ -222,3 +224,11 @@ def search(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def check_notify():
+    for tmp_user in User.objects.all():
+        for tmp_todo in Todos.objects.filter(user=tmp_user):
+            if datetime(0, 0, 0, 1, 0, 0, 0) > tmp_todo.deadline - datetime.now():
+                mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title, "У вас не выполненная задача!")
+                send_mail(mail)

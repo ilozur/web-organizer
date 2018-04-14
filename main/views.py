@@ -17,6 +17,7 @@ from calendars.models import *
 from django.contrib.auth.models import User
 
 from profile.forms import RecoverPasswordUserData
+from todo.forms import AddTodoForm, EditTodoForm
 
 
 def index(request):
@@ -54,6 +55,8 @@ def index(request):
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
+            context['add_todo_form'] = AddTodoForm()
+            context['edit_todo_form'] = EditTodoForm()
             return render(request, "main/home.html", context)
     else:
         return HttpResponseRedirect('/')

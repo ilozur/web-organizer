@@ -146,6 +146,54 @@ function get_todo_data_ajax(id){
     });
 };
 
+function save_todo_ajax()
+{
+    var id = $('#todo_num').html();
+    $("#id_todo_id").val(id);
+    var form_data = $('#edit_todo_form').serialize();
+    $("#edit_todo_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#save_todo_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/todo/edit',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "Success")
+            {
+                alert('OK, Changes were saved');
+                $('#todo_title_' + id).html($('#id_todo_edit_title').val());
+                $('#todo_card_' + id).html($('#id_todo_edit_title').val());
+                get_priorities(response['priority'], id);
+                $('#todo_date_' + id).html(response['deadline_date']);
+                close_todo_edit_mode();
+                $('#todo_text_show').html($('#id_todo_edit_text').val());
+                $('#todo_title_show').html($('#id_todo_edit_title').val());
+		        set_priority_edit($('#id_todo_edit_priority').val());
+
+                $('#todo_last_edit').html(response['edited_time']);
+            }
+            else{
+                alert(response['result']);
+            }
+            $("#edit_todo_form").find(':input').each(function(){
+                $(this).removeAttr('disabled');
+            });
+            $('#save_todo_btn').removeAttr('disabled');
+        }
+    });
+};
+
+function set_priority(value){
+    $("#id_todo_priority").val(value);
+};
+
+function set_priority_edit(value){
+    $("#id_todo_edit_priority").val(value);
+};
+
 function open_todo_edit_mode()
 {
     $('#Show-Todo-Modal').attr('hidden', '');
