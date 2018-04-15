@@ -56,6 +56,14 @@ function get_priorities(value, id){
     }
 };
 
+function clean_add_todo_fields()
+{
+    $("#id_todo_title").val("");
+    $("#id_todo_text").val("");
+    $("#id_todo_deadline").val("");
+    $("#id_todo_time").val("");
+};
+
 function sorting(type){
     $.ajax({
         type: "POST",
