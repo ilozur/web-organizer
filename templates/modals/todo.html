@@ -1,56 +1,48 @@
 {% load staticfiles %}
-<div class="modal fade" id="New-Todo">
+<div class="modal fade" id="New-Todo" xmlns="http://www.w3.org/1999/html">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Создание напоминания</h2>
+                <h2>Создание напоминания</h2>
             </div>
             <div class="modal-body">
                 <form id="add_todo_form">
-                        {% csrf_token %}
-                        {{ add_todo_form.media }}
+                    {% csrf_token %}
+                    {{ add_todo_form.media }}
+                    <div class="form-group">
                         <h3>Название</h3>
-                    <div class="form-group">
-                        {{ add_todo_form.title }}
+                        {{ add_todo_form.todo_title }}
                     </div>
+                    <div class="form-group">
                         <h3>Текст</h3>
-                    <div class="form-group">
-                        {{ add_todo_form.text }}
+                        {{ add_todo_form.todo_text }}
+                        {{ add_todo_form.todo_deadline }}
+                        {{ add_todo_form.todo_time }}
+                        {{ add_todo_form.todo_priority }}
                     </div>
-                        <h3>Срок</h3>
-                    <div class="form-group">
-                        {{ add_todo_form.deadline }}
-                    </div>
-                        <div class="btn-group btn-group-sm WYSIWYG">
-                            <button type="button" class="btn btn-light"><strong>B</strong></button>
-                            <button type="button" class="btn btn-light"><em>I</em></button>
-                            <button type="button" class="btn btn-light"><del>S</del></button>
-                            <button type="button" class="btn btn-light"><ins>U</ins></button>
-                        </div>
                     <div class="form-group">
                         <h3> Приоритет </h3>
-                        <button type="button" class="btn btn-light btn-sm">1</button>
-                        <button type="button" class="btn btn-light btn-sm">2</button>
-                        <button type="button" class="btn btn-light btn-sm">3</button>
-                        <button type="button" class="btn btn-light btn-sm">4</button>
-                        <button type="button" class="btn btn-light btn-sm">5</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(1)">1</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(2)">2</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(3)">3</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(4)">4</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority(5)">5</button>
                     </div>
                 </form>
                 <h3>Записать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
-                        <img src='{% static "icons/micro_icon.png" %}'>
+                        <img src='{% static "/icons/micro_icon.png" %}'>
                     </picture>
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_todo_btn" >Отменить</button>
-                <button type="button" class="btn btn-light" onclick="add_todo_ajax()">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="add_todo_ajax()">Создать</button>
             </div>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="Open-Todo">
     <div class="modal-dialog modal modal-dialog-centered">
         <div class="modal-content">
@@ -62,12 +54,11 @@
                 </div>
                 <small id="todo_added_time"></small>
                 <br/>
+                Выполнить к <small id="todo_deadline"></small>
+                <br/>
                 <small class="text-muted" id="todo_last_edit"></small>
-                <div class="form-group">
-                    <h3> Приоритет </h3>
-                    <span class="badge badge-pill priority">!</span>
-                    <span class="badge badge-pill priority">!</span>
-                    <span class="badge badge-pill priority">!</span>
+                <h3> Приоритет </h3>
+                <div class="form-group" id="todo_priority">
                 </div>
                 <hr>
                 <h3> Cтатус </h3>
@@ -75,62 +66,168 @@
                 <button type="button" class="btn btn-light">&#10003;</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit"
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_todo_ajax('{{item.2}}')">Удалить</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-Todo"
                         onclick="open_todo_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>
             </div>
+            <div hidden id="todo_num"></div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="Edit">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Редактирование напоминания</h2>
-                </div>
-                <div class="modal-body">
-                    <form id="save_todo_form">
-                        {% csrf_token %}
-                        {{ edit_todo_form.media }}
+<div class="modal fade" id="Edit-Todo">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <form id="edit_todo_form">
+                    {% csrf_token %}
+                    {{ edit_todo_form.media }}
+                    <div class="form-group">
+                        <h3>Изменить название</h3>
+                        {{ edit_todo_form.todo_edit_title }}
+                    </div>
+                    <div class="form-group">
+                        <h3>Изменить текст</h3>
+                        {{ edit_todo_form.todo_edit_text }}
+                        <h3>Изменить дедлайн</h3>
+                        {{ edit_todo_form.todo_edit_deadline }}
+                        </br>
+                        {{ edit_todo_form.todo_edit_time }}
+                        {{ edit_todo_form.todo_edit_priority }}
                         {{ edit_todo_form.todo_id }}
-                        <div class="form-group">
-                            <h3>Изменить название</h3>
-                           { edit_todo_form.todo_title_edit }}
-                        </div>
-                        <div class="form-group">
-                            <h3>Изменить текст</h3>
-                            {{edit_note_form.todo_text_edit}}
-                            <div class="btn-group btn-group-sm WYSIWYG">
-                                <button type="button" class="btn btn-primary"><strong>B</strong></button>
-                                <button type="button" class="btn btn-primary"><em>I</em></button>
-                                <button type="button" class="btn btn-primary"><del>S</del></button>
-                                <button type="button" class="btn btn-primary"><ins>U</ins></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <h3> Изменить приоритет </h3>
-                            <button type="button" class="btn btn-primary btn-sm">1</button>
-                            <button type="button" class="btn btn-primary btn-sm">2</button>
-                            <button type="button" class="btn btn-primary btn-sm">3</button>
-                            <button type="button" class="btn btn-primary btn-sm">4</button>
-                            <button type="button" class="btn btn-primary btn-sm">5</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="close_todo_edit_mode()">Отменить</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="save_todo_ajax();">Сохранить</button>
-                </div>
-                <hr>
-                <h3> Cтатус </h3>
-                <p> Выполнено </p>
-                <button type="button" class="btn btn-light">&#10007;</button>
+                    </div>
+                    <div class="form-group">
+                        <h3> Изменить приоритет </h3>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(1)">1</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(2)">2</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(3)">3</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(4)">4</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(5)">5</button>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Удалить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="save_todo_ajax()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Synchronization">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Синхронизация</h2>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-light">Сохранить все напоминания в файл</button>
+                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose">Сохранить часть напоминаний в файл</button>
+                <hr>
+                <div class="form-group btn btn-light">
+                    <label>Загрузить все напоминания из файла</label>
+                    <input type="file" class="form-control-file">
+                </div>
+                <div class="form-group btn btn-light">
+                    <label>Загрузить некоторые напоминания из файла</label>
+                    <input type="file" class="form-control-file">
+                </div>
+                <button type="button" class="btn btn-light">Синхронизировать</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Choose">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Выберите напоминания для сохранения</h2>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <div class="form-check list-group-item list-group-item-light">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label"> Sad but True </label>
+                    </div>
+                    <div class="form-check list-group-item list-group-item-light">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label"> True but Sad </label>
+                    </div>
+                    <div class="form-check list-group-item list-group-item-light">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label"> but Sad True </label>
+                    </div>
+                    <div class="form-check list-group-item list-group-item-light">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label"> but True Sad</label>
+                    </div>
+                    <div class="form-check list-group-item list-group-item-light">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label"> Sad True but </label>
+                    </div>
+                    <div class="form-check list-group-item list-group-item-light">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label"> True Sad but</label>
+                    </div>
+                </div>
+                <nav class=" navbar navbar-pag">
+                    <div class="btn-group btn-group-lg">
+                        <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                        <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
+                        <a href="#"><button type="button" class="btn btn-light">2</button></a>
+                        <a href="#"><button type="button" class="btn btn-light">3</button></a>
+                        <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
+                    </div>
+                </nav>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="Complete">
+    <div class="modal-dialog modal modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Выполненные задачи</h2>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    {% for item in done_todos %}
+                        <a href="#" id="todo_{{ item.2 }}" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
+                            <h7>{{ item.0 }}</h7>
+                            <div class="priorities">
+                                <span class="badge badge-pill priority-list">!</span>
+                                <span class="badge badge-pill priority-list">!</span>
+                                <span class="badge badge-pill priority-list">!</span>
+                                <span class="badge badge-pill priority-list">!</span>
+                                <span class="badge badge-pill priority-list-last">!</span>
+                                <button  type="button" class="btn btn-info" onclick="status_change({{ item.2 }}, 'in progress')">&#10007;</button>
+                                <div class="date"><small>{{ item.1 }}</small></div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <nav class="navbar">
+                    <div class="btn-group btn-group-lg">
+                        <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                        <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
+                        <a href="#"><button type="button" class="btn btn-light">2</button></a>
+                        <a href="#"><button type="button" class="btn btn-light">3</button></a>
+                        <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
+                    </div>
+                </nav>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Назад</button>
+            </div>
+        </div>
+    </div>
+</div>
