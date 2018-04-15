@@ -37,10 +37,10 @@ class Command ( BaseCommand ):
         e.save ()
         
     def deleteall(self):
-        for i in self.us:
-            i.delete()
         for e in self.events:
             e.delete()
         for n in self.notes:
             n.delete()
+        for i in self.us:
+            i.delete()
 
