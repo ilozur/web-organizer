@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+
+from main.views import create_mail, send_mail
 from todo.forms import AddTodoForm
 from todo.forms import SearchForm
 from todo.forms import EditTodoForm
@@ -19,11 +21,9 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    todo_list = []
-    todos = Todos.get_todos('AtoZ', 'in progress', user)
-    for i in todos:
-        todo_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
-    context['todo_data'] = todo_list
+    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
+    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
+    context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
@@ -36,15 +36,19 @@ def add_todo(request):
     if request.method == "POST":
         form = AddTodoForm(request.POST)
         if form.is_valid():
-            title = form.cleaned_data['title']
-            text = form.cleaned_data['text']
+            title = form.cleaned_data['todo_title']
+            text = form.cleaned_data['todo_text']
+            deadline_date = form.cleaned_data['todo_deadline']
+            deadline_time = form.cleaned_data['todo_time']
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
             tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
-                        priority=3)
+                        priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
             tmp.save()
             result = "Success"
             response_data['id'] = tmp.id
             response_data['title'] = tmp.title
             response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+            response_data['priority'] = tmp.priority
         else:
             result = 'form not valid'
         response_data['result'] = result
@@ -56,17 +60,31 @@ def add_todo(request):
 @login_required
 def show_todo(request):
     if request.method == "POST":
-        response_data = {}
         todo_id = request.POST.get('id')
-        if Todos.get_todo_by_id(todo_id):
+        if Todos.objects.filter(id=todo_id).exists():
             todo = Todos.get_todo_by_id(todo_id)
-            response_data = {'title': todo.title, 'text': todo.text,
-                             'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
-                             'result': "Success"
-                             }
+            if todo.status == "in progress":
+                current_status = "'done'"
+            else:
+                current_status = "'in progress'"
+            response = {
+                'title': todo.title,
+                'text': todo.text,
+                'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
+                'deadline': todo.deadline.strftime("%I:%M%p on %B %d, %Y"),
+                'priority': todo.priority,
+                'status': todo.status,
+                'time': [todo.deadline.hour, todo.deadline.minute],
+                'date': [todo.deadline.year, todo.deadline.month, todo.deadline.day],
+                'id': todo.id,
+                'result': "Success",
+                'current_status': current_status
+            }
         else:
-            response_data['result'] = "Todo does not exist"
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            response = {
+                'result': "User is not authenticated"
+            }
+        return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
@@ -100,6 +118,7 @@ def status_change(request):
             obj.status = todo_type
             obj.save()
             response['result'] = "Success"
+            response['amount_of_todos'] = Todos.get_amounts(request.user)
         else:
             response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type='application/json')
@@ -109,25 +128,32 @@ def status_change(request):
 
 @login_required
 def edit_todo(request):
-    response_data = {}
+    response = {}
     if request.method == "POST":
         form = EditTodoForm(request.POST)
         if form.is_valid():
-            todo_id = form.cleaned_data['note_id']
-            if Todos.get_todo_by_id(id=todo_id).count() > 0:
-                tmp = Todos.get_todo_by_id(id=todo_id).first()
-                tmp.title = form.cleaned_data['todo_title_edit']
-                tmp.text = form.cleaned_data['todo_text_edit']
-                tmp.last_edit_time = datetime.now()
-                tmp.save()
-                result = 'success'
-                response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+            todo_id = form.cleaned_data['todo_id']
+            deadline_date = form.cleaned_data['todo_edit_deadline']
+            deadline_time = form.cleaned_data['todo_edit_time']
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
+            if deadline_date > datetime.now():
+                if Todos.objects.filter(id=todo_id).exists():
+                    tmp = Todos.get_todo_by_id(todo_id)
+                    tmp.title = form.cleaned_data['todo_edit_title']
+                    tmp.text = form.cleaned_data['todo_edit_text']
+                    tmp.priority = form.cleaned_data['todo_edit_priority']
+                    tmp.deadline = deadline_date
+                    tmp.save()
+                    response['result'] = "Success"
+                    response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
+                    response['priority'] = tmp.priority
+                else:
+                    response['result'] = 'No such todo'
             else:
-                result = 'No such note'
+                response['result'] = 'Date has already passed'
         else:
-            result = 'Form not valid'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            response['result'] = 'Form is not valid'
+        return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
@@ -165,9 +191,9 @@ def delete_todo(request):
     response_data = {}
     if request.method == "POST":
         if request.user.is_authenticated:
-            id = request.POST.get('id')
-            if Todos.delete_todo(id):
-                result = "success"
+            todo_id = request.POST.get('id')
+            if Todos.delete_todo(todo_id):
+                result = "Success"
             else:
                 result = "Sorry, Todo does not exist"
         else:
@@ -191,9 +217,6 @@ def search(request):
                 }
                 result = 'Success'
             else:
-                response_data = {
-                    'todo_list': Todos.get_todos(request.sorting_type, 'in progress', request.user)
-                }
                 result = 'Form is not valid'
         else:
             result = 'user is not authenticated'
@@ -201,3 +224,11 @@ def search(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def check_notify():
+    for tmp_user in User.objects.all():
+        for tmp_todo in Todos.objects.filter(user=tmp_user):
+            if datetime(0, 0, 0, 1, 0, 0, 0) > tmp_todo.deadline - datetime.now():
+                mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title, "У вас не выполненная задача!")
+                send_mail(mail)

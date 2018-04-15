@@ -250,3 +250,29 @@ function listen_note(param)
         $('#New-Note').find('img').attr('src', '/static/icons/micro_icon.png');
     });
 };
+
+function get_event_data_ajax(id){
+    $('#event_num').html(id);
+    $('#event_title_show').html('loading');
+    $('#event_date_show').html('loading');
+    $('#event_description_show').html('loading');
+    $.ajax({
+        type: "POST",
+        url: '/calendar/events/get_event_data',
+        data: {"id": id},
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                $('#event_title_show').html(response['title']);
+                $('#event_date_show').html(response['date']);
+                $('#event_description_show').html(response['description']);
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
+
+        }
+    });
+};

@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from notes.forms import *
 import json
@@ -15,11 +14,11 @@ def index(request):
         'title': "Notes index page",
         'header': "Notes index page header",
     }
-    user = request.user
     notes_list = []
-    context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
-    context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
-    notes = Notes.get_notes('title_up', user)
+    context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
+    context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+    context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+    notes = Notes.get_notes('title_up', request.user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
     context['notes_data'] = notes_list
@@ -27,6 +26,7 @@ def index(request):
     context['add_note_form'] = AddNoteForm()
     context['edit_note_form'] = EditNoteForm()
     return render(request, "notes/index.html", context)
+
 
 @login_required
 def add_note_ajax(request):
@@ -53,7 +53,7 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search(substr):
+def search_notes(substr):
     obj = Notes.objects.all()
     ret_list = []
     for i in obj:
@@ -67,7 +67,7 @@ def get_note_data_ajax(request):
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
-        if Notes.objects.filter(id=note_id).count() > 0:
+        if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
             note = Notes.objects.filter(id=note_id).first()
             response_data = {
                 'title': note.name,
@@ -92,7 +92,7 @@ def search_ajax(request):
         if form.is_valid():
             string = form.data['result']
             response_data = {
-                'notes_list': search_notes(string, request.user)
+                'notes_list': Notes.search_notes(string, request.user)
             }
             result = '100'
         else:
@@ -135,7 +135,7 @@ def save_ajax(request):
         form = EditNoteForm(request.POST)
         if form.is_valid():
             note_id = form.cleaned_data['note_id']
-            if Notes.objects.filter(id=note_id).count() > 0:
+            if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
                 tmp = Notes.objects.filter(id=note_id).first()
                 tmp.name = form.cleaned_data['note_title_edit']
                 tmp.data = form.cleaned_data['note_data_edit']
@@ -161,8 +161,11 @@ def delete_ajax(request):
     if request.method == "POST":
         note_id = request.POST.get('id')
         should_return_last_note = request.POST.get('return_last_note')
-        if Notes.delete_note(note_id):
-            result = "100"
+        if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
+            if Notes.delete_note(note_id):
+                result = "100"
+            else:
+                result = "111"
         else:
             result = "111"
         last_notes = Notes.get_notes("date_up", request.user)

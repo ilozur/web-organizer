@@ -35,17 +35,17 @@
                     </picture>
                 </button>
                 <div class="alert alert-danger">
-                    <small data-toggle="modal" data-target="#All event">Всего событий : 72</small>
+                    <small data-toggle="modal" data-target="#All event">Всего событий: {{ all_events_count }}</small>
                     <br/>
-                    <small data-toggle="modal" data-target="#For-Today event">Событий на сегодня: 4</small>
+                    <small data-toggle="modal" data-target="#For-Today event">Событий на сегодня: {{ today_events_count }}</small>
                     <br/>
-                    <small>Событий за вчера: 2</small>
+                    <small>Событий за вчера: {{ yesterday_events_count }}</small>
                     <br/>
-                    <small>Событий за неделю: 7</small>
+                    <small>Событий за неделю: {{ week_events_count }}</small>
                     <br/>
-                    <small>Событий за месяц: 27</small>
+                    <small>Событий за месяц: {{ month_events_count }}</small>
                     <br/>
-                    <small>Событий за год: 54</small>
+                    <small>Событий за год: {{ year_events_count }}</small>
                 </div>
             </nav>
             <nav class="navbar">
@@ -81,7 +81,7 @@
                     <button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
                 </a>
 
-                <h2>&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
+                <h2 style="width: 270px">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
                         id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
                 <a>
                     <button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>

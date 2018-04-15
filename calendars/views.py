@@ -12,7 +12,17 @@ def index(request):
     if request.method == "GET":
         date = datetime.now()
         context = dict(title="Calendar index page", header="Calendar index page header")
-        context['weeks'] = get_weeks(date)
+        context['weeks'] = get_weeks(date, request.user)
+        context['all_events_count'] = Event.objects.filter(user=request.user).count()
+        context['today_events_count'] = Event.objects.filter(user=request.user, date=date.date()).count()
+        context['yesterday_events_count'] = Event.objects.filter(user=request.user,
+                                                                 date=date.date() - timedelta(1)).count()
+        context['week_events_count'] = Event.get_events_in_range(date.date() - timedelta(7),
+                                                                 date.date(), request.user).count()
+        context['month_events_count'] = Event.get_events_in_range(date.date() - timedelta(30),
+                                                                  date.date(), request.user).count()
+        context['year_events_count'] = Event.get_events_in_range(date.date() - timedelta(365),
+                                                                 date.date(), request.user).count()
         context['now_month'] = get_month_name(date.month)
         context['now_year'] = date.year
         context['now_month_num'] = date.month
@@ -36,14 +46,14 @@ def index(request):
                 return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
         except ValueError:
             return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
-        response_data['weeks'] = get_weeks(now_date)
+        response_data['weeks'] = get_weeks(now_date, request.user)
         response_data['month_name'] = get_month_name(now_date.month)
         response_data['now_year'] = now_date.year
         response_data['result'] = "100"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def get_weeks(date_time):
+def get_weeks(date_time, user):
     date = date_time
     datetime_now = datetime.now()
     if (date.month == datetime_now.month) and (date.year == datetime_now.year):
@@ -73,7 +83,7 @@ def get_weeks(date_time):
                 if date.month != date_time.month:
                     day_class = "future-date"
             tmp_day['class'] = day_class
-            tmp_day_events = Event.objects.filter(date=date)
+            tmp_day_events = Event.objects.filter(user=user, date=date)
             if tmp_day_events.count() > 0:
                 tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
             week_days.append(tmp_day)
@@ -98,7 +108,7 @@ def get_weeks(date_time):
                 if date.month != date_time.month:
                     day_class = "future-date"
             tmp_day['class'] = day_class
-            tmp_day_events = Event.objects.filter(date=date)
+            tmp_day_events = Event.objects.filter(user=user, date=date)
             if tmp_day_events.count() > 0:
                 tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
             week_days.append(tmp_day)
@@ -176,7 +186,7 @@ def get_event_data_ajax(request):
     response_data = {}
     if request.method == "POST":
         event_id = request.POST.get('id')
-        if Event.objects.filter(id=event_id).count() > 0:
+        if Event.objects.filter(user=request.user, id=event_id).count() > 0:
             event = Event.objects.filter(id=event_id).first()
             response_data = {
                 'title': event.title,
@@ -197,8 +207,11 @@ def delete_ajax(request):
     response_data = {}
     if request.method == "POST":
         event_id = request.POST.get('id')
-        if Event.delete_event(event_id):
-            result = "100"
+        if Event.objects.filter(user=request.user, id=event_id).count() > 0:
+            if Event.delete_event(event_id):
+                result = "100"
+            else:
+                result = "114"
         else:
             result = "114"
         response_data['result'] = result
