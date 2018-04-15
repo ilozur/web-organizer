@@ -12,7 +12,7 @@ from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
-from calendar.models import Event
+from calendars.models import Event
 from notes.models import Notes
 from todo.models import Todos
 from django.contrib.auth.models import User
@@ -41,7 +41,7 @@ def index(request):
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             context['notes_stat'] = count_notes(request.user)
-            context['todo_stat'] = count_todos(request.user)
+            #context['todo_stat'] = count_todos(request.user)
             context['event_stat'] = count_events(request.user)
 
 
