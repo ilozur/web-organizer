@@ -4,7 +4,7 @@
 body {
 	text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 	box-shadow: inset 0 0 5rem #fff3cd;
-	background-image: url(../img/bg_notes.jpg);
+	background-image: url(../img/bg_notes.jpeg);
 	background-repeat: repeat;
 	background-attachment: fixed;
 	color: #856404;
@@ -90,7 +90,7 @@ nav .active {
 
 /*Модуль*/
 .modal {
-  background-image: url(../img/bg_notes.jpg);
+  background-image: url(../img/bg_notes.jpeg);
   background-repeat: repeat;
   background-attachment: scroll;
 }
