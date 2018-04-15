@@ -15,8 +15,9 @@ def index(request):
         'header': "Notes index page header",
     }
     notes_list = []
-    context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
-    context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+    context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
+    context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+    context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
     notes = Notes.get_notes('title_up', request.user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
