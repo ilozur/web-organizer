@@ -160,7 +160,7 @@ def delete_ajax(request):
     if request.method == "POST":
         note_id = request.POST.get('id')
         should_return_last_note = request.POST.get('return_last_note')
-        if Notes.objects.filter(user=request.user, id=note_id).count > 0:
+        if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
             if Notes.delete_note(note_id):
                 result = "100"
             else:
