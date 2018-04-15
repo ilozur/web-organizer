@@ -7,21 +7,28 @@ from calendars.models import Event
 
 class Command ( BaseCommand ):
     args = "there's no args"
-    us = User.objects.all ()
-    notes = Notes.objects.all()
-    events = Event.objects.all()
+
     Lopsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor \
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco\
                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate \
                  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, \
                  sunt in culpa qui officia deserunt mollit anim id est laborum."
 
+    def us ( self ):
+        return User.objects.all ()
+
+    def notes ( self ):
+        return Notes.objects.all ()
+
+    def events ( self ):
+        return Event.objects.all ()
+
     def handle ( self, *args, **options ):
-        self.deleteall()
+        self.deleteall ()
         for i in range ( 0, 50 ):
             self.create_user ( username='test_user_{}'.format ( i ), password=" ", email=None )
-            for j in self.us:
-                self.create_note ( text=self.Lopsum, name="Lorem Ipsum", user=j, time=datetime.datetime.now() )
+            for j in self.us ():
+                self.create_note ( text=self.Lopsum, name="Lorem Ipsum", user=j, time=datetime.datetime.now () )
                 self.create_calendar ( date="2108-01-01", content=self.Lopsum, user=j )
 
     def create_user ( self, username, password, email ):
@@ -33,14 +40,16 @@ class Command ( BaseCommand ):
         n.save ()
 
     def create_calendar ( self, date, content, user ):
-        e = Event ( user=user, date=date, description=content, is_public=True )
+        e = Event ( user=user, date=date, description=content, time=datetime.time().now(), is_public=True )
         e.save ()
-        
-    def deleteall(self):
-        for e in self.events:
-            e.delete()
-        for n in self.notes:
-            n.delete()
-        for i in self.us:
-            i.delete()
 
+    def deleteall ( self ):
+        for e in self.events():
+            e.delete ()
+            print('event deleted')
+        for n in self.notes():
+            n.delete ()
+            print('note deleted')
+        for i in self.us ():
+            i.delete ()
+            print('user deleted')
