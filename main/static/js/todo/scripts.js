@@ -293,7 +293,7 @@ function add_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-		var array = [response['title'], response['date'], response['id'], response['priority']];
+		var array = [response['title'], response['datetime'], response['id'], response['priority']];
 		add_to_list(array);
                 $('#todo_' + response['id']).slideDown(duration='slow');
                 $('#todo_card_' + response['id']).slideDown(duration='slow');
