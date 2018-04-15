@@ -15,8 +15,9 @@ def index(request):
         'header': "Notes index page header",
     }
     notes_list = []
-    context['voice_note'] = Notes.objects.filter(user=request.user, is_voice=True).count()
-    context['text_note'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+    context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
+    context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+    context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
     notes = Notes.get_notes('title_up', request.user)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
@@ -160,7 +161,7 @@ def delete_ajax(request):
     if request.method == "POST":
         note_id = request.POST.get('id')
         should_return_last_note = request.POST.get('return_last_note')
-        if Notes.objects.filter(user=request.user, id=note_id).count > 0:
+        if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
             if Notes.delete_note(note_id):
                 result = "100"
             else:

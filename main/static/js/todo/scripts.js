@@ -144,6 +144,7 @@ function get_todo_data_ajax(id){
         {
             if (response['result'] == "Success")
             {
+                $("#todo_id").html(id);
                 $("#Open-Todo").find("#todo_title_show").html(response['title']);
                 $("#Open-Todo").find("#todo_text_show").html(response['text']);
 		$("#Open-Todo").find("#todo_id").html(response['id']);
@@ -295,19 +296,19 @@ function add_todo_ajax()
 };
 
 
-function delete_todo_ajax(id)
+function delete_todo_ajax()
 {
     $('#delete_btn').attr('disabled', 'disabled');
     $.ajax({
         type: "POST",
         url: '/todo/delete',
-        data: {"id": id},
+        data: {"id": $('#todo_id').html()},
         success: function(response)
         {
             if (response['result'] == "Success")
             {
-                $('#todo_' + id).slideUp(duration='slow', complete=function(){$('#todo_' + id).remove()});
-                    $('#todo_card_' + id).slideUp(duration='slow', complete=function(){$('#todo_card' + id).remove()});
+                $('#todo_' + $('#todo_id').html()).slideUp("slow");
+                $('#todo_card_' + $('#todo_id').html()).slideUp("slow");
             }
             $('#delete_btn').removeAttr('disabled');
         }

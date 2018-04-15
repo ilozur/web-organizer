@@ -46,6 +46,7 @@
 <div class="modal fade" id="Open-Todo">
     <div class="modal-dialog modal modal-dialog-centered">
         <div class="modal-content">
+            <div hidden id="todo_id"></div>
             <div class="modal-header">
                 <h2 class="modal-title" id="todo_title_show"></h2>
             </div>
@@ -66,7 +67,7 @@
                 <button type="button" class="btn btn-light">&#10003;</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_todo_ajax('{{item.2}}')">Удалить</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_todo_ajax()">Удалить</button>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-Todo"
                         onclick="open_todo_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>

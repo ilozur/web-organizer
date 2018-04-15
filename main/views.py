@@ -50,6 +50,27 @@ def index(request):
                                                                       date.date(), request.user).count()
             context['year_events_count'] = Event.get_events_in_range(date.date() - timedelta(365),
                                                                      date.date(), request.user).count()
+            context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
+            context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+            context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+            nearest_events = Event.objects.filter(user=request.user, date__gte=date.date()).order_by('date')
+            if nearest_events.count() > 0:
+                while (nearest_events.first().date == date.date()) and (nearest_events.first().time < date.time()):
+                    nearest_events.pop(0)
+                    if nearest_events.count() == 0:
+                        break
+            if nearest_events.first():
+                context['nearest_event_exists'] = True
+                context['nearest_event_name'] = nearest_events.first().title
+                context['nearest_event_date'] = nearest_events.first().date.strftime("%d.%m.%Y ") + \
+                                                nearest_events.first().time.strftime("%H:%M")
+            else:
+                context['nearest_event_exists'] = False
+            if Notes.objects.filter(user=request.user).order_by('-last_edit_time', '-added_time').first():
+                context['last_note_exists'] = True
+                context['last_note_title'] = Notes.objects.all().order_by('-last_edit_time', '-added_time').first().name
+            else:
+                context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
