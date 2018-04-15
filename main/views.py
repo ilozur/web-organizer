@@ -12,8 +12,12 @@ from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
-from notes.models import Notes
+from notes.models import *
+from calendars.models import *
 from django.contrib.auth.models import User
+
+from profile.forms import RecoverPasswordUserData
+from todo.forms import AddTodoForm, EditTodoForm
 
 
 def index(request):
@@ -27,13 +31,54 @@ def index(request):
             context['sign_in_form'] = sign_in_form
             sign_up_form = SignUpForm()
             context['sign_up_form'] = sign_up_form
+            recover_password_user_data_form = RecoverPasswordUserData()
+            context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
+            date = datetime.now()
+            if Event.objects.filter(user=request.user, date=date.date()).first():
+                context['today_event_exists'] = True
+                context['today_event_name'] = Event.objects.filter(user=request.user, date=date.date()).first().title
+                context['today_event_id'] = Event.objects.filter(user=request.user, date=date.date()).first().id
+            context['all_events_count'] = Event.objects.filter(user=request.user).count()
+            context['today_events_count'] = Event.objects.filter(user=request.user, date=date.date()).count()
+            context['yesterday_events_count'] = Event.objects.filter(user=request.user,
+                                                                     date=date.date() - timedelta(1)).count()
+            context['week_events_count'] = Event.get_events_in_range(date.date() - timedelta(7),
+                                                                     date.date(), request.user).count()
+            context['month_events_count'] = Event.get_events_in_range(date.date() - timedelta(30),
+                                                                      date.date(), request.user).count()
+            context['year_events_count'] = Event.get_events_in_range(date.date() - timedelta(365),
+                                                                     date.date(), request.user).count()
+            context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
+            context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
+            context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+            nearest_events = Event.objects.filter(user=request.user, date__gte=date.date()).order_by('date')
+            if nearest_events.count() > 0:
+                while (nearest_events.first().date == date.date()) and (nearest_events.first().time < date.time()):
+                    nearest_events.pop(0)
+                    if nearest_events.count() == 0:
+                        break
+            if nearest_events.first():
+                context['nearest_event_exists'] = True
+                context['nearest_event_name'] = nearest_events.first().title
+                context['nearest_event_date'] = nearest_events.first().date.strftime("%d.%m.%Y ") + \
+                                                nearest_events.first().time.strftime("%H:%M")
+            else:
+                context['nearest_event_exists'] = False
+            if Notes.objects.filter(user=request.user).order_by('-last_edit_time', '-added_time').first():
+                context['last_note_exists'] = True
+                context['last_note_title'] = Notes.objects.filter(
+                        user=request.user).order_by('-last_edit_time', '-added_time').first().name
+            else:
+                context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
+            context['add_todo_form'] = AddTodoForm()
+            context['edit_todo_form'] = EditTodoForm()
             return render(request, "main/home.html", context)
     else:
         return HttpResponseRedirect('/')
@@ -59,7 +104,7 @@ def send_mail(mail):
     msg.send()
 
 
-def sign_up_view(request):
+def sign_up_ajax(request):
     context = {}
     if request.method == "GET":
         if not request.user.is_authenticated:
@@ -97,18 +142,17 @@ def sign_up_view(request):
                                                "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
                                                "'>Go to this link to activate your account</a>")
                             send_mail(mail)
-                            result = "success"
+                            result = "100"
                         else:
-                            result = "Passwords do not match"
+                            result = "101"
                     else:
-                        result = "This username is already taken"
+                        result = "102"
                 else:
-                    result = "This email is already used"
-
+                    result = "103"
             else:
-                result = "Form not valid"
+                result = "104"
         else:
-            result = "User has already signed in"
+            result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -162,12 +206,12 @@ def sign_in_ajax(request):
         if not request.user.is_authenticated:
             form = SignInForm(request.POST)
             if form.is_valid():
-                name = form.data['username'].lower()
+                name = form.data['username_sign_in'].lower()
                 password = form.data['password']
                 found_user = (len(User.objects.filter(username=name)) > 0) or \
                              (len(User.objects.filter(email=name)) > 0)
                 if not found_user:
-                    result = "User not found"
+                    result = "106"
                 else:
                     user = User.objects.filter(email=name).first()
                     if user is None:
@@ -175,16 +219,16 @@ def sign_in_ajax(request):
                     if user.is_active:
                         loginned_user = authenticate(request, username=user.username, password=password)
                         if loginned_user is None:
-                            result = "Wrong password"
+                            result = "107"
                         else:
                             login(request, loginned_user)
-                            result = "success"
+                            result = "100"
                     else:
-                        result = "User was not activated with email"
+                        result = "108"
             else:
-                result = "Form not valid"
+                result = "104"
         else:
-            result = "User has already signed in"
+            result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

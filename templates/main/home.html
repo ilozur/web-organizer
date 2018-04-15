@@ -7,6 +7,7 @@
     <link rel="stylesheet" href='{% static "css/base.css" %}'>
     <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
     <script charset='utf-8' type="text/javascript" src='{% static "js/main/home/scripts.js" %}'></script>
+    <script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
     <script>setup_link({% url "notes.index" %});</script>
 {% endblock %}
 
@@ -15,16 +16,31 @@
         <div class="carousel-item active">
             <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">
             <div class="carousel-caption text-left">
-                <h1>Добрый день, {{ request.user.first_name }}</h1>
-                <h3>Последняя заметка: </h3>
-                <p><a href='{% url "notes.latest" %}' class="link-section">Резервные коды</a></p>
-                <h3>Ближайшее мероприятие: </h3>
-                <p><a href='{% url "calendar.nearest" %}' class="link-section">Дедлайн</a><br/>
-                    <small><i>25.10.2018 10:00 AM | Школа Анализа Данных</i></small>
-                </p>
-                <h3>Скорейшее напоминание: </h3>
-                <p><a href="/todo_near" class="link-section">Отдать Бобу диски</a></p>
 
+                <script> 
+                var h=(new Date()).getHours(); 
+                    if (h >= 23 || h < 6) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>");
+                    if (h >= 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>");
+                    if (h >= 12 && h < 17) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>");
+                    if (h >= 17 && h < 23) document.write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>");
+                </script> 
+                <h3>Ближайшее мероприятие: </h3>
+                {% if nearest_event_exists %}
+                    <p><a href="#" class="link-section">{{ nearest_event_name }}</a><br/>
+                        <small><i>{{ nearest_event_date }} | Place here</i></small>
+                    </p>
+                {% else %}
+                    <p><a href="#" class="link-section">Нет событий</a><br/></p>
+                {% endif %}
+                <h3>Скорейшее напоминание: </h3>
+                <p><a href="#" class="link-section">Отдать Бобу диски</a></p>
+                <h3>Последняя заметка: </h3>
+                {% if last_note_exists %}
+                    <p><a href="#" class="link-section">{{ last_note_title }}</a></p>
+                {% else %}
+                    <p><a href="#" class="link-section">Нет заметок</a></p>
+                {% endif %}
+>>>>>>> develop
             </div>
         </div>
     </div>
@@ -52,9 +68,9 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего заметок : 42</h4>
-                        <p class="lead"> 24 текстовых </p>
-                        <p class="lead"> 18 голосовых </p>
+                        <h4>Всего заметок : {{ all_notes_count }}</h4>
+                        <p class="lead"> {{ text_notes_count }} текстовых </p>
+                        <p class="lead"> {{ voice_notes_count }} голосовых </p>
                     </div>
                 </div>
             </div>
@@ -63,19 +79,19 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>Ближайшие события календаря:</h4>
-                        <p class="lead"> На день: <span class="text-muted">Ничего не запланированно</span></p>
+                        <p class="lead"> На день: <span class="text-muted">{% if today_event_exists %}<a href="#" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ today_event_id }})">{{ today_event_name }}</a>{% else %}Ничего не запланировано{% endif %}</span></p>
                         <p class="lead"> На неделю: <a href="#" data-toggle="modal" data-target="#Event">Дедлайн</a> <a href="#" data-toggle="modal" data-target="#Event">День рождения Алисы</a></p>
                         <a href="#" class="badge badge-danger add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего событий : 72</h4>
-                        <p class="lead">Событий за сегодня: 0 </p>
-                        <p class="lead">Событий за вчера: 2 </p>
-                        <p class="lead">Событий за неделю: 7 </p>
-                        <p class="lead">Событий за месяц: 27 </p>
-                        <p class="lead">Событий за год: 54 </p>
+                        <h4>Всего событий : {{ all_events_count }}</h4>
+                        <p class="lead">Событий за сегодня: {{ today_events_count }}</p>
+                        <p class="lead">Событий за вчера: {{ yesterday_events_count }}</p>
+                        <p class="lead">Событий за неделю: {{ week_events_count }}</p>
+                        <p class="lead">Событий за месяц: {{ month_events_count }}</p>
+                        <p class="lead">Событий за год: {{ year_events_count }}</p>
                     </div>
                 </div>
             </div>
@@ -88,8 +104,8 @@
                         <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Напомнить Саше про сотку</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                         <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Забрать заказ</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                         <h4>Завершенные напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-danger">&#10007;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-danger">&#10007;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
+                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>
                         <a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
                     </div>
@@ -109,7 +125,4 @@
     {% include "modals/calendar.html" %}
     {% include "modals/small_parts.html" %}
     {% include "modals/todo.html" %}
-{% endblock %}
-{% block pre_scripts %}
-    <script>hello_user('{{ request.user.first_name }}');</script>
 {% endblock %}

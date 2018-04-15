@@ -1,10 +1,5 @@
 /*Стили для личного кабинета*/
 
-/*Цвет фона*/
-body {
-  background-color: #eee;
-}
-
 /*Границы контента*/
 .profile {
   padding: 5% 20%;
@@ -31,14 +26,4 @@ body {
   margin: auto;
   margin-right: 10px;
   float: left;
-}
-
-/*Заголовок модуля*/
-.modal-header {
-  background-color: #eee;
-}
-
-/*Подвал модуля*/
-.modal-footer {
-  background-color: #eee;
 }

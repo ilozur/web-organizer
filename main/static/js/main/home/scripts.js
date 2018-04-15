@@ -26,7 +26,7 @@ function get_note_data_ajax(id){
         data: {"id": id},
         success: function(response)
         {
-            if (response['result'] == "Success")
+            if (response['result'] == "100")
             {
                 $('#note_title_show').html(response['title']);
                 $('#note_data_show').html(response['data']);
@@ -35,6 +35,10 @@ function get_note_data_ajax(id){
                 {
                     $('#note_last_edit').html(response['last_edit_time'] + '(edited)');
                 }
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -73,7 +77,7 @@ function add_note_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "Success")
+            if (response['result'] == "100")
             {
                 var now_notes_count = $("#last_notes_holder").find('div').length;
                 if (now_notes_count == 0)
@@ -92,7 +96,11 @@ function add_note_ajax()
                 }
                 $('#note_' + response['id']).slideDown('slow');
                 $("#close_note_btn").trigger("click");
-                voice_text('Заметка добавлена');
+                voice_text('Заметка добавлена.');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -112,10 +120,14 @@ function add_event_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
-                alert('OK, event was added');
                 $("#close_calendar_btn").trigger("click");
+                voice_text('Событие добавлено.');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
         }
     });
@@ -142,7 +154,7 @@ function save_note_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "100")
             {
                 $('#note_title_' + id).html($('#id_note_title_edit').val());
                 close_note_edit_mode();
@@ -157,7 +169,11 @@ function save_note_ajax()
                 $('#note_data_show').html(CKEDITOR.instances.id_note_data_edit.getData());
                 $('#note_title_show').html($('#id_note_title_edit').val());
                 $('#note_last_edit').html(response['edited_time']);
-                voice_text('Заметка сохранена');
+                voice_text('Заметка сохранена.');
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
             }
             $("#save_note_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
@@ -179,7 +195,7 @@ function delete_note_ajax()
             data: {"id": id, "return_last_note": true},
             success: function(response)
             {
-                if (response['result'] == "success")
+                if (response['result'] == "100")
                 {
                     var now_notes_count = $("#last_notes_holder").find('div').length;
                     if (now_notes_count == 1)
@@ -199,7 +215,11 @@ function delete_note_ajax()
                         $('#note_' + response['id']).slideDown('slow');
                     }
                     $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
-                    voice_text('Заметка удалена');
+                    voice_text('Заметка удалена.');
+                }
+                else
+                {
+                    voice_ajax_result(response['result']);
                 }
             }
         });
@@ -210,4 +230,49 @@ function voice_note()
 {
     var clean_text = $('#note_data_show').text();
     voice_text(clean_text);
+};
+
+function listen_note(param)
+{
+    $('#New-Note').find('img').attr('src', '/static/icons/listening_icon.png');
+    voice_to_text(function (text) {
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        if (param == "add")
+        {
+            CKEDITOR.instances.id_note_data.setData(text);
+        }
+        else if (param == 'edit')
+        {
+            CKEDITOR.instances.id_note_data_edit.setData(text);
+        }
+        $('#New-Note').find('img').attr('src', '/static/icons/micro_icon.png');
+    });
+};
+
+function get_event_data_ajax(id){
+    $('#event_num').html(id);
+    $('#event_title_show').html('loading');
+    $('#event_date_show').html('loading');
+    $('#event_description_show').html('loading');
+    $.ajax({
+        type: "POST",
+        url: '/calendar/events/get_event_data',
+        data: {"id": id},
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                $('#event_title_show').html(response['title']);
+                $('#event_date_show').html(response['date']);
+                $('#event_description_show').html(response['description']);
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
+
+        }
+    });
 };

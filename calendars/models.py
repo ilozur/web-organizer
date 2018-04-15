@@ -47,3 +47,17 @@ class Event(models.Model):
         elif modificator == 'private':
             events = events.filter(is_public=0)
         return events
+
+    @staticmethod
+    def delete_event(event_id):
+        if len(Event.objects.filter(id=event_id)) > 0:
+            Event.objects.filter(id=event_id).delete()
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def get_events_in_range(from_date, to_date, user):
+        events = Event.objects.filter(user=user)
+        events = events.filter(date__gte=from_date, date__lte=to_date)
+        return events

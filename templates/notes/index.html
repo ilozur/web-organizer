@@ -1,5 +1,4 @@
 {% extends "main/base.html" %}
-
 {% block meta %}
     {% load staticfiles %}
     <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
@@ -9,7 +8,6 @@
     <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
     <script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
 {% endblock %}
-
 {% block content %}
     <article class="notes">
 			<section class="mast">
@@ -21,12 +19,12 @@
 						<div class="btn-group btn-group-lg">
 							<button type="button" class="btn btn-warning" onclick="show_cards();">
 								<picture>
-									<img src='{% static "icons/card_icon.png" %}' class="icon">
+									<img src='{% static "icons/card_icon_notes.png" %}' class="icon">
 								</picture>
 							</button>
 							<button type="button" class="btn btn-warning" onclick="show_list();">
 								<picture>
-									<img src='{% static "icons/list_icon.png" %}' class="icon">
+									<img src='{% static "icons/list_icon_notes.png" %}' class="icon">
 								</picture>
 							</button>
 						</div>
@@ -38,23 +36,17 @@
 							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('title_down')">Я..А</button>
 						</div>
 						<div class="alert alert-warning">
-							<small>Всего заметок: 42</small> <br/>
-							<small>Текстовых: 24</small> <br/>
-							<small>Голосовых: 18</small> <br/>
+							<small>Всего заметок: {{ all_notes_count }}</small> <br/>
+							<small>Текстовых: {{ text_notes_count }}</small> <br/>
+							<small>Голосовых: {{ voice_notes_count }}</small> <br/>
 						</div>
-						<form id="search_note_form" onsubmit="return false;">
-							{% load bootstrap %}
-							{% csrf_token %}
-							{{ search_note_form.result | bootstrap }}
-						</form>
-						<input id="search_note_btn" type="button" value="Search" class="btn btn-warning" onclick="search_notes_ajax()">
 					</nav>
 				</section>
 				<section class="list-view">
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
 							<div id="note_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');">
-								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
+								<a href="#" class="list-group-item list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
 									<h7 id="note_title_{{ item.2 }}">{{ item.0 }}</h7>
 									<div class="date"> <small id="note_date_{{ item.1 }}">{{ item.1 }}</small></div>
 								</a>
@@ -79,7 +71,7 @@
 						{% endfor %}
 					</div>
 				</section>
-				<nav class="navbar">
+				<nav class=" navbar navbar-pag">
 					<div class="btn-group btn-group-lg">
 						<a href="#"><button type="button" class="btn btn-warning">&laquo;</button></a>
 						<a href="#"><button type="button" class="btn btn-warning disabled">1</button></a>
