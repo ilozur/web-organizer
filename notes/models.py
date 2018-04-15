@@ -34,6 +34,8 @@ class Notes(models.Model):
         """
         @brief
         This function get notes
+        @detailed
+        This function get notes by time and alphabetically
         if aim = 'date' -> 'up' = new-old, 'down' = old-new
         if aim = 'title' -> 'up' = a-z, 'down' = z-a
         """
@@ -60,9 +62,9 @@ class Notes(models.Model):
     def get_note_by_id(note_id):
         """
         @param
-        This is ID of Notes
+        This is ID of notes
         @brief
-        This function get notes by id
+        This function gets note by id
         """
         return Notes.objects.filter(id=note_id).first()
 
@@ -70,9 +72,9 @@ class Notes(models.Model):
     def delete_note(note_id):
         """
         @param
-        This is ID of Notes
+        This is ID of notes
         @brief
-        This function delete note
+        This function deletes note
         """
         if len(Notes.objects.filter(id=note_id)) > 0:
             Notes.objects.filter(id=note_id).delete()
@@ -99,8 +101,8 @@ class Notes(models.Model):
         @param
         This is the time at which the notes are sorted
         @brief
-        This function sorts notes by date
-        "detailed
+        This function sorts notes
+        @detailed
         This function sorts notes by date and alphabetically and aslo from new to old and conversely
         """
         notelist = Notes.objects.filter(user=user)
