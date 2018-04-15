@@ -12,7 +12,9 @@ from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
+from calendar.models import Event
 from notes.models import Notes
+from todo.models import Todos
 from django.contrib.auth.models import User
 
 from profile.forms import RecoverPasswordUserData
@@ -38,9 +40,45 @@ def index(request):
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
             context['last_notes_count'] = len(context['last_notes'])
+            context['notes_stat'] = count_notes(request.user)
+            context['todo_stat'] = count_todos(request.user)
+            context['event_stat'] = count_events(request.user)
+
+
             return render(request, "main/home.html", context)
     else:
         return HttpResponseRedirect('/')
+
+
+def count_notes(current_user):
+    all_notes = Notes.objects.filter(Notes.user == current_user)
+    stat = {'notes_count': all_notes.count()}
+    text_notes = all_notes.filter(Notes.is_voice == False)
+    stat['text_note_count'] = text_notes.count()
+    stat['voice_note_count'] = all_notes.count() - text_notes.count()
+    return stat
+
+
+def count_todos(current_user):
+    all_todo = Todos.objects.filter(Todos.user == current_user)
+    stat = {'todo_count': all_todo.count()}
+    todo_in_progress = all_todo.filter(Todos.status == 'in progress')
+    stat['in_progress_todo_count'] = todo_in_progress.count()
+    stat['voice_note_count'] = all_todo.count() - todo_in_progress.count()
+    return stat
+
+def count_events(current_user):
+
+    #stat = {'today_event':Event.objects.filter(Event.added_date == date).count()}
+    stat = {
+        'today_evnts':count_event_in_interval(current_user,0),
+        'last_week_events':count_event_in_interval(current_user,7),
+        'last_month_evens':count_event_in_interval(current_user,30),
+        'last_year_events':count_event_in_interval(current_user,360),
+
+    }
+    return stat
+
 
 
 def get_last_notes(user):
@@ -209,3 +247,9 @@ def sign_out_view(request):
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect('/')
+
+def count_event_in_interval(current_user,days_interval):
+    all_evnts = Event.objects.filter(Event.user == current_user)
+    date = datetime.now().date()
+    count = all_evnts((date.days - Event.added_date.days) <= days_interval).count()
+    return count
