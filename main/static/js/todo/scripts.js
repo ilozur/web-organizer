@@ -31,6 +31,19 @@ function add_to_list(item){
     get_priorities(item[3], item[2]);
 };
 
+function update_done_todos(item){
+    var str = "'in progress'";
+    tmp = '<a href="#" id="todo_' + item[2] + '" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">' +
+              '<h7>' + item[0] + '</h7>' +
+              '<div class="priorities">' +
+                  '<button  type="button" class="btn btn-info" onclick="status_change(' + item[2] + ', ' + str + ')">&#10007;</button>' +
+                  '<div class="date"><small>' + item[1] + '</small></div>' +
+              '</div>' +
+          '</a>';
+    $("#Complete").find(".list-group").html(tmp + $("#Complete").find(".list-group").html());
+    get_priorities(item[3], item[2]);
+}
+
 function get_priorities(value, id){
     $("#list_priorities_" + id).html('');
     for (var i = 1; i < value; i++){
@@ -56,8 +69,8 @@ function sorting(type){
                 for(var i = 0; i < response['todo_list'].length; i++){
                     add_to_list(response['todo_list'][i]);
                 }
-		$("#CardList").html('');
-		for(var i = 0; i < response['todo_list'].length; i++){
+		        $("#CardList").html('');
+		        for(var i = 0; i < response['todo_list'].length; i++){
                     add_todo_card(response['todo_list'][i]);
                 }
             }
@@ -106,9 +119,13 @@ function status_change(id, type){
         success: function(response){
             if (response['result'] == 'Success')
             {
-		sorting('new');
-                $("#todo_" + id).remove();
-                $("#card_" + id).remove();
+		        sorting('new');
+		        console.log(type);
+		        if (type == 'done'){
+		            update_done_todos(response['current']);
+		        } else {
+		            $("#todo_" + id).remove();
+		        }
                 $("#amounts small:eq(1)").html(response['amount_of_todos'][0]);
                 $("#amounts small:eq(3)").html(response['amount_of_todos'][1]);
                 $("#amounts small:eq(5)").html(response['amount_of_todos'][2]);

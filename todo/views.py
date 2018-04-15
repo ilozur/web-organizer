@@ -117,6 +117,7 @@ def status_change(request):
             obj = Todos.get_todo_by_id(todo_id)
             obj.status = todo_type
             obj.save()
+            response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
             response['result'] = "Success"
             response['amount_of_todos'] = Todos.get_amounts(request.user)
         else:
