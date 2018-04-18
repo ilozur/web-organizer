@@ -24,7 +24,7 @@
                     if (h >= 17 && h < 23) document.write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>");
                 </script> 
                 <h3>Ближайшее мероприятие: </h3>
-                {% if neares_event_exists %}
+                {% if nearest_event_exists %}
                     <p><a href="#" class="link-section">{{ nearest_event_name }}</a><br/>
                         <small><i>{{ nearest_event_date }} | Place here</i></small>
                     </p>

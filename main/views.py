@@ -68,7 +68,8 @@ def index(request):
                 context['nearest_event_exists'] = False
             if Notes.objects.filter(user=request.user).order_by('-last_edit_time', '-added_time').first():
                 context['last_note_exists'] = True
-                context['last_note_title'] = Notes.objects.all().order_by('-last_edit_time', '-added_time').first().name
+                context['last_note_title'] = Notes.objects.filter(
+                        user=request.user).order_by('-last_edit_time', '-added_time').first().name
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()

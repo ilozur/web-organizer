@@ -258,7 +258,6 @@ function save_todo_ajax()
 
 function add_todo_ajax()
 {
-    alert($('#id_todo_deadline').val());
     form_data = $('#add_todo_form').serialize();
     $.ajax({
         type: "POST",
@@ -270,6 +269,7 @@ function add_todo_ajax()
             {
 		var array = [response['title'], response['date'], response['id'], response['priority']];
 		add_to_list(array);
+        add_todo_card(array);
                 $('#todo_' + response['id']).slideDown(duration='slow');
                 $('#todo_card_' + response['id']).slideDown(duration='slow');
                 $("#close_todo_btn").trigger("click");
