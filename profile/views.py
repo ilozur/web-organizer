@@ -122,7 +122,7 @@ def change_password_ajax(request):
     response_data = {}
     user = request.user
     if request.method == "POST":
-        form = ChangeUserDataForm(request.POST)
+        form = ChangePasswordForm(request.POST)
         if form.is_valid():
             password = form.data['old_password']
             new_password1 = form.data['new_password1']
