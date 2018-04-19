@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from main.forms import *
@@ -35,6 +34,7 @@ def index(request):
             context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
+            context['language'] = Language.objects.filter(user=request.user).first().lang
             date = datetime.now()
             if Event.objects.filter(user=request.user, date=date.date()).first():
                 context['today_event_exists'] = True
@@ -134,6 +134,9 @@ def sign_up_ajax(request):
                             user = User(email=email, username=username, first_name=name, last_name=surname, is_active=0)
                             user.set_password(pass1)
                             user.save()
+                            # here should be lang=*lang taken from registration*
+                            lang = Language(user=user)
+                            lang.save()
                             sign_up_key = create_unic_key(user, username, pass1)
                             sign_up_key.save()
                             mail = create_mail(user,

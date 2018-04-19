@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from calendars.models import *
 from notes.models import *
 from todo.models import *
+from main.models import Language
 from django.contrib.auth.models import User
 
 
@@ -107,6 +108,9 @@ class Command(BaseCommand):
             self.stdout.write("-", ending="")
         self.stdout.write("]")
         for user in users:
+            langs = Language.objects.filter(user=user)
+            for lang in langs:
+                lang.delete()
             user.delete()
             counter += 1
             percents = int(counter / users_count * 100)

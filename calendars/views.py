@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import *
 from datetime import datetime, timedelta
 from calendars.forms import *
+from main.models import Language
 from django.http import HttpResponse, HttpResponseRedirect
 import json
 
@@ -29,6 +30,7 @@ def index(request):
         context['now_date'] = str(date.year) + "_" + str(date.month)
         add_event_form = AddingEventForm()
         context['add_event_form'] = add_event_form
+        context['language'] = Language.objects.filter(user=request.user).first().lang
         return render(request, "calendars/index.html", context)
     else:
         response_data = {}

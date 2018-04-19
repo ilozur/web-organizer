@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from notes.forms import *
+from main.models import Language
 import json
 from datetime import datetime
 from notes.forms import AddNoteForm, SearchForm
@@ -15,6 +16,7 @@ def index(request):
         'header': "Notes index page header",
     }
     notes_list = []
+    context['language'] = Language.objects.filter(user=request.user).first().lang
     context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
     context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
     context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()

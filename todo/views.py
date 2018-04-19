@@ -1,10 +1,9 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
-
+from main.models import Language
 from main.views import create_mail, send_mail
 from todo.forms import AddTodoForm
 from todo.forms import SearchForm
@@ -27,6 +26,7 @@ def index(request):
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
+    context['language'] = Language.objects.filter(user=request.user).first().lang
     return render(request, "todo/index.html", context)
 
 

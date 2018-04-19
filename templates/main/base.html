@@ -18,7 +18,7 @@
     {% if user.is_authenticated %}
         <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
         <script src='{% static "js/live_recognizing.js" %}'></script>
-        <script>start_background_listening();</script>
+        <script>start_background_listening("{{ language }}");</script>
     {% endif %}
 </head>
 <body>

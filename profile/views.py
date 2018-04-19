@@ -18,7 +18,8 @@ def index(request):
             'title': "User profile page",
             'header': "User profile header",
             'change_user_data_form': change_user_data_form,
-            'change_password_form': change_password_form
+            'change_password_form': change_password_form,
+            'language': Language.objects.filter(user=request.user).first().lang,
         }
         if request.user.is_authenticated:
             return render(request, "main/profile.html", context)
