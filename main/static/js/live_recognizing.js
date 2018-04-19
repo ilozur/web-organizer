@@ -11,6 +11,10 @@ function start_background_listening(language)
         {
             commands = {
                 "привет (ева)": function() { alert('Ева'); },
+                "открой заметки": function() { window.location.href = "/notes"; },
+                "открой главную": function() { window.location.href = "/"; },
+                "открой календарь": function() { window.location.href = "/calendar"; },
+                "открой напоминания": function() { window.location.href = "/todo"; },
             };
         }
         else if (language == "en")
