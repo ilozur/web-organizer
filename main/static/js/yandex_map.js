@@ -1,5 +1,5 @@
 ymaps.ready(function () {
-    var myPlacemark,
+    var placemark,
     myMap = new ymaps.Map('map', {
         center: [55.753994, 37.622093],
         zoom: 10
@@ -12,21 +12,20 @@ ymaps.ready(function () {
         var coords = e.get('coords');
 
         // Если метка уже создана – просто передвигаем ее.
-        if (myPlacemark) {
-            myPlacemark.geometry.setCoordinates(coords);
-            console.log(coords);
+        if (placemark) {
+            placemark.geometry.setCoordinates(coords);
         }
         // Если нет – создаем.
         else {
-            myPlacemark = createPlacemark(coords);
-            myMap.geoObjects.add(myPlacemark);
+            placemark = createPlacemark(coords);
+            myMap.geoObjects.add(placemark);
             // Слушаем событие окончания перетаскивания на метке.
-            myPlacemark.events.add('dragend', function () {
-                getAddress(myPlacemark.geometry.getCoordinates());
+            placemark.events.add('dragend', function () {
+                getAddress(placemark.geometry.getCoordinates());
             });
-            console.log(coords);
         }
         getAddress(coords);
+        console.log(coords);
     });
 
     // Создание метки.
@@ -41,11 +40,11 @@ ymaps.ready(function () {
 
     // Определяем адрес по координатам (обратное геокодирование).
     function getAddress(coords) {
-        myPlacemark.properties.set('iconCaption', 'поиск...');
+        placemark.properties.set('iconCaption', 'поиск...');
         ymaps.geocode(coords).then(function (res) {
             var firstGeoObject = res.geoObjects.get(0);
 
-            myPlacemark.properties
+            placemark.properties
                 .set({
                     // Формируем строку с данными об объекте.
                     iconCaption: [
@@ -57,6 +56,7 @@ ymaps.ready(function () {
                     // В качестве контента балуна задаем строку с адресом объекта.
                     balloonContent: firstGeoObject.getAddressLine()
                 });
+            $('#placemark').html(firstGeoObject.getAddressLine());
         });
     }
 });
