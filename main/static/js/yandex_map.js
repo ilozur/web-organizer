@@ -1,3 +1,5 @@
+var cur_coordinates;
+
 ymaps.ready(function () {
     var placemark,
     myMap = new ymaps.Map('map', {
@@ -25,7 +27,8 @@ ymaps.ready(function () {
             });
         }
         getAddress(coords);
-        console.log(coords);
+        console.log(placemark.geometry.getCoordinates()[0]);
+        $('#id_place').val(placemark.geometry.getCoordinates()[0] + "|" + placemark.geometry.getCoordinates()[1]);
     });
 
     // Создание метки.
@@ -59,4 +62,13 @@ ymaps.ready(function () {
             $('#placemark').html(firstGeoObject.getAddressLine());
         });
     }
+    
+    showMap = new ymaps.Map('show_map', {
+        center: [55.753994, 37.622093],
+        zoom: 10
+    }, {
+        searchControlProvider: 'yandex#search'
+    });
+
+
 });

@@ -17,7 +17,7 @@ class Event(models.Model):
     should_notify_hours = models.SmallIntegerField(default=0)
     should_notify_minutes = models.SmallIntegerField(default=0)
     should_notify_days = models.SmallIntegerField(default=0)
-    place = models.CharField(max_length=255, default=None)
+    place = models.CharField(max_length=255, default="none")
 
     @staticmethod
     def get_events(sorting_type, user=None):
