@@ -15,7 +15,7 @@ from notes.models import *
 from calendars.models import *
 from django.contrib.auth.models import User
 
-from profile.forms import RecoverPasswordUserData
+from siteprofile.forms import RecoverPasswordUserData
 from todo.forms import AddTodoForm, EditTodoForm
 
 

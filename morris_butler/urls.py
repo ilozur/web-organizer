@@ -20,13 +20,13 @@ from ckeditor_uploader import views
 import calendars.urls
 import notes.urls
 import todo.urls
-import profile.urls
+import siteprofile.urls
 from main.views import *
 from django.conf.urls.static import static
 from morris_butler import settings
 from django.contrib.auth.decorators import login_required
 
-from profile.views import confirm_mail
+from siteprofile.views import confirm_mail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,7 +34,7 @@ urlpatterns = [
     path('notes/', include(notes.urls)),
     path('calendar/', include(calendars.urls)),
     path('todo/', include(todo.urls)),
-    path('profile/', include(profile.urls)),
+    path('siteprofile/', include(siteprofile.urls)),
     path('sign_in/', sign_in_ajax, name='sign_in'),
     path('sign_out/', sign_out_view, name='sign_out'),
     path('sign_up/', sign_up_ajax, name='sign_up'),

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from profile.forms import *
+from siteprofile.forms import *
 from main.models import *
 from main.views import create_mail, send_mail, create_key, check_email_uniq, create_unic_key
 
@@ -15,8 +15,8 @@ def index(request):
         change_user_data_form = ChangeUserDataForm()
         change_password_form = ChangePasswordForm()
         context = {
-            'title': "User profile page",
-            'header': "User profile header",
+            'title': "User siteprofile page",
+            'header': "User siteprofile header",
             'change_user_data_form': change_user_data_form,
             'change_password_form': change_password_form,
             'language': Language.objects.filter(user=request.user).first().lang,
@@ -99,7 +99,7 @@ def confirm_mail(request, key):
             user.email = keys.first().email
             keys.first().delete()
             user.save()
-    return HttpResponseRedirect('/profile')
+    return HttpResponseRedirect('/siteprofile')
 
 
 def create_confirm_email_key(user, email):
@@ -202,9 +202,9 @@ def create_recover_password_key_ajax(request):
                         key = create_unic_key(user, user.username, user.password)
                         key.save()
                         mail = create_mail(user,
-                                           "Go to this link to recover your password: 127.0.0.1:8000/profile/recover_password/" +
+                                           "Go to this link to recover your password: 127.0.0.1:8000/siteprofile/recover_password/" +
                                            key.key,
-                                           "<a href='http://127.0.0.1:8000/profile/recover_password/" + key.key +
+                                           "<a href='http://127.0.0.1:8000/siteprofile/recover_password/" + key.key +
                                            "'>Go to this link to recover your password</a>")
                         send_mail(mail)
                     result = "100"
