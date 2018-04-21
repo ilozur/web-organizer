@@ -1,5 +1,3 @@
-var cur_coordinates;
-
 ymaps.ready(function () {
     var placemark,
     myMap = new ymaps.Map('map', {
@@ -62,13 +60,46 @@ ymaps.ready(function () {
             $('#placemark').html(firstGeoObject.getAddressLine());
         });
     }
-    
+
     showMap = new ymaps.Map('show_map', {
         center: [55.753994, 37.622093],
         zoom: 10
     }, {
         searchControlProvider: 'yandex#search'
     });
-
-
 });
+
+
+function savePlacemark(coords) {
+
+        // Создание метки
+        var savePlacemark = new ymaps.Placemark(coords, {
+            iconCaption: 'поиск...'
+        }, {
+            preset: 'islands#violetDotIconWithCaption',
+            draggable: false
+        });
+
+        savePlacemark.properties.set('iconCaption', 'поиск...');
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+
+            savePlacemark.properties
+                .set({
+                    // Формируем строку с данными об объекте.
+                    iconCaption: [
+                        // Название населенного пункта или вышестоящее административно-территориальное образование.
+                        firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                        // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                        firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                    ].filter(Boolean).join(', '),
+                    // В качестве контента балуна задаем строку с адресом объекта.
+                    balloonContent: firstGeoObject.getAddressLine()
+                });
+            $('#place_address').html(firstGeoObject.getAddressLine());
+        });
+
+        // Добавление метки на карту
+        showMap.geoObjects.add(savePlacemark);
+
+    }

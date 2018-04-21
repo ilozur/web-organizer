@@ -263,12 +263,7 @@ function get_event_data_ajax(id){
                 $('#event_description_show').html(response['description']);
                 if(response['map_coordinates'] != 'none'){
                     coords = response['map_coordinates'].split('|')
-                    show_placemark = createPlacemark(coords);
-                    myMap.geoObjects.add(show_placemark);
-                    show_placemark.events.add('dragend', function () {
-                        getAddress(show_placemark.geometry.getCoordinates());
-                    });
-                    getAddress(coords);
+                    savePlacemark(coords);
                 }
             }
             else
