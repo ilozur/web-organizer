@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'bootstrapform',
     'ckeditor_uploader',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'morris_butler.urls'
@@ -162,3 +164,6 @@ EMAIL_HOST_USER = 'Morris-Butler-Organaizer@yandex.ru'
 EMAIL_HOST_PASSWORD = '7966915'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'Morris-Butler-Organaizer@yandex.ru'
+INTERNAL_IPS = '127.0.0.1'
+
+# https://django-debug-toolbar.readthedocs.io/en/stable/installation.html/
