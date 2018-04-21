@@ -6,8 +6,8 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/notes.css" %}'>
-    <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
-    <script charset="utf-8" language="JavaScript" src='{% static "js/notes/scripts.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
 {% endblock %}
 
 {% block content %}
@@ -15,70 +15,101 @@
 			<section class="mast">
 				<h1>Заметки</h1>
 			</section>
-			<section class="content">
-				<section class="navigation">
-					<nav class="navbar">
-						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-warning" onclick="show_cards();">
-								<picture>
-									<img src='{% static "icons/card_icon.png" %}' class="icon">
-								</picture>
-							</button>
-							<button type="button" class="btn btn-warning" onclick="show_list();">
-								<picture>
-									<img src='{% static "icons/list_icon.png" %}' class="icon">
-								</picture>
-							</button>
-						</div>
-						<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()">+</button>
-						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
-							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
-							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('title_up')">А..Я</button>
-							<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('title_down')">Я..А</button>
-						</div>
-						<div class="alert alert-warning">
-							<small>Всего заметок: 42</small> <br/>
-							<small>Текстовых: 24</small> <br/>
-							<small>Голосовых: 18</small> <br/>
-						</div>
-						<form id="search_note_form" onsubmit="return false;">
-							{% load bootstrap %}
-							{% csrf_token %}
-							{{ search_note_form.result | bootstrap }}
-						</form>
-						<input id="search_note_btn" type="button" value="Search" class="btn btn-warning" onclick="search_notes_ajax()">
-					</nav>
-				</section>
+			<section>
+				<div class="row">
+
+           		 <div class="col-3">
+
+                      <div class="card text-white bg-test mb-3 ml-3 noanimation" style="max-width:;">
+							  <div class="card-header">
+
+
+									<div class="btn-group btn-group-lg">
+										<button type="button" class="btn btn-warning" onclick="show_cards();">
+											<picture>
+												<img src='{% static "icons/card_icon.png" %}' class="icon">
+											</picture>
+										</button>
+										<button type="button" class="btn btn-warning" onclick="show_list();">
+											<picture>
+												<img src='{% static "icons/list_icon.png" %}' class="icon">
+											</picture>
+										</button>
+									</div>
+
+								  	<button type="button" class="btn btn-lg btn-warning test" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()">+</button>
+
+
+							  </div>
+							  <div class="card-body">
+
+
+
+
+								<form id="search_note_form" onsubmit="return false;" type="text1">
+									{% load bootstrap %}
+									{% csrf_token %}
+									{{ search_note_form.result | bootstrap }}
+								</form>
+
+								<input id="search_note_btn" type="button" value="Search" class="btn btn-warning" onclick="search_notes_ajax()">
+
+
+								<hr>
+
+
+								 <div class="alert alert-warning">
+									<small>Всего заметок: 42</small> <br/>
+									<small>Текстовых: 24</small> <br/>
+									<small>Голосовых: 18</small> <br/>
+								 </div>
+
+
+
+
+
+
+
+							  </div>
+						  </div>
+
+
+
+				</div>
+
+
+
 				<section class="list-view">
 					<div class="list-group" id="list_id">
 						{% for item in notes_data %}
-							<div id="note_{{item.2}}" onclick="get_note_data_ajax('{{item.2}}');">
+							<div id="note_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');">
 								<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
-									<h7 id="note_title_{{item.2}}">{{ item.0 }}</h7>
-									<div class="date"> <small id="note_date_{{item.1}}">{{ item.1 }}</small></div>
+									<h7 id="note_title_{{ item.2 }}">{{ item.0 }}</h7>
+									<div class="date"> <small id="note_date_{{ item.1 }}">{{ item.1 }}</small></div>
 								</a>
 							</div>
 						{% endfor %}
 					</div>
 				</section>
-				<section class="card-view" hidden>
-					<div class="row" id="cards_id">
+				<section class="card-view">
+					<div class="row" id="cards_id" style="display: none" hidden>
 						{% for item in notes_data %}
-							<div class="col-md-4" data-toggle="modal" data-target="#Open-Note">
-							<div class="card">
-								<div class="card-body">
-									<h3> {{ item.0 }} <small class="date">{{ item.1 }}</small></h3>
-									<hr/>
-									<p>
-										...
-									</p>
+							<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-md-4" data-toggle="modal" data-target="#Note-Card">
+								<div class="card">
+									<div class="card-body">
+										<h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3> <small class="date">{{ item.1 }}</small>
+										<hr/>
+										<p id="card_note_description_{{ item.2 }}">
+											{{ item.3 }}
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
 						{% endfor %}
 					</div>
 				</section>
+
+
 				<nav class="navbar">
 					<div class="btn-group btn-group-lg">
 						<a href="#"><button type="button" class="btn btn-warning">&laquo;</button></a>
@@ -87,10 +118,36 @@
 						<a href="#"><button type="button" class="btn btn-warning">3</button></a>
 						<a href="#"><button type="button" class="btn btn-warning">&raquo;</button></a>
 					</div>
+
+
+
+
 				</nav>
+
 			</section>
-		</article>
-		<article class="modals">
+
+
+
+
+
+
+
+					<div class="btn-group btn-group-lg">
+						<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
+						<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
+						<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('title_up')">А..Я</button>
+						<button type="button" class="btn btn-warning" onclick="sort_notes_ajax('title_down')">Я..А</button>
+					</div>
+
+
+
+				<div class="col"></div>
+
+				<div class="col"></div>
+			</div>
+
+	</article>
+	<article class="modals">
 			{% include "modals/notes.html" %}
-		</article>
+	</article>
 {% endblock %}
