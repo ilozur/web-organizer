@@ -33,231 +33,292 @@
 
 {% block content %}
 
-<article class="todo">
+<div class="todo">
     <section class="mast">
         <h1>Напоминания</h1>
     </section>
-    <section class="content">
-        <section class="navigation">
-            <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary" onclick="ShowCard()">
-                        <picture>
-                            <img src='{% static "/icons/card_icon.png" %}' class="icon">
-                        </picture>
-                    </button>
-                    <button type="button" class="btn btn-primary" onclick="ShowList()">
-                        <picture>
-                            <img src='{% static "/icons/list_icon.png" %}' class="icon">
-                        </picture>
-                    </button>
-                </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New">+</button>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Complite">&#10003;</button>
-                <div class="btn-group btn-group-lg">
+    <section>
+
+
+  <div class="row">
+
+
+
+    <div class="col-3">
+
+			  <div class="card text-white bg-test mb-3 ml-3 " style="max-width:;">
+				  <div class="card-header">
+
+
+
+					<div class="btn-group btn-group-lg">
+						<button type="button" class="btn btn-primary" onclick="ShowCard()">
+							<picture>
+								<img src='{% static "/icons/card_icon.png" %}' class="icon">
+							</picture>
+						</button>
+						<button type="button" class="btn btn-primary" onclick="ShowList()">
+							<picture>
+								<img src='{% static "/icons/list_icon.png" %}' class="icon">
+							</picture>
+						</button>
+					</div>
+
+
+                     <button type="button" class="btn btn-lg btn-primary test " data-toggle="modal" data-target="#Complite">&#10003;</button>
+
+					<button type="button" class="btn btn-lg btn-primary test mr-3" data-toggle="modal" data-target="#New">+</button>
+
+
+				  </div>
+				  <div class="card-body">
+
+
+
+					 <div class="alert alert-primary">
+						<small>Всего напоминаний: 42</small> <br/>
+						<small>Активных: 24</small> <br/>
+						<small>Завершенных: 18</small> <br/>
+					 </div>
+
+					<hr>
+
+
+
+                          <button type="button" class="btn btn-lg btn-primary " data-toggle="modal" data-target="#Synchronization">  Синхронизировать
+							<picture>
+								<img src='{% static "/icons/sync_icon.png" %}' class="icon">
+							</picture>
+						</button>
+
+
+
+
+				  </div>
+			  </div>
+
+
+    </div>
+
+
+
+
+
+
+
+    <div class="col-7">
+
+
+
+
+	     <section class="list-view mt-2" id="ViewList">
+				<div class="list-group">
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Купить хлеб
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Сделать домашнюю
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Напомнить Сане про сотку
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Зайти к сыну маминой подруги
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Убраться в комнате
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Починить наушники
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Лечь пораньше
+						<div class="priorities">
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
+						Доделать проект
+						<div class="priorities">
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list">!</span>
+							<span class="badge badge-pill priority-list-last">!</span>
+							<button type="button" class="btn btn-info">&#10003;</button>
+						</div>
+					</a>
+				</div>
+			</section>
+
+
+
+			<section class="card-view" id="ViewCard">
+				<div class="row">
+					<div class="col-md-4" data-toggle="modal" data-target="#Open">
+						<div class="card">
+							<div class="card-body">
+								<h3> Доделать проект</h3>
+								<p> Да уж, надо бы </p>
+							</div>
+							<div class="card-footer">
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<div class="priorities">
+									<button type="button" class="btn btn-info">&#10003;</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" data-toggle="modal" data-target="#Open">
+						<div class="card">
+							<div class="card-body">
+								<h3> Лечь пораньше </h3>
+							</div>
+							<div class="card-footer">
+								<div class="priorities">
+									<button type="button" class="btn btn-info">&#10003;</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" data-toggle="modal" data-target="#Open">
+						<div class="card">
+							<div class="card-body">
+								<h3> Починить наушники</h3>
+								<p> Да уж, надо бы </p>
+							</div>
+							<div class="card-footer">
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<div class="priorities">
+									<button type="button" class="btn btn-info">&#10003;</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" data-toggle="modal" data-target="#Open">
+						<div class="card">
+							<div class="card-body">
+								<h3> Убраться в комнате</h3>
+								<p> Да уж, надо бы </p>
+							</div>
+							<div class="card-footer">
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<div class="priorities">
+									<button type="button" class="btn btn-info">&#10003;</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" data-toggle="modal" data-target="#Open">
+						<div class="card">
+							<div class="card-body">
+								<h3> Сделать домашнюю</h3>
+								<p> Да уж, надо бы </p>
+							</div>
+							<div class="card-footer">
+								<div class="priorities">
+									<button type="button" class="btn btn-info">&#10003;</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" data-toggle="modal" data-target="#Open">
+						<div class="card">
+							<div class="card-body">
+								<h3> Купить хлеб</h3>
+							</div>
+							<div class="card-footer">
+								<span class="badge badge-pill priority">!</span>
+								<span class="badge badge-pill priority">!</span>
+								<div class="priorities">
+									<button type="button" class="btn btn-info">&#10003;</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" data-toggle="modal" data-target="#New">
+						<div class="card last">
+							<div class="card-body">
+								<p>
+									+
+								</p>
+							</div>
+						</div>
+					</div>
+            </section>
+			<nav class="navbar">
+				<div class="btn-group btn-group-lg">
+					<a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
+					<a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
+					<a href="#"><button type="button" class="btn btn-primary">2</button></a>
+					<a href="#"><button type="button" class="btn btn-primary">3</button></a>
+					<a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
+				</div>
+			</nav>
+
+    </div>
+
+
+               <div class="btn-group btn-group-lg">
                     <button type="button" class="btn btn-primary">Сначала новые</button>
                     <button type="button" class="btn btn-primary">Сначала старые</button>
                     <button type="button" class="btn btn-primary">А..Я</button>
                     <button type="button" class="btn btn-primary">Я..А</button>
                 </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
-                    <picture>
-                        <img src='{% static "/icons/sync_icon.png" %}' class="icon">
-                    </picture>
-                </button>
-                <div class="alert alert-primary">
-                    <small>Всего напоминаний: 42</small> <br/>
-                    <small>Активных: 24</small> <br/>
-                    <small>Завершенных: 18</small> <br/>
-                </div>
-            </nav>
-        </section>
-        <section class="list-view" id="ViewList">
-            <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Купить хлеб
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Сделать домашнюю
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Напомнить Сане про сотку
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Зайти к сыну маминой подруги
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Убраться в комнате
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Починить наушники
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Лечь пораньше
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" data-target="#Open">
-                    Доделать проект
-                    <div class="priorities">
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list">!</span>
-                        <span class="badge badge-pill priority-list-last">!</span>
-                        <button type="button" class="btn btn-info">&#10003;</button>
-                    </div>
-                </a>
-            </div>
-        </section>
-        <section class="card-view" id="ViewCard">
-            <div class="row">
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Доделать проект</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Лечь пораньше </h3>
-                        </div>
-                        <div class="card-footer">
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Починить наушники</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Убраться в комнате</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Сделать домашнюю</h3>
-                            <p> Да уж, надо бы </p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#Open">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3> Купить хлеб</h3>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge badge-pill priority">!</span>
-                            <span class="badge badge-pill priority">!</span>
-                            <div class="priorities">
-                                <button type="button" class="btn btn-info">&#10003;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-toggle="modal" data-target="#New">
-                    <div class="card last">
-                        <div class="card-body">
-                            <p>
-                                +
-                            </p>
-                        </div>
-                    </div>
-                </div>
-        </section>
-            <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
-                </div>
-            </nav>
-    </section>
-    </article>
-    <article class="modals">
+
+
+
+
+
+  </div>
+</div>
+
+
+
+
+    <section class="modals">
 
 
 
@@ -565,6 +626,7 @@
             </div>
         </div>
     </div>
+    </section>
         </article>
     <script>
       function ShowCard(){

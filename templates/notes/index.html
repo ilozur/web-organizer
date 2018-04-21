@@ -46,7 +46,7 @@
 
 
 
-								<form id="search_note_form" onsubmit="return false;" type="text1">
+								<form id="search_note_form" onsubmit="return false;">
 									{% load bootstrap %}
 									{% csrf_token %}
 									{{ search_note_form.result | bootstrap }}
