@@ -98,21 +98,30 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>Последние напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Отдать Бобу диски</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Напомнить Саше про сотку</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">Забрать заказ</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                        {% if active_notes_count == 0 %}
+                            <h5>Нет напоминаний</h5>
+                        {% else %}
+                            {% for todo in last_todo %}
+                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">{% todo.title %}</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                            {% endfor %}
+                        {% endif %}
                         <h4>Завершенные напоминания:</h4>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Убраться в комнате</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
-                        <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">Сделать макет страницы</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
+                        {% if finished_notes_count == 0 %}
+                            <h5>Нет напоминаний</h5>
+                        {% else %}
+                            {% for todo in last_todo %}
+                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">{% todo.title %}</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
+                            {% endfor %}
+                        {% endif %}
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>
                         <a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего напоминаний : 26</h4>
-                        <p class="lead"> Активных напоминаний: 6 </p>
-                        <p class="lead"> Завершенных напоминаний: 20 </p>
+                        <h4>Всего напоминаний : {{ all_todo_count }}</h4>
+                        <p class="lead"> Активных напоминаний: {{ active_todo_count }} </p>
+                        <p class="lead"> Завершенных напоминаний: {{ finished_todo_count }} </p>
                     </div>
                 </div>
             </div>
