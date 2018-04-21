@@ -12,6 +12,7 @@ from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
 from notes.models import *
+from todo.models import *
 from calendars.models import *
 from django.contrib.auth.models import User
 
@@ -90,6 +91,15 @@ def get_last_notes(user):
         first_three = all_notes[0:3]
     else:
         first_three = all_notes
+    return first_three
+
+
+def get_last_todos(user):
+    all_todos = Todos.get_todos("date_up", user)
+    if all_todos.count() >= 3:
+        first_three = all_todos[0:3]
+    else:
+        first_three = all_todos
     return first_three
 
 
