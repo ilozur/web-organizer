@@ -1,6 +1,6 @@
 
 
--- Главная после авторизации--
+# -- Главная после авторизации--
 title = 'Main'
 notes_title = 'Notes'
 calendars_title = 'Calendar'
@@ -18,12 +18,12 @@ closest_reminder_title = 'Closest reminder'
 latest_note_title = 'Latest note'
 
 
---Заметки--
+# --Заметки--
 
-latest_notes =  'Latest notes'
+latest_notes = 'Latest notes'
 notes_showall = 'Show all'
 
-notes_create = 'Create note
+notes_create = 'Create note'
 notes_name = 'Note name'
 notes_text = 'Text'
 notes_audio = 'Record audio'
@@ -39,8 +39,7 @@ notes_changetext = 'Change text'
 notes_rewrite_audio = 'Re-record audio'
 
 
-
---Календарь--
+# --Календарь--
 
 closest_events_calendar = 'Nearest events of the calendar'
 events_onday = 'For a day'
@@ -69,7 +68,7 @@ calendar_delete = 'Delete'
 calendar_save = 'ОК'
 
 
---Напоминания--
+# --Напоминания--
 
 latest_reminders = 'Latest reminders'
 closed_reminders = 'Closed reminders'
@@ -78,7 +77,7 @@ total_reminders = 'Total reminders'
 active_reminders = 'Active reminders'
 
 reminders_create = 'Create a reminder'
-reminders_name = 'Reminder's name'
+reminders_name = "Reminder's name"
 reminders_text = 'Text'
 reminders_priority = 'Priority'
 reminders_audio = 'Record audio'
@@ -101,7 +100,7 @@ reminders_upload_partfromfile = 'Upload some reminders from the file'
 reminders_synchronize = 'Synchronize'
 
 
---Личный кабинет --
+# --Личный кабинет --
 
 profile_nickname = 'Nickname'
 profile_name = 'Name'
@@ -124,7 +123,3 @@ profile_language = 'Choose your language:'
 profile_russian = 'Russian'
 profile_english = 'English'
 profile_germany = 'Germany'
-
-
-
-
