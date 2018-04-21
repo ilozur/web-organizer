@@ -95,7 +95,6 @@ def sorting(request):
     if request.method == "POST":
         if request.user.is_authenticated:
             sort_type = request.POST.get('data')
-            todo_list = list()
             response = {
                 'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
                 'result': "Success"
