@@ -12,6 +12,7 @@ from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
 from notes.forms import *
 from notes.models import *
+from todo.models import *
 from calendars.models import *
 from django.contrib.auth.models import User
 
@@ -56,6 +57,10 @@ def index(request):
             context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
             context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
             context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+            todos = Todos.objects.filter(user=request.user).get_amount()
+            context['all_todo_count'] = todos[0]
+            context['active_todo_count'] = todos[1]
+            context['finished_todo_count'] = todos[2]
             nearest_events = Event.objects.filter(user=request.user, date__gte=date.date()).order_by('date')
             if nearest_events.count() > 0:
                 while (nearest_events.first().date == date.date()) and (nearest_events.first().time < date.time()):
@@ -79,6 +84,7 @@ def index(request):
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
+            context['last_todo'] = get_last_todos(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             context['add_todo_form'] = AddTodoForm()
             context['edit_todo_form'] = EditTodoForm()
@@ -96,6 +102,15 @@ def get_last_notes(user):
         first_three = all_notes[0:3]
     else:
         first_three = all_notes
+    return first_three
+
+
+def get_last_todos(user):
+    all_todos = Todos.get_todos("date_up", user)
+    if all_todos.count() >= 3:
+        first_three = all_todos[0:3]
+    else:
+        first_three = all_todos
     return first_three
 
 
