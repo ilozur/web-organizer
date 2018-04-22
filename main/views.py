@@ -99,14 +99,31 @@ def get_last_notes(user):
     return first_three
 
 
-def get_last_todos(user):
+def get_active_todos(user):
     all_todos = Todos.get_todos("date_up", user)
-    if all_todos.count() >= 3:
-        first_three = all_todos[0:3]
+    active_todos = []
+    last_active_todos = []
+    for item in all_todos:
+        if item.status == 'in progress':
+            active_todos.append(item)
+    if active_todos.count() > 2:
+        last_active_todos = active_todos[0:3]
     else:
-        first_three = all_todos
-    return first_three
+        last_active_todos = active_todos[0:active_todos.count()]
+    return last_active_todos
 
+def get_finished_todos(user):
+    all_todos = Todos.get_todos("date_up", user)
+    finished_todos = []
+    last_finished_todos = []
+    for item in all_todos:
+        if item.status != 'in progress':
+            finished_todos.append(item)
+    if finished_todos.count() > 2:
+        last_finished_todos = finished_todos[0:3]
+    else:
+        last_finished_todos = finished_todos[0:finished_todos.count()]
+    return last_finished_todos
 
 def send_mail(mail):
     subject = mail['subject']
