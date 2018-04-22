@@ -2,6 +2,9 @@ from django import forms
 
 
 class SignInForm(forms.Form):
+    """!
+        @brief Form that handles user's data while signing in process
+    """
     username_sign_in = forms.CharField(label='Email or username', max_length=200,
                                        widget=forms.TextInput(attrs={'class': 'form-control',
                                                                      'placeholder': 'Enter your e-mail or username'}))
@@ -11,6 +14,9 @@ class SignInForm(forms.Form):
 
 
 class SignUpForm(forms.Form):
+    """!
+        @brief Form that handles user's data while signing up process
+    """
     email = forms.EmailField(label='E-mail', max_length=200,
                              widget=forms.TextInput(attrs={'class': 'form-control',
                                                            'placeholder': 'Enter your e-mail'}))
