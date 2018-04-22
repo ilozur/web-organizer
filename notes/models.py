@@ -85,3 +85,4 @@ class Notes(models.Model):
         First_id = (Page_number - 1) * 20
         for item in range(First_id, First_id + 20):
             List_Note.append(Notes.object.filter(id == item))
+        return List_Note
