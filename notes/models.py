@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 
 
 # Create your models here.
@@ -80,9 +81,9 @@ class Notes(models.Model):
             return notelist.filter(pub_date__gte=datetime[0].date(),
                                    pub_date__lte=datetime[1].date()).order_by('-pub_date')
 
-    def Paginate(self, Page_number):
-        List_Note = []
-        First_id = (Page_number - 1) * 20
-        for item in range(First_id, First_id + 20):
-            List_Note.append(Notes.object.filter(id == item))
+    def Paginate(self, Page_number, user, data):
+        List_Note = Notes.objects.filter(user=user, data=data)
+        p = Paginator(List_Note, 20)
+        pageN = p.page(Page_number)
+        List_Note =  pageN.object_list
         return List_Note
