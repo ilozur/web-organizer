@@ -20,6 +20,9 @@ class ConfirmMailKey(models.Model):
 
 
 def modification_of_user_data(user, name=None, surname=None, username=None):
+    """!
+            @brief Function that saves modified user data if it is valid
+    """
     if name is not None:
         user.first_name = name
     if surname is not None:

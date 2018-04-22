@@ -11,6 +11,9 @@ from main.views import create_mail, send_mail, create_key, check_email_uniq, cre
 
 @login_required
 def index(request):
+    """!
+            @brief Function that renders user's profile page
+    """
     if request.method == "GET":
         change_user_data_form = ChangeUserDataForm()
         change_password_form = ChangePasswordForm()
@@ -31,6 +34,9 @@ def index(request):
 
 @login_required
 def get_user_data_ajax(request):
+    """!
+            @brief Function that gets user's data (with ajax)
+    """
     response_data = {}
     user = request.user
     if request.method == "POST":
@@ -53,6 +59,9 @@ def get_user_data_ajax(request):
 
 @login_required
 def change_user_data_ajax(request):
+    """!
+            @brief Function that changes user's data (with ajax)
+    """
     response_data = {}
     user = request.user
     if request.method == "POST":
@@ -92,6 +101,9 @@ def change_user_data_ajax(request):
 
 
 def confirm_mail(request, key):
+    """!
+            @brief Function that processes mail confirmation
+    """
     if request.method == "GET":
         keys = ConfirmMailKey.objects.filter(key=key)
         if keys.count() > 0:
@@ -103,6 +115,9 @@ def confirm_mail(request, key):
 
 
 def create_confirm_email_key(user, email):
+    """!
+            @brief Function that creates email confirmation key
+    """
     key = create_key(user.username + user.password, user)
     if check_email_uniq(email):
         if ConfirmMailKey.objects.filter(user=user).count() > 0:
@@ -120,6 +135,9 @@ def create_confirm_email_key(user, email):
 
 @login_required
 def change_password_ajax(request):
+    """!
+            @brief Function that changes password if new one is valid (with ajax)
+    """
     response_data = {}
     user = request.user
     if request.method == "POST":
@@ -147,6 +165,9 @@ def change_password_ajax(request):
 
 
 def recover_password_view(request, key):
+    """!
+            @brief Function that renders password recovery page
+    """
     if request.method == "GET":
         recover_form = RecoverPasswordForm()
         context = {
@@ -161,6 +182,9 @@ def recover_password_view(request, key):
 
 
 def recover_password_ajax(request, key):
+    """!
+            @brief Function that recovers password (with ajax)
+    """
     if request.method == "POST":
         response_data = {}
         recover_form = RecoverPasswordForm(request.POST)
@@ -189,6 +213,9 @@ def recover_password_ajax(request, key):
 
 
 def create_recover_password_key_ajax(request):
+    """!
+            @brief Function that creates password recovery key
+    """
     if request.method == "POST":
         response_data = {}
         recover_form = RecoverPasswordUserData(request.POST)
