@@ -128,7 +128,7 @@ function create_recover_key()
     $('#recover_password_btn').attr('disabled', 'disabled');
     $.ajax({
         type: "POST",
-        url: '/profile/recover_password_key',
+        url: '/siteprofile/recover_password_key',
         data: form_data,
         success: function(response)
         {

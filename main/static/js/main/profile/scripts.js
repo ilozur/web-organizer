@@ -2,7 +2,7 @@ function get_user_data()
 {
 	$.ajax({
 		type: "POST",
-		url: '/profile/get_user_data',
+		url: '/siteprofile/get_user_data',
 		success: function(response)
 		{
 			$('#id_name').val(response['user'].name);
@@ -29,13 +29,13 @@ function change_password()
 	$('#change_password_btn').attr('disabled', 'disabled');
 	$.ajax({
 		type: "POST",
-		url: '/profile/change_password',
+		url: '/siteprofile/change_password',
 		data: form_data,
 		success: function(response)
 		{
 			if (response['result'] == 'Success')
 			{
-				location.href = "/profile"
+				location.href = "/siteprofile"
 			}
 			else
 			{
@@ -58,7 +58,7 @@ function change_user_data()
 	$('#save_changes_btn').attr('disabled', 'disabled');
 	$.ajax({
 		type: "POST",
-		url: '/profile/change_user_data',
+		url: '/siteprofile/change_user_data',
 		data: form_data,
 		success: function(response)
 		{
