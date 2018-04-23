@@ -159,6 +159,9 @@ def add_event(request, data):
                           should_notify_hours=data['should_notify_hours'],
                           should_notify_minutes=data['should_notify_minutes'],
                           should_notify_days=data['should_notify_days'])
+            if data['place'] != "":
+                event.place = data['place']
+            print(event.place)
             event.save()
             return "100"
 
@@ -194,6 +197,7 @@ def get_event_data_ajax(request):
                 'title': event.title,
                 'description': event.description,
                 'date': datetime.combine(event.date, event.time).strftime("%I:%M%p on %B %d, %Y"),
+                'map_coordinates': event.place,
             }
             result = '100'
         else:
