@@ -104,7 +104,7 @@
                             <h5>Нет напоминаний</h5>
                         {% else %}
                             {% for todo in last_active_todo %}
-                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">{% todo.title %}</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo"></a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                             {% endfor %}
                         {% endif %}
                         <h4>Завершенные напоминания:</h4>
@@ -112,7 +112,7 @@
                             <h5>Нет напоминаний</h5>
                         {% else %}
                             {% for todo in last_finished_todo %}
-                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">{% todo.title %}</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
+                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2"></a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
                             {% endfor %}
                         {% endif %}
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>

@@ -6,7 +6,7 @@ from main.models import *
 import json
 import hashlib
 import binascii
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
@@ -39,7 +39,7 @@ def index(request):
             return render(request, "main/index.html", context)
         else:
             context['language'] = Language.objects.filter(user=request.user).first().lang
-            date = datetime.now()
+            date = datetime.datetime.now()
             if Event.objects.filter(user=request.user, date=date.date()).first():
                 context['today_event_exists'] = True
                 context['today_event_name'] = Event.objects.filter(user=request.user, date=date.date()).first().title
@@ -57,7 +57,7 @@ def index(request):
             context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
             context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
             context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
-            todos = Todos.objects.filter(user=request.user).get_amount()
+            todos = Todos.get_amounts(request.user)
             context['all_todo_count'] = todos[0]
             context['active_todo_count'] = todos[1]
             context['finished_todo_count'] = todos[2]
@@ -84,7 +84,6 @@ def index(request):
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
-            context['last_todo'] = get_last_todos(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             context['add_todo_form'] = AddTodoForm()
             context['edit_todo_form'] = EditTodoForm()
