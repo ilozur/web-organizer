@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'calendars.apps.CalendarsConfig',
     'notes.apps.NotesConfig',
     'todo.apps.TodoConfig',
+    'admin.apps.AdminConfig',
     'ckeditor',
     'bootstrapform',
     'ckeditor_uploader',
