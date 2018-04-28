@@ -11,6 +11,7 @@ import main.management.commands.createuser as cu
 def index():
     pass
 
+
 def creation(argument, number):
     if argument == 'n' or argument == 'N':
         gn.Command.generate_notes(number)

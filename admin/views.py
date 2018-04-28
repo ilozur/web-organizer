@@ -1,62 +1,49 @@
 from django.shortcuts import render
+from main.forms import SignInForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse, HttpResponseRedirect
+import json
 
 
 def index(request):
-    context = {}
+    context = {'sign_in_form': SignInForm()}
     return render(request, "admin/index.html", context)
 
-def sign_up_ajax(request):
-  
-    context = {}
-    if request.method == "GET":
-        if not request.user.is_superuser:
-            context['title'] = "Sign up page"
-            context['header'] = "Sign up page header"
-            sign_up_form = SignUpForm()
-            context['sign_up_form'] = sign_up_form
-            return render(request, "main/sign_up.html", context)
-        else:
-            return HttpResponseRedirect('/')
-    else:
-        response_data = {}
-        if not request.user.is_superuser:
-            form = SignUpForm(request.POST)
+
+def sign_in_ajax(request):
+    response_data = {}
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            form = SignInForm(request.POST)
             if form.is_valid():
-                email = form.data['email'].lower()
-                username = form.data['username'].lower()
-                name = form.data['name']
-                surname = form.data['surname']
-                pass1 = form.data['password1']
-                pass2 = form.data['password2']
-                email_uniq = check_email_uniq(email)
-                username_uniq = check_username_uniq(username)
-                if email_uniq:
-                    if username_uniq:
-                        if pass1 == pass2:
-                            user = User(email=email, username=username, first_name=name, last_name=surname, is_active=0)
-                            user.set_password(pass1)
-                            user.save()
-                            # here should be lang=*lang taken from registration*
-                            lang = Language(user=user)
-                            lang.save()
-                            sign_up_key = create_unic_key(user, username, pass1)
-                            sign_up_key.save()
-                            mail = create_mail(user,
-                                               "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
-                                               sign_up_key.key,
-                                               "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
-                                               "'>Go to this link to activate your account</a>")
-                            send_mail(mail)
-                            result = "100"
-                        else:
-                            result = "101"
-                    else:
-                        result = "102"
+                name = form.data['username_sign_in'].lower()
+                password = form.data['password']
+                found_user = (len(User.objects.filter(username=name)) > 0) or \
+                             (len(User.objects.filter(email=name)) > 0)
+                if not found_user:
+                    result = "106"
                 else:
-                    result = "103"
+                    user = User.objects.filter(email=name).first()
+                    if user is None:
+                        user = User.objects.filter(username=name).first()
+                    if user.is_active:
+                        if user.is_superuser:
+                            loginned_user = authenticate(request, username=user.username, password=password)
+                            if loginned_user is None:
+                                result = "107"
+                            else:
+                                login(request, loginned_user)
+                                result = "100"
+                        else:
+                            result = "106"
+                    else:
+                        result = "108"
             else:
                 result = "104"
         else:
             result = "105"
         response_data['result'] = result
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
