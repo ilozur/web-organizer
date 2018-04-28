@@ -20,7 +20,7 @@ def creation(argument, number):
         gt.Command.generate_todo(number)
     elif argument == 'u' or argument == 'U':
         gu.Command.generate_users(number)
-    else alert('Wrong Input')
+
 
 def user_create(nickname, password, lang):
     cu.Command.create_user(nickname,password,lang)
