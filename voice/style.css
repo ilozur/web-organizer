@@ -1,59 +1,264 @@
-body {
-  background-color: #000000;
+.wave {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 10%;
+	padding-top: 100%;
+	overflow: hidden;
 }
 
-span {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 10%;
-  padding-top: 100%;
-  overflow: hidden;
+.d1{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s   0.000s linear infinite;
 }
 
-div {
-  margin-top: -15%;
-  height: 15%; 
-  width: 1%;
-  bottom: 33%;
-  border-radius: 20px;
-  position: absolute;
-  background: #ffffff;
-
+.d2{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -16.227s linear infinite; 
 }
-div:nth-of-type(1)  { animation: wave 17s   0.000s linear infinite; }
-div:nth-of-type(2)  { animation: wave 17s -16.227s linear infinite; }
-div:nth-of-type(3)  { animation: wave 17s -15.455s linear infinite; }
-div:nth-of-type(4)  { animation: wave 17s -14.682s linear infinite; }
-div:nth-of-type(5)  { animation: wave 17s -13.909s linear infinite; }
-div:nth-of-type(6)  { animation: wave 17s -13.136s linear infinite; }
-div:nth-of-type(7)  { animation: wave 17s -12.364s linear infinite; }
-div:nth-of-type(8)  { animation: wave 17s -11.591s linear infinite; }
-div:nth-of-type(9)  { animation: wave 17s -10.818s linear infinite; }
-div:nth-of-type(10) { animation: wave 17s -10.045s linear infinite; }
-div:nth-of-type(11) { animation: wave 17s  -9.273s linear infinite; }
-div:nth-of-type(12) { animation: wave 17s  -8.500s linear infinite; }
-div:nth-of-type(13) { animation: wave 17s  -7.727s linear infinite; }
-div:nth-of-type(14) { animation: wave 17s  -6.955s linear infinite; }
-div:nth-of-type(15) { animation: wave 17s  -6.182s linear infinite; }
-div:nth-of-type(16) { animation: wave 17s  -5.409s linear infinite; }
-div:nth-of-type(17) { animation: wave 17s  -4.636s linear infinite; }
-div:nth-of-type(18) { animation: wave 17s  -3.864s linear infinite; }
-div:nth-of-type(19) { animation: wave 17s  -3.091s linear infinite; }
-div:nth-of-type(20) { animation: wave 17s  -2.318s linear infinite; }
-div:nth-of-type(21) { animation: wave 17s  -1.545s linear infinite; }
-div:nth-of-type(22) { animation: wave 17s  -0.773s linear infinite; }
+
+.d3{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -15.455s linear infinite; 
+}
+
+.d4{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -14.682s linear infinite; 
+}
+
+.d5{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -13.909s linear infinite;
+}
+
+.d6{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -13.136s linear infinite; 
+}
+
+.d7{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -12.364s linear infinite; 
+}
+
+.d8{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -11.591s linear infinite; 
+}
+
+.d9{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -10.818s linear infinite; 
+}
+
+.d10{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -10.045s linear infinite; 
+}
+
+.d11{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s  -9.273s linear infinite;
+}
+
+.d12{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -8.500s  linear infinite; 
+}
+
+.d13{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -7.727s linear infinite; 
+}
+
+.d14{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -6.955s linear infinite; 
+}
+
+.d15{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -6.182s linear infinite; 
+}
+
+.d16{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -5.409s linear infinite; 
+}
+
+.d17{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -4.636s linear infinite; 
+}
+
+.d18{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -3.864s linear infinite; 
+}
+
+.d19{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -3.091s linear infinite; 
+}
+
+.d20{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s -2.318s linear infinite; 
+}
+
+.d21{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s  -1.545s linear infinite;
+}
+
+.d22{
+	margin-top: -15%;
+	height: 15%; 
+	width: 1%;
+	bottom: 45%;
+	border-radius: 20px;
+	position: absolute;
+	background: #000000;
+	animation: wave 17s  -0.773s linear infinite;	
+}
 
 @keyframes wave {
-  0%  { left:-2%;}
-  10%  { height:1%; margin-top: -1%;}
-  20%  { height:20%; margin-top: -20%;}
-  30%  { height:1%; margin-top: -1%;}
-  40%  { height:5%; margin-top: -5%;}
-  50%  { height:1%; margin-top: -1%;}
-  60%  { height:25%; margin-top: -25%;}
-  70%  { height:1%; margin-top: -1%;}
-  80%  { height:10%; margin-top:-10%;}
-  90%  { height:1%; margin-top: -1%;}
-  100% { height:15%; margin-top:-15%; left:100%;}
+	0%  { left:-2%;}
+	10%  { height:1%; margin-top: -1%;}
+	20%  { height:20%; margin-top: -20%;}
+	30%  { height:1%; margin-top: -1%;}
+	40%  { height:5%; margin-top: -5%;}
+	50%  { height:1%; margin-top: -1%;}
+	60%  { height:25%; margin-top: -25%;}
+	70%  { height:1%; margin-top: -1%;}
+	80%  { height:10%; margin-top:-10%;}
+	90%  { height:1%; margin-top: -1%;}
+	100% { height:15%; margin-top:-15%; left:100%;}
 }
