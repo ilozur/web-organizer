@@ -8,3 +8,41 @@
     <h1>Welcome to admin page</h1>
 </body>
 </html>
+
+function sign_in_ajax()
+{
+    form_data = $('#sign_in_form').serialize();
+    $("#sign_in_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#sign_in_btn').attr('disabled', 'disabled');
+    $("#sign_up_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#sign_up_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        admin/login: '/sign_in/',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                voice_text('Добро пожаловать!', function(){ window.location.href = '/'; });
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+                $("#sign_in_form").find(':input').each(function(){
+                   $(this).removeAttr('disabled');
+                });
+                $('#sign_in_btn').removeAttr('disabled');
+                $("#sign_up_form").find(':input').each(function(){
+                    $(this).removeAttr('disabled');
+                });
+                $('#sign_up_btn').removeAttr('disabled');
+            }
+        }
+    });
+};
+
