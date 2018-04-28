@@ -235,3 +235,51 @@ def check_notify():
             if datetime(0, 0, 0, 1, 0, 0, 0) > tmp_todo.deadline - datetime.now():
                 mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title, "У вас не выполненная задача!")
                 send_mail(mail)
+
+
+def high_version_priority(request):
+    user = request.user
+    todos = Todos.get_todos('AtoZ', 'done', user)
+    deadline_list = []
+    priority_list = []
+    days = []
+    now = str(datetime.today())
+    date_now = []
+    for item in todos:
+        deadline_list.append(todos.deadline[item])
+        priority_list.append(todos.priority[item])
+    for item in deadline_list:
+        tmp = deadline_list[item].split('.')
+        days.append(days_in_years(tmp))
+    date_now = now.split('-')
+    date_now.reverse()
+    for item in days:
+        days[item] = days[item] - days_in_years(date_now)
+    
+
+
+def days_in_years(tmp):
+    result = 0
+    statistic = {
+       '1': 31,
+        '3': 31,
+        '4': 30,
+        '5': 31,
+        '6': 30,
+        '7': 31,
+        '8': 31,
+        '9': 30,
+        '10': 31,
+        '11': 30,
+        '12': 31,
+    }
+    if ((tmp[1] % 4 == 0) and (tmp[1] % 100 != 0)) or (tmp[1] % 400 == 0):
+        statistic['2'] = 29
+        year = 366
+    else:
+        statistic['2'] = 28
+        year = 365
+    for item in statistic:
+        result += int(statistic[item])
+    result += year*int(tmp[2]) + tmp[0]
+    return result
