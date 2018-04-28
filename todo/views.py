@@ -237,17 +237,19 @@ def check_notify():
                 send_mail(mail)
 
 
-def high_version_priority(request):
-    user = request.user
-    todos = Todos.get_todos('AtoZ', 'done', user)
+def high_version_priority():
+    todos = Todos.get_todos('AtoZ', 'done')
     deadline_list = []
+    dictionary = {}
     priority_list = []
+    id_list = []
+    combo_list = []
     days = []
     now = str(datetime.today())
-    date_now = []
     for item in todos:
         deadline_list.append(todos.deadline[item])
         priority_list.append(todos.priority[item])
+        id_list.append(todos.id[item])
     for item in deadline_list:
         tmp = deadline_list[item].split('.')
         days.append(days_in_years(tmp))
@@ -255,7 +257,18 @@ def high_version_priority(request):
     date_now.reverse()
     for item in days:
         days[item] = days[item] - days_in_years(date_now)
-    
+    for i in range(len(days)):
+        dictionary[days] = priority_list[i]
+    for item in sorted(dictionary.keys()):
+        d = {item: dictionary[item]}
+        list = []
+        list.append(d)
+        list.append(id_list)
+        combo_list.append(list)
+    for i in range(len(combo_list)):
+        if (combo_list[i][0].values > combo_list[i+1][0].values) and (combo_list[i][0].keys == combo_list[i+1][0].keys):
+            combo_list[i+1][0], combo_list[i][0] = combo_list[i][0], combo_list[i+1][0]
+    return combo_list
 
 
 def days_in_years(tmp):
@@ -279,7 +292,17 @@ def days_in_years(tmp):
     else:
         statistic['2'] = 28
         year = 365
-    for item in statistic:
+    for item in range(1, tmp[1]):
         result += int(statistic[item])
-    result += year*int(tmp[2]) + tmp[0]
+    result += year*int(tmp[2]) + int(tmp[0])
     return result
+
+
+def new_target_proirity(id_todo):
+    todo = Todos.get_todo_by_id(id=id_todo)
+    smart_priority = 0
+    todo_list = high_version_priority()
+    for i in range(len(todo_list)):
+        if todo.id == todo_list[i][1]:
+            smart_priority = round((i / len(todo_list)) * 100, 1)
+    return smart_priority
