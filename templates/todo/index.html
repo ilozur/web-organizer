@@ -60,7 +60,7 @@
         </section>
         <section class="list-view list-group" >
             <div class="list-group" id="ViewList">
-                {% for item in undone_todos %}
+                {% for item in undone_todos.object_list %}
                     <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
                         <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
                         <div class="priorities">
@@ -75,7 +75,7 @@
         </section>
         <section class="card-view"  style="display: None" id="ViewCard">
             <div class="row" id="CardList">
-                {% for item in undone_todos %}
+                {% for item in undone_todos.object_list %}
                     <a href="#" id="todo_card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
                         <div class="card">
                             <div class="card-body">
@@ -100,18 +100,18 @@
                 </div>
             </div>
         </section>
-            <nav class="navbar">
-                <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
-                </div>
-            </nav>
+        <nav class="navbar">
+            <div class="btn-group btn-group-lg">
+                    <a href="#"><button type="button" id="PrevPage" class="btn btn-primary" disabled>&laquo;</button></a>
+                {% for number in undone_pages.page_range %}
+                    <a href="#"><button type="button" onclick="paginate({{ number }})" class="btn btn-primary">{{ number }}</button></a>
+                {% endfor %}
+                    <a href="#"><button type="button" id="NextPage" onclick="paginate(2)" class="btn btn-primary">&raquo;</button></a>
+            </div>
+        </nav>
     </section>
-    </article>
-    <article class="modals">
-        {% include "modals/todo.html" %}
-    </article>
+</article>
+<article class="modals">
+    {% include "modals/todo.html" %}
+</article>
 {% endblock %}

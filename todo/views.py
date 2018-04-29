@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 from main.models import Language
 from main.views import create_mail, send_mail
 from todo.forms import AddTodoForm
@@ -20,7 +21,10 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
+    global data
+    data = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
+    context['undone_todos'] = data.page(1)
+    context['undone_pages'] = data
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
@@ -235,3 +239,16 @@ def check_notify():
             if datetime(0, 0, 0, 1, 0, 0, 0) > tmp_todo.deadline - datetime.now():
                 mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title, "У вас не выполненная задача!")
                 send_mail(mail)
+
+
+def paginate(request):
+    response_data = {}
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            page_number = request.POST.get('page')
+            response_data['buttons'] = [data.page(page_number).has_previous(), data.page(page_number).has_next()]
+            response_data['todo_list'] = data.page(page_number).object_list
+            response_data['result'] = 200
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
