@@ -8,20 +8,7 @@
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script>
-    	function change() {
-    		var name = "wave";
-    		var i;
-    		for (i = 1; i < 22; i++) {
-    			name = name + i.toString();
-    			alert(name);
-    			document.getElementById(name).style.display = '';
-    			name = "wave";
-    			alert(name);
-    			return false;
-    		}
-    	}
-    </script>
+	<script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
 </head>
 <body>
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="change()">Large modal</button>
@@ -36,7 +23,30 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					...
+					<span class="wave">
+						  <div class="d1" id = "wave1"></div> 
+						  <div class="d2" id = "wave2"></div>
+						  <div class="d3" id = "wave3"></div> 
+						  <div class="d4" id = "wave4"></div>
+						  <div class="d5" id = "wave5"></div> 
+						  <div class="d6" id = "wave6"></div>
+						  <div class="d7" id = "wave7"></div> 
+						  <div class="d8" id = "wave8"></div>
+						  <div class="d9" id = "wave9"></div> 
+						  <div class="d10" id = "wave10"></div>
+						  <div class="d11" id = "wave11"></div> 
+						  <div class="d12" id = "wave12"></div>
+						  <div class="d13" id = "wave13"></div> 
+						  <div class="d14" id = "wave14"></div>
+						  <div class="d15" id = "wave15"></div> 
+						  <div class="d16" id = "wave16"></div>
+						  <div class="d17" id = "wave17"></div> 
+						  <div class="d18" id = "wave18"></div>
+						  <div class="d19" id = "wave19"></div> 
+						  <div class="d20" id = "wave20"></div>
+						  <div class="d21" id = "wave21"></div> 
+						  <div class="d22" id = "wave22"></div>
+						</span>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -45,30 +55,6 @@
 			</div>
 		</div>
 	</div>
-	<span class="wave">
-	  <div class="d1" id = "wave1"></div> 
-	  <div class="d2" id = "wave2"></div>
-	  <div class="d3" id = "wave3"></div> 
-	  <div class="d4" id = "wave4"></div>
-	  <div class="d5" id = "wave5"></div> 
-	  <div class="d6" id = "wave6"></div>
-	  <div class="d7" id = "wave7"></div> 
-	  <div class="d8" id = "wave8"></div>
-	  <div class="d9" id = "wave9"></div> 
-	  <div class="d10" id = "wave10"></div>
-	  <div class="d11" id = "wave11"></div> 
-	  <div class="d12" id = "wave12"></div>
-	  <div class="d13" id = "wave13"></div> 
-	  <div class="d14" id = "wave14"></div>
-	  <div class="d15" id = "wave15"></div> 
-	  <div class="d16" id = "wave16"></div>
-	  <div class="d17" id = "wave17"></div> 
-	  <div class="d18" id = "wave18"></div>
-	  <div class="d19" id = "wave19"></div> 
-	  <div class="d20" id = "wave20"></div>
-	  <div class="d21" id = "wave21"></div> 
-	  <div class="d22" id = "wave22"></div>
-	</span>
 </body>
 </html>
 
