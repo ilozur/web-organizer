@@ -5,6 +5,7 @@
     <link rel="stylesheet" href='{% static "css/general.css" %}'>
 	<link rel="stylesheet" href='{% static "css/index.css" %}'>
     <link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <link rel="stylesheet" href='{% static "css/clock.css" %}'>
     <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
     <script charset='utf-8' type="text/javascript" src='{% static "js/main/home/scripts.js" %}'></script>
     <script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
@@ -42,6 +43,7 @@
             </div>
         </div>
     </div>
+    <div id="clock_root"></div>
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
@@ -101,16 +103,16 @@
                         {% if active_notes_count == 0 %}
                             <h5>Нет напоминаний</h5>
                         {% else %}
-                            {% for todo in last_todo %}
-                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo">{% todo.title %}</a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
+                            {% for todo in last_active_todo %}
+                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo"></a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                             {% endfor %}
                         {% endif %}
                         <h4>Завершенные напоминания:</h4>
                         {% if finished_notes_count == 0 %}
                             <h5>Нет напоминаний</h5>
                         {% else %}
-                            {% for todo in last_todo %}
-                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2">{% todo.title %}</a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
+                            {% for todo in last_finished_todo %}
+                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2"></a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
                             {% endfor %}
                         {% endif %}
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>
@@ -127,7 +129,9 @@
             </div>
         </div>
     </div>
-
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js'></script>
+    <script src='{% static "js/clock.js" %}'></script>
     {% include "modals/notes.html" %}
     {% include "modals/calendar.html" %}
     {% include "modals/small_parts.html" %}

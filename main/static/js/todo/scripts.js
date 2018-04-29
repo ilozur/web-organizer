@@ -198,7 +198,6 @@ function save_todo_ajax()
                 $('#todo_text_show').html($('#id_todo_edit_text').val());
                 $('#todo_title_show').html($('#id_todo_edit_title').val());
 		        set_priority_edit($('#id_todo_edit_priority').val());
-
                 $('#todo_last_edit').html(response['edited_time']);
             }
             else{
@@ -246,41 +245,6 @@ function ShowList()
     $("#ViewCard").hide("slow");
 };
 
-function save_todo_ajax()
-{
-    var id = $('#todo_id').html();
-    $("#id_todo_id").val(id);
-    var form_data = $('#save_todo_form').serialize();
-    $("#save_todo_form").find(':input').each(function(){
-        $(this).attr('disabled', 'disabled');
-    });
-    $('#save_todo_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/edit',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "success")
-            {
-                alert('OK, Changes were saved');
-                $('#todo_title_' + id).html($('#id_todo_edit_title').val());
-                close_todo_edit_mode();
-                $('#todo_text_show').html($('#id_todo_edit_text').val());
-		set_priority_edit($('#id_todo_edit_priority').val());
-                $('#todo_title_show').html($('#id_todo_title_edit').val());
-                $('#todo_last_edit').html(response['edited_time']);
-            } else{
-		alert(response['result']);
-	    }
-            $("#save_todo_form").find(':input').each(function(){
-                $(this).removeAttr('disabled');
-            });
-            $('#save_todo_btn').removeAttr('disabled');
-        }
-    });
-};
-
 function add_todo_ajax()
 {
     form_data = $('#add_todo_form').serialize();
@@ -292,12 +256,15 @@ function add_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-		var array = [response['title'], response['datetime'], response['id'], response['priority']];
-		add_to_list(array);
-        add_todo_card(array);
+		        var array = [response['title'], response['datetime'], response['id'], response['priority']];
+		        add_to_list(array);
+                add_todo_card(array);
                 $('#todo_' + response['id']).slideDown(duration='slow');
                 $('#todo_card_' + response['id']).slideDown(duration='slow');
                 $("#close_todo_btn").trigger("click");
+            }
+            else{
+                alert(response['result']);
             }
         }
     });

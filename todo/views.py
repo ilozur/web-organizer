@@ -41,14 +41,17 @@ def add_todo(request):
             deadline_date = form.cleaned_data['todo_deadline']
             deadline_time = form.cleaned_data['todo_time']
             deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
-            tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
-                        priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
-            tmp.save()
-            result = "Success"
-            response_data['id'] = tmp.id
-            response_data['title'] = tmp.title
-            response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
-            response_data['priority'] = tmp.priority
+            if deadline_date > datetime.now():
+                tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
+                            priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
+                tmp.save()
+                result = "Success"
+                response_data['id'] = tmp.id
+                response_data['title'] = tmp.title
+                response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+                response_data['priority'] = tmp.priority
+            else:
+                result = 'Deadline date has passed'
         else:
             result = 'form not valid'
         response_data['result'] = result
@@ -95,7 +98,6 @@ def sorting(request):
     if request.method == "POST":
         if request.user.is_authenticated:
             sort_type = request.POST.get('data')
-            todo_list = list()
             response = {
                 'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
                 'result': "Success"

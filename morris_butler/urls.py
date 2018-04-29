@@ -14,13 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
 from django.urls import path, include
 from ckeditor_uploader import views
 import calendars.urls
 import notes.urls
 import todo.urls
 import userprofile.urls
+import admin.urls
 from main.views import *
 from django.conf.urls.static import static
 from morris_butler import settings
@@ -29,7 +29,7 @@ from django.contrib.auth.decorators import login_required
 from userprofile.views import confirm_mail
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', include(admin.urls)),
     path('', index, name='index'),
     path('notes/', include(notes.urls)),
     path('calendar/', include(calendars.urls)),

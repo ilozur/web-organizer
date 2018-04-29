@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'calendars.apps.CalendarsConfig',
     'notes.apps.NotesConfig',
     'todo.apps.TodoConfig',
+    'admin.apps.AdminConfig',
     'ckeditor',
     'bootstrapform',
     'ckeditor_uploader',
@@ -173,7 +173,7 @@ DEBUG_TOOLBAR_PANELS = [
     # 'debug_toolbar.panels.headers.HeadersPanel',
     # 'debug_toolbar.panels.request.RequestPanel',
     'debug_toolbar.panels.sql.SQLPanel',
-    # 'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
     'debug_toolbar.panels.templates.TemplatesPanel',
     # 'debug_toolbar.panels.cache.CachePanel',
     # 'debug_toolbar.panels.signals.SignalsPanel',

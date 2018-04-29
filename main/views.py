@@ -6,7 +6,7 @@ from main.models import *
 import json
 import hashlib
 import binascii
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
 from calendars.forms import AddingEventForm
@@ -39,7 +39,7 @@ def index(request):
             return render(request, "main/index.html", context)
         else:
             context['language'] = Language.objects.filter(user=request.user).first().lang
-            date = datetime.now()
+            date = datetime.datetime.now()
             if Event.objects.filter(user=request.user, date=date.date()).first():
                 context['today_event_exists'] = True
                 context['today_event_name'] = Event.objects.filter(user=request.user, date=date.date()).first().title
@@ -57,7 +57,7 @@ def index(request):
             context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
             context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
             context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
-            todos = Todos.objects.filter(user=request.user).get_amount()
+            todos = Todos.get_amounts(request.user)
             context['all_todo_count'] = todos[0]
             context['active_todo_count'] = todos[1]
             context['finished_todo_count'] = todos[2]
@@ -84,7 +84,6 @@ def index(request):
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user)
-            context['last_todo'] = get_last_todos(request.user)
             context['last_notes_count'] = len(context['last_notes'])
             context['add_todo_form'] = AddTodoForm()
             context['edit_todo_form'] = EditTodoForm()
@@ -105,13 +104,32 @@ def get_last_notes(user):
     return first_three
 
 
-def get_last_todos(user):
+def get_active_todos(user):
     all_todos = Todos.get_todos("date_up", user)
-    if all_todos.count() >= 3:
-        first_three = all_todos[0:3]
+    active_todos = []
+    last_active_todos = []
+    for item in all_todos:
+        if item.status == 'in progress':
+            active_todos.append(item)
+    if active_todos.count() > 2:
+        last_active_todos = active_todos[0:3]
     else:
-        first_three = all_todos
-    return first_three
+        last_active_todos = active_todos[0:active_todos.count()]
+    return last_active_todos
+
+
+def get_finished_todos(user):
+    all_todos = Todos.get_todos("date_up", user)
+    finished_todos = []
+    last_finished_todos = []
+    for item in all_todos:
+        if item.status != 'in progress':
+            finished_todos.append(item)
+    if finished_todos.count() > 2:
+        last_finished_todos = finished_todos[0:3]
+    else:
+        last_finished_todos = finished_todos[0:finished_todos.count()]
+    return last_finished_todos
 
 
 def send_mail(mail):
