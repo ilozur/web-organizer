@@ -237,14 +237,15 @@ def check_notify():
                 send_mail(mail)
 
 
-def high_version_priority():
-    todos = Todos.get_todos('AtoZ', 'done')
+def high_version_priority(user):
+    todos = Todos.get_todos('AtoZ', 'done', user)
     deadline_list = []
-    dictionary = {}
+    final_list = []
     priority_list = []
     id_list = []
     combo_list = []
     days = []
+    result = []
     now = str(datetime.today())
     for item in todos:
         deadline_list.append(todos.deadline[item])
@@ -258,16 +259,21 @@ def high_version_priority():
     for item in days:
         days[item] = days[item] - days_in_years(date_now)
     for i in range(len(days)):
-        dictionary[days] = priority_list[i]
-    for item in sorted(dictionary.keys()):
-        d = {item: dictionary[item]}
-        list = []
-        list.append(d)
-        list.append(id_list)
-        combo_list.append(list)
+        final_list = []
+        final_list.append(days[i])
+        final_list.append(priority_list[i])
+        final_list.append(id_list[i])
+        combo_list.append(final_list)
     for i in range(len(combo_list)):
-        if (combo_list[i][0].values > combo_list[i+1][0].values) and (combo_list[i][0].keys == combo_list[i+1][0].keys):
-            combo_list[i+1][0], combo_list[i][0] = combo_list[i][0], combo_list[i+1][0]
+        if int(combo_list[i][0])<int(combo_list[i-1][0]):
+            min_value = 1 / final_list[i][0]
+    max_value = 5
+    for i in range(len(combo_list)):
+        new_value = ( ((combo_list[i][1]/combo_list[i][0]) - min_value) / (max_value - min_value) ) * (100 - 1) + 1
+        result.append({combo_list[i][2]:new_value})
+    return result
+
+
     return combo_list
 
 
@@ -298,11 +304,6 @@ def days_in_years(tmp):
     return result
 
 
-def new_target_proirity(id_todo):
-    todo = Todos.get_todo_by_id(id=id_todo)
-    smart_priority = 0
-    todo_list = high_version_priority()
-    for i in range(len(todo_list)):
-        if todo.id == todo_list[i][1]:
-            smart_priority = round((i / len(todo_list)) * 100, 1)
-    return smart_priority
+def new_target_proirity(user):
+    smart_priorities =  high_version_priority(user)
+
