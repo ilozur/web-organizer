@@ -314,7 +314,7 @@ function paginate(page){
                 for(var i = 0; i < response['todo_list'].length; i++){
                     add_to_list(response['todo_list'][i]);
                 }
-                $("#ViewCard").html('');
+                $("#CardList").html('');
                 for(var i = 0; i < response['todo_list'].length; i++){
                     add_todo_card(response['todo_list'][i]);
                 }
