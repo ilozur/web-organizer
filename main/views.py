@@ -117,6 +117,7 @@ def get_active_todos(user):
         last_active_todos = active_todos[0:active_todos.count()]
     return last_active_todos
 
+
 def get_finished_todos(user):
     all_todos = Todos.get_todos("date_up", user)
     finished_todos = []
@@ -129,6 +130,7 @@ def get_finished_todos(user):
     else:
         last_finished_todos = finished_todos[0:finished_todos.count()]
     return last_finished_todos
+
 
 def send_mail(mail):
     """!

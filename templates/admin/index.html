@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin page</title>
-</head>
-<body>
-    <h1>Welcome to admin page</h1>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin page</title>
+        {% load staticfiles %}
+        <script src="https://webasr.yandex.net/jsapi/v1/webspeechkit-settings.js" type="text/javascript"></script>
+        <script src="https://webasr.yandex.net/jsapi/v1/webspeechkit.js" type="text/javascript"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src='{% static "js/speechkit.js" %}'></script>
+        <script>init_speechkit();</script>
+        <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+    </head>
+
+    <body>
+        <h1>Welcome to admin page</h1>
+        <form id="sign_in_form">
+            {% csrf_token %}
+            {{ sign_in_form.username_sign_in }}
+            {{ sign_in_form.password }}
+        </form>
+        <button onclick="sign_in_ajax()">Войти</button>
+
+        <script>
+        function sign_in_ajax()
+        {
+            form_data = $('#sign_in_form').serialize();
+            $.ajax({
+                type: "POST",
+                url: '/admin/sign_in/',
+                data: form_data,
+                success: function(response)
+                {
+                    if (response['result'] == "100")
+                    {
+                        voice_text('Добро пожаловать!', function(){ window.location.href = '/'; });
+                    }
+                    else
+                    {
+                        voice_ajax_result(response['result']);
+                    }
+                }
+            });
+        };
+        </script>
+    </body>
 </html>
