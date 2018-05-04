@@ -20,6 +20,7 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
+    smart_priority(user)
     context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
     context['amount_of_todos'] = Todos.get_amounts(user)
@@ -32,6 +33,7 @@ def index(request):
 
 @login_required
 def add_todo(request):
+    user = request.user
     response_data = {}
     if request.method == "POST":
         form = AddTodoForm(request.POST)
@@ -50,6 +52,7 @@ def add_todo(request):
                 response_data['title'] = tmp.title
                 response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
                 response_data['priority'] = tmp.priority
+                smart_priority(user)
             else:
                 result = 'Deadline date has passed'
         else:
@@ -81,7 +84,8 @@ def show_todo(request):
                 'date': [todo.deadline.year, todo.deadline.month, todo.deadline.day],
                 'id': todo.id,
                 'result': "Success",
-                'current_status': current_status
+                'current_status': current_status,
+                'smart_priority': todo.smart_priority
             }
         else:
             response = {
@@ -131,6 +135,7 @@ def status_change(request):
 
 @login_required
 def edit_todo(request):
+    user = request.user
     response = {}
     if request.method == "POST":
         form = EditTodoForm(request.POST)
@@ -150,6 +155,7 @@ def edit_todo(request):
                     response['result'] = "Success"
                     response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
                     response['priority'] = tmp.priority
+                    smart_priority(user)
                 else:
                     response['result'] = 'No such todo'
             else:
@@ -237,44 +243,20 @@ def check_notify():
                 send_mail(mail)
 
 
-def high_version_priority(user):
-    todos = Todos.get_todos('AtoZ', 'done', user)
-    deadline_list = []
-    final_list = []
-    priority_list = []
-    id_list = []
-    combo_list = []
-    days = []
-    result = []
-    now = str(datetime.today())
+def smart_priority(user):
+    todos = Todos.get_todos('AtoZ', 'in progress', user)
+    now = datetime.now()
+    now = now.strftime("%d.%m.%y")
+    now.split('.')
+    now = days_in_years(now)
     for item in todos:
-        deadline_list.append(todos.deadline[item])
-        priority_list.append(todos.priority[item])
-        id_list.append(todos.id[item])
-    for item in deadline_list:
-        tmp = deadline_list[item].split('.')
-        days.append(days_in_years(tmp))
-    date_now = now.split('-')
-    date_now.reverse()
-    for item in days:
-        days[item] = days[item] - days_in_years(date_now)
-    for i in range(len(days)):
-        final_list = []
-        final_list.append(days[i])
-        final_list.append(priority_list[i])
-        final_list.append(id_list[i])
-        combo_list.append(final_list)
-    for i in range(len(combo_list)):
-        if int(combo_list[i][0])<int(combo_list[i-1][0]):
-            min_value = 1 / final_list[i][0]
-    max_value = 5
-    for i in range(len(combo_list)):
-        new_value = ( ((combo_list[i][1]/combo_list[i][0]) - min_value) / (max_value - min_value) ) * (100 - 1) + 1
-        result.append({combo_list[i][2]:new_value})
-    return result
-
-
-    return combo_list
+        deadline = todos[item].deadline
+        priority = todos[item].priority
+        deadline = deadline.strftime("%d.%m.%Y")
+        deadline.split('.')
+        deadline = days_in_years(deadline) - now
+        new_value = (((priority / deadline) - 0) / (5 - 0)) * (100 - 1) + 1
+        todos[item].smart_priority = round(new_value, 1)
 
 
 def days_in_years(tmp):
@@ -292,7 +274,7 @@ def days_in_years(tmp):
         '11': 30,
         '12': 31,
     }
-    if ((tmp[1] % 4 == 0) and (tmp[1] % 100 != 0)) or (tmp[1] % 400 == 0):
+    if ((tmp[2] % 4 == 0) and (tmp[2] % 100 != 0)) or (tmp[2] % 400 == 0):
         statistic['2'] = 29
         year = 366
     else:
@@ -302,8 +284,4 @@ def days_in_years(tmp):
         result += int(statistic[item])
     result += year*int(tmp[2]) + int(tmp[0])
     return result
-
-
-def new_target_proirity(user):
-    smart_priorities =  high_version_priority(user)
 

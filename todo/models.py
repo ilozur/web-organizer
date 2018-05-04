@@ -12,6 +12,7 @@ class Todos(models.Model):
     priority = models.IntegerField(default=3)
     status = models.CharField(max_length=128, default="in progress")
     deadline = models.DateTimeField(default=None)
+    smart_priority = models.FloatField(default=1)
 
     @staticmethod
     def get_todos(sorting_type, status, user):
@@ -25,7 +26,8 @@ class Todos(models.Model):
         todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
         todo_list = list()
         for item in todos:
-            todo_list.append((item.title, item.deadline.strftime("%I:%M%p on %B %d, %Y"), item.id, item.priority))
+            todo_list.append((item.title, item.deadline.strftime("%I:%M%p on %B %d, %Y"), item.id, item.priority,
+                              item.smart_priority))
         return todo_list
 
     @staticmethod
