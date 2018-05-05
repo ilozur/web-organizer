@@ -7,21 +7,26 @@
 <body>
     <h1>Welcome to admin page</h1>
     <div>
+        <form action="admin">
         {{cform.inputfld}}
         <br>
         {{cform.checkbox}}
         <br>
-        {{cform.buttonsubmit}}
+        {{cform.key.as_hidden}}
+
+        </form>
 
     </div>
     <div>
-        {{ucform.logfld}}
-        <br>
-        {{ucform.passfld}}
-        <br>
-        {{ucform.langfld}}
-        <br>
-        {{ucform.submitbtn}}
+        <form action="admin">
+            {{ucform.logfld}}
+            <br>
+            {{ucform.passfld}}
+            <br>
+            {{ucform.langfld}}
+            <br>
+            {{ucform.key.as_hidden}}
+        </form>
     </div>
 </body>
 </html>
