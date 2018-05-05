@@ -3,7 +3,7 @@ from admin.models import *
 
 
 class cform(forms.ModelForm):
-    inputfld = forms.IntegerField(max_length=3, label='number')
+    inputfld = forms.IntegerField(label='number')
     checkbox = forms.BooleanField()
     key = forms.CharField(max_length=2)
 

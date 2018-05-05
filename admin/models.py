@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Creating (models.Model):
-    inputfld = models.IntegerField(max_length=3)
+    inputfld = models.IntegerField()
     checkbox = models.BooleanField()
     key = models.CharField(max_length=2)
 
