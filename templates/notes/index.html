@@ -71,13 +71,17 @@
 						{% endfor %}
 					</div>
 				</section>
-				<nav class=" navbar navbar-pag">
+				<section class="empty">
+					<h2> Еще нет заметок? </h2>
+					<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()">Добавить заметку</button>
+				</section>
+				<nav class="navbar navbar-pag">
 					<div class="btn-group btn-group-lg">
-						<a href="#"><button type="button" class="btn btn-warning">&laquo;</button></a>
-						<a href="#"><button type="button" class="btn btn-warning disabled">1</button></a>
-						<a href="#"><button type="button" class="btn btn-warning">2</button></a>
-						<a href="#"><button type="button" class="btn btn-warning">3</button></a>
-						<a href="#"><button type="button" class="btn btn-warning">&raquo;</button></a>
+						<button type="button" class="btn btn-warning">&laquo;</button>
+						<button type="button" class="btn btn-warning disabled">1</button>
+						<button type="button" class="btn btn-warning">2</button>
+						<button type="button" class="btn btn-warning">3</button>
+						<button type="button" class="btn btn-warning">&raquo;</button>
 					</div>
 				</nav>
 			</section>
