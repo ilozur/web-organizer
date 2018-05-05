@@ -93,13 +93,17 @@
                 </div>
             </div>
         </section>
-            <nav class="navbar">
+        <section class="empty">
+            <h2> Еще нет напоминании? </h2>
+            <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo" onclick="clean_add_todo_fields()">Добавить напоминание</button>
+        </section>
+            <nav class="navbar navbar-pag">
                 <div class="btn-group btn-group-lg">
-                    <a href="#"><button type="button" class="btn btn-primary">&laquo;</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary disabled">1</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">2</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">3</button></a>
-                    <a href="#"><button type="button" class="btn btn-primary">&raquo;</button></a>
+                    <button type="button" class="btn btn-primary">&laquo;</button>
+                    <button type="button" class="btn btn-primary disabled">1</button>
+                    <button type="button" class="btn btn-primary">2</button>
+                    <button type="button" class="btn btn-primary">3</button>
+                    <button type="button" class="btn btn-primary">&raquo;</button>
                 </div>
             </nav>
     </section>
