@@ -7,14 +7,21 @@
 <body>
     <h1>Welcome to admin page</h1>
     <div>
-         <form action="/admin_action">
-                <input type="text" name="number" value="1">
-                <input type="radio" name="n" value="note"> <br>
-                <input type="radio" name="e" value="event"> <br>
-                <input type="radio" name="t" value="todo"> <br>
-                <input type="radio" name="u" value="user">
-          </form>
+        {{cform.inputfld}}
+        <br>
+        {{cform.checkbox}}
+        <br>
+        {{cform.buttonsubmit}}
 
+    </div>
+    <div>
+        {{ucform.logfld}}
+        <br>
+        {{ucform.passfld}}
+        <br>
+        {{ucform.langfld}}
+        <br>
+        {{ucform.submitbtn}}
     </div>
 </body>
 </html>
