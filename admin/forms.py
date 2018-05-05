@@ -1,5 +1,5 @@
 from django import forms
-from admin.models import Creating
+from admin.models import *
 
 
 class cform(forms.ModelForm):
@@ -9,3 +9,10 @@ class cform(forms.ModelForm):
 
     class Meta:
         model = Creating
+
+class ucform(forms.ModelForm):
+    logfld = forms.CharField ( max_length=40 )
+    passfld = forms.CharField ( max_length=40 )
+    langfld = forms.CharField ( max_length=3 )
+    class Meta:
+        model = CreateUsr
