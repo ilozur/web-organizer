@@ -15,9 +15,9 @@ from notes.models import *
 from todo.models import *
 from calendars.models import *
 from django.contrib.auth.models import User
-
 from userprofile.forms import RecoverPasswordUserData
 from todo.forms import AddTodoForm, EditTodoForm
+from localisation import rus, eng
 
 
 def index(request):
@@ -26,8 +26,7 @@ def index(request):
     """
     if request.method == "GET":
         context = {
-            'title': "Index page",
-            'header': "Index page header",
+            'title': 'Index page'
         }
         if not request.user.is_authenticated:
             sign_in_form = SignInForm()
@@ -38,7 +37,15 @@ def index(request):
             context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
-            context['language'] = Language.objects.filter(user=request.user).first().lang
+            user_lang = Language.objects.filter(user=request.user).first().lang
+            if user_lang == "ru":
+                lang = rus
+            elif user_lang == "en":
+                lang = eng
+            else:
+                lang = eng
+            context['language'] = user_lang
+            context['lang'] = lang
             events = Event.objects.filter(user=request.user)
             notes = Notes.objects.filter(user=request.user)
             date = datetime.datetime.now()

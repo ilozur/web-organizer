@@ -4,7 +4,7 @@
 title = 'Main'
 notes_title = 'Notes'
 calendars_title = 'Calendar'
-reminders_title = 'Reminders'
+reminders_title = 'Todo'
 account_title = 'Account'
 quit_title = 'Quit'
 navigation_title = 'Navigation'
@@ -16,6 +16,9 @@ help_title = 'Help'
 nearest_event_title = 'Nearest event'
 closest_reminder_title = 'Closest reminder'
 latest_note_title = 'Latest note'
+no_events_title = 'There is no events'
+no_notes_title = 'There is no notes'
+no_todo_title = 'There is no todo'
 
 
 # --Заметки--
@@ -25,6 +28,7 @@ notes_showall = 'Show all'
 
 notes_create = 'Create note'
 notes_name = 'Note name'
+notes_total = 'Total notes'
 notes_text = 'Text'
 notes_audio = 'Record audio'
 notes_cancel = 'Cancel'
@@ -37,6 +41,8 @@ notes_edit_title = 'Edit note'
 notes_changename = 'Change name'
 notes_changetext = 'Change text'
 notes_rewrite_audio = 'Re-record audio'
+notes_text_count = 'with text'
+notes_voice_count = 'with voice'
 
 
 # --Календарь--
@@ -51,6 +57,7 @@ events_week = 'Events for the week'
 events_month = 'Events for the month'
 events_year = 'Events for the year'
 
+calendar_nothing_planned = 'Nothing planned'
 calendar_create = 'Create an event'
 calendar_name = 'Name'
 calendar_choosedate = 'Choose date'
@@ -66,6 +73,7 @@ calendar_check_comments = 'See comments'
 calendar_close = 'Close'
 calendar_delete = 'Delete'
 calendar_save = 'ОК'
+calendar_place_and_time = 'The place and time at will'
 
 
 # --Напоминания--
@@ -75,6 +83,7 @@ closed_reminders = 'Closed reminders'
 reminders_showall = 'Show all reminders'
 total_reminders = 'Total reminders'
 active_reminders = 'Active reminders'
+closed_reminders_count = 'Completed reminders'
 
 reminders_create = 'Create a reminder'
 reminders_name = "Reminder's name"
@@ -123,3 +132,11 @@ profile_language = 'Choose your language:'
 profile_russian = 'Russian'
 profile_english = 'English'
 profile_germany = 'Germany'
+
+
+# --Остальное --
+
+good_night = "Good night"
+good_morning = "Good morning"
+good_day = "Good afternoon"
+good_evening = "Good evening"
