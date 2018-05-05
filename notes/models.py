@@ -27,10 +27,12 @@ class Notes(models.Model):
         return sorted_list
 
     @staticmethod
-    def get_notes(sorting_type, user=1):
+    def get_notes(sorting_type, user=1, notes=None):
         # if aim = 'date' -> 'up' = new-old, 'down' = old-new
         # if aim = 'title' -> 'up' = a-z, 'down' = z-a
-        notes = Notes.objects.filter(user=user)
+        if notes is None:
+            notes = Notes.objects.filter(user=user)
+        notes = notes.filter(user=user)
         if sorting_type != 'all':
             sort = sorting_type.split('_')
             aim = sort[0]

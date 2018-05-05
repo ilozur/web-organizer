@@ -39,29 +39,29 @@ def index(request):
             return render(request, "main/index.html", context)
         else:
             context['language'] = Language.objects.filter(user=request.user).first().lang
+            events = Event.objects.filter(user=request.user)
+            notes = Notes.objects.filter(user=request.user)
             date = datetime.datetime.now()
-            if Event.objects.filter(user=request.user, date=date.date()).first():
+            today_event = events.filter(date=date.date()).first()
+            if today_event:
                 context['today_event_exists'] = True
-                context['today_event_name'] = Event.objects.filter(user=request.user, date=date.date()).first().title
-                context['today_event_id'] = Event.objects.filter(user=request.user, date=date.date()).first().id
-            context['all_events_count'] = Event.objects.filter(user=request.user).count()
-            context['today_events_count'] = Event.objects.filter(user=request.user, date=date.date()).count()
-            context['yesterday_events_count'] = Event.objects.filter(user=request.user,
-                                                                     date=date.date() - timedelta(1)).count()
-            context['week_events_count'] = Event.get_events_in_range(date.date() - timedelta(7),
-                                                                     date.date(), request.user).count()
-            context['month_events_count'] = Event.get_events_in_range(date.date() - timedelta(30),
-                                                                      date.date(), request.user).count()
-            context['year_events_count'] = Event.get_events_in_range(date.date() - timedelta(365),
-                                                                     date.date(), request.user).count()
-            context['all_notes_count'] = Notes.objects.filter(user=request.user).count()
-            context['voice_notes_count'] = Notes.objects.filter(user=request.user, is_voice=True).count()
-            context['text_notes_count'] = Notes.objects.filter(user=request.user, is_voice=False).count()
+                context['today_event_name'] = today_event.title
+                context['today_event_id'] = today_event.id
+            context['all_events_count'] = events.count()
+            context['today_events_count'] = events.filter(date=date.date()).count()
+            context['yesterday_events_count'] = events.filter(date=date.date() - timedelta(1)).count()
+            last_events = events.filter(date__lte=date.date())
+            context['week_events_count'] = last_events.filter(date__gte=date.date() - timedelta(1)).count()
+            context['month_events_count'] = last_events.filter(date__gte=date.date() - timedelta(30)).count()
+            context['year_events_count'] = last_events.filter(date__gte=date.date() - timedelta(365)).count()
+            context['all_notes_count'] = notes.count()
+            context['voice_notes_count'] = notes.filter(is_voice=True).count()
+            context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
             todos = Todos.get_amounts(request.user)
             context['all_todo_count'] = todos[0]
             context['active_todo_count'] = todos[1]
             context['finished_todo_count'] = todos[2]
-            nearest_events = Event.objects.filter(user=request.user, date__gte=date.date()).order_by('date')
+            nearest_events = events.filter(date__gte=date.date()).order_by('date')
             if nearest_events.count() > 0:
                 while (nearest_events.first().date == date.date()) and (nearest_events.first().time < date.time()):
                     nearest_events.pop(0)
@@ -74,16 +74,16 @@ def index(request):
                                                 nearest_events.first().time.strftime("%H:%M")
             else:
                 context['nearest_event_exists'] = False
-            if Notes.objects.filter(user=request.user).order_by('-last_edit_time', '-added_time').first():
+            last_note = notes.order_by('-last_edit_time', '-added_time').first()
+            if last_note:
                 context['last_note_exists'] = True
-                context['last_note_title'] = Notes.objects.filter(
-                        user=request.user).order_by('-last_edit_time', '-added_time').first().name
+                context['last_note_title'] = last_note.name
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()
             context['add_note_form'] = AddNoteForm()
             context['edit_note_form'] = EditNoteForm()
-            context['last_notes'] = get_last_notes(request.user)
+            context['last_notes'] = get_last_notes(request.user, notes)
             context['last_notes_count'] = len(context['last_notes'])
             context['add_todo_form'] = AddTodoForm()
             context['edit_todo_form'] = EditTodoForm()
@@ -92,11 +92,11 @@ def index(request):
         return HttpResponseRedirect('/')
 
 
-def get_last_notes(user):
+def get_last_notes(user, notes):
     """!
             @brief Function that get last three notes out all
     """
-    all_notes = Notes.get_notes("date_up", user)
+    all_notes = Notes.get_notes("date_up", user, notes)
     if all_notes.count() >= 3:
         first_three = all_notes[0:3]
     else:
@@ -226,7 +226,7 @@ def create_unic_key(user, username, password):
             @brief Function creates sign up key
     """
     key = create_key(username + password, user)
-    expiration_date = datetime.now().date()
+    expiration_date = datetime.datetime.now().date()
     expiration_date += timedelta(days=3)
     sign_up_key = ConfirmKey(user=user, key=key, expiration_date=expiration_date)
     return sign_up_key
@@ -239,7 +239,7 @@ def activate_key(request, key):
     if request.method == "GET":
         keys = ConfirmKey.objects.filter(key=key)
         if keys.count() > 0:
-            if keys.first().expiration_date >= datetime.now().date():
+            if keys.first().expiration_date >= datetime.datetime.now().date():
                 user = keys.first().user
                 user.is_active = True
                 user.save()
