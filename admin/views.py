@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
-import admin.forms as forms
 from django.contrib.auth.decorators import user_passes_test
 import main.management.commands.generate_notes as gn
 import main.management.commands.generate_events as ge
@@ -38,13 +37,13 @@ def user_create(nickname, password, lang):
 @user_passes_test(lambda u: u.is_superuser)
 def index(request):
     context = {}
-    cform = forms.cform()
+
     users = User.objects.all()
     if request.method == 'POST':
         if request.key == 'uc':
-            user_create(request.nickname, request.password, request.lang)
+            user_create(request.logfld, request.passfld, request.langfld)
         elif request.key == 'c':
-            creation(request.argument, request.number, users)
+            creation(request.checkbox, request.inputfld, users)
     return render(request, "admin/index.html", context)
 
 

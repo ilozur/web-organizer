@@ -7,16 +7,18 @@
 <body>
     <h1>Welcome to admin page</h1>
     <div>
-        <form action="admin">
+        <form action="">
             {{cform.inputfld}}
             <br>
             {{cform.checkbox}}
             <br>
             {{cform.key.as_hidden}}
+            <br>
+            <input type="submit">
         </form>
     </div>
     <div>
-        <form action="admin">
+        <form action="">
             {{ucform.logfld}}
             <br>
             {{ucform.passfld}}
@@ -24,6 +26,8 @@
             {{ucform.langfld}}
             <br>
             {{ucform.key.as_hidden}}
+            <br>
+            <input type="submit">
         </form>
     </div>
 </body>
