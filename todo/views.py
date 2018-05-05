@@ -11,6 +11,8 @@ from todo.forms import EditTodoForm
 from todo.models import Todos
 import json
 from datetime import datetime
+import os
+import http.cookies
 
 
 @login_required
@@ -21,7 +23,8 @@ def index(request):
     }
     user = request.user
     smart_priority(user)
-    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
+    sort_type = get_cookie()
+    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user)
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
@@ -106,6 +109,7 @@ def sorting(request):
                 'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
                 'result': "Success"
             }
+            set_cookie(sort_type)
         else:
             response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type="application/json")
@@ -245,18 +249,19 @@ def check_notify():
 
 def smart_priority(user):
     todos = Todos.get_todos('AtoZ', 'in progress', user)
-    now = datetime.now()
-    now = now.strftime("%d.%m.%y")
-    now.split('.')
-    now = days_in_years(now)
-    for item in todos:
-        deadline = todos[item].deadline
-        priority = todos[item].priority
-        deadline = deadline.strftime("%d.%m.%Y")
-        deadline.split('.')
-        deadline = days_in_years(deadline) - now
-        new_value = (((priority / deadline) - 0) / (5 - 0)) * (100 - 1) + 1
-        todos[item].smart_priority = round(new_value, 1)
+    if len(todos) > 0:
+        now = datetime.now()
+        now = now.strftime("%d.%m.%y")
+        now.split('.')
+        now = days_in_years(now)
+        for item in todos:
+            deadline = todos[item].deadline
+            priority = todos[item].priority
+            deadline = deadline.strftime("%d.%m.%Y")
+            deadline.split('.')
+            deadline = days_in_years(deadline) - now
+            new_value = (((priority / deadline) - 0) / (5 - 0)) * (100 - 1) + 1
+            todos[item].smart_priority = round(new_value, 1)
 
 
 def days_in_years(tmp):
@@ -285,3 +290,19 @@ def days_in_years(tmp):
     result += year*int(tmp[2]) + int(tmp[0])
     return result
 
+
+def set_cookie(sort_type):
+    cookie = http.cookies.SimpleCookie()
+    cookie['sort_type'] = sort_type
+
+
+def get_cookie():
+    cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+    sort_type = cookie.get("sort_type")
+    if sort_type is None:
+        cookie = http.cookies.SimpleCookie()
+        cookie['sort_type'] = 'AtoZ'
+        sort_type = cookie.get("sort_type")
+        return sort_type.value
+    else:
+        return sort_type.value
