@@ -19,40 +19,39 @@
             <div class="carousel-caption text-left">
                 <script> 
                 var h=(new Date()).getHours(); 
-                    if (h >= 23 || h < 6) document.write("<h1>Доброй ночи, {{ request.user.first_name }}</h1>");
-                    if (h >= 6 && h < 12) document.write("<h1>Доброе утро, {{ request.user.first_name }}</h1>");
-                    if (h >= 12 && h < 17) document.write("<h1>Добрый день, {{ request.user.first_name }}</h1>");
-                    if (h >= 17 && h < 23) document.write("<h1>Добрый вечер, {{ request.user.first_name }}</h1>");
+                    if (h >= 23 || h < 6) document.write("<h1>{{ lang.good_night }}, {{ request.user.first_name }}</h1>");
+                    if (h >= 6 && h < 12) document.write("<h1>{{ lang.good_morning }}, {{ request.user.first_name }}</h1>");
+                    if (h >= 12 && h < 17) document.write("<h1>{{ lang.good_day }}, {{ request.user.first_name }}</h1>");
+                    if (h >= 17 && h < 23) document.write("<h1>{{ lang.good_evening }}, {{ request.user.first_name }}</h1>");
                 </script> 
-                <h3>Ближайшее мероприятие: </h3>
+                <h3>{{ lang.nearest_event_title }}: </h3>
                 {% if nearest_event_exists %}
                     <p><a href="#" class="link-section">{{ nearest_event_name }}</a><br/>
                         <small><i>{{ nearest_event_date }} | Place here</i></small>
                     </p>
                 {% else %}
-                    <p><a href="#" class="link-section">Нет событий</a><br/></p>
+                    <p><a href="#" class="link-section">{{ lang.no_events_title }}</a><br/></p>
                 {% endif %}
-                <h3>Скорейшее напоминание: </h3>
+                <h3>{{ lang.closest_reminder_title }}: </h3>
                 <p><a href="#" class="link-section">Отдать Бобу диски</a></p>
-                <h3>Последняя заметка: </h3>
+                <h3>{{ lang.latest_note_title }}: </h3>
                 {% if last_note_exists %}
                     <p><a href="#" class="link-section">{{ last_note_title }}</a></p>
                 {% else %}
-                    <p><a href="#" class="link-section">Нет заметок</a></p>
+                    <p><a href="#" class="link-section">{{ lang.no_notes_title }}</a></p>
                 {% endif %}
             </div>
         </div>
     </div>
-    <div id="clock_root"></div>
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <h2><a class="btn btn-warning btn-lg btn-block section" href='{% url "notes.index" %}'>Заметки</a></h2>
+                <h2><a class="btn btn-warning btn-lg btn-block section" href='{% url "notes.index" %}'>{{ lang.notes_title }}</a></h2>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Последние заметки:</h4>
+                        <h4>{{ lang.latest_notes }}:</h4>
                         {% if last_notes_count == 0 %}
-                            <h5>Нет заметок</h5>
+                            <h5>{{ lang.no_notes_title }}</h5>
                             <div id="last_notes_holder">
                             </div>
                         {% else %}
@@ -60,7 +59,7 @@
                                 {% for note in last_notes %}
                                     <div id="note_{{ note.id }}"><p class="lead"> <a href="#" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ note.id }})" id="note_title_{{ note.id }}">{{ note.name }}</a></p></div>
                                 {% endfor %}
-                                <p class="lead"> <small><a href='{% url "notes.index" %}'>Показать все</a></small></p>
+                                <p class="lead"> <small><a href='{% url "notes.index" %}'>{{ lang.notes_showall }}</a></small></p>
                             </div>
                         {% endif %}
                         <a href="#" class="badge badge-warning add-new" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()"><font class="plus">+</font></a>
@@ -68,62 +67,62 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего заметок : {{ all_notes_count }}</h4>
-                        <p class="lead"> {{ text_notes_count }} текстовых </p>
-                        <p class="lead"> {{ voice_notes_count }} голосовых </p>
+                        <h4>{{ lang.notes_total}} : {{ all_notes_count }}</h4>
+                        <p class="lead"> {{ text_notes_count }} {{ lang.notes_text_count }} </p>
+                        <p class="lead"> {{ voice_notes_count }} {{ lang.notes_voice_count }} </p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <h2><a class="btn btn-danger btn-lg btn-block section" href='{% url "calendar.index" %}'>Календарь</a></h2>
+                <h2><a class="btn btn-danger btn-lg btn-block section" href='{% url "calendar.index" %}'>{{ lang.calendars_title }}</a></h2>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Ближайшие события календаря:</h4>
-                        <p class="lead"> На день: <span class="text-muted">{% if today_event_exists %}<a href="#" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ today_event_id }})">{{ today_event_name }}</a>{% else %}Ничего не запланировано{% endif %}</span></p>
-                        <p class="lead"> На неделю: <a href="#" data-toggle="modal" data-target="#Event">Дедлайн</a> <a href="#" data-toggle="modal" data-target="#Event">День рождения Алисы</a></p>
+                        <h4>{{ lang.closest_events_calendar }}:</h4>
+                        <p class="lead"> {{ lang.events_onday }}: <span class="text-muted">{% if today_event_exists %}<a href="#" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ today_event_id }})">{{ today_event_name }}</a>{% else %}{{ lang.calendar_nothing_planned }}{% endif %}</span></p>
+                        <p class="lead">{{ lang.events_onweek }}: <a href="#" data-toggle="modal" data-target="#Event">Дедлайн</a> <a href="#" data-toggle="modal" data-target="#Event">День рождения Алисы</a></p>
                         <a href="#" class="badge badge-danger add-new" data-toggle="modal" data-target="#New-Date"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего событий : {{ all_events_count }}</h4>
-                        <p class="lead">Событий за сегодня: {{ today_events_count }}</p>
-                        <p class="lead">Событий за вчера: {{ yesterday_events_count }}</p>
-                        <p class="lead">Событий за неделю: {{ week_events_count }}</p>
-                        <p class="lead">Событий за месяц: {{ month_events_count }}</p>
-                        <p class="lead">Событий за год: {{ year_events_count }}</p>
+                        <h4>{{ lang.events_total }} : {{ all_events_count }}</h4>
+                        <p class="lead">{{ lang.events_today }}: {{ today_events_count }}</p>
+                        <p class="lead">{{ lang.events_yesterday}}: {{ yesterday_events_count }}</p>
+                        <p class="lead">{{ lang.events_week }}: {{ week_events_count }}</p>
+                        <p class="lead">{{ lang.events_month }}: {{ month_events_count }}</p>
+                        <p class="lead">{{ lang.events_year }}: {{ year_events_count }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <h2><a class="btn btn-primary btn-lg btn-block section" href='{% url "todo.index" %}'>Напоминания</a></h2>
+                <h2><a class="btn btn-primary btn-lg btn-block section" href='{% url "todo.index" %}'>{{ lang.reminders_title }}</a></h2>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Последние напоминания:</h4>
+                        <h4>{{ lang.latest_reminders }}:</h4>
                         {% if active_notes_count == 0 %}
-                            <h5>Нет напоминаний</h5>
+                            <h5>{{ lang.no_todo_title ]}</h5>
                         {% else %}
                             {% for todo in last_active_todo %}
                                 <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo"></a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                             {% endfor %}
                         {% endif %}
-                        <h4>Завершенные напоминания:</h4>
+                        <h4>{{ lang.closed_reminders }}:</h4>
                         {% if finished_notes_count == 0 %}
-                            <h5>Нет напоминаний</h5>
+                            <h5>{{ lang.no_todo_title }}</h5>
                         {% else %}
                             {% for todo in last_finished_todo %}
                                 <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2"></a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
                             {% endfor %}
                         {% endif %}
-                        <p class="lead"> <small><a href='{% url "todo.index" %}'>Показать все</a></small></p>
+                        <p class="lead"> <small><a href='{% url "todo.index" %}'>{{ lang.reminders_showall }}</a></small></p>
                         <a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4>Всего напоминаний : {{ all_todo_count }}</h4>
-                        <p class="lead"> Активных напоминаний: {{ active_todo_count }} </p>
-                        <p class="lead"> Завершенных напоминаний: {{ finished_todo_count }} </p>
+                        <h4>{{ lang.total_reminders }} : {{ all_todo_count }}</h4>
+                        <p class="lead"> {{ lang.active_reminders }}: {{ active_todo_count }} </p>
+                        <p class="lead"> {{ lang.closed_reminders_count }}: {{ finished_todo_count }} </p>
                     </div>
                 </div>
             </div>

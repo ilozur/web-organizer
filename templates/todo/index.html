@@ -49,13 +49,6 @@
                     <small>Активных: </small><small>{{ amount_of_todos.1 }}</small> <br/>
                     <small>Завершенных: </small><small>{{ amount_of_todos.2 }}</small> <br/>
                 </div>
-                <form id="search_todo_form" onsubmit="return false;">
-                            {% load bootstrap %}
-                            {% csrf_token %}
-                            {{ search_todo_form.result | bootstrap }}
-                </form>
-                <input id="search_todo_btn" type="button" value="Search" class="btn btn-warning"
-                       onclick="search_todo_ajax()">
             </nav>
         </section>
         <section class="list-view list-group" >
@@ -99,6 +92,10 @@
                     </div>
                 </div>
             </div>
+        </section>
+        <section class="empty">
+            <h2> Еще нет напоминании? </h2>
+            <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo" onclick="clean_add_todo_fields()">Добавить напоминание</button>
         </section>
         <nav class="navbar">
             <div class="btn-group btn-group-lg">

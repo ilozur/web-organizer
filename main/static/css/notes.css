@@ -1,15 +1,5 @@
 /*Стили для раздела заметок*/
 
-/*Главные стили*/
-body {
-	text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-	box-shadow: inset 0 0 5rem #fff3cd;
-	background-image: url(../img/bg_notes.jpeg);
-	background-repeat: repeat;
-	background-attachment: fixed;
-	color: #856404;
-}
-
 /*Заголовок*/
 h1 {
 	color: #856404;
@@ -88,13 +78,6 @@ nav .active {
   height: 200px;
 }
 
-/*Модуль*/
-.modal {
-  background-image: url(../img/bg_notes.jpeg);
-  background-repeat: repeat;
-  background-attachment: scroll;
-}
-
 /*Заголовок у модуля*/
 .modal-header {
   background-color: #ffeeba;
@@ -121,6 +104,15 @@ nav .active {
 	color: #856404;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 	transition: 0.5s;
+}
+
+.empty {
+	text-align: center;
+	color: #856404;
+	background-color: #fff3cd;
+	border-radius: 15px 15px;
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
 }
 
 /*Подвал*/
