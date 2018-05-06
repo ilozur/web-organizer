@@ -57,11 +57,6 @@
                             <img src='{% static "icons/month_icon.png" %}' class="icon">
                         </picture>
                     </button>
-                    <button type="button" class="btn btn-danger btn-change" data-num="2">
-                        <picture>
-                            <img src='{% static "icons/week_icon.png" %}' class="icon">
-                        </picture>
-                    </button>
                     <button type="button" class="btn btn-danger btn-change" data-num="3">
                         <picture>
                             <img src='{% static "icons/list_icon_calendar.png" %}' class="icon">
@@ -83,7 +78,7 @@
                     <button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
                 </a>
 
-                <h2 style="width: 270px">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
+                <h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
                         id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
                 <a>
                     <button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>
@@ -133,61 +128,6 @@
                     {% endfor %}
                 </tr>
                 {% endfor %}
-                </tbody>
-            </table>
-        </section>
-        <section class="section-week">
-            <div class="btn-group btn-group-sm btn-mouth">
-                <a href="#">
-                    <button type="button" class="btn btn-danger">&laquo;</button>
-                </a>
-
-                <h2>&nbsp;&nbsp;22.10  28.10&nbsp;&nbsp;</h2>
-                <a href="#">
-                    <button type="button" class="btn btn-danger">&raquo;</button>
-                </a>
-            </div>
-            <table class="table table-danger table-week table-sm" id="table2">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Понедельник</th>
-                    <th>Вторник</th>
-                    <th>Среда</th>
-                    <th>Четверг</th>
-                    <th>Пятница</th>
-                    <th>Суббота</th>
-                    <th>Воскресенье</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th></th>
-                    <td>
-                        <small class="date">22</small>
-                    </td>
-                    <td>
-                        <div class="alert alert-danger event" data-toggle="modal" data-target="#Event">
-                            День рождения
-                        </div>
-                        <small class="date">23</small>
-                    </td>
-                    <td>
-                        <small class="date">24</small>
-                    </td>
-                    <td>
-                        <small class="date">25</small>
-                    </td>
-                    <td class="today">
-                        <small class="date">26</small>
-                    </td>
-                    <td>
-                        <small class="date">27</small>
-                    </td>
-                    <td>
-                        <small class="date">28</small>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </section>
@@ -252,21 +192,11 @@
             </div>
             <nav class="navbar navbar-pag">
                 <div class="btn-group btn-group-lg">
-                    <a href="#">
                         <button type="button" class="btn btn-danger">&laquo;</button>
-                    </a>
-                    <a href="#">
                         <button type="button" class="btn btn-danger disabled">1</button>
-                    </a>
-                    <a href="#">
                         <button type="button" class="btn btn-danger">2</button>
-                    </a>
-                    <a href="#">
                         <button type="button" class="btn btn-danger">3</button>
-                    </a>
-                    <a href="#">
                         <button type="button" class="btn btn-danger">&raquo;</button>
-                    </a>
                 </div>
             </nav>
         </section>

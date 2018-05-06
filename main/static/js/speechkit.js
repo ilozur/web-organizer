@@ -20,7 +20,7 @@ function init_speechkit()
 {
     speaker = new ya.speechkit.Tts(
     {
-        apikey: '762b9ab5-635c-4142-b8bd-9aca7274f427',
+        apikey: '44633ebd-af15-40d3-8304-0c1d6e4eb907',
         emotion: 'neutral',
         speed: 1,
         speaker: 'jane',

@@ -28,7 +28,7 @@
                     <div class="carousel-item active">
                         <div class="container">
                             <div class="carousel-caption">
-                                <h1>Заметки</h1>
+                                <h1>Notes</h1>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
                                     porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
                                     elit.</p>
@@ -38,7 +38,7 @@
                     <div class="carousel-item">
                         <div class="container">
                             <div class="carousel-caption">
-                                <h1>Календарь</h1>
+                                <h1>Calendar</h1>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
                                     porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
                                     elit.</p>
@@ -48,7 +48,7 @@
                     <div class="carousel-item">
                         <div class="container">
                             <div class="carousel-caption">
-                                <h1>Напоминания</h1>
+                                <h1>Todo</h1>
                                 <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
                                     porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
                                     elit.</p>
@@ -64,7 +64,7 @@
                 </a>
             </section>
             <section id="login" class="login">
-                <h2 class="cover-heading">Добро пожаловать</h2>
+                <h2 class="cover-heading">Welcome!</h2>
                 <p class="lead">
                 <form id="sign_up_form">
                     {% csrf_token %}
@@ -90,14 +90,13 @@
                     </div>
                     <div class="form-check" style="margin-bottom: 20px;">
                         <input type="checkbox" class="form-check-input">
-                        <label class="form-check-label">Я принимаю условия Пользовательского соглашения и Политики
-                            конфиденциальности</label>
+                        <label class="form-check-label">I accept the terms of the User agreement and privacy Policy</label>
                     </div>
                     <a class="btn btn-success btn-block" id="sign_up_btn"
-                       onclick="sign_up_ajax()">Зарегистрироваться</a>
+                       onclick="sign_up_ajax()">Sign up</a>
                 </form>
                 <p class="lead" style="margin-top: 50px;">
-                <h3 class="cover-heading">Уже с нами?</h3>
+                <h3 class="cover-heading">Already with us?</h3>
                 <form id="sign_in_form">
                     {% csrf_token %}
                     <div class="form-row">
@@ -108,10 +107,10 @@
                             {{ sign_in_form.password|bootstrap }}
                         </div>
                     </div>
-                    <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Войти</a>
+                    <a class="btn btn-primary btn-block" id="sign_in_btn" onclick="sign_in_ajax()">Sign in</a>
                 </form>
                 <p class="lead" style="margin-top: 50px;">
-                <h3 class="cover-heading">Забыли пароль?</h3>
+                <h3 class="cover-heading">Did you orget your password?</h3>
                 <form id="recover_password_form">
                     {% csrf_token %}
                     <div class="form-row">
@@ -122,7 +121,7 @@
                             {{ recover_password_form.recover_email|bootstrap }}
                         </div>
                     </div>
-                    <a class="btn btn-primary btn-block" id="recover_password_btn" onclick="create_recover_key()">Получить ключ восстановления пароля</a>
+                    <a class="btn btn-primary btn-block" id="recover_password_btn" onclick="create_recover_key()">Get password recovery key</a>
                 </form>
                             </section>
         </main>

@@ -16,6 +16,9 @@ help_title = 'Справка'
 nearest_event_title = 'Ближайшее мероприятие'
 closest_reminder_title = 'Скорейшее напоминание'
 latest_note_title = 'Последняя заметка'
+no_events_title = 'Нет событий'
+no_notes_title = 'Нет заметок'
+no_todo_title = 'Нет напоминаний'
 
 
 # --Заметки--
@@ -25,6 +28,7 @@ notes_showall = 'Показать все'
 
 notes_create = 'Создание заметки'
 notes_name = 'Название'
+notes_total = 'Всего заметок'
 notes_text = 'Текст'
 notes_audio = 'Записать аудио'
 notes_cancel = 'Отменить'
@@ -37,6 +41,8 @@ notes_edit_title = 'Редактировать заметку'
 notes_changename = 'Изменить название'
 notes_changetext = 'Изменить текст'
 notes_rewrite_audio = 'Переписать аудио'
+notes_text_count = 'текстовых'
+notes_voice_count = 'голосовых'
 
 
 # --Календарь--
@@ -51,6 +57,7 @@ events_week = 'Событий за неделю'
 events_month = 'Событий за месяц'
 events_year = 'Событий за год'
 
+calendar_nothing_planned = 'Ничего не запланировано'
 calendar_create = 'Создание мероприятия'
 calendar_name = 'Название'
 calendar_choosedate = 'Выбрать дату'
@@ -66,15 +73,17 @@ calendar_check_comments = 'Посмотреть комментарии'
 calendar_close = 'Закрыть'
 calendar_delete = 'Удалить'
 calendar_save = 'ОК'
+calendar_place_and_time = 'Место и время по желанию'
 
 
 # --Напоминания--
 
 latest_reminders = 'Последние напоминания'
 closed_reminders = 'Завершенные напоминания'
-reminders_showall = 'Всего напоминаний'
+reminders_showall = 'Показать все'
 total_reminders = 'Всего напоминаний'
 active_reminders = 'Активных напоминаний'
+closed_reminders_count = 'Завершенных напоминаний'
 
 reminders_create = 'Создание напоминания'
 reminders_name = 'Название'
@@ -123,3 +132,11 @@ profile_language = 'Выберите язык:'
 profile_russian = 'Русский'
 profile_english = 'Английский'
 profile_germany = 'Немецкий'
+
+
+# --Остальное --
+
+good_night = "Доброй ночи"
+good_morning = "Доброе утро"
+good_day = "Добрый день"
+good_evening = "Добрый вечер"
