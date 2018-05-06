@@ -6,12 +6,11 @@ import main.management.commands.generate_events as ge
 import main.management.commands.generate_todo as gt
 import main.management.commands.generate_users as gu
 import main.management.commands.createuser as cu
-
-
-# Register your models here.
+from admin.forms import CForm, ucform
 
 
 def creation(argument, number, users):
+    number = int(number)
     if argument == 'n' or argument == 'N':
         for i in range(0, number):
             for user in users:
@@ -37,13 +36,22 @@ def user_create(nickname, password, lang):
 @user_passes_test(lambda u: u.is_superuser)
 def index(request):
     context = {}
-
+    req = request.POST
     users = User.objects.all()
-    if request.method == 'POST':
-        if request.key == 'uc':
-            user_create(request.logfld, request.passfld, request.langfld)
-        elif request.key == 'c':
-            creation(request.checkbox, request.inputfld, users)
+    if req:
+        if 'logfield' in req:
+            ucf = ucform(req)
+            context['ucform'] = ucf
+            user_create(ucf.logfld, ucf.passfld, ucf.langfld)
+        elif 'inputfld' in req:
+            cf = CForm(req)
+            context['CForm'] = cf
+            creation(cf.data['choicebox'], cf.data['inputfld'], users)
+    else:
+        cf = CForm()
+        ucf = ucform()
+        context['cform'] = cf
+        context['ucform'] = ucf
     return render(request, "admin/index.html", context)
 
 

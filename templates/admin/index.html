@@ -7,18 +7,22 @@
 <body>
     <h1>Welcome to admin page</h1>
     <div>
-        <form action="">
+        <form action="" method="POST">
+            {% csrf_token %}
             {{cform.inputfld}}
             <br>
-            {{cform.checkbox}}
+            {{cform.choicebox}}
             <br>
             {{cform.key.as_hidden}}
             <br>
             <input type="submit">
         </form>
     </div>
+    <br>
+    <br>
     <div>
-        <form action="">
+        <form action="" method="POST">
+            {% csrf_token %}
             {{ucform.logfld}}
             <br>
             {{ucform.passfld}}
