@@ -293,7 +293,7 @@ function delete_todo_ajax()
 function paginate(page){
     $.ajax({
         type: "POST",
-        url: "/todo/page",
+        url: "/todo/paginate",
         data: { "page": page },
         success: function(response)
         {

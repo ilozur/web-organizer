@@ -88,11 +88,11 @@
 			</section>
 			<nav class="navbar navbar-pag">
 				<div class="btn-group btn-group-lg">
-					<button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button>
+                    <a href="#"><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
 					{% for number in notes_pages %}
-						<button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button>
+                    <a href="#"><button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
 					{% endfor %}
-					<button id="NextPage" type="button" class="btn btn-warning">&raquo;</button>
+                    <a href="#"><button id="NextPage" type="button" class="btn btn-warning">&raquo;</button></a>
 				</div>
 			</nav>
 		</div>

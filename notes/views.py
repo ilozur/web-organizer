@@ -206,7 +206,7 @@ def paginate(request):
         if request.user.is_authenticated:
             page_number = request.POST.get('page')
             response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
-            response_data['todo_list'] = pages.page(page_number).object_list
+            response_data['notes_list'] = pages.page(page_number).object_list
             response_data['result'] = 200
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

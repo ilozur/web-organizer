@@ -1,3 +1,11 @@
+function add_note_to_list(notes_data){
+    $("#list_id").append('<div onclick="get_note_data_ajax('+ notes_data[2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
+    + notes_data[2] + '">' + notes_data[0]
+    + '</h7><div class="date"><small id="note_date_'
+    + notes_data[2] + '">' + notes_data[1]
+    + '</small></div></a></div>');
+}
+
 function get_note_data_ajax(id){
     $('#note_num').html(id);
     $('#Edit-Note-Modal').attr('hidden', '');
@@ -278,7 +286,7 @@ function voice_note()
 function paginate(page){
     $.ajax({
         type: "POST",
-        url: "/notes/page",
+        url: "/notes/paginate",
         data: { "page": page },
         success: function(response)
         {
@@ -296,7 +304,9 @@ function paginate(page){
                     $("#NextPage").attr('disabled', 'disabled');
                 }
                 $("#list_id").html('');
-
+                for (var i = 0; i < response['notes_list'].length; i++) {
+                    add_note_to_list(response['notes_list'][i]);
+                }
             }
         }
     });

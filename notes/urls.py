@@ -9,5 +9,5 @@ urlpatterns = [
     path('search', search_ajax, name='notes.search'),
     path('sort', sort_ajax, name='notes.sort'),
     path('delete', delete_ajax, name='notes.delete'),
-    path('page', paginate, name='notes.page')
+    path('paginate', paginate, name='notes.paginate')
 ]
