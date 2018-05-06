@@ -58,7 +58,9 @@ class Event(models.Model):
             return False
 
     @staticmethod
-    def get_events_in_range(from_date, to_date, user):
-        events = Event.objects.filter(user=user)
+    def get_events_in_range(from_date, to_date, user, events=None):
+        if events is None:
+            events = Event.objects.all()
+        events = events.filter(user=user)
         events = events.filter(date__gte=from_date, date__lte=to_date)
         return events

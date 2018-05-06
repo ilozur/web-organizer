@@ -13,17 +13,15 @@ def index(request):
     if request.method == "GET":
         date = datetime.now()
         context = dict(title="Calendar index page", header="Calendar index page header")
-        context['weeks'] = get_weeks(date, request.user)
-        context['all_events_count'] = Event.objects.filter(user=request.user).count()
-        context['today_events_count'] = Event.objects.filter(user=request.user, date=date.date()).count()
-        context['yesterday_events_count'] = Event.objects.filter(user=request.user,
-                                                                 date=date.date() - timedelta(1)).count()
-        context['week_events_count'] = Event.get_events_in_range(date.date() - timedelta(7),
-                                                                 date.date(), request.user).count()
-        context['month_events_count'] = Event.get_events_in_range(date.date() - timedelta(30),
-                                                                  date.date(), request.user).count()
-        context['year_events_count'] = Event.get_events_in_range(date.date() - timedelta(365),
-                                                                 date.date(), request.user).count()
+        events = Event.objects.filter(user=request.user)
+        context['weeks'] = get_weeks(date, request.user, events)
+        context['all_events_count'] = events.count()
+        context['today_events_count'] = events.filter(date=date.date()).count()
+        context['yesterday_events_count'] = events.filter(date=date.date() - timedelta(1)).count()
+        context['week_events_count'] = last_events = events.filter(date__lte=date.date())
+        context['week_events_count'] = last_events.filter(date__gte=date.date() - timedelta(1)).count()
+        context['month_events_count'] = last_events.filter(date__gte=date.date() - timedelta(30)).count()
+        context['year_events_count'] = last_events.filter(date__gte=date.date() - timedelta(365)).count()
         context['now_month'] = get_month_name(date.month)
         context['now_year'] = date.year
         context['now_month_num'] = date.month
@@ -48,14 +46,15 @@ def index(request):
                 return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
         except ValueError:
             return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
-        response_data['weeks'] = get_weeks(now_date, request.user)
+        events = Event.objects.filter(user=request.user)
+        response_data['weeks'] = get_weeks(now_date, request.user, events)
         response_data['month_name'] = get_month_name(now_date.month)
         response_data['now_year'] = now_date.year
         response_data['result'] = "100"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def get_weeks(date_time, user):
+def get_weeks(date_time, user, events):
     date = date_time
     datetime_now = datetime.now()
     if (date.month == datetime_now.month) and (date.year == datetime_now.year):
@@ -84,8 +83,8 @@ def get_weeks(date_time, user):
             else:
                 if date.month != date_time.month:
                     day_class = "future-date"
+            tmp_day_events = events.filter(date=date)
             tmp_day['class'] = day_class
-            tmp_day_events = Event.objects.filter(user=user, date=date)
             if tmp_day_events.count() > 0:
                 tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
             week_days.append(tmp_day)
@@ -110,7 +109,7 @@ def get_weeks(date_time, user):
                 if date.month != date_time.month:
                     day_class = "future-date"
             tmp_day['class'] = day_class
-            tmp_day_events = Event.objects.filter(user=user, date=date)
+            tmp_day_events = events.filter(date=date)
             if tmp_day_events.count() > 0:
                 tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
             week_days.append(tmp_day)
