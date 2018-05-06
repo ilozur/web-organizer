@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Todos(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
     title = models.CharField(max_length=128, default="title")
-    text = models.CharField(max_length=600, default="time")
+    text = models.CharField(max_length=600, default="text")
     added_date_and_time = models.DateTimeField(auto_now_add=True)
     priority = models.IntegerField(default=3)
     status = models.CharField(max_length=128, default="in progress")

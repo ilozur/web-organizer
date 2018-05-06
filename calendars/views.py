@@ -6,13 +6,23 @@ from calendars.forms import *
 from main.models import Language
 from django.http import HttpResponse, HttpResponseRedirect
 import json
+from localisation import rus, eng
 
 
 @login_required
 def index(request):
     if request.method == "GET":
-        date = datetime.now()
         context = dict(title="Calendar index page", header="Calendar index page header")
+        user_lang = Language.objects.filter(user=request.user).first().lang
+        if user_lang == "ru":
+            lang = rus
+        elif user_lang == "en":
+            lang = eng
+        else:
+            lang = eng
+        context['language'] = user_lang
+        context['lang'] = lang
+        date = datetime.now()
         events = Event.objects.filter(user=request.user)
         context['weeks'] = get_weeks(date, request.user, events)
         context['all_events_count'] = events.count()
@@ -28,7 +38,6 @@ def index(request):
         context['now_date'] = str(date.year) + "_" + str(date.month)
         add_event_form = AddingEventForm()
         context['add_event_form'] = add_event_form
-        context['language'] = Language.objects.filter(user=request.user).first().lang
         return render(request, "calendars/index.html", context)
     else:
         response_data = {}
