@@ -9,6 +9,7 @@ from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
 from localisation import eng, rus
 
+
 @login_required
 def index(request):
     context = {
