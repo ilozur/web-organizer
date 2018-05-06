@@ -6,6 +6,7 @@ function add_todo_card(item){
                             '<h3>' + item[0] + '</h3>' +
                             '<small class="date id="card_date_' + item[2] + '">' + item[1] + '</small>' +
                         '</div>' +
+                        '<p>Коэффициент важности: ' + item[4] + '</p>' +
                         '<div class="card-footer">' +
                             '<div class="priorities" id="card_priorities_' + item[2] + '">' +
                             '</div>' +
@@ -21,7 +22,7 @@ function add_to_list(item){
     var str = "'done'";
     tmp = '<a href="#" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
                 '<h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7>' +
-                '<p>Коэффициент важности: '{{item.4}}'</p><br>' +
+                '<p>Коэффициент важности: ' + item[4] + '</p>' +
                 '<div class="priorities">' +
                     '<div class="priorities" id="list_priorities_' + item[2] + '"></div>'+
                     '<button  type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ',' + str + ')">&#10003;</button>'+
@@ -36,7 +37,6 @@ function update_done_todos(item){
     var str = "'in progress'";
     tmp = '<a href="#" id="todo_' + item[2] + '" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">' +
               '<h7>' + item[0] + '</h7>' +
-              '<p>Коэффициент важности: '{{item.4}}'</p><br>' +
               '<div class="priorities">' +
                   '<button  type="button" class="btn btn-info" onclick="status_change(' + item[2] + ', ' + str + ')">&#10007;</button>' +
                   '<div class="date"><small>' + item[1] + '</small></div>' +

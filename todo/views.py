@@ -22,10 +22,12 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    smart_priority(user)
     sort_type = get_cookie()
-    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user)
-    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
+    todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
+    for item in todos:
+        smart_priority(item, 'index')
+    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user , 'none')
+    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user, 'none')
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
@@ -49,13 +51,13 @@ def add_todo(request):
             if deadline_date > datetime.now():
                 tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
+                tmp.smart_priority = smart_priority(tmp, 'add')
                 tmp.save()
                 result = "Success"
                 response_data['id'] = tmp.id
                 response_data['title'] = tmp.title
                 response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
                 response_data['priority'] = tmp.priority
-                smart_priority(user)
             else:
                 result = 'Deadline date has passed'
         else:
@@ -106,7 +108,7 @@ def sorting(request):
         if request.user.is_authenticated:
             sort_type = request.POST.get('data')
             response = {
-                'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
+                'todo_list': Todos.get_todos(sort_type, 'in progress', request.user, 'none'),
                 'result': "Success"
             }
             set_cookie(sort_type)
@@ -247,21 +249,28 @@ def check_notify():
                 send_mail(mail)
 
 
-def smart_priority(user):
-    todos = Todos.get_todos('AtoZ', 'in progress', user)
-    if len(todos) > 0:
-        now = datetime.now()
-        now = now.strftime("%d.%m.%y")
-        now.split('.')
-        now = days_in_years(now)
-        for item in todos:
-            deadline = todos[item].deadline
-            priority = todos[item].priority
-            deadline = deadline.strftime("%d.%m.%Y")
-            deadline.split('.')
-            deadline = days_in_years(deadline) - now
-            new_value = (((priority / deadline) - 0) / (5 - 0)) * (100 - 1) + 1
-            todos[item].smart_priority = round(new_value, 1)
+def smart_priority(todo, address):
+    now = datetime.now()
+    now = now.strftime("%d.%m.%y")
+    now = now.split('.')
+    now = days_in_years(now)
+    if address == 'index':
+        deadline = todo[1]
+        priority = todo[3]
+        deadline = deadline.split('.')
+        deadline = days_in_years(deadline) - now
+        new_value = round((((priority / deadline) - 0.0000001) / (5 - 0.0000001)) * (100 - 1) + 1)
+        tmp = Todos.get_todo_by_id(todo[2])
+        tmp.smart_priority = new_value
+        tmp.save()
+    elif address == 'add':
+        deadline = todo.deadline
+        priority = todo.priority
+        deadline = deadline.strftime("%d.%m.%y")
+        deadline = deadline.split('.')
+        deadline = days_in_years(deadline) - now
+        new_value = round((((priority / deadline) - 0.0000001) / (5 - 0.0000001)) * (100 - 1) + 1)
+        return new_value
 
 
 def days_in_years(tmp):
@@ -279,14 +288,14 @@ def days_in_years(tmp):
         '11': 30,
         '12': 31,
     }
-    if ((tmp[2] % 4 == 0) and (tmp[2] % 100 != 0)) or (tmp[2] % 400 == 0):
+    if (int(tmp[2]) % 4 == 0) and (int(tmp[2]) % 100 != 0) or (int(tmp[2]) % 400 == 0):
         statistic['2'] = 29
         year = 366
     else:
         statistic['2'] = 28
         year = 365
-    for item in range(1, tmp[1]):
-        result += int(statistic[item])
+    for item in range(1, int(tmp[1])):
+        result += int(statistic[str(item)])
     result += year*int(tmp[2]) + int(tmp[0])
     return result
 
