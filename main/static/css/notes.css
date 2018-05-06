@@ -5,6 +5,11 @@ h1 {
 	color: #856404;
 }
 
+
+.all_content{
+  margin: 3% 0% 3% 0%
+}
+
 /*Элементы навигационной панели*/
 .nav-item:hover {
   background-color: #fff3cd;
