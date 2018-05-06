@@ -10,6 +10,9 @@ import json
 
 @login_required
 def index(request):
+    """!
+       @brief This function render calendar page for current user
+    """
     if request.method == "GET":
         date = datetime.now()
         context = dict(title="Calendar index page", header="Calendar index page header")
@@ -55,6 +58,9 @@ def index(request):
 
 
 def get_weeks(date_time, user, events):
+    """!
+        @brief This function select weeks and belong them events
+    """
     date = date_time
     datetime_now = datetime.now()
     if (date.month == datetime_now.month) and (date.year == datetime_now.year):
@@ -120,12 +126,18 @@ def get_weeks(date_time, user, events):
 
 
 def get_month_name(month):
+    """!
+        @brief This functon get name of month by number
+    """
     m = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
          "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь", ]
     return m[month - 1]
 
 
 def search_events(string):
+    """!
+        @brief This function select events by regular phrase
+    """
     events = Event.get_events("title_up_all")
     found_events = []
     for i in events:
@@ -135,6 +147,9 @@ def search_events(string):
 
 
 def add_event(request, data):
+    """!
+        @brief This function add event to DB if data of event is valid
+    """
     time_now = datetime.now()
     data['added_date'] = time_now.date()
     data['added_time'] = time_now.time()
@@ -187,6 +202,9 @@ def event_view(request):
 
 @login_required
 def get_event_data_ajax(request):
+    """!
+        This function get data of event (with ajax)
+    """
     response_data = {}
     if request.method == "POST":
         event_id = request.POST.get('id')
