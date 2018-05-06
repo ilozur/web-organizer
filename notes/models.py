@@ -81,4 +81,3 @@ class Notes(models.Model):
         else:
             return notelist.filter(pub_date__gte=datetime[0].date(),
                                    pub_date__lte=datetime[1].date()).order_by('-pub_date')
-

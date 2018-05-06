@@ -78,7 +78,7 @@ def index(request):
                 context['nearest_event_exists'] = True
                 context['nearest_event_name'] = nearest_events.first().title
                 context['nearest_event_date'] = nearest_events.first().date.strftime("%d.%m.%Y ") + \
-                                                nearest_events.first().time.strftime("%H:%M")
+                    nearest_events.first().time.strftime("%H:%M")
             else:
                 context['nearest_event_exists'] = False
             last_note = notes.order_by('-last_edit_time', '-added_time').first()

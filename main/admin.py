@@ -17,11 +17,11 @@ def creation(argument, number):
         gn.Command.generate_notes(number)
     elif argument == 'e' or argument == 'E':
         ge.Command.generate_events(number)
-    elif argument == 't' or argument== 'T':
+    elif argument == 't' or argument == 'T':
         gt.Command.generate_todo(number)
     elif argument == 'u' or argument == 'U':
         gu.Command.generate_users(number)
 
 
 def user_create(nickname, password, lang):
-    cu.Command.create_user(nickname,password,lang)
+    cu.Command.create_user(nickname, password, lang)
