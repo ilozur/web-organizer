@@ -39,9 +39,8 @@ def index(request):
     req = request.POST
     users = User.objects.all()
     if req:
-        if 'logfield' in req:
-            ucf = ucform(req)
-            user_create(ucf.logfld, ucf.passfld, ucf.langfld)
+        if 'logfld' in req:
+            user_create(req['logfld'], req['passfld'], req['langfld'])
         elif 'inputfld' in req:
             cf = CForm(req)
             creation(cf.data['choicebox'], cf.data['inputfld'], users)
