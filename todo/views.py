@@ -11,7 +11,7 @@ from todo.forms import EditTodoForm
 from todo.models import Todos
 import json
 from datetime import datetime
-
+from localisation import eng, rus
 
 @login_required
 def index(request):
@@ -19,6 +19,15 @@ def index(request):
         'title': "Todos index page",
         'header': "Todos index page header",
     }
+    user_lang = Language.objects.filter(user=request.user).first().lang
+    if user_lang == "ru":
+        lang = rus
+    elif user_lang == "en":
+        lang = eng
+    else:
+        lang = eng
+    context['language'] = user_lang
+    context['lang'] = lang
     user = request.user
     context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
@@ -26,7 +35,6 @@ def index(request):
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
-    context['language'] = Language.objects.filter(user=request.user).first().lang
     return render(request, "todo/index.html", context)
 
 
