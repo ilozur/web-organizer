@@ -21,10 +21,9 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    global data
     data = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
     context['undone_todos'] = data.page(1)
-    context['undone_pages'] = data
+    context['undone_pages'] = data.page_range
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
@@ -243,11 +242,12 @@ def check_notify():
 
 def paginate(request):
     response_data = {}
+    pages = Paginator(Todos.get_todos('AtoZ', 'in progress', request.user), 20)
     if request.method == "POST":
         if request.user.is_authenticated:
             page_number = request.POST.get('page')
-            response_data['buttons'] = [data.page(page_number).has_previous(), data.page(page_number).has_next()]
-            response_data['todo_list'] = data.page(page_number).object_list
+            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+            response_data['todo_list'] = pages.page(page_number).object_list
             response_data['result'] = 200
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

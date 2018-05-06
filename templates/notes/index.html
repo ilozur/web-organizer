@@ -77,11 +77,11 @@
 				</section>
 				<nav class="navbar navbar-pag">
 					<div class="btn-group btn-group-lg">
-						<button type="button" class="btn btn-warning">&laquo;</button>
-						<button type="button" class="btn btn-warning disabled">1</button>
-						<button type="button" class="btn btn-warning">2</button>
-						<button type="button" class="btn btn-warning">3</button>
-						<button type="button" class="btn btn-warning">&raquo;</button>
+						<button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button>
+						{% for number in notes_pages %}
+						    <button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button>
+                        {% endfor %}
+						<button id="NextPage" type="button" class="btn btn-warning">&raquo;</button>
 					</div>
 				</nav>
 			</section>

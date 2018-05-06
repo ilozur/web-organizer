@@ -274,3 +274,30 @@ function voice_note()
     var clean_text = $('#note_data_show').text();
     voice_text(clean_text);
 };
+
+function paginate(page){
+    $.ajax({
+        type: "POST",
+        url: "/notes/page",
+        data: { "page": page },
+        success: function(response)
+        {
+            if (response['result'] == 200) {
+                if (response['buttons'][0]) {
+                    $("#PrevPage").removeAttr('disabled');
+                    $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+                } else {
+                    $("#PrevPage").attr('disabled', 'disabled');
+                }
+                if (response['buttons'][1]) {
+                    $("#NextPage").removeAttr('disabled');
+                    $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+                }  else {
+                    $("#NextPage").attr('disabled', 'disabled');
+                }
+                $("#list_id").html('');
+
+            }
+        }
+    });
+};

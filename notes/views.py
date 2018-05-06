@@ -7,6 +7,7 @@ from datetime import datetime
 from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 
 
 @login_required
@@ -24,7 +25,9 @@ def index(request):
     notes = notes.order_by('name')
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-    context['notes_data'] = notes_list
+    pages = Paginator(notes_list, 20)
+    context['notes_data'] = pages.page(1)
+    context['notes_pages'] = pages.page_range
     context['search_note_form'] = SearchForm()
     context['add_note_form'] = AddNoteForm()
     context['edit_note_form'] = EditNoteForm()
@@ -179,6 +182,24 @@ def delete_ajax(request):
             response_data['id'] = last_note.id
             response_data['name'] = last_note.name
         response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def paginate(request):
+    response_data = {}
+    notes_list = []
+    notes = Notes.objects.filter(user=request.user)
+    for i in notes:
+        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+    pages = Paginator(notes_list, 20)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            page_number = request.POST.get('page')
+            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+            response_data['todo_list'] = pages.page(page_number).object_list
+            response_data['result'] = 200
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
