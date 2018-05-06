@@ -5,21 +5,49 @@ from django.db import models
 # Create your models here.
 class Event(models.Model):
     """!
-        This is class of user's events
+        @brief This is class of user's events.
     """
+
+    ##@brief This variable contain number of user who create this event.
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
+
+    ##@brief This variable contain date of adding event.
     added_date = models.DateField(default="2018-01-01")
+
+    ##@brief This variable contain time of adding.
     added_time = models.TimeField(default="00:00:00:000000")
+
+    ##@brief This variable contain title.
     title = models.CharField(max_length=255)
+
+    ##@brief This variable contain description.
     description = models.TextField()
+
+    ##@brief This variable contain informations about is an public this variable or not.
     is_public = models.BooleanField()
+
+    ##@brief This variable contain date why this event will happen.
     date = models.DateField(default="2018-01-01")
+
+    ##@brief This variable contain time why event will happen.
     time = models.TimeField()
+
+    ##@brief This field contain information about stage of progress of event.
     status = models.CharField(max_length=64, default="opened")
+
+    ##@brief This variable contain information about sending notification to email (can be true or false).
     notified_already = models.BooleanField(default=False)
+
+    ##@brief This variable contain information about time (hour) why notification will be send.
     should_notify_hours = models.SmallIntegerField(default=0)
+
+    ##@brief This variable contain information about time (minute) why notification will be send.
     should_notify_minutes = models.SmallIntegerField(default=0)
+
+    ##@brief This variable contain information about date why notification will be send.
     should_notify_days = models.SmallIntegerField(default=0)
+
+    ##@brief This fiels contain name of place where event will happen.
     place = models.CharField(max_length=255, default="none")
 
     @staticmethod
