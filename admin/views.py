@@ -24,9 +24,9 @@ def creation(argument, number, users):
             for user in users:
                 gt.Command.create_todo(user)
     elif argument == 'u' or argument == 'U':
+        c = gu.Command()
         for i in range(0, number):
-            for user in users:
-                gu.Command.create_user(user)
+            gu.Command.create_user(c)
 
 
 def user_create(nickname, password, lang):
@@ -41,17 +41,14 @@ def index(request):
     if req:
         if 'logfield' in req:
             ucf = ucform(req)
-            context['ucform'] = ucf
             user_create(ucf.logfld, ucf.passfld, ucf.langfld)
         elif 'inputfld' in req:
             cf = CForm(req)
-            context['CForm'] = cf
             creation(cf.data['choicebox'], cf.data['inputfld'], users)
-    else:
-        cf = CForm()
-        ucf = ucform()
-        context['cform'] = cf
-        context['ucform'] = ucf
+    cf = CForm()
+    ucf = ucform()
+    context['cform'] = cf
+    context['ucform'] = ucf
     return render(request, "admin/index.html", context)
 
 
