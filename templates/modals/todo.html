@@ -200,7 +200,7 @@
                 <h2>Выполненные задачи</h2>
             </div>
             <div class="modal-body">
-                <div class="list-group">
+                <div class="list-group" id="ViewDone">
                     {% for item in done_todos %}
                         <a href="#" id="todo_{{ item.2 }}" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">
                             <h7>{{ item.0 }}</h7>
@@ -213,11 +213,11 @@
                 </div>
                 <nav class="navbar">
                     <div class="btn-group btn-group-lg">
-                        <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
-                        <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
-                        <a href="#"><button type="button" class="btn btn-light">2</button></a>
-                        <a href="#"><button type="button" class="btn btn-light">3</button></a>
-                        <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
+                        <a href="#"><button id="PrevPage_Done" type="button" class="btn btn-light" disabled>&laquo;</button></a>
+                        {% for number in done_pages %}
+                        <a href="#"><button type="button" onclick="paginate({{ number }}, 'done')" class="btn btn-light">{{ number }}</button></a>
+                        {% endfor %}
+                        <a href="#"><button id="NextPage_Done" type="button" onclick="paginate(2, 'done')" class="btn btn-light">&raquo;</button></a>
                     </div>
                 </nav>
             </div>

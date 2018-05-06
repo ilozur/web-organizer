@@ -99,11 +99,11 @@
         </section>
         <nav class="navbar">
             <div class="btn-group btn-group-lg">
-                <a href="#"><button type="button" id="PrevPage" class="btn btn-primary" disabled>&laquo;</button></a>
+                <a href="#"><button type="button" id="PrevPage_Progress" class="btn btn-primary" disabled>&laquo;</button></a>
                 {% for number in undone_pages %}
-                <a href="#"><button type="button" onclick="paginate({{ number }})" class="btn btn-primary">{{ number }}</button></a>
+                <a href="#"><button type="button" onclick="paginate({{ number }}, 'in progress')" class="btn btn-primary">{{ number }}</button></a>
                 {% endfor %}
-                <a href="#"><button type="button" id="NextPage" onclick="paginate(2)" class="btn btn-primary">&raquo;</button></a>
+                <a href="#"><button type="button" id="NextPage_Progress" onclick="paginate(2, 'in progress')" class="btn btn-primary">&raquo;</button></a>
             </div>
         </nav>
     </section>

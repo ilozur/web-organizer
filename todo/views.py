@@ -31,10 +31,12 @@ def index(request):
     context['language'] = user_lang
     context['lang'] = lang
     user = request.user
-    data = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
-    context['undone_todos'] = data.page(1)
-    context['undone_pages'] = data.page_range
-    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
+    undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
+    done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user), 20)
+    context['undone_todos'] = undone_todos.page(1)
+    context['undone_pages'] = undone_todos.page_range
+    context['done_todos'] = done_todos.page(1)
+    context['done_pages'] = done_todos.page_range
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
@@ -254,7 +256,8 @@ def check_notify():
 
 def paginate(request):
     response_data = {}
-    pages = Paginator(Todos.get_todos('AtoZ', 'in progress', request.user), 20)
+    status = request.POST.get('status')
+    pages = Paginator(Todos.get_todos('AtoZ', status, request.user), 20)
     if request.method == "POST":
         if request.user.is_authenticated:
             page_number = request.POST.get('page')

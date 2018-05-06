@@ -92,7 +92,7 @@
 					{% for number in notes_pages %}
                     <a href="#"><button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
 					{% endfor %}
-                    <a href="#"><button id="NextPage" type="button" class="btn btn-warning">&raquo;</button></a>
+                    <a href="#"><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
 				</div>
 			</nav>
 		</div>

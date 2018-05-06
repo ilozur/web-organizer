@@ -128,7 +128,6 @@ function status_change(id, type){
             if (response['result'] == 'Success')
             {
 		        sorting('new');
-		        console.log(type);
 		        if (type == 'done'){
 		            update_done_todos(response['current']);
 		        } else {
@@ -290,33 +289,52 @@ function delete_todo_ajax()
     });
 };
 
-function paginate(page){
+function paginate(page, status){
     $.ajax({
         type: "POST",
         url: "/todo/paginate",
-        data: { "page": page },
+        data: { "page": page, "status": status },
         success: function(response)
         {
             if (response['result'] == 200) {
-                if (response['buttons'][0]) {
-                    $("#PrevPage").removeAttr('disabled');
-                    $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+                if (status == 'in progress'){
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Progress").removeAttr('disabled');
+                        $("#PrevPage_Progress").attr("onclick", "paginate(" + (page - 1) + ", " + "'in progress'" + ")");
+                    } else {
+                        $("#PrevPage_Progress").attr('disabled', 'disabled');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Progress").removeAttr('disabled');
+                        $("#NextPage_Progress").attr("onclick", "paginate(" + (page + 1) + ", " + "'in progress'" + ")");
+                    }  else {
+                        $("#NextPage_Progress").attr('disabled', 'disabled');
+                    }
+                    $("#ViewList").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        add_to_list(response['todo_list'][i]);
+                    }
+                    $("#CardList").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        add_todo_card(response['todo_list'][i]);
+                    }
                 } else {
-                    $("#PrevPage").attr('disabled', 'disabled');
-                }
-                if (response['buttons'][1]) {
-                    $("#NextPage").removeAttr('disabled');
-                    $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
-                }  else {
-                    $("#NextPage").attr('disabled', 'disabled');
-                }
-                $("#ViewList").html('');
-                for(var i = 0; i < response['todo_list'].length; i++){
-                    add_to_list(response['todo_list'][i]);
-                }
-                $("#CardList").html('');
-                for(var i = 0; i < response['todo_list'].length; i++){
-                    add_todo_card(response['todo_list'][i]);
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Done").removeAttr('disabled');
+                        $("#PrevPage_Done").attr("onclick", "paginate(" + (page - 1) + ", " + "'done'" + ")");
+                    } else {
+                        $("#PrevPage_Done").attr('disabled', 'disabled');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Done").removeAttr('disabled');
+                        $("#NextPage_Done").attr("onclick", "paginate(" + (page + 1) + ", " + "'done'" + ")");
+                    }  else {
+                        $("#NextPage_Done").attr('disabled', 'disabled');
+                    }
+                    $("#ViewDone").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        update_done_todos(response['todo_list'][i]);
+                    }
                 }
             }
         }
