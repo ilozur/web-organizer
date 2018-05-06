@@ -4,6 +4,9 @@ from ckeditor_uploader.fields import RichTextUploadingFormField
 
 
 class AddingEventForm(forms.Form):
+    """!
+        @brief Form that handles user's event for writing to DB
+    """
     date = forms.DateField(widget=forms.DateInput(attrs={'form': 'add_event_form', 'type': 'date'}))
     time = forms.TimeField(widget=forms.TimeInput(attrs={'form': 'add_event_form', 'type': 'time'}))
     title = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control',
