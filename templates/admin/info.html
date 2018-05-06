@@ -10,9 +10,29 @@
 {% endblock %}
 {% block content %}
 <div>
-    <table>
+    <h1 class="text-center">Users</h1>
+    <table class="table table-striped table-dark" border="1">
+        <tr>
+            <td>Никнейм</td>
+            <td>Имя</td>
+            <td>Фамилия
+            <td>Почта
+            <td>Дата регистрации</td>
+            <td>Дата последнего входа</td>
+            <td>Суперпользователь</td>
+            <td>Активен</td>
+          </tr>
         {% for item in list_user %}
-            <tr>item</tr>
+          <tr>
+              <td>{{ item.username }}</td>
+              <td>{{ item.first_name }}</td>
+              <td>{{ item.second_name }}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.date_joined }}</td>
+              <td>{{ item.last_login}}</td>
+              <td>{{ item.is_superuser }}</td>
+              <td>{{ item.is_active }}</td>
+          </tr>
         {% endfor %}
     </table>
 </div>
