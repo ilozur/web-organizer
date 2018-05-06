@@ -11,6 +11,8 @@ from todo.forms import EditTodoForm
 from todo.models import Todos
 import json
 from datetime import datetime
+import os
+import http.cookies
 
 
 @login_required
@@ -20,7 +22,9 @@ def index(request):
         'header': "Todos index page header",
     }
     user = request.user
-    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
+    smart_priority(user)
+    sort_type = get_cookie()
+    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user)
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
@@ -32,6 +36,7 @@ def index(request):
 
 @login_required
 def add_todo(request):
+    user = request.user
     response_data = {}
     if request.method == "POST":
         form = AddTodoForm(request.POST)
@@ -50,6 +55,7 @@ def add_todo(request):
                 response_data['title'] = tmp.title
                 response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
                 response_data['priority'] = tmp.priority
+                smart_priority(user)
             else:
                 result = 'Deadline date has passed'
         else:
@@ -81,7 +87,8 @@ def show_todo(request):
                 'date': [todo.deadline.year, todo.deadline.month, todo.deadline.day],
                 'id': todo.id,
                 'result': "Success",
-                'current_status': current_status
+                'current_status': current_status,
+                'smart_priority': todo.smart_priority
             }
         else:
             response = {
@@ -102,6 +109,7 @@ def sorting(request):
                 'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
                 'result': "Success"
             }
+            set_cookie(sort_type)
         else:
             response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type="application/json")
@@ -131,6 +139,7 @@ def status_change(request):
 
 @login_required
 def edit_todo(request):
+    user = request.user
     response = {}
     if request.method == "POST":
         form = EditTodoForm(request.POST)
@@ -150,6 +159,7 @@ def edit_todo(request):
                     response['result'] = "Success"
                     response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
                     response['priority'] = tmp.priority
+                    smart_priority(user)
                 else:
                     response['result'] = 'No such todo'
             else:
@@ -237,38 +247,21 @@ def check_notify():
                 send_mail(mail)
 
 
-def high_version_priority():
-    todos = Todos.get_todos('AtoZ', 'done')
-    deadline_list = []
-    dictionary = {}
-    priority_list = []
-    id_list = []
-    combo_list = []
-    days = []
-    now = str(datetime.today())
-    for item in todos:
-        deadline_list.append(todos.deadline[item])
-        priority_list.append(todos.priority[item])
-        id_list.append(todos.id[item])
-    for item in deadline_list:
-        tmp = deadline_list[item].split('.')
-        days.append(days_in_years(tmp))
-    date_now = now.split('-')
-    date_now.reverse()
-    for item in days:
-        days[item] = days[item] - days_in_years(date_now)
-    for i in range(len(days)):
-        dictionary[days] = priority_list[i]
-    for item in sorted(dictionary.keys()):
-        d = {item: dictionary[item]}
-        list = []
-        list.append(d)
-        list.append(id_list)
-        combo_list.append(list)
-    for i in range(len(combo_list)):
-        if (combo_list[i][0].values > combo_list[i+1][0].values) and (combo_list[i][0].keys == combo_list[i+1][0].keys):
-            combo_list[i+1][0], combo_list[i][0] = combo_list[i][0], combo_list[i+1][0]
-    return combo_list
+def smart_priority(user):
+    todos = Todos.get_todos('AtoZ', 'in progress', user)
+    if len(todos) > 0:
+        now = datetime.now()
+        now = now.strftime("%d.%m.%y")
+        now.split('.')
+        now = days_in_years(now)
+        for item in todos:
+            deadline = todos[item].deadline
+            priority = todos[item].priority
+            deadline = deadline.strftime("%d.%m.%Y")
+            deadline.split('.')
+            deadline = days_in_years(deadline) - now
+            new_value = (((priority / deadline) - 0) / (5 - 0)) * (100 - 1) + 1
+            todos[item].smart_priority = round(new_value, 1)
 
 
 def days_in_years(tmp):
@@ -286,7 +279,7 @@ def days_in_years(tmp):
         '11': 30,
         '12': 31,
     }
-    if ((tmp[1] % 4 == 0) and (tmp[1] % 100 != 0)) or (tmp[1] % 400 == 0):
+    if ((tmp[2] % 4 == 0) and (tmp[2] % 100 != 0)) or (tmp[2] % 400 == 0):
         statistic['2'] = 29
         year = 366
     else:
@@ -298,11 +291,18 @@ def days_in_years(tmp):
     return result
 
 
-def new_target_proirity(id_todo):
-    todo = Todos.get_todo_by_id(id=id_todo)
-    smart_priority = 0
-    todo_list = high_version_priority()
-    for i in range(len(todo_list)):
-        if todo.id == todo_list[i][1]:
-            smart_priority = round((i / len(todo_list)) * 100, 1)
-    return smart_priority
+def set_cookie(sort_type):
+    cookie = http.cookies.SimpleCookie()
+    cookie['sort_type'] = sort_type
+
+
+def get_cookie():
+    cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+    sort_type = cookie.get("sort_type")
+    if sort_type is None:
+        cookie = http.cookies.SimpleCookie()
+        cookie['sort_type'] = 'AtoZ'
+        sort_type = cookie.get("sort_type")
+        return sort_type.value
+    else:
+        return sort_type.value
