@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+{% block meta %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel="stylesheet" href='{% static "css/general.css" %}'>
+	<link rel="stylesheet" href='{% static "css/base.css" %}'>
+    <link rel="stylesheet" href='{% static "css/notes.css" %}'>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+    <script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
+{% endblock %}
+{% block content %}
+<div>
+    <table>
+        {% for item in list_user %}
+            <tr>item</tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
