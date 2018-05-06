@@ -34,6 +34,6 @@ function start_background_listening(language)
     }
     else
     {
-        alert('Your browser is unsupported for voice. Sorry');
+        alert('Voice usage is not supported in your browser. Sorry');
     }
 };
