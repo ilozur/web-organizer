@@ -55,6 +55,7 @@ nav .active {
   margin: 10px;
   margin-bottom: 40px;
   cursor: pointer;
+  border-radius: 15px;
 }
 .card:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
@@ -99,6 +100,7 @@ nav .active {
 .list-group-item {
 	color: #856404;	
 	transition: 0.5s;
+	  border-radius: 15px;
 }
 .list-group-item:hover {
 	color: #856404;
@@ -118,4 +120,18 @@ nav .active {
 /*Подвал*/
 footer {
 	color: #fff3cd;
+}
+
+.test{
+    float: right;
+}
+
+
+.noanimation{
+    height: auto ;
+    margin-bottom:auto ;
+    border-radius: 15px;
+    position: fixed;
+    text-align: center;
+    margin-top: : 150px;
 }

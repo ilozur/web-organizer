@@ -12,6 +12,7 @@ from todo.forms import EditTodoForm
 from todo.models import Todos
 import json
 from datetime import datetime
+from localisation import eng, rus
 
 
 @login_required
@@ -20,6 +21,15 @@ def index(request):
         'title': "Todos index page",
         'header': "Todos index page header",
     }
+    user_lang = Language.objects.filter(user=request.user).first().lang
+    if user_lang == "ru":
+        lang = rus
+    elif user_lang == "en":
+        lang = eng
+    else:
+        lang = eng
+    context['language'] = user_lang
+    context['lang'] = lang
     user = request.user
     data = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
     context['undone_todos'] = data.page(1)
@@ -29,7 +39,6 @@ def index(request):
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
-    context['language'] = Language.objects.filter(user=request.user).first().lang
     return render(request, "todo/index.html", context)
 
 
@@ -43,7 +52,8 @@ def add_todo(request):
             text = form.cleaned_data['todo_text']
             deadline_date = form.cleaned_data['todo_deadline']
             deadline_time = form.cleaned_data['todo_time']
-            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
+                                     deadline_time.minute, 0)
             if deadline_date > datetime.now():
                 tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
@@ -141,7 +151,8 @@ def edit_todo(request):
             todo_id = form.cleaned_data['todo_id']
             deadline_date = form.cleaned_data['todo_edit_deadline']
             deadline_time = form.cleaned_data['todo_edit_time']
-            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
+                                     deadline_time.minute, 0)
             if deadline_date > datetime.now():
                 if Todos.objects.filter(id=todo_id).exists():
                     tmp = Todos.get_todo_by_id(todo_id)
@@ -236,7 +247,8 @@ def check_notify():
     for tmp_user in User.objects.all():
         for tmp_todo in Todos.objects.filter(user=tmp_user):
             if datetime(0, 0, 0, 1, 0, 0, 0) > tmp_todo.deadline - datetime.now():
-                mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title, "У вас не выполненная задача!")
+                mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title,
+                                   "У вас не выполненная задача!")
                 send_mail(mail)
 
 
@@ -252,3 +264,75 @@ def paginate(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def high_version_priority():
+    todos = Todos.get_todos('AtoZ', 'done')
+    deadline_list = []
+    dictionary = {}
+    priority_list = []
+    id_list = []
+    combo_list = []
+    days = []
+    now = str(datetime.today())
+    for item in todos:
+        deadline_list.append(todos.deadline[item])
+        priority_list.append(todos.priority[item])
+        id_list.append(todos.id[item])
+    for item in deadline_list:
+        tmp = deadline_list[item].split('.')
+        days.append(days_in_years(tmp))
+    date_now = now.split('-')
+    date_now.reverse()
+    for item in days:
+        days[item] = days[item] - days_in_years(date_now)
+    for i in range(len(days)):
+        dictionary[days] = priority_list[i]
+    for item in sorted(dictionary.keys()):
+        d = {item: dictionary[item]}
+        list = []
+        list.append(d)
+        list.append(id_list)
+        combo_list.append(list)
+    for i in range(len(combo_list)):
+        if (combo_list[i][0].values > combo_list[i + 1][0].values) and (
+            combo_list[i][0].keys == combo_list[i + 1][0].keys):
+            combo_list[i + 1][0], combo_list[i][0] = combo_list[i][0], combo_list[i + 1][0]
+    return combo_list
+
+
+def days_in_years(tmp):
+    result = 0
+    statistic = {
+        '1': 31,
+        '3': 31,
+        '4': 30,
+        '5': 31,
+        '6': 30,
+        '7': 31,
+        '8': 31,
+        '9': 30,
+        '10': 31,
+        '11': 30,
+        '12': 31,
+    }
+    if ((tmp[1] % 4 == 0) and (tmp[1] % 100 != 0)) or (tmp[1] % 400 == 0):
+        statistic['2'] = 29
+        year = 366
+    else:
+        statistic['2'] = 28
+        year = 365
+    for item in range(1, tmp[1]):
+        result += int(statistic[item])
+    result += year * int(tmp[2]) + int(tmp[0])
+    return result
+
+
+def new_target_proirity(id_todo):
+    todo = Todos.get_todo_by_id(id=id_todo)
+    smart_priority = 0
+    todo_list = high_version_priority()
+    for i in range(len(todo_list)):
+        if todo.id == todo_list[i][1]:
+            smart_priority = round((i / len(todo_list)) * 100, 1)
+    return smart_priority

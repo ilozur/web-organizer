@@ -8,17 +8,25 @@ from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
+from localisation import eng, rus
 
 
 @login_required
 def index(request):
     context = {
         'title': "Notes index page",
-        'header': "Notes index page header",
     }
+    user_lang = Language.objects.filter(user=request.user).first().lang
+    if user_lang == "ru":
+        lang = rus
+    elif user_lang == "en":
+        lang = eng
+    else:
+        lang = eng
+    context['language'] = user_lang
+    context['lang'] = lang
     notes_list = []
     notes = Notes.objects.filter(user=request.user)
-    context['language'] = Language.objects.filter(user=request.user).first().lang
     context['all_notes_count'] = notes.count()
     context['voice_notes_count'] = notes.filter(is_voice=True).count()
     context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
