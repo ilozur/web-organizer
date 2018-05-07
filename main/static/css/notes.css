@@ -50,7 +50,8 @@ nav .active {
 /*Карточки*/
 .card {
   background-color: #fff3cd;
-  height: 500px;
+  height: 400px;
+  width: 400px;
   transition: 0.5s;
   margin: 10px;
   margin-bottom: 40px;
@@ -100,7 +101,9 @@ nav .active {
 .list-group-item {
 	color: #856404;	
 	transition: 0.5s;
-	  border-radius: 15px;
+	margin-top: 10px;
+	width: 1000px;
+	margin-left: 150px;
 }
 .list-group-item:hover {
 	color: #856404;
@@ -108,30 +111,19 @@ nav .active {
 	transition: 0.5s;
 }
 
-.empty {
-	text-align: center;
-	color: #856404;
-	background-color: #fff3cd;
-	border-radius: 15px 15px;
-	padding-top: 1.5em;
-	padding-bottom: 1.5em;
-}
-
 /*Подвал*/
 footer {
 	color: #fff3cd;
 }
 
-.test{
-    float: right;
-}
-
-
 .noanimation{
     height: auto ;
-    margin-bottom:auto ;
+    width: 215px;
     border-radius: 15px;
-    position: fixed;
     text-align: center;
     margin-top: : 150px;
+}
+
+.noanimation:hover{
+	box-shadow: 0 0;
 }

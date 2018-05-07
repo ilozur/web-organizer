@@ -33,9 +33,9 @@ def index(request):
     user = request.user
     undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
     done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user), 20)
-    context['undone_todos'] = undone_todos.page(1)
+    context['undone_todos'] = undone_todos.page(1).object_list
     context['undone_pages'] = undone_todos.page_range
-    context['done_todos'] = done_todos.page(1)
+    context['done_todos'] = done_todos.page(1).object_list
     context['done_pages'] = done_todos.page_range
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()

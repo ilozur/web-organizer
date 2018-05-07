@@ -23,10 +23,6 @@ a:hover {
 	color: #000;
 }
 
-.content {
-	padding: 0 20%;
-}
-
 h1 {
 	padding-top: 5%;
 	font-weight: 300;
@@ -38,10 +34,6 @@ h1 {
 
 .list-group {
 	margin-bottom: 20px;
-}
-
-.navbar-pag {
-	margin-top: 100px;
 }
 
 .icon {

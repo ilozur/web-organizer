@@ -1,75 +1,90 @@
 {% extends "main/base.html" %}
-
 {% block meta %}
-    {% load staticfiles %}
-    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
-    <link rel="stylesheet" href='{% static "css/general.css" %}'>
-	<link rel="stylesheet" href='{% static "css/base.css" %}'>
-    <link rel="stylesheet" href='{% static "css/todolist.css" %}'>
-    <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
-    <script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
+{% load staticfiles %}
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/general.css" %}'>
+<link rel="stylesheet" href='{% static "css/base.css" %}'>
+<link rel="stylesheet" href='{% static "css/todolist.css" %}'>
+<script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
+<script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
 {% endblock %}
-
 {% block content %}
 <article class="todo">
     <section class="mast">
-        <h1>Напоминания</h1>
+        <h1>Задачи</h1>
     </section>
     <section class="content">
-        <section class="navigation">
+        <div class="row">
+            <div class="col-2">
+                <div class="card mb-3 ml-3 noanimation">
+                    <div class="card-header">
+                        <div class="btn-group btn-group-lg">
+                            <button type="button" class="btn btn-primary" onclick="ShowCard()">
+                                <picture>
+                                    <img src='{% static "/icons/card_icon_todo.png" %}' class="icon">
+                                </picture>
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="ShowList()">
+                                <picture>
+                                    <img src='{% static "/icons/list_icon_todo.png" %}' class="icon">
+                                </picture>
+                            </button>
+                            <button type="button" class="btn btn-lg btn-light" data-toggle="modal" onclick="clean_add_todo_fields()" data-target="#New-Todo">+</button>
+                        </div>
+                    </div>
+                    <div class="dropdown btn-lg">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Сортировка
+                        </button>
+                        <div class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="sorting('new')">Сначала новые</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('old')">Сначала старые</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('AtoZ')">А..Я</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('ZtoA')">Я..А</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('deadline')">Горящие задачи</button>
+                        </div>
+                    </div>
+                    <!--                 <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
+                        <picture>
+                            <img src='{% static "/icons/sync_icon_todo.png" %}' class="icon">
+                        </picture>
+                        </button> -->
+                    <div class="card-footer">
+                        <div id="amounts" class="alert alert-primary">
+                            <small>Всего задач: </small><small>{{ amount_of_todos.0 }}</small> <br/>
+                            <small>Активных: </small><small>{{ amount_of_todos.1 }}</small> <br/>
+                            <small>Завершенных: </small><small>{{ amount_of_todos.2 }}</small> <br/>
+                        </div>
+                    </div>
+                </div>
             <nav class="navbar">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary" onclick="ShowCard()">
-                        <picture>
-                            <img src='{% static "/icons/card_icon_todo.png" %}' class="icon">
-                        </picture>
-                    </button>
-                    <button type="button" class="btn btn-primary" onclick="ShowList()">
-                        <picture>
-                            <img src='{% static "/icons/list_icon_todo.png" %}' class="icon">
-                        </picture>
-                    </button>
-                </div>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" onclick="clean_add_todo_fields()" data-target="#New-Todo">+</button>
-                <button type="button" class="btn btn-lg btn-light" data-toggle="modal" data-target="#Complete">&#10003;</button>
-                <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light" onclick="sorting('new')">Сначала новые</button>
-                    <button type="button" class="btn btn-light" onclick="sorting('old')">Сначала старые</button>
-                    <button type="button" class="btn btn-light" onclick="sorting('AtoZ')">А..Я</button>
-                    <button type="button" class="btn btn-light" onclick="sorting('ZtoA')">Я..А</button>
-                    <button type="button" class="btn btn-light" onclick="sorting('deadline')">Горящие задачи</button>
-                </div>
-                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
-                    <picture>
-                        <img src='{% static "/icons/sync_icon_todo.png" %}' class="icon">
-                    </picture>
-                </button>
-                <div id="amounts" class="alert alert-primary">
-                    <small>Всего напоминаний: </small><small>{{ amount_of_todos.0 }}</small> <br/>
-                    <small>Активных: </small><small>{{ amount_of_todos.1 }}</small> <br/>
-                    <small>Завершенных: </small><small>{{ amount_of_todos.2 }}</small> <br/>
+                    <a href="#"><button type="button" id="PrevPage_Progress" class="btn btn-primary" disabled>&laquo;</button></a>
+                    {% for number in undone_pages %}
+                    <a href="#"><button type="button" onclick="paginate({{ number }}, 'in progress')" class="btn btn-primary">{{ number }}</button></a>
+                    {% endfor %}
+                    <a href="#"><button type="button" id="NextPage_Progress" onclick="paginate(2, 'in progress')" class="btn btn-primary">&raquo;</button></a>
                 </div>
             </nav>
-        </section>
-        <section class="list-view list-group" >
+        </div>
+        <section class="list-view col">
             <div class="list-group" id="ViewList">
-                {% for item in undone_todos.object_list %}
-                    <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
-                        <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
-                        <div class="priorities">
-                            <div class="priorities" id="list_priorities_{{ item.2}}"></div>
-                            <script>get_priorities({{ item.3 }}, {{ item.2 }});</script>
-                            <button type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
-                            <div class="date"><small id="todo_date_{{item.2}}">{{ item.1 }}</small></div>
-                        </div>
-                    </a>
+                {% for item in undone_todos %}
+                <a href="#" id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
+                    <button  type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">&#10003;</button>
+                    <h7 id="todo_title_{{item.2}}">{{ item.0 }}</h7>
+                    <div class="priorities">
+                        <div class="priorities" id="list_priorities_{{ item.2}}"></div>
+                        <script>get_priorities({{ item.3 }}, {{ item.2 }});</script>
+                        <div class="date"><small id="todo_date_{{ item.2 }}">{{ item.1 }}</small></div>
+                    </div>
+                </a>
                 {% endfor %}
-            </div>
-        </section>
-        <section class="card-view"  style="display: None" id="ViewCard">
-            <div class="row" id="CardList">
-                {% for item in undone_todos.object_list %}
-                    <a href="#" id="todo_card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">
+                </div>
+            <section class="card-view"  style="display: None" id="ViewCard">
+                <div class="row" id="CardList">
+                    {% for item in undone_todos %}
+                    <a href="#" id="todo_card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-4" data-toggle="modal" data-target="#Open-Todo">
                         <div class="card">
                             <div class="card-body">
                                 <h3> {{ item.0 }} </h3>
@@ -83,29 +98,11 @@
                             </div>
                         </div>
                     </a>
-                {% endfor %}
-            </div>
-            <div class="col-md-4" data-toggle="modal" data-target="#New-Todo">
-                <div class="card last">
-                    <div class="card-body">
-                        <p>+</p>
-                    </div>
+                    {% endfor %}
                 </div>
-            </div>
-        </section>
-        <section class="empty" hidden>
-            <h2> Еще нет напоминаний? </h2>
-            <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#New-Todo" onclick="clean_add_todo_fields()">Добавить напоминание</button>
-        </section>
-        <nav class="navbar">
-            <div class="btn-group btn-group-lg">
-                <a href="#"><button type="button" id="PrevPage_Progress" class="btn btn-primary" disabled>&laquo;</button></a>
-                {% for number in undone_pages %}
-                <a href="#"><button type="button" onclick="paginate({{ number }}, 'in progress')" class="btn btn-primary">{{ number }}</button></a>
-                {% endfor %}
-                <a href="#"><button type="button" id="NextPage_Progress" onclick="paginate(2, 'in progress')" class="btn btn-primary">&raquo;</button></a>
-            </div>
-        </nav>
+            </section>
+            </section>
+        </div>
     </section>
 </article>
 <article class="modals">

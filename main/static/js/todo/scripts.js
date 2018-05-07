@@ -311,11 +311,9 @@ function paginate(page, status){
                         $("#NextPage_Progress").attr('disabled', 'disabled');
                     }
                     $("#ViewList").html('');
-                    for(var i = 0; i < response['todo_list'].length; i++){
-                        add_to_list(response['todo_list'][i]);
-                    }
                     $("#CardList").html('');
                     for(var i = 0; i < response['todo_list'].length; i++){
+                        add_to_list(response['todo_list'][i]);
                         add_todo_card(response['todo_list'][i]);
                     }
                 } else {
