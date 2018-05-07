@@ -101,7 +101,6 @@ nav .active {
 .list-group-item {
 	color: #856404;	
 	transition: 0.5s;
-	border-radius: 15px;
 	margin-top: 10px;
 	width: 1000px;
 	margin-left: 150px;
@@ -112,24 +111,10 @@ nav .active {
 	transition: 0.5s;
 }
 
-.empty {
-	text-align: center;
-	color: #856404;
-	background-color: #fff3cd;
-	border-radius: 15px 15px;
-	padding-top: 1.5em;
-	padding-bottom: 1.5em;
-}
-
 /*Подвал*/
 footer {
 	color: #fff3cd;
 }
-
-.test{
-    float: right;
-}
-
 
 .noanimation{
     height: auto ;
