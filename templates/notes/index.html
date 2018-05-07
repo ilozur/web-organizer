@@ -15,7 +15,7 @@
 	</section>
 	<section>
 		<div class="row">
-			<div class="col-3">
+			<div class="col-2">
 				<div class="card text-white bg-test mb-3 ml-3 noanimation" style="max-width:;">
 					<div class="card-header">
 						<div class="btn-group btn-group-lg">
@@ -33,15 +33,15 @@
 						</div>
 					</div>
 					<div class="dropdown btn-lg">
-					  <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					    Сортировка
-					  </button>
-					  <div class="dropdown-menu">
-						<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
-						<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
-						<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_up')">А..Я</button>
-						<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_down')">Я..А</button>
-					  </div>
+						<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Сортировка
+						</button>
+						<div class="dropdown-menu">
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_up')">А..Я</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_down')">Я..А</button>
+						</div>
 					</div>
 					<div class="card-footer">
 						<div class="alert alert-warning">
@@ -51,8 +51,17 @@
 						</div>
 					</div>
 				</div>
+				<nav class="navbar">
+					<div class="btn-group btn-group-lg">
+						<button type="button" class="btn btn-warning">&laquo;</button>
+						<button type="button" class="btn btn-warning disabled">1</button>
+						<button type="button" class="btn btn-warning">2</button>
+						<button type="button" class="btn btn-warning">3</button>
+						<button type="button" class="btn btn-warning">&raquo;</button>
+					</div>
+				</nav>
 			</div>
-			<section class="list-view">
+			<section class="list-view col">
 				<div class="list-group" id="list_id">
 					{% for item in notes_data %}
 					<div id="note_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');">
@@ -63,11 +72,10 @@
 					</div>
 					{% endfor %}
 				</div>
-			</section>
 			<section class="card-view">
 				<div class="row" id="cards_id" style="display: none" hidden>
 					{% for item in notes_data %}
-					<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-md-9" data-toggle="modal" data-target="#Note-Card">
+					<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
 						<div class="card">
 							<div class="card-body">
 								<h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
@@ -82,15 +90,8 @@
 					{% endfor %}
 				</div>
 			</section>
-            <nav class="navbar navbar-pag">
-                <div class="btn-group btn-group-lg">
-                        <button type="button" class="btn btn-warning">&laquo;</button>
-                        <button type="button" class="btn btn-warning disabled">1</button>
-                        <button type="button" class="btn btn-warning">2</button>
-                        <button type="button" class="btn btn-warning">3</button>
-                        <button type="button" class="btn btn-warning">&raquo;</button>
-                </div>
-            </nav>
+			</section>
+		</div>
 	</section>
 	</div>
 </article>
