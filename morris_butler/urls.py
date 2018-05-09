@@ -41,6 +41,7 @@ urlpatterns = [
     path('activate/<str:key>', activate_key, name='activate_key'),
     path('confirm_mail/<str:key>', confirm_mail, name='confirm_mail'),
     path('ckeditor/upload/', login_required(views.upload), name='ckeditor_upload'),
+    path('api/get_csrf', get_csrf, name='api.get_csrf'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
