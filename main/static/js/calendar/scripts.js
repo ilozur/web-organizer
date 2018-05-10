@@ -300,3 +300,16 @@ function delete_event_ajax()
         });
     }
 };
+
+
+function ShowTable()
+{
+    $("#ViewList").hide("slow");
+    $("#ViewTable").show("slow");
+};
+
+function ShowList()
+{
+    $("#ViewList").show("slow");
+    $("#ViewTable").hide("slow");
+};

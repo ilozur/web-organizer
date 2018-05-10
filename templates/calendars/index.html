@@ -23,12 +23,12 @@
 				<div class="card mb-3 ml-3 noanimation">
 					<div class="card-header">
 						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-danger btn-change" data-num="1">
+							<button type="button" class="btn btn-danger btn-change" data-num="1" onclick="ShowTable()">
 								<picture>
 									<img src='{% static "icons/month_icon.png" %}' class="icon">
 								</picture>
 							</button>
-							<button type="button" class="btn btn-danger btn-change" data-num="3">
+							<button type="button" class="btn btn-danger btn-change" data-num="3" onclick="ShowList()">
 								<picture>
 									<img src='{% static "icons/list_icon_calendar.png" %}' class="icon">
 								</picture>
@@ -91,6 +91,7 @@
 			</nav>
 			</div>
 		<section class="section-mouth col">
+			<div id="ViewTable">
 			<div class="btn-group btn-group-sm btn-mouth">
 				<a>
 				<button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
@@ -147,8 +148,9 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			</div>
 		<section class="section-list">
-			<div class="list-group">
+			<div class="list-group" style="display: None" id="ViewList">
 				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
 					data-target="#Event">
 					Where is my mind?

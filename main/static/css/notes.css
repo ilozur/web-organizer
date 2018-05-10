@@ -104,6 +104,7 @@ nav .active {
 	margin-top: 10px;
 	width: 1000px;
 	margin-left: 150px;
+  border-radius: 15px 15px 15px 15px;
 }
 .list-group-item:hover {
 	color: #856404;
