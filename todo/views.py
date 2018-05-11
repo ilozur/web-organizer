@@ -262,7 +262,6 @@ def check_notify():
                 send_mail(mail)
 
 
-
 def smart_priority(todo, address):
     now = datetime.now()
     now = now.strftime("%d.%m.%y")
@@ -311,6 +310,7 @@ def days_in_years(tmp):
     for item in range(1, int(tmp[1])):
         result += int(statistic[str(item)])
     result += year*int(tmp[2]) + int(tmp[0])
+    return result
 
 
 def set_cookie(sort_type):

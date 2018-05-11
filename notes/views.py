@@ -8,6 +8,8 @@ from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
 from localisation import eng, rus
+import http.cookies
+import os
 
 
 @login_required
@@ -29,7 +31,8 @@ def index(request):
     context['all_notes_count'] = notes.count()
     context['voice_notes_count'] = notes.filter(is_voice=True).count()
     context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
-    notes = notes.order_by('name')
+    sorting_type = get_cookie()
+    notes = Notes.get_notes(sorting_type, user=1, notes=None)
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
     context['notes_data'] = notes_list
@@ -130,6 +133,7 @@ def sort_ajax(request):
                 'notes_list': notes_list
             }
             result = '100'
+            set_cookie(sort_type)
         else:
             result = '112'
         response_data['result'] = result
@@ -190,3 +194,21 @@ def delete_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def set_cookie(sort_type):
+    cookie = http.cookies.SimpleCookie()
+    cookie['sort_type'] = sort_type
+    cookie.load(cookie)
+
+
+def get_cookie():
+    cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+    sort_type = cookie.get("sort_type")
+    if sort_type is None:
+        cookie = http.cookies.SimpleCookie()
+        cookie['sort_type'] = 'title_up'
+        sort_type = cookie.get("sort_type")
+        return sort_type.value
+    else:
+        return sort_type.value
