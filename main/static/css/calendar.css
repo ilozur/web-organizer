@@ -106,6 +106,19 @@ h2 {
   color: #721c24;
 }
 
+th {
+  width: 100px;
+}
+
+.table {
+  height: auto;
+  width: 1200px;
+}
+
+.section-mouth {
+  margin-left: 150px;
+}
+
 /*Оформление ячейек и ее аимация при наведении*/
 td {
   border: 1px solid #721c24;
@@ -121,6 +134,7 @@ td:hover {
   transition: 0.2s;
   border: 2px solid #721c24;
 }
+
 .table th {
   background-color: #f8d7da;
   border: 2px solid #721c24;
@@ -213,7 +227,7 @@ td:hover {
   transition: 0.5s;
   margin-top: 10px;
   width: 1000px;
-  margin-left: 150px;
+  border-radius: 15px 15px 15px 15px;
 }
 .list-group-item:hover {
   color: #721c24;
