@@ -63,37 +63,13 @@ function close_note_edit_mode()
 };
 
 function show_cards(){
-    if ($('#cards_id').attr('hidden'))
-    {
-        $('#list_id').attr('hidden', '');
-        $('#list_id').attr('style', 'display: none');
-        $('#cards_id').removeAttr('hidden');
-        if ($('#cards_id div').length == 0)
-        {
-            $('#cards_id').removeAttr('style');
-        }
-        else
-        {
-            $('#cards_id').slideDown('slow');
-        }
-    }
+    $('#list_id').slideUp('slow');
+    $('#cards_id').slideDown('slow');
 };
 
 function show_list(){
-    if ($('#list_id').attr('hidden'))
-    {
-        $('#cards_id').attr('hidden', '');
-        $('#cards_id').attr('style', 'display: none');
-        $('#list_id').removeAttr('hidden');
-        if ($('#list_id div').length == 0)
-        {
-            $('#list_id').removeAttr('style');
-        }
-        else
-        {
-            $('#list_id').slideDown('slow');
-        }
-    }
+    $('#cards_id').slideUp('slow');
+    $('#list_id').slideDown('slow');
 };
 
 function search_notes_ajax()

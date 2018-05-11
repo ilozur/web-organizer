@@ -278,8 +278,8 @@ def high_version_priority():
         list.append(id_list)
         combo_list.append(list)
     for i in range(len(combo_list)):
-        if (combo_list[i][0].values > combo_list[i + 1][0].values) and (
-            combo_list[i][0].keys == combo_list[i + 1][0].keys):
+        if (combo_list[i][0].values > combo_list[i + 1][0].values) and\
+                (combo_list[i][0].keys == combo_list[i + 1][0].keys):
             combo_list[i + 1][0], combo_list[i][0] = combo_list[i][0], combo_list[i + 1][0]
     return combo_list
 
