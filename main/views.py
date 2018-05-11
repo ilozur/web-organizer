@@ -18,7 +18,6 @@ from django.contrib.auth.models import User
 from userprofile.forms import RecoverPasswordUserData
 from todo.forms import AddTodoForm, EditTodoForm
 from localisation import rus, eng
-from django.middleware.csrf import get_token as get_csrf_token
 
 
 def index(request):
@@ -307,11 +306,6 @@ def sign_in_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
-
-
-def get_csrf(request):
-    if request.method == "GET":
-        return HttpResponse(get_csrf_token(request))
 
 
 def create_key(text, user):
