@@ -47,6 +47,22 @@ nav .active {
   transition: 0.5s;
 }
 
+/*Карточки*/
+.card {
+  background-color: #f8d7da;
+  height: 400px;
+  width: 400px;
+  transition: 0.5s;
+  margin: 10px;
+  margin-bottom: 40px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+.card:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
+  transition: 0.5s;
+}
+
 /*Лого*/
 .logo {
   color: #721c24;
@@ -90,6 +106,19 @@ h2 {
   color: #721c24;
 }
 
+th {
+  width: 100px;
+}
+
+.table {
+  height: auto;
+  width: 1200px;
+}
+
+.section-mouth {
+  margin-left: 150px;
+}
+
 /*Оформление ячейек и ее аимация при наведении*/
 td {
   border: 1px solid #721c24;
@@ -105,6 +134,7 @@ td:hover {
   transition: 0.2s;
   border: 2px solid #721c24;
 }
+
 .table th {
   background-color: #f8d7da;
   border: 2px solid #721c24;
@@ -195,9 +225,24 @@ td:hover {
 .list-group-item {
   color: #721c24; 
   transition: 0.5s;
+  margin-top: 10px;
+  width: 1000px;
+  border-radius: 15px 15px 15px 15px;
 }
 .list-group-item:hover {
   color: #721c24;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: 0.5s;
+}
+
+.noanimation{
+    height: auto ;
+    width: 215px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: : 150px;
+}
+
+.noanimation:hover{
+  box-shadow: 0 0;
 }

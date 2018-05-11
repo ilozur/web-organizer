@@ -26,6 +26,7 @@ nav .active {
   border-top: 0px;
   background-color: #cce5ff;
   border-radius: 0 0 15px 15px;
+  margin-bottom: 25px;
 }
 
 /*Кнопки*/
@@ -51,6 +52,10 @@ nav .active {
 .list-group-item {
   color: #004085; 
   transition: 0.5s;
+  margin-top: 10px;
+  width: 1000px;
+  margin-left: 150px;
+  border-radius: 15px 15px 15px 15px;
 }
 .list-group-item:hover {
   color: #004085;
@@ -88,10 +93,13 @@ footer {
 /*Оформление карты и анимация при наводке*/
 .card {
   background-color: #cce5ff;
-  cursor: pointer;
-  transition: 0.2s;
+  height: 200px;
+  width: 400px;
+  transition: 0.5s;
   margin: 10px;
   margin-bottom: 40px;
+  cursor: pointer;
+  border-radius: 15px;
 }
 .card:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -144,11 +152,15 @@ footer {
   text-align: center;
 }
 
-.empty {
-  text-align: center;
-  color: #004085;
-  background-color: #cce5ff;
-  border-radius: 15px 15px;
-  padding-top: 1.5em;
-  padding-bottom: 1.5em;
+.noanimation{
+    height: auto ;
+    width: 215px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: : 150px;
 }
+
+.noanimation:hover{
+  box-shadow: 0 0;
+}
+

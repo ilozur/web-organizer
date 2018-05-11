@@ -13,6 +13,8 @@ import json
 from datetime import datetime
 import os
 import http.cookies
+from localisation import eng, rus
+
 
 
 @login_required
@@ -21,6 +23,15 @@ def index(request):
         'title': "Todos index page",
         'header': "Todos index page header",
     }
+    user_lang = Language.objects.filter(user=request.user).first().lang
+    if user_lang == "ru":
+        lang = rus
+    elif user_lang == "en":
+        lang = eng
+    else:
+        lang = eng
+    context['language'] = user_lang
+    context['lang'] = lang
     user = request.user
     sort_type = get_cookie()
     todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
@@ -32,7 +43,6 @@ def index(request):
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
     context['edit_todo_form'] = EditTodoForm()
-    context['language'] = Language.objects.filter(user=request.user).first().lang
     return render(request, "todo/index.html", context)
 
 
@@ -47,7 +57,8 @@ def add_todo(request):
             text = form.cleaned_data['todo_text']
             deadline_date = form.cleaned_data['todo_deadline']
             deadline_time = form.cleaned_data['todo_time']
-            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
+                                     deadline_time.minute, 0)
             if deadline_date > datetime.now():
                 tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
@@ -149,7 +160,8 @@ def edit_todo(request):
             todo_id = form.cleaned_data['todo_id']
             deadline_date = form.cleaned_data['todo_edit_deadline']
             deadline_time = form.cleaned_data['todo_edit_time']
-            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour, deadline_time.minute, 0)
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
+                                     deadline_time.minute, 0)
             if deadline_date > datetime.now():
                 if Todos.objects.filter(id=todo_id).exists():
                     tmp = Todos.get_todo_by_id(todo_id)
@@ -245,8 +257,10 @@ def check_notify():
     for tmp_user in User.objects.all():
         for tmp_todo in Todos.objects.filter(user=tmp_user):
             if datetime(0, 0, 0, 1, 0, 0, 0) > tmp_todo.deadline - datetime.now():
-                mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title, "У вас не выполненная задача!")
+                mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title,
+                                   "У вас не выполненная задача!")
                 send_mail(mail)
+
 
 
 def smart_priority(todo, address):
@@ -276,7 +290,7 @@ def smart_priority(todo, address):
 def days_in_years(tmp):
     result = 0
     statistic = {
-       '1': 31,
+        '1': 31,
         '3': 31,
         '4': 30,
         '5': 31,
@@ -297,12 +311,12 @@ def days_in_years(tmp):
     for item in range(1, int(tmp[1])):
         result += int(statistic[str(item)])
     result += year*int(tmp[2]) + int(tmp[0])
-    return result
 
 
 def set_cookie(sort_type):
     cookie = http.cookies.SimpleCookie()
     cookie['sort_type'] = sort_type
+    cookie.load(cookie)
 
 
 def get_cookie():
