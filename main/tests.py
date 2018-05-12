@@ -19,6 +19,7 @@ class TestMainPage(TestCase):
         self.assertRedirects(response, '/')
 
     def test_index_non_auth(self):
+        
         response = self.c.get('/')
         # check status code
         self.assertEqual(response.status_code, 200)
