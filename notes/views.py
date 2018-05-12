@@ -44,6 +44,10 @@ def index(request):
 
 @login_required
 def add_note_ajax(request):
+    """
+    @brief
+    This function adds notes
+    """
     response_data = {}
     if request.method == "POST":
         form = AddNoteForm(request.POST)
@@ -66,9 +70,13 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search_notes(substr):
+def search_notes(substr, user):
     obj = Notes.objects.all()
     ret_list = []
+    """
+        @brief
+        This function searches notes
+        """
     for i in obj:
         if substr in i.name:
             ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
@@ -77,6 +85,12 @@ def search_notes(substr):
 
 @login_required
 def get_note_data_ajax(request):
+    """
+    @brief
+    This function receives information about notes
+    @detailed
+    This function receives information about notes such as date, time, name
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
@@ -100,6 +114,12 @@ def get_note_data_ajax(request):
 
 @login_required
 def search_ajax(request):
+    """
+    @brief
+    This function looks for the notes
+    @detailed
+    This function searches for a note among those that exist
+    """
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -121,6 +141,12 @@ def search_ajax(request):
 
 @login_required
 def sort_ajax(request):
+    """
+    @brief
+    This function sorts notes
+    @detailed
+    This function sorts notes by time and alphabetically
+    """
     response_data = {}
     if request.method == "POST":
         sorting_types = ('date_up', 'date_down', 'title_up', 'title_down')
@@ -143,6 +169,12 @@ def sort_ajax(request):
 
 @login_required
 def save_ajax(request):
+    """
+    @brief
+    This function saves the notes
+    @detailed
+    This function saves the written note
+    """
     response_data = {}
     if request.method == "POST":
         form = EditNoteForm(request.POST)
@@ -170,6 +202,10 @@ def save_ajax(request):
 
 @login_required
 def delete_ajax(request):
+    """
+    @brief
+    This function deletes notes
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
