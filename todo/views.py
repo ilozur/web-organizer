@@ -11,10 +11,8 @@ from todo.forms import EditTodoForm
 from todo.models import Todos
 import json
 from datetime import datetime
-import os
-import http.cookies
 from localisation import eng, rus
-import cgi
+import requests
 
 
 
@@ -35,7 +33,10 @@ def index(request):
     context['language'] = user_lang
     context['lang'] = lang
     user = request.user
-    sort_type = get_cookie()
+    try:
+        sort_type = get_cookie()
+    except KeyError:
+        sort_type = 'AtoZ'
     todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
     for item in todos:
         smart_priority(item, 'index')
@@ -318,18 +319,17 @@ def days_in_years(tmp):
 
 
 def set_cookie(sort_type):
-    cookie = http.cookies.SimpleCookie()
-    cookie['sort_type'] = sort_type
-    cookie.load(sort_type)
+    url = 'http://127.0.0.1:8000/todo/'
+    cookies = sort_type
+    r = requests.get(url, cookies=cookies)
 
 
 def get_cookie():
-    cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
-    sort_type = cookie.get("sort_type")
+    url = 'http://127.0.0.1:8000/todo/'
+    r = requests.get(url)
+    sort_type = r.cookies['name']
     if sort_type is None:
-        cookie = http.cookies.SimpleCookie()
-        cookie['sort_type'] = 'AtoZ'
-        sort_type = cookie.get("sort_type")
-        return sort_type.value
+        set_cookie('AtoZ')
+        return 'AtoZ'
     else:
-        return sort_type.value
+        return sort_type
