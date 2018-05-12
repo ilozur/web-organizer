@@ -28,6 +28,10 @@ nav .active {
   border-radius: 0 0 15px 15px;
 }
 
+.change-button{
+  margin-top: 15px;
+}
+
 /*Кнопки*/
 .btn,
 .btn:focus,

@@ -30,17 +30,16 @@
                     <div class="form-group">
                       <div class="form-check btn btn-light">
                         {{ add_event_form.is_public }}
-
                         <label class="form-check-label"> {{ lang.calendar_private_event }}</label>
                       </div>
                     </div>
                 </form>
-                <h3>Записать аудио</h3>
+<!--                 <h3>Записать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
                     </picture>
-                </button>
+                </button> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal" id="close_calendar_btn">{{ lang.calendar_cancel }}</button>
@@ -55,7 +54,13 @@
         <div id="event_num" hidden>0</div>
         <div class="modal-content">
             <div class="modal-header">
+                <a class="change-button" href="#" role="button">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
                 <h2 class="modal-title" id="event_title_show"></h2>
+                <a class="change-button" href="#" role="button">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
             </div>
             <div class="modal-body">
                 <h3 id="event_date_show"></h3>
@@ -64,11 +69,12 @@
                 <hr/>
                 <h3 id="place_address">...</h3>
                 <div id="show_map" style="width: 450px; height: 350px;"></div>
-                <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#Watch-in-Map">{{ lang.calendar_onthemap }}</button>
+<!--                 <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#Watch-in-Map">{{ lang.calendar_onthemap }}</button> -->
                 <hr/>
                 <h4 id="event_description_show"></h4>
                 <hr/>
-                <div class="form-group">
+
+<!--                 <div class="form-group">
                     <div class="like">
                         <button type="button" class="btn btn-light btn-sm">:) <span>12</span></button>
                         <button type="button" class="btn btn-light btn-sm">:( <span>2</span></button>
@@ -126,7 +132,7 @@
                         </nav>
                         <button type="button" class="btn btn-light" data-toggle="collapse" data-target="#collapseExample">{{ lang.calendar_close }}</button>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_event_ajax()">{{ lang.calendar_delete }}</button>
