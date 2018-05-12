@@ -17,11 +17,11 @@ class Todos(models.Model):
     @staticmethod
     def get_todos(sorting_type, status, user, why):
         mode = {
-            'AtoZ': '-title',
-            'ZtoA': 'title',
-            'old': '-added_date_and_time',
-            'new': 'added_date_and_time',
-            'deadline': '-deadline'
+            'AtoZ': 'title',
+            'ZtoA': '-title',
+            'old': 'added_date_and_time',
+            'new': '-added_date_and_time',
+            'deadline': 'deadline'
         }
         todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
         todo_list = list()

@@ -14,6 +14,8 @@ from datetime import datetime
 import os
 import http.cookies
 from localisation import eng, rus
+import cgi
+
 
 
 
@@ -37,7 +39,7 @@ def index(request):
     todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
     for item in todos:
         smart_priority(item, 'index')
-    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user , 'none')
+    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user, 'none')
     context['done_todos'] = Todos.get_todos('AtoZ', 'done', user, 'none')
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
@@ -272,7 +274,8 @@ def smart_priority(todo, address):
         priority = todo[3]
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
-        new_value = round((((priority / deadline) - 0.0000001) / (5 - 0.0000001)) * (100 - 1) + 1)
+        value = deadline*0.4+priority*0.6
+        new_value = round(((value - 1) / (1000 - 1)) * (100 - 1) + 1)
         tmp = Todos.get_todo_by_id(todo[2])
         tmp.smart_priority = new_value
         tmp.save()
@@ -282,7 +285,8 @@ def smart_priority(todo, address):
         deadline = deadline.strftime("%d.%m.%y")
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
-        new_value = round((((priority / deadline) - 0.0000001) / (5 - 0.0000001)) * (100 - 1) + 1)
+        value = deadline * 0.4 + priority * 0.6
+        new_value = round(((value - 1) / (1000 - 1)) * (100 - 1) + 1)
         return new_value
 
 
