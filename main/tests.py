@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from notes.models import *
-import datetime
-
+from datetime import *
+from todo.models import *
 
 class TestMainPage(TestCase):
 
@@ -57,7 +57,7 @@ class TestMainPage(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # check template
-        self.assertTemplateUsed(response, 'main/notes.html')
+        self.assertTemplateUsed(response, 'notes/index.html')
 
         # check the adding process
         all_notes = Notes.objects.all()
@@ -88,3 +88,36 @@ class TestMainPage(TestCase):
         # check the editing process
         response = self.c.get('/notes/get_note_data')
         self.assertEqual(response.result, 100)
+
+    def test_Todo(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/todo')
+
+        # check status code
+        self.assertEqual(response.status_code, 200)
+
+        # check template
+        self.assertTemplateUsed(response, 'todo/index.html')
+
+        # check the adding process
+        all_todos = Todos.objects.all()
+        context = {'priority':5,
+            'datetime':datetime.datetime.now(),
+            'title':'test todo',
+            'id':'{}'.format(len(all_todos) + 1)}
+
+        response = self.c.post('/todo/add', context)
+
+        self.assertEqual(response.result, "Success")
+
+        response = self.c.post('/todo/add', context)
+
+        self.assertEqual(response.result, "Success")
+
+        response = self.c.post('/todo/add', context)
+
+        self.assertEqual(response.result, "Success")
+
+        # check the editing process
+        response = self.c.get('/todo/get_note_data')
+        self.assertEqual(response.result, "Success")
