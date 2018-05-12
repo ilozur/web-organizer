@@ -1,9 +1,22 @@
 function add_note_to_list(notes_data){
-    $("#list_id").append('<div onclick="get_note_data_ajax('+ notes_data[i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
-    + notes_data[i][2] + '">' + notes_data[i][0]
-    + '</h7><div class="date"> <small id="note_date_'
-    + notes_data[i][2] + '">' + notes_data[i][1]
-    + '</small></div></a></div>');
+    $("#list_id").append('<div onclick="get_note_data_ajax('
+        + notes_data[2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
+        + notes_data[2] + '">'
+        + notes_data[0] + '</h7><div class="date"><small id="note_date_'
+        + notes_data[2] + '">'
+        + notes_data[1] + '</small></div></a></div>'
+    );
+}
+
+function add_note_to_cards(notes_data){
+    $("#cards_id").append('<div id="note_card_'
+        + notes_data[2] + '" onclick="get_note_data_ajax('
+        + notes_data[2] + ')" class="col-4" data-toggle="modal" data-target="#Note-Card"><div class="card"><div class="card-body"><h3 id="card_note_title_'
+        + notes_data[2] + '">'
+        + notes_data[0] + '</h3><small class="date">{{ item.1 }}</small><hr/><p id="card_note_description_'
+        + notes_data[2] + '">'
+        + notes_data[3] + '</p></div></div></div>'
+    );
 }
 
 function get_note_data_ajax(id){
@@ -89,7 +102,11 @@ function search_notes_ajax()
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['notes_list'].length; i++) {
-                    add_note_to_list(response['notes_list']);
+                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
+                    + response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
+                    + '</h7><div class="date"> <small id="note_date_'
+                    + response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
+                    + '</small></div></a></div>');
                 }
                 $("#search_note_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
@@ -253,4 +270,35 @@ function voice_note()
 {
     var clean_text = $('#note_data_show').text();
     voice_text(clean_text);
+};
+
+function paginate(page){
+    $.ajax({
+        type: "POST",
+        url: "/notes/paginate",
+        data: { "page": page },
+        success: function(response)
+        {
+            if (response['result'] == 200) {
+                if (response['buttons'][0]) {
+                    $("#PrevPage").removeAttr('disabled');
+                    $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+                } else {
+                    $("#PrevPage").attr('disabled', 'disabled');
+                }
+                if (response['buttons'][1]) {
+                    $("#NextPage").removeAttr('disabled');
+                    $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+                }  else {
+                    $("#NextPage").attr('disabled', 'disabled');
+                }
+                $("#list_id").html('');
+                $("#cards_id").html('');
+                for (var i = 0; i < response['notes_list'].length; i++) {
+                    add_note_to_list(response['notes_list'][i]);
+                    add_note_to_cards(response['notes_list'][i]);
+                }
+            }
+        }
+    });
 };
