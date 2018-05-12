@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class UserAvatar(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
-    image = models.ImageField(upload_to="avatars/")
+    image = models.ImageField(upload_to="main/static/avatar")
 
     def __init__(self, *args, **kwargs):
         super(UserAvatar, self).__init__(*args, **kwargs)

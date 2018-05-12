@@ -48,3 +48,7 @@ class RecoverPasswordUserData(forms.Form):
                                                                            'placeholder': 'Enter your e-mail'}))
     recover_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
                                                                          'placeholder': 'Enter your name'}))
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.ImageField()

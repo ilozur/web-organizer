@@ -70,3 +70,20 @@ function change_user_data()
 		}
 	});
 };
+function upload_avatar()
+{
+	form_data = $('#upload_file_form').serialize();
+	$("#upload_file_form").find(':input').each(function(){
+		$(this).attr('disabled', 'disabled');
+	});
+	$('#save_changes_btn').attr('disabled', 'disabled');
+	$.ajax({
+		type: "POST",
+		url: '/siteprofile/upload_avatar',
+		data: form_data,
+		success: function(response)
+		{
+			$('#save_changes_btn').removeAttr('disabled');
+		}
+	});
+};
