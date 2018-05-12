@@ -316,7 +316,7 @@ def days_in_years(tmp):
 def set_cookie(sort_type):
     cookie = http.cookies.SimpleCookie()
     cookie['sort_type'] = sort_type
-    cookie.load(cookie)
+    cookie.load(sort_type)
 
 
 def get_cookie():

@@ -16,8 +16,11 @@
                     <div class="form-group">
                         <h3>Текст</h3>
                         {{ add_todo_form.todo_text }}
+                        <br/>
                         {{ add_todo_form.todo_deadline }}
+                        <br/>
                         {{ add_todo_form.todo_time }}
+                        <br/>
                         {{ add_todo_form.todo_priority }}
                     </div>
                     <div class="form-group">
@@ -29,12 +32,12 @@
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority(5)">5</button>
                     </div>
                 </form>
-                <h3>Записать аудио</h3>
+<!--                 <h3>Записать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
                         <img src='{% static "/icons/micro_icon.png" %}'>
                     </picture>
-                </button>
+                </button> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>

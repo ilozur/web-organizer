@@ -44,6 +44,11 @@
                             <button type="button" class="dropdown-item" onclick="sorting('deadline')">Горящие задачи</button>
                         </div>
                     </div>
+                      <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
+                            <picture>
+                                <img src='{% static "/icons/sync_icon_todo.png" %}' class="icon">
+                            </picture>
+                        </button>  
                     <div class="card-footer">
                         <div id="amounts" class="alert alert-primary">
                             <small>Всего задач: </small><small>{{ amount_of_todos.0 }}</small> <br/>

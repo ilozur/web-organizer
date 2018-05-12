@@ -73,7 +73,7 @@
 					{% endfor %}
 				</div>
 			<section class="card-view">
-				<div class="row" id="cards_id" style="display: none" hidden>
+				<div class="row" id="cards_id" style="display: none" display="block">
 					{% for item in notes_data %}
 					<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
 						<div class="card">
