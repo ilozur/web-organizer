@@ -51,7 +51,7 @@ class TestMainPage(TestCase):
 
     def test_Notes(self):
         self.c.login(username="testuser", password="pass")
-        response = self.c.get('/notes/')
+        response = self.c.get('/notes')
 
         # check status code
         self.assertEqual(response.status_code, 200)
@@ -61,15 +61,15 @@ class TestMainPage(TestCase):
 
         # check the adding process
         all_notes = Notes.objects.all()
-        response = self.c.post('/notes/add/', {
+        response = self.c.post('/notes/add', {
                                 'data_part':'test value',
                                 'datetime':datetime.datetime.now(),
                                 'name':'test note',
                                 'id':'{}'.format(len(all_notes) + 1)})
-        
+
         self.assertEqual(response.status_code, 200)
 
-        response = self.c.post('/notes/add/', {
+        response = self.c.post('/notes/add', {
                                 'data_part':'<strong>test value</strong>',
                                 'datetime':datetime.datetime.now(),
                                 'name':'test note',
@@ -77,7 +77,7 @@ class TestMainPage(TestCase):
 
         self.assertEqual(response.result, 100)
 
-        response = self.c.post('/notes/add/', {
+        response = self.c.post('/notes/add', {
                                 'data_part':'<em>test value</em>',
                                 'datetime':datetime.datetime.now(),
                                 'name':'test note',
@@ -86,5 +86,5 @@ class TestMainPage(TestCase):
         self.assertEqual(response.result, 100)
 
         # check the editing process
-        response = self.c.get('/notes/get_note_data/')
+        response = self.c.get('/notes/get_note_data')
         self.assertEqual(response.result, 100)
