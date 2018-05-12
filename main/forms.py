@@ -35,3 +35,7 @@ class SignUpForm(forms.Form):
     password2 = forms.CharField(label='Password again', max_length=200,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                   'placeholder': 'Enter your password again'}))
+
+class UploadFileForm(forms.Form):
+      title = forms.CharField(max_length=50)
+      file = forms.ImageField()

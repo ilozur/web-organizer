@@ -55,10 +55,12 @@
 						<h2 class="modal-title">Редактировать профиль {{user.username}}</h2>
 					</div>
 					<div class="modal-body">
-						<div class="form-group btn btn-light change-avatar">
-							<label>Изменить аватар</label>
-							<input type="file" class="form-control-file">
-						</div>
+						<form id="upload_file_form">
++							<div class="form-group btn btn-light change-avatar">
++								<label>Изменить аватар</label>
++								{{ upload_file_form.file }}
++							</div>
++						</form>
 						<form id="change_user_data_form">
 							<div class="form-row">
 								<div class="form-group col-md-6">
@@ -94,7 +96,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-light" id="save_changes_btn" onclick="change_user_data(); get_user_data();">Сохранить</button>
+						<button type="submit" class="btn btn-light" id="save_changes_btn" onclick="change_user_data(); upload_avatar(); get_user_data();">Сохранить</button>
 						<button type="submit" class="btn btn-light" id="change_password_btn" onclick="change_password()">Изменить пароль</button>
 					</div>
 				</div>

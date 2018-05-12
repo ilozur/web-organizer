@@ -2,6 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class UserAvatar(models.Model):
+    user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
+    image = models.ImageField(upload_to="avatars/")
+
+    def __init__(self, *args, **kwargs):
+        super(UserAvatar, self).__init__(*args, **kwargs)
+        self.image.verbose_name = "{}.png".format(self.user.id)
+
+
 class Language(models.Model):
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
     lang = models.CharField(max_length=3, default="ru")
