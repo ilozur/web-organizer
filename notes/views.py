@@ -7,6 +7,7 @@ from datetime import datetime
 from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 from localisation import eng, rus
 
 
@@ -32,7 +33,9 @@ def index(request):
     notes = notes.order_by('name')
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-    context['notes_data'] = notes_list
+    pages = Paginator(notes_list, 20)
+    context['notes_data'] = pages.page(1)
+    context['notes_pages'] = pages.page_range
     context['search_note_form'] = SearchForm()
     context['add_note_form'] = AddNoteForm()
     context['edit_note_form'] = EditNoteForm()
@@ -41,6 +44,10 @@ def index(request):
 
 @login_required
 def add_note_ajax(request):
+    """
+    @brief
+    This function adds notes
+    """
     response_data = {}
     if request.method == "POST":
         form = AddNoteForm(request.POST)
@@ -63,9 +70,13 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search_notes(substr):
+def search_notes(substr, user):
     obj = Notes.objects.all()
     ret_list = []
+    """
+        @brief
+        This function searches notes
+        """
     for i in obj:
         if substr in i.name:
             ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
@@ -74,6 +85,12 @@ def search_notes(substr):
 
 @login_required
 def get_note_data_ajax(request):
+    """
+    @brief
+    This function receives information about notes
+    @detailed
+    This function receives information about notes such as date, time, name
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
@@ -97,6 +114,12 @@ def get_note_data_ajax(request):
 
 @login_required
 def search_ajax(request):
+    """
+    @brief
+    This function looks for the notes
+    @detailed
+    This function searches for a note among those that exist
+    """
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -118,6 +141,12 @@ def search_ajax(request):
 
 @login_required
 def sort_ajax(request):
+    """
+    @brief
+    This function sorts notes
+    @detailed
+    This function sorts notes by time and alphabetically
+    """
     response_data = {}
     if request.method == "POST":
         sorting_types = ('date_up', 'date_down', 'title_up', 'title_down')
@@ -140,6 +169,12 @@ def sort_ajax(request):
 
 @login_required
 def save_ajax(request):
+    """
+    @brief
+    This function saves the notes
+    @detailed
+    This function saves the written note
+    """
     response_data = {}
     if request.method == "POST":
         form = EditNoteForm(request.POST)
@@ -167,6 +202,10 @@ def save_ajax(request):
 
 @login_required
 def delete_ajax(request):
+    """
+    @brief
+    This function deletes notes
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
@@ -187,6 +226,24 @@ def delete_ajax(request):
             response_data['id'] = last_note.id
             response_data['name'] = last_note.name
         response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def paginate(request):
+    response_data = {}
+    notes_list = []
+    notes = Notes.objects.filter(user=request.user)
+    for i in notes:
+        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+    pages = Paginator(notes_list, 20)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            page_number = request.POST.get('page')
+            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+            response_data['notes_list'] = pages.page(page_number).object_list
+            response_data['result'] = 200
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')

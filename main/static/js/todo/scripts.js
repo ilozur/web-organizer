@@ -128,7 +128,6 @@ function status_change(id, type){
             if (response['result'] == 'Success')
             {
 		        sorting('new');
-		        console.log(type);
 		        if (type == 'done'){
 		            update_done_todos(response['current']);
 		        } else {
@@ -155,18 +154,18 @@ function get_todo_data_ajax(id){
                 $("#todo_id").html(id);
                 $("#Open-Todo").find("#todo_title_show").html(response['title']);
                 $("#Open-Todo").find("#todo_text_show").html(response['text']);
-		$("#Open-Todo").find("#todo_id").html(response['id']);
+		        $("#Open-Todo").find("#todo_id").html(response['id']);
                 $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
                 $("#Open-Todo").find("p:first").html(response['status']);
                 $("#Open-Todo").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
-		$("#Open-Todo").find("#todo_deadline").html(response['deadline']);
-		$("#Open-Todo").find("#todo_num").html(response['id']);
-		$("#Open-Todo").find("#todo_priority").html('');
-		for (var i = 0; i < response['priority']; i++){
-		    $("#Open-Todo").find("#todo_priority").html($("#Open-Todo").find("#todo_priority").html() + '<span class="badge badge-pill priority">!</span>');
-		$('#id_todo_edit_time').val(response['time'][0] + ':' + response['time'][1]);
-		$('#id_todo_edit_deadline').val(response['date'][0] + '-' + response['date'][1] + '-' + response['date'][2]);
-		}
+		        $("#Open-Todo").find("#todo_deadline").html(response['deadline']);
+		        $("#Open-Todo").find("#todo_num").html(response['id']);
+		        $("#Open-Todo").find("#todo_priority").html('');
+		        for (var i = 0; i < response['priority']; i++){
+		            $("#Open-Todo").find("#todo_priority").html($("#Open-Todo").find("#todo_priority").html() + '<span class="badge badge-pill priority">!</span>');
+		            $('#id_todo_edit_time').val(response['time'][0] + ':' + response['time'][1]);
+		            $('#id_todo_edit_deadline').val(response['date'][0] + '-' + response['date'][1] + '-' + response['date'][2]);
+		        }
             }
         }
     });
@@ -286,6 +285,56 @@ function delete_todo_ajax()
                 $('#todo_card_' + $('#todo_id').html()).slideUp("slow");
             }
             $('#delete_btn').removeAttr('disabled');
+        }
+    });
+};
+
+function paginate(page, status){
+    $.ajax({
+        type: "POST",
+        url: "/todo/paginate",
+        data: { "page": page, "status": status },
+        success: function(response)
+        {
+            if (response['result'] == 200) {
+                if (status == 'in progress'){
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Progress").removeAttr('disabled');
+                        $("#PrevPage_Progress").attr("onclick", "paginate(" + (page - 1) + ", " + "'in progress'" + ")");
+                    } else {
+                        $("#PrevPage_Progress").attr('disabled', 'disabled');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Progress").removeAttr('disabled');
+                        $("#NextPage_Progress").attr("onclick", "paginate(" + (page + 1) + ", " + "'in progress'" + ")");
+                    }  else {
+                        $("#NextPage_Progress").attr('disabled', 'disabled');
+                    }
+                    $("#ViewList").html('');
+                    $("#CardList").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        add_to_list(response['todo_list'][i]);
+                        add_todo_card(response['todo_list'][i]);
+                    }
+                } else {
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Done").removeAttr('disabled');
+                        $("#PrevPage_Done").attr("onclick", "paginate(" + (page - 1) + ", " + "'done'" + ")");
+                    } else {
+                        $("#PrevPage_Done").attr('disabled', 'disabled');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Done").removeAttr('disabled');
+                        $("#NextPage_Done").attr("onclick", "paginate(" + (page + 1) + ", " + "'done'" + ")");
+                    }  else {
+                        $("#NextPage_Done").attr('disabled', 'disabled');
+                    }
+                    $("#ViewDone").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        update_done_todos(response['todo_list'][i]);
+                    }
+                }
+            }
         }
     });
 };

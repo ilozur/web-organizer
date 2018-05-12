@@ -1,4 +1,4 @@
-{% extends "main/base.html" %}
+﻿{% extends "main/base.html" %}
 {% block meta %}
 {% load staticfiles %}
 <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
@@ -53,11 +53,11 @@
 				</div>
 				<nav class="navbar">
 					<div class="btn-group btn-group-lg">
-						<button type="button" class="btn btn-warning">&laquo;</button>
-						<button type="button" class="btn btn-warning disabled">1</button>
-						<button type="button" class="btn btn-warning">2</button>
-						<button type="button" class="btn btn-warning">3</button>
-						<button type="button" class="btn btn-warning">&raquo;</button>
+						<a href="#"><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
+						{% for number in notes_pages %}
+						<a href="#"><button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
+						{% endfor %}
+						<a href="#"><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
 					</div>
 				</nav>
 			</div>
@@ -86,10 +86,9 @@
 								</p>
 							</div>
 						</div>
+						{% endfor %}
 					</div>
-					{% endfor %}
-				</div>
-			</section>
+				</section>
 			</section>
 		</div>
 	</section>

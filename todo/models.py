@@ -11,7 +11,7 @@ class Todos(models.Model):
     added_date_and_time = models.DateTimeField(auto_now_add=True)
     priority = models.IntegerField(default=3)
     status = models.CharField(max_length=128, default="in progress")
-    deadline = models.DateTimeField(default=None)
+    deadline = models.DateTimeField(default='2018-06-01 00:00')
 
     @staticmethod
     def get_todos(sorting_type, status, user):
