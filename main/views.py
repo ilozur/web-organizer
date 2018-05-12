@@ -77,14 +77,16 @@ def index(request):
             if nearest_events.first():
                 context['nearest_event_exists'] = True
                 context['nearest_event_name'] = nearest_events.first().title
+                context['nearest_event_place'] = nearest_events.first().place
                 context['nearest_event_date'] = nearest_events.first().date.strftime("%d.%m.%Y ") + \
                     nearest_events.first().time.strftime("%H:%M")
             else:
                 context['nearest_event_exists'] = False
-            last_note = notes.order_by('-last_edit_time', '-added_time').first()
+            last_note = notes.order_by('-added_time').first()
             if last_note:
                 context['last_note_exists'] = True
                 context['last_note_title'] = last_note.name
+                context['last_note_id'] = last_note.id
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()

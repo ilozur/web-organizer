@@ -9,6 +9,7 @@
     <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
     <script charset='utf-8' type="text/javascript" src='{% static "js/main/home/scripts.js" %}'></script>
     <script charset="utf-8" language="JavaScript" src='{% static "js/todo/scripts.js" %}'></script>
+    <script src="http://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU" type="text/javascript"></script>
     <script>setup_link({% url "notes.index" %});</script>
 {% endblock %}
 
@@ -27,7 +28,7 @@
                 <h3>{{ lang.nearest_event_title }}: </h3>
                 {% if nearest_event_exists %}
                     <p><a href="#" class="link-section">{{ nearest_event_name }}</a><br/>
-                        <small><i>{{ nearest_event_date }} | Place here</i></small>
+                        <small><i id="nearest_event_info">{{ nearest_event_date }}</i></small>
                     </p>
                 {% else %}
                     <p><a href="#" class="link-section">{{ lang.no_events_title }}</a><br/></p>
@@ -36,9 +37,9 @@
                 <p><a href="#" class="link-section">Отдать Бобу диски</a></p>
                 <h3>{{ lang.latest_note_title }}: </h3>
                 {% if last_note_exists %}
-                    <p><a href="#" class="link-section">{{ last_note_title }}</a></p>
+                    <p><a href="" class="link-section" id="last_note_title" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ last_note_id }})">{{ last_note_title }}</a></p>
                 {% else %}
-                    <p><a href="#" class="link-section">{{ lang.no_notes_title }}</a></p>
+                    <p><a class="link-section" id="last_note_title">{{ lang.no_notes_title }}</a></p>
                 {% endif %}
             </div>
         </div>
@@ -131,6 +132,18 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js'></script>
     <script src='{% static "js/clock.js" %}'></script>
+    <script>
+        ymaps.ready(function () {
+            var coords = '{{ nearest_event_place }}'.split('|');
+            if (coords.length == 2)
+            {
+                ymaps.geocode(coords).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    $('#nearest_event_info').append(' | ' + firstGeoObject.getAddressLine());
+                });
+            }
+        });
+    </script>
     {% include "modals/notes.html" %}
     {% include "modals/calendar.html" %}
     {% include "modals/small_parts.html" %}

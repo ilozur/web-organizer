@@ -84,6 +84,9 @@ function add_note_ajax()
                 {
                     $("#last_notes_holder").html('<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>');
                     $("#last_notes_holder").parent().find('h5').remove();
+                    $("#last_note_title").attr('href', '');
+                    $("#last_note_title").attr('data-toggle', 'modal');
+                    $("#last_note_title").attr('data-target', '#Note-Card');
                 }
                 var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                     'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
@@ -96,6 +99,8 @@ function add_note_ajax()
                 }
                 $('#note_' + response['id']).slideDown('slow');
                 $("#close_note_btn").trigger("click");
+                $("#last_note_title").html(response['name']);
+                $("#last_note_title").attr('onclick', 'get_note_data_ajax(' + response['id'] + ')');
                 voice_text('Заметка добавлена.');
             }
             else
@@ -202,6 +207,19 @@ function delete_note_ajax()
                     {
                         $("#last_notes_holder p:last").remove();
                         $("#last_notes_holder").append('<h5>Нет заметок</h5>');
+                        $('#last_note_title').html('Нет заметок');
+                        $("#last_note_title").removeAttr('onclick');
+                        $("#last_note_title").removeAttr('href');
+                        $("#last_note_title").removeAttr('data-toggle');
+                        $("#last_note_title").removeAttr('data-target');
+                    }
+                    else
+                    {
+                        if ($('#last_notes_holder div')[0].id == 'note_' + id)
+                        {
+                            $('#last_note_title').html($('#last_notes_holder div p a')[1].text);
+                            $("#last_note_title").attr('onclick', $('#last_notes_holder div p a').attr('onclick'));
+                        }
                     }
                     if (response['id'])
                     {
@@ -215,6 +233,7 @@ function delete_note_ajax()
                         $('#note_' + response['id']).slideDown('slow');
                     }
                     $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
+
                     voice_text('Заметка удалена.');
                 }
                 else

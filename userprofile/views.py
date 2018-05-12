@@ -7,6 +7,7 @@ from django.shortcuts import render
 from userprofile.forms import *
 from main.models import *
 from main.views import create_mail, send_mail, create_key, check_email_uniq, create_unic_key
+from localisation import rus, eng
 
 
 @login_required
@@ -25,6 +26,15 @@ def index(request):
             'language': Language.objects.filter(user=request.user).first().lang,
         }
         if request.user.is_authenticated:
+            user_lang = Language.objects.filter(user=request.user).first().lang
+            if user_lang == "ru":
+                lang = rus
+            elif user_lang == "en":
+                lang = eng
+            else:
+                lang = eng
+            context['language'] = user_lang
+            context['lang'] = lang
             return render(request, "main/profile.html", context)
         else:
             return HttpResponseRedirect('/')
