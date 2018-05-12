@@ -3,14 +3,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Создание напоминания</h2>
+                <h2>{{ lang.reminders_create}} </h2>
             </div>
             <div class="modal-body">
                 <form id="add_todo_form">
                     {% csrf_token %}
                     {{ add_todo_form.media }}
                     <div class="form-group">
-                        <h3>Название</h3>
+                        <h3>{{ lang.reminders_name }}</h3>
                         {{ add_todo_form.todo_title }}
                     </div>
                     <div class="form-group">
@@ -40,8 +40,8 @@
                 </button> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="add_todo_ajax()">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.reminders_cancel }}</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="add_todo_ajax()">{{ lang.reminders_add }}</button>
             </div>
         </div>
     </div>
@@ -70,9 +70,9 @@
                 <button type="button" class="btn btn-light">&#10003;</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_todo_ajax()">Удалить</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_todo_ajax()">{{ lang.reminders_delete }}</button>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-Todo"
-                        onclick="open_todo_edit_mode()">Редактировать</button>
+                        onclick="open_todo_edit_mode()">{{ lang.reminders_edit }}</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">ОК</button>
             </div>
             <div hidden id="todo_num"></div>
@@ -90,13 +90,13 @@
                     {% csrf_token %}
                     {{ edit_todo_form.media }}
                     <div class="form-group">
-                        <h3>Изменить название</h3>
+                        <h3>{{ lang.reminders_changename1 }}</h3>
                         {{ edit_todo_form.todo_edit_title }}
                     </div>
                     <div class="form-group">
-                        <h3>Изменить текст</h3>
+                        <h3>{{ lang.reminders_changetext }}</h3>
                         {{ edit_todo_form.todo_edit_text }}
-                        <h3>Изменить дедлайн</h3>
+                        <h3>{{ lang.reminders_changedeadline }}</h3>
                         {{ edit_todo_form.todo_edit_deadline }}
                         </br>
                         {{ edit_todo_form.todo_edit_time }}
@@ -104,7 +104,7 @@
                         {{ edit_todo_form.todo_id }}
                     </div>
                     <div class="form-group">
-                        <h3> Изменить приоритет </h3>
+                        <h3> {{ lang.reminders_changepriority }} </h3>
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(1)">1</button>
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(2)">2</button>
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority_edit(3)">3</button>
@@ -114,8 +114,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="save_todo_ajax()">Сохранить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.reminders_cancel }}</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="save_todo_ajax()">{{ lang.reminders_savechanges }}</button>
             </div>
         </div>
     </div>
@@ -124,24 +124,24 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Синхронизация</h2>
+                <h2>{{ lang.reminders_synchronize }}</h2>
             </div>
             <div class="modal-body">
-                <button type="button" class="btn btn-light">Сохранить все напоминания в файл</button>
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose">Сохранить часть напоминаний в файл</button>
+                <button type="button" class="btn btn-light">{{ lang.reminders_savealltofile }}</button>
+                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose">{{ lang.reminders_saveparttofile }}</button>
                 <hr>
                 <div class="form-group btn btn-light">
-                    <label>Загрузить все напоминания из файла</label>
+                    <label>{{ lang.reminders_upload_allfromfile }}</label>
                     <input type="file" class="form-control-file">
                 </div>
                 <div class="form-group btn btn-light">
-                    <label>Загрузить некоторые напоминания из файла</label>
+                    <label>{{ lang.reminders_upload_partfromfile }}</label>
                     <input type="file" class="form-control-file">
                 </div>
-                <button type="button" class="btn btn-light">Синхронизировать</button>
+                <button type="button" class="btn btn-light">{{ lang.reminders_synchronize }}</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.reminders_cancel }}</button>
             </div>
         </div>
     </div>
@@ -150,7 +150,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Выберите напоминания для сохранения</h2>
+                <h2>{{ lang.reminders_chose_reminds_for_save }}</h2>
             </div>
             <div class="modal-body">
                 <div class="list-group">
@@ -190,7 +190,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.reminders_cancel }}</button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
             </div>
         </div>
@@ -200,7 +200,7 @@
     <div class="modal-dialog modal modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Выполненные задачи</h2>
+                <h2>{{ lang.reminders_accomplish_task }}</h2>
             </div>
             <div class="modal-body">
                 <div class="list-group">
@@ -225,7 +225,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Назад</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.reminders_back }}</button>
             </div>
         </div>
     </div>

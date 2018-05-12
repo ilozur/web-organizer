@@ -3,12 +3,12 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Редактирование мероприятия</h2>
+                <h2 class="modal-title">{{ lang.calendar_editing_an_event }}</h2>
             </div>
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <h3>Изменить название</h3>
+                        <h3>{{ lang.calendar_changename }}</h3>
                         <input type="name" class="form-control" placeholder="Мероприятиеюшка">
                     </div>
                     <div class="form-group">
@@ -16,7 +16,7 @@
                         <span>{{ add_event_form.time }}</span>
                     </div>
                     <div class="form-group">
-                        <h3>Изменить описание</h3>
+                        <h3>{{ lang.calendar_change_description }}</h3>
                         <textarea class="form-control" rows="7"></textarea>
 
                         <div class="btn-group btn-group-sm WYSIWYG">
@@ -33,11 +33,11 @@
                     <div class="form-group">
                         <div class="form-check btn btn-light">
                             <input class="form-check-input" type="checkbox">
-                            <label class="form-check-label"> Приватное мероприятие</label>
+                            <label class="form-check-label"> {{ lang.calendar_private_event }}</label>
                         </div>
                     </div>
                 </form>
-                <h3>Записать аудио</h3>
+                <h3>{{ lang.calendar_audio }}</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
@@ -45,8 +45,8 @@
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-                <button type="button" class="btn btn-light">Сохранить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
+                <button type="button" class="btn btn-light">{{ lang.calendar_savechanges }}</button>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">События на сегодня</h2>
+                <h2 class="modal-title">{{ lang.calendar_today_event }}</h2>
             </div>
             <div class="modal-body">
                 <div class="list-group">
@@ -101,7 +101,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
             </div>
         </div>
     </div>
@@ -111,13 +111,13 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">События на карте</h2>
+                <h2 class="modal-title">{{ lang.calendar_map_events }}</h2>
             </div>
             <div class="modal-body">
                 <!-- Тут нужен JS -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
             </div>
         </div>
     </div>
@@ -127,14 +127,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Мои события</h2>
+                <h2 class="modal-title">{{ lang.calendar_my_events }}</h2>
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_first_new }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_first_old }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_A_Z }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_Z_A }}</button>
                 </div>
                 <br/>
 
@@ -180,7 +180,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
             </div>
         </div>
     </div>
@@ -190,14 +190,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Все события</h2>
+                <h2 class="modal-title">{{ lang.calendar_all_events }}</h2>
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_first_new }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_first_old }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_A_Z }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_Z_A }}</button>
                 </div>
                 <br/>
 
@@ -260,7 +260,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
             </div>
         </div>
     </div>
@@ -270,14 +270,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Рекомендованные события</h2>
+                <h2 class="modal-title">{{ lang.calendar_recommended_events }}</h2>
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_first_new }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_first_old }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_A_Z }}</button>
+                    <button type="button" class="btn btn-light">{{ lang.calendar_Z_A }}</button>
                 </div>
                 <br/>
 
@@ -321,7 +321,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
             </div>
         </div>
     </div>
@@ -331,7 +331,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Карта</h2>
+                <h2 class="modal-title">{{ lang.calendar_map }}</h2>
             </div>
             <div class="modal-body">
                 <!-- Тут нужен JS -->
@@ -347,26 +347,26 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Синхронизация</h2>
+                <h2 class="modal-title">{{ lang.calendar_synchronisation }}</h2>
             </div>
             <div class="modal-body">
-                <button type="button" class="btn btn-light">Сохранить все события в файл</button>
+                <button type="button" class="btn btn-light">{{ lang.calendar_save_all_events_to_file }}</button>
                 <button type="button" class="btn btn-light" data-toggle="modal"
-                        data-target="#Choose-Synchronization">Сохранить часть событий в файл
+                        data-target="#Choose-Synchronization">{{ lang.calendar_save_part_of_events_to_file }}
                 </button>
                 <hr>
                 <div class="form-group btn btn-light">
-                    <label>Загрузить все события из файла</label>
+                    <label>{{ lang.calendar_download_all_events_from_file }}</label>
                     <input type="file" class="form-control-file">
                 </div>
                 <div class="form-group btn btn-light">
-                    <label>Загрузить некоторые события из файла</label>
+                    <label>{{ lang.calendar_download_part_of_events_to_file }}</label>
                     <input type="file" class="form-control-file">
                 </div>
-                <button type="button" class="btn btn-light">Синхронизировать</button>
+                <button type="button" class="btn btn-light">{{ lang.calendar_synchronisation }}</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
             </div>
         </div>
     </div>
@@ -376,7 +376,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Выберите события для сохранения</h2>
+                <h2 class="modal-title">{{ lang.calendar_chose_event_to_save }}</h2>
             </div>
             <div class="modal-body">
                 <div class="list-group" style="margin-top: 10px;">
@@ -426,7 +426,7 @@
                 </nav>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_cancel }}</button>
                 <button type="button" class="btn btn-light">ОК</button>
             </div>
         </div>
