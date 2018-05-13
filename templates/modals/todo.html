@@ -14,7 +14,7 @@
                         {{ add_todo_form.todo_title }}
                     </div>
                     <div class="form-group">
-                        <h3>Текст</h3>
+                        <h3>{{ lang.reminders_text }}</h3>
                         {{ add_todo_form.todo_text }}
                         <br/>
                         {{ add_todo_form.todo_deadline }}
@@ -59,7 +59,7 @@
                 <small id="todo_added_time"></small>
                 <br/>
                 {{ lang.reminders_accomplish_to }} <small id="todo_deadline"></small>
-                <br/>
+                <br/>f
                 <small class="text-muted" id="todo_last_edit"></small>
                 <h3> {{ lang.reminders_priority }}</h3>
                 <div class="form-group" id="todo_priority">
