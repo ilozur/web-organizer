@@ -3,14 +3,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Создание заметки</h2>
+                <h2 class="modal-title">{{ lang.notes_create }}</h2>
             </div>
             <div class="modal-body">
                 <form id="add_note_form">
                     {% csrf_token %}
                     {{ add_note_form.media }}
                     <div class="form-group">
-                        <h3>Название</h3>
+                        <h3>{{ lang.name }}</h3>
                         {{ add_note_form.note_title }}
                     </div>
                     <div class="form-group">
@@ -27,8 +27,8 @@
                 </button> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_note_btn">Отменить</button>
-                <button type="button" class="btn btn-light" onclick="add_note_ajax()">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_note_btn">{{ lang.notes_cancel }}</button>
+                <button type="button" class="btn btn-light" onclick="add_note_ajax()">{{ lang.notes_add }}</button>
             </div>
         </div>
     </div>
@@ -49,9 +49,9 @@
                 <small class="text-muted" id="note_last_edit"></small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_note_ajax()">Удалить</button>
-                <button type="button" class="btn btn-light" onclick="voice_note()">Прослушать</button>
-                <button type="button" class="btn btn-light" onclick="open_note_edit_mode()">Редактировать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_note_ajax()">{{ lang.notes_delete }}</button>
+                <button type="button" class="btn btn-light" onclick="voice_note()">{{ lang.notes_listen }}</button>
+                <button type="button" class="btn btn-light" onclick="open_note_edit_mode()">{{ lang.notes_edit }}</button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
             </div>
         </div>
@@ -59,7 +59,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" id="Edit-Note-Modal" hidden>
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Редактирование заметки</h2>
+                <h2>{{ lang.notes_edit_title1 }}</h2>
             </div>
             <div class="modal-body">
                 <form id="save_note_form">
@@ -67,11 +67,11 @@
                     {{ edit_note_form.media }}
                     {{ edit_note_form.note_id }}
                     <div class="form-group">
-                        <h3>Изменить название</h3>
+                        <h3>{{ lang.notes_changename }}</h3>
                         {{ edit_note_form.note_title_edit }}
                     </div>
                     <div class="form-group">
-                        <h3>Изменить текст</h3>
+                        <h3>{{ lang.notes_changetext }}</h3>
                         {{ edit_note_form.note_data_edit }}
                         {{ edit_note_form.note_data_part_edit }}
                     </div>
@@ -84,9 +84,9 @@
                 </button> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" onclick="close_note_edit_mode()">Отменить</button>
+                <button type="button" class="btn btn-light" onclick="close_note_edit_mode()">{{ lang.notes_cancel }}</button>
                 <button class="btn btn-light" onclick="save_note_ajax();">
-                    Сохранить
+                   {{ lang.notes_save1 }}
                 </button>
             </div>
         </div>

@@ -24,7 +24,7 @@
                         {{ add_todo_form.todo_priority }}
                     </div>
                     <div class="form-group">
-                        <h3> Приоритет </h3>
+                        <h3> {{ lang.reminders_priority }} </h3>
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority(1)">1</button>
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority(2)">2</button>
                         <button type="button" class="btn btn-light btn-sm" onclick="set_priority(3)">3</button>
@@ -58,15 +58,15 @@
                 </div>
                 <small id="todo_added_time"></small>
                 <br/>
-                Выполнить к <small id="todo_deadline"></small>
+                {{ lang.reminders_accomplish_to }} <small id="todo_deadline"></small>
                 <br/>
                 <small class="text-muted" id="todo_last_edit"></small>
-                <h3> Приоритет </h3>
+                <h3> {{ lang.reminders_priority }}</h3>
                 <div class="form-group" id="todo_priority">
                 </div>
                 <hr>
-                <h3> Cтатус </h3>
-                <p> Не выполнено </p>
+                <h3> {{ lang.reminders_status }}</h3>
+                <p> {{ lang.reminders_not_executed }} </p>
                 <button type="button" class="btn btn-light">&#10003;</button>
             </div>
             <div class="modal-footer">
