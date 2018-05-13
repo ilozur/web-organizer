@@ -103,14 +103,6 @@ class TestMainPage(TestCase):
 
         self.assertEqual(response.result, "Success")
 
-        response = self.c.post('/todo/add', context)
-
-        self.assertEqual(response.result, "Success")
-
-        response = self.c.post('/todo/add', context)
-
-        self.assertEqual(response.result, "Success")
-
         # check the showing process
         response = self.c.get('/todo/show_todo')
         self.assertEqual(response.result, "Success")
