@@ -245,6 +245,12 @@ td:hover {
     border-radius: 15px;
     text-align: center;
     margin-top: : 150px;
+    cursor: default;
+
+}
+
+.btn-btn {
+  margin: 5px 20px;
 }
 
 .noanimation:hover{
