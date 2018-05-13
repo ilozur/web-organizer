@@ -218,7 +218,7 @@ function sort_notes_ajax(type){
         {
             if (response['result'] == "100")
             {
-
+                //here should be sort by get queries
             }
             else
             {
