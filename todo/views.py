@@ -73,6 +73,7 @@ def add_todo(request):
                 response_data['title'] = tmp.title
                 response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
                 response_data['priority'] = tmp.priority
+                response_data['smart_priority'] = tmp.smart_priority
             else:
                 result = 'Deadline date has passed'
         else:
@@ -275,7 +276,9 @@ def smart_priority(todo, address, user):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
         value = deadline*0.4+priority*0.6
-        new_value = round(((value - 1) / (max(user, now) - 1)) * (100 - 1) + 1)
+        new_value = 100-round(((value - 1) / (max_smart_priority(user, now) - 1)) * (100 - 1) + 1)
+        if new_value == 0:
+            new_value +=1
         tmp = Todos.get_todo_by_id(todo[2])
         tmp.smart_priority = new_value
         tmp.save()
@@ -286,7 +289,9 @@ def smart_priority(todo, address, user):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
         value = deadline * 0.4 + priority * 0.6
-        new_value = round(((value - 1) / (max(user, now) - 1)) * (100 - 1) + 1)
+        new_value = 100-round(((value - 1) / (max_smart_priority(user, now) - 1)) * (100 - 1) + 1)
+        if new_value == 0:
+            new_value +=1
         return new_value
 
 
@@ -332,12 +337,13 @@ def days_in_years(tmp):
     return result
 
 
-def max(user, now):
+def max_smart_priority(user, now):
     todo_list = Todos.get_todos('AtoZ', 'in progress', user, 'sm_priority')
     max = 0
     for item in todo_list:
-        deadline = todo_list[item][1]
-        priority = todo_list[item][3]
+        todo = item
+        deadline = todo[1]
+        priority = todo[3]
         deadline = deadline.split('.')
         deadline = days_in_years(deadline)-now
         value = 0.4*deadline+priority*0.6
