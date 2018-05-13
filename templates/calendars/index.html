@@ -65,17 +65,17 @@
 							</button> -->
 							<div class="card-footer">
 							<div class="alert alert-danger">
-								<small data-toggle="modal" data-target="#All event">Всего событий: {{ all_events_count }}</small>
+								<small data-toggle="modal" data-target="#All event">{{lang.events_total}}: {{ all_events_count }}</small>
 								<br/>
-								<small data-toggle="modal" data-target="#For-Today event">На сегодня: {{ today_events_count }}</small>
+								<small data-toggle="modal" data-target="#For-Today event">{{lang.events_onday}}: {{ today_events_count }}</small>
 								<br/>
-								<small>За вчера: {{ yesterday_events_count }}</small>
+								<small>{{lang.events_yesterday}}: {{ yesterday_events_count }}</small>
 								<br/>
-								<small>За неделю: {{ week_events_count }}</small>
+								<small>{{lang.events_week}}: {{ week_events_count }}</small>
 								<br/>
-								<small>За месяц: {{ month_events_count }}</small>
+								<small>{{lang.events_month}}: {{ month_events_count }}</small>
 								<br/>
-								<small>За год: {{ year_events_count }}</small>
+								<small>{{lang.events_year}}: {{ year_events_count }}</small>
 							</div>
 							</div>
 							</div>
