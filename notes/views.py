@@ -231,19 +231,19 @@ def delete_ajax(request):
         return HttpResponseRedirect('/')
 
 
+@login_required
 def paginate(request):
-    response_data = {}
-    notes_list = []
-    notes = Notes.objects.filter(user=request.user)
-    for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-    pages = Paginator(notes_list, 20)
     if request.method == "POST":
-        if request.user.is_authenticated:
-            page_number = request.POST.get('page')
-            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
-            response_data['notes_list'] = pages.page(page_number).object_list
-            response_data['result'] = 200
+        response_data = {}
+        notes_list = []
+        notes = Notes.objects.filter(user=request.user)
+        for i in notes:
+            notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+        pages = Paginator(notes_list, 20)
+        page_number = request.POST.get('page')
+        response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+        response_data['notes_list'] = pages.page(page_number).object_list
+        response_data['result'] = 200
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')

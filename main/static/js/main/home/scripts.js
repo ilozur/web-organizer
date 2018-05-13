@@ -218,7 +218,7 @@ function delete_note_ajax()
                         if ($('#last_notes_holder div')[0].id == 'note_' + id)
                         {
                             $('#last_note_title').html($('#last_notes_holder div p a')[1].text);
-                            $("#last_note_title").attr('onclick', $('#last_notes_holder div p a').attr('onclick'));
+                            $("#last_note_title").attr('onclick', $('#last_notes_holder div p a')[1].getAttribute('onclick'));
                         }
                     }
                     if (response['id'])

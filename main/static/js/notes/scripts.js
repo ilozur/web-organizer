@@ -13,7 +13,7 @@ function add_note_to_cards(notes_data){
         + notes_data[2] + '" onclick="get_note_data_ajax('
         + notes_data[2] + ')" class="col-4" data-toggle="modal" data-target="#Note-Card"><div class="card"><div class="card-body"><h3 id="card_note_title_'
         + notes_data[2] + '">'
-        + notes_data[0] + '</h3><small class="date">{{ item.1 }}</small><hr/><p id="card_note_description_'
+        + notes_data[0] + '</h3><small class="date">' + notes_data[1] + '</small><hr/><p id="card_note_description_'
         + notes_data[2] + '">'
         + notes_data[3] + '</p></div></div></div>'
     );
@@ -280,17 +280,24 @@ function paginate(page){
         success: function(response)
         {
             if (response['result'] == 200) {
+                for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+                {
+                    $('#paginate_btn_' + i).removeAttr('disabled');
+                }
+                $('#paginate_btn_' + page).attr('disabled', 'disabled');
                 if (response['buttons'][0]) {
                     $("#PrevPage").removeAttr('disabled');
                     $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
                 } else {
                     $("#PrevPage").attr('disabled', 'disabled');
+                    $('#PrevPage').removeAttr('onclick');
                 }
                 if (response['buttons'][1]) {
                     $("#NextPage").removeAttr('disabled');
                     $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
                 }  else {
                     $("#NextPage").attr('disabled', 'disabled');
+                    $('#NextPage').removeAttr('onclick');
                 }
                 $("#list_id").html('');
                 $("#cards_id").html('');

@@ -52,12 +52,12 @@
 					</div>
 				</div>
 				<nav class="navbar">
-					<div class="btn-group btn-group-lg">
-						<a href="#"><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
-						{% for number in notes_pages %}
-						<a href="#"><button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
-						{% endfor %}
-						<a href="#"><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
+					<div class="btn-group btn-group-lg" id="paginate_btn_holder">
+						<a><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
+							{% for number in notes_pages %}
+								<a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
+							{% endfor %}
+						<a><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
 					</div>
 				</nav>
 			</div>
@@ -72,23 +72,24 @@
 					</div>
 					{% endfor %}
 				</div>
+            </section>
 			<section class="card-view">
 				<div class="row" id="cards_id" style="display: none" display="block">
 					{% for item in notes_data %}
-					<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
-						<div class="card">
-							<div class="card-body">
-								<h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
-								<small class="date">{{ item.1 }}</small>
-								<hr/>
-								<p id="card_note_description_{{ item.2 }}">
-									{{ item.3 }}
-								</p>
+						<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
+							<div class="card">
+								<div class="card-body">
+									<h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
+									<small class="date">{{ item.1 }}</small>
+									<hr/>
+									<p id="card_note_description_{{ item.2 }}">
+										{{ item.3 }}
+									</p>
+								</div>
 							</div>
 						</div>
-						{% endfor %}
-					</div>
-				</section>
+					{% endfor %}
+				</div>
 			</section>
 		</div>
 	</section>
