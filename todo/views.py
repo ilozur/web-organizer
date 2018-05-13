@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 from main.models import Language
 from main.views import create_mail, send_mail
 from todo.forms import AddTodoForm
@@ -30,8 +30,12 @@ def index(request):
     context['language'] = user_lang
     context['lang'] = lang
     user = request.user
-    context['undone_todos'] = Todos.get_todos('AtoZ', 'in progress', user)
-    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user)
+    undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
+    done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user), 20)
+    context['undone_todos'] = undone_todos.page(1).object_list
+    context['undone_pages'] = undone_todos.page_range
+    context['done_todos'] = done_todos.page(1).object_list
+    context['done_pages'] = done_todos.page_range
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
@@ -102,38 +106,32 @@ def show_todo(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def sorting(request):
     response = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            sort_type = request.POST.get('data')
-            response = {
-                'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
-                'result': "Success"
-            }
-        else:
-            response['result'] = "User is not authenticated"
+        sort_type = request.POST.get('data')
+        response = {
+            'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
+            'result': "Success"
+        }
         return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def status_change(request):
     response = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            todo_id = request.POST.get('id')
-            todo_type = request.POST.get('type')
-            obj = Todos.get_todo_by_id(todo_id)
-            obj.status = todo_type
-            obj.save()
-            response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
-            response['result'] = "Success"
-            response['amount_of_todos'] = Todos.get_amounts(request.user)
-        else:
-            response['result'] = "User is not authenticated"
+        todo_id = request.POST.get('id')
+        todo_type = request.POST.get('type')
+        obj = Todos.get_todo_by_id(todo_id)
+        obj.status = todo_type
+        obj.save()
+        response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
+        response['result'] = "Success"
+        response['amount_of_todos'] = Todos.get_amounts(request.user)
         return HttpResponse(json.dumps(response), content_type='application/json')
     else:
         return HttpResponseRedirect('/')
@@ -247,6 +245,21 @@ def check_notify():
                 mail = create_mail(tmp_user, "У вас не выполненная задача!" + tmp_todo.title,
                                    "У вас не выполненная задача!")
                 send_mail(mail)
+
+
+def paginate(request):
+    response_data = {}
+    status = request.POST.get('status')
+    pages = Paginator(Todos.get_todos('AtoZ', status, request.user), 20)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            page_number = request.POST.get('page')
+            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+            response_data['todo_list'] = pages.page(page_number).object_list
+            response_data['result'] = 200
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
 def high_version_priority():

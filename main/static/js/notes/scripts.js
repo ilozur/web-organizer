@@ -1,9 +1,22 @@
 function add_note_to_list(notes_data){
-    $("#list_id").append('<div onclick="get_note_data_ajax('+ notes_data[i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
-    + notes_data[i][2] + '">' + notes_data[i][0]
-    + '</h7><div class="date"> <small id="note_date_'
-    + notes_data[i][2] + '">' + notes_data[i][1]
-    + '</small></div></a></div>');
+    $("#list_id").append('<div onclick="get_note_data_ajax('
+        + notes_data[2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
+        + notes_data[2] + '">'
+        + notes_data[0] + '</h7><div class="date"><small id="note_date_'
+        + notes_data[2] + '">'
+        + notes_data[1] + '</small></div></a></div>'
+    );
+}
+
+function add_note_to_cards(notes_data){
+    $("#cards_id").append('<div id="note_card_'
+        + notes_data[2] + '" onclick="get_note_data_ajax('
+        + notes_data[2] + ')" class="col-4" data-toggle="modal" data-target="#Note-Card"><div class="card"><div class="card-body"><h3 id="card_note_title_'
+        + notes_data[2] + '">'
+        + notes_data[0] + '</h3><small class="date">' + notes_data[1] + '</small><hr/><p id="card_note_description_'
+        + notes_data[2] + '">'
+        + notes_data[3] + '</p></div></div></div>'
+    );
 }
 
 function get_note_data_ajax(id){
@@ -63,13 +76,13 @@ function close_note_edit_mode()
 };
 
 function show_cards(){
-    $('#list_id').slideUp('slow');
-    $('#cards_id').slideDown('slow');
+    $('#list_id').hide('slow');
+    $('#cards_id').show('slow');
 };
 
 function show_list(){
-    $('#cards_id').slideUp('slow');
-    $('#list_id').slideDown('slow');
+    $('#cards_id').hide('slow');
+    $('#list_id').show('slow');
 };
 
 function search_notes_ajax()
@@ -89,7 +102,11 @@ function search_notes_ajax()
             {
                 $("#list_id").html('');
                 for (var i = 0; i < response['notes_list'].length; i++) {
-                    add_note_to_list(response['notes_list']);
+                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
+                    + response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
+                    + '</h7><div class="date"> <small id="note_date_'
+                    + response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
+                    + '</small></div></a></div>');
                 }
                 $("#search_note_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
@@ -179,8 +196,8 @@ function add_note_ajax()
                     '</small><hr/><p id="card_note_description_' + response['id'] + '">' + response['data_part'] + '</p></div></div></div>';
                 $("#list_id").html(result_html_list + $("#list_id").html());
                 $("#cards_id").html(result_html_card + $("#cards_id").html());
-                $('#note_' + response['id']).slideDown(duration='slow');
-                $('#note_card_' + response['id']).slideDown(duration='slow');
+                $('#note_' + response['id']).show(duration='slow');
+                $('#note_card_' + response['id']).show(duration='slow');
                 $("#close_note_btn").trigger("click");
                 voice_text('Заметка добавлена.');
             }
@@ -236,8 +253,8 @@ function delete_note_ajax()
             {
                 if (response['result'] == "100")
                 {
-                    $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
-                    $('#note_card_' + id).slideUp(duration='slow', complete=function(){$('#note_card' + id).remove()});
+                    $('#note_' + id).hide(duration='slow', complete=function(){$('#note_' + id).remove()});
+                    $('#note_card_' + id).hide(duration='slow', complete=function(){$('#note_card' + id).remove()});
                     voice_text('Заметка удалена.');
                 }
                 else
@@ -253,4 +270,42 @@ function voice_note()
 {
     var clean_text = $('#note_data_show').text();
     voice_text(clean_text);
+};
+
+function paginate(page){
+    $.ajax({
+        type: "POST",
+        url: "/notes/paginate",
+        data: { "page": page },
+        success: function(response)
+        {
+            if (response['result'] == 200) {
+                for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+                {
+                    $('#paginate_btn_' + i).removeAttr('disabled');
+                }
+                $('#paginate_btn_' + page).attr('disabled', 'disabled');
+                if (response['buttons'][0]) {
+                    $("#PrevPage").removeAttr('disabled');
+                    $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+                } else {
+                    $("#PrevPage").attr('disabled', 'disabled');
+                    $('#PrevPage').removeAttr('onclick');
+                }
+                if (response['buttons'][1]) {
+                    $("#NextPage").removeAttr('disabled');
+                    $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+                }  else {
+                    $("#NextPage").attr('disabled', 'disabled');
+                    $('#NextPage').removeAttr('onclick');
+                }
+                $("#list_id").html('');
+                $("#cards_id").html('');
+                for (var i = 0; i < response['notes_list'].length; i++) {
+                    add_note_to_list(response['notes_list'][i]);
+                    add_note_to_cards(response['notes_list'][i]);
+                }
+            }
+        }
+    });
 };

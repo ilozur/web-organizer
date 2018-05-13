@@ -1,6 +1,6 @@
 function add_todo_card(item){
     var str = "'done'";
-    tmp = '<a href="#" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
+    tmp = '<div style="display: none" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
                     '<div class="card">' +
                         '<div class="card-body">' +
                             '<h3>' + item[0] + '</h3>' +
@@ -12,22 +12,23 @@ function add_todo_card(item){
                             '<button type="button" onclick="status_change(' + item[2] + ',' + str + ')" class="btn btn-light">&#10003;</button>' +
                         '</div>' +
                     '</div>' +
-                '</a>';
+                '</div>';
     $("#CardList").html(tmp + $("#CardList").html());
+    $('#todo_card_' + item[2]).show('slow');
     get_priorities(item[3], item[2]);
 };
 
 function add_to_list(item){
     var str = "'done'";
-    tmp = '<a href="#" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
-                '<h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7>' +
-                '<div class="priorities">' +
-                    '<div class="priorities" id="list_priorities_' + item[2] + '"></div>'+
-                    '<button  type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ',' + str + ')">&#10003;</button>'+
-                    '<div class="date"><small id="todo_date_' + item[2] + '">' + item[1] + '</small></div>'+
-                '</div>'+
-            '</a>';
+    var tmp = '<div style="display: none" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');">' +
+    '<a href="#" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
+    '<button type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ', ' + str + ')">' +
+    '&#10003;</button><h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7><div class="priorities">' +
+    '<div class="priorities" id="list_priorities_' + item[2] + '"></div><script>get_priorities(' +
+    item[3] + ', ' + item[2] + ');</script><div class="date"><small id="todo_date_' + item[2] + '">' +
+    item[1] + '</small></div></div></a></div>';
     $("#ViewList").html(tmp + $("#ViewList").html());
+    $('#todo_' + item[2]).show("slow");
     get_priorities(item[3], item[2]);
 };
 
@@ -128,7 +129,6 @@ function status_change(id, type){
             if (response['result'] == 'Success')
             {
 		        sorting('new');
-		        console.log(type);
 		        if (type == 'done'){
 		            update_done_todos(response['current']);
 		        } else {
@@ -155,18 +155,18 @@ function get_todo_data_ajax(id){
                 $("#todo_id").html(id);
                 $("#Open-Todo").find("#todo_title_show").html(response['title']);
                 $("#Open-Todo").find("#todo_text_show").html(response['text']);
-		$("#Open-Todo").find("#todo_id").html(response['id']);
+		        $("#Open-Todo").find("#todo_id").html(response['id']);
                 $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
                 $("#Open-Todo").find("p:first").html(response['status']);
                 $("#Open-Todo").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
-		$("#Open-Todo").find("#todo_deadline").html(response['deadline']);
-		$("#Open-Todo").find("#todo_num").html(response['id']);
-		$("#Open-Todo").find("#todo_priority").html('');
-		for (var i = 0; i < response['priority']; i++){
-		    $("#Open-Todo").find("#todo_priority").html($("#Open-Todo").find("#todo_priority").html() + '<span class="badge badge-pill priority">!</span>');
-		$('#id_todo_edit_time').val(response['time'][0] + ':' + response['time'][1]);
-		$('#id_todo_edit_deadline').val(response['date'][0] + '-' + response['date'][1] + '-' + response['date'][2]);
-		}
+		        $("#Open-Todo").find("#todo_deadline").html(response['deadline']);
+		        $("#Open-Todo").find("#todo_num").html(response['id']);
+		        $("#Open-Todo").find("#todo_priority").html('');
+		        for (var i = 0; i < response['priority']; i++){
+		            $("#Open-Todo").find("#todo_priority").html($("#Open-Todo").find("#todo_priority").html() + '<span class="badge badge-pill priority">!</span>');
+		            $('#id_todo_edit_time').val(response['time'][0] + ':' + response['time'][1]);
+		            $('#id_todo_edit_deadline').val(response['date'][0] + '-' + response['date'][1] + '-' + response['date'][2]);
+		        }
             }
         }
     });
@@ -259,8 +259,8 @@ function add_todo_ajax()
 		        var array = [response['title'], response['datetime'], response['id'], response['priority']];
 		        add_to_list(array);
                 add_todo_card(array);
-                $('#todo_' + response['id']).slideDown(duration='slow');
-                $('#todo_card_' + response['id']).slideDown(duration='slow');
+                $('#todo_' + response['id']).show(duration='slow');
+                $('#todo_card_' + response['id']).show(duration='slow');
                 $("#close_todo_btn").trigger("click");
             }
             else{
@@ -273,19 +273,78 @@ function add_todo_ajax()
 
 function delete_todo_ajax()
 {
-    $('#delete_btn').attr('disabled', 'disabled');
+    var should_delete = confirm('Вы уверены?');
+    if (should_delete)
+    {
+        $.ajax({
+            type: "POST",
+            url: '/todo/delete',
+            data: {"id": $('#todo_id').html()},
+            success: function(response)
+            {
+                if (response['result'] == "Success")
+                {
+                    $('#todo_' + $('#todo_id').html()).hide("slow", complete=function(){$('#todo_' + id).remove()});
+                    $('#todo_card_' + $('#todo_id').html()).hide("slow", complete=function(){$('#todo_card_' + id).remove()});
+                }
+            }
+        });
+    }
+};
+
+function paginate(page, status){
     $.ajax({
         type: "POST",
-        url: '/todo/delete',
-        data: {"id": $('#todo_id').html()},
+        url: "/todo/paginate",
+        data: { "page": page, "status": status },
         success: function(response)
         {
-            if (response['result'] == "Success")
-            {
-                $('#todo_' + $('#todo_id').html()).slideUp("slow");
-                $('#todo_card_' + $('#todo_id').html()).slideUp("slow");
+            if (response['result'] == 200) {
+                for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+                {
+                    $('#paginate_btn_' + i).removeAttr('disabled');
+                }
+                $('#paginate_btn_' + page).attr('disabled', 'disabled');
+                if (status == 'in progress'){
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Progress").removeAttr('disabled');
+                        $("#PrevPage_Progress").attr("onclick", "paginate(" + (page - 1) + ", " + "'in progress'" + ")");
+                    } else {
+                        $("#PrevPage_Progress").attr('disabled', 'disabled');
+                        $("#PrevPage_Progress").removeAttr('onclick');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Progress").removeAttr('disabled');
+                        $("#NextPage_Progress").attr("onclick", "paginate(" + (page + 1) + ", " + "'in progress'" + ")");
+                    }  else {
+                        $("#NextPage_Progress").attr('disabled', 'disabled');
+                        $("#NextPage_Progress").removeAttr('onclick');
+                    }
+                    $("#ViewList").html('');
+                    $("#CardList").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        add_to_list(response['todo_list'][i]);
+                        add_todo_card(response['todo_list'][i]);
+                    }
+                } else {
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Done").removeAttr('disabled');
+                        $("#PrevPage_Done").attr("onclick", "paginate(" + (page - 1) + ", " + "'done'" + ")");
+                    } else {
+                        $("#PrevPage_Done").attr('disabled', 'disabled');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Done").removeAttr('disabled');
+                        $("#NextPage_Done").attr("onclick", "paginate(" + (page + 1) + ", " + "'done'" + ")");
+                    }  else {
+                        $("#NextPage_Done").attr('disabled', 'disabled');
+                    }
+                    $("#ViewDone").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        update_done_todos(response['todo_list'][i]);
+                    }
+                }
             }
-            $('#delete_btn').removeAttr('disabled');
         }
     });
 };

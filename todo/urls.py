@@ -10,4 +10,5 @@ urlpatterns = [
     path('sort', views.sorting, name='todo.sort'),
     path('change', views.status_change, name='todo.change'),
     path('delete', views.delete_todo, name='todo.delete_todo'),
+    path('paginate', views.paginate, name='todo.paginate')
 ]
