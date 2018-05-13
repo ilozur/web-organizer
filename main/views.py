@@ -48,6 +48,7 @@ def index(request):
             context['lang'] = lang
             events = Event.objects.filter(user=request.user)
             notes = Notes.objects.filter(user=request.user)
+            todos = Todos.objects.filter(user=request.user)
             date = datetime.datetime.now()
             today_event = events.filter(date=date.date()).first()
             if today_event:
@@ -64,10 +65,10 @@ def index(request):
             context['all_notes_count'] = notes.count()
             context['voice_notes_count'] = notes.filter(is_voice=True).count()
             context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
-            todos = Todos.get_amounts(request.user)
-            context['all_todo_count'] = todos[0]
-            context['active_todo_count'] = todos[1]
-            context['finished_todo_count'] = todos[2]
+            todos_info = Todos.get_amounts(request.user)
+            context['all_todo_count'] = todos_info[0]
+            context['active_todo_count'] = todos_info[1]
+            context['finished_todo_count'] = todos_info[2]
             nearest_events = events.filter(date__gte=date.date()).order_by('date')
             if nearest_events.count() > 0:
                 while (nearest_events.first().date == date.date()) and (nearest_events.first().time < date.time()):
@@ -82,11 +83,23 @@ def index(request):
                     nearest_events.first().time.strftime("%H:%M")
             else:
                 context['nearest_event_exists'] = False
+            nearest_todo = todos.filter(deadline__gte=date.date()).order_by('deadline')
+            if nearest_todo.count() > 0:
+                while (nearest_todo.first().deadline.date() == date.date()) and\
+                        (nearest_todo.first().deadline.time() < date.time()):
+                    nearest_todo.pop(0)
+                    if nearest_todo.count() == 0:
+                        break
+            if nearest_todo.first():
+                context['nearest_todo_exists'] = True
+                context['nearest_todo_name'] = nearest_todo.first().title
+            else:
+                context['nearest_todo_exists'] = False
             last_note = notes.order_by('-added_time').first()
             if last_note:
                 context['last_note_exists'] = True
                 context['last_note_title'] = last_note.name
-                context['last_note_id'] = last_note.id
+                context['last_note_id'] = last_note
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()

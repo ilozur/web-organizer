@@ -33,7 +33,11 @@
                     <p><a href="#" class="link-section">{{ lang.no_events_title }}</a><br/></p>
                 {% endif %}
                 <h3>{{ lang.closest_reminder_title }}: </h3>
-                <p><a href="#" class="link-section">Отдать Бобу диски</a></p>
+                {% if nearest_todo_exists %}
+                    <p><a href="#" class="link-section">{{ nearest_todo_name }}</a></p>
+                {% else %}
+                    <p><a href="#" class="link-section">{{ lang.no_todo_title }}</a></p>
+                {% endif %}
                 <h3>{{ lang.latest_note_title }}: </h3>
                 {% if last_note_exists %}
                     <p><a href="" class="link-section" id="last_note_title" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ last_note_id }})">{{ last_note_title }}</a></p>
