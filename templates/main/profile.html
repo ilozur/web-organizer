@@ -14,26 +14,26 @@
 	<section class="profile">
 		<div class="card text-center">
 			<div class="card-header">
-				<h1> Личный кабинет </h1>
+				<h1> {{lang.account_title}}</h1>
 			</div>
 			<div class="card-body">
 				<picture>
 					<img src='{% static "/img/avatar_user.png" %}' class="avatar">
 				</picture>
 				<div class="data">
-					<span>Ник</span>
+					<span>{{lang.profile_nickname}}</span>
 					<h2 class="card-title" id="username">{{ user.username }}</h2>
 				</div>
 				<div class="data" style="margin-top: 25px;">
-					<span>Имя</span>
+					<span>{{lang.profile_name}}</span>
 					<h2 class="card-title" id="name">{{ user.first_name }}</h2>
 				</div>
 				<div class="data">
-					<span>Фамилия</span>
+					<span>{{lang.profile_surname}}</span>
 					<h2 class="card-title" id="surname">{{ user.last_name }}</h2>
 				</div>
 				<div class="data">
-					<span>Email</span>
+					<span>{{lang.profile_email}}</span>
 					<h2 class="card-title" id="email">{{ user.email }}</h2>
 				</div>
 			</div>
@@ -52,7 +52,7 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h2 class="modal-title">Редактировать профиль {{user.username}}</h2>
+						<h2 class="modal-title">{{lang.profile_edit}}{{user.username}}</h2>
 					</div>
 					<div class="modal-body">
 						<div class="form-group btn btn-light change-avatar">
@@ -62,32 +62,32 @@
 						<form id="change_user_data_form">
 							<div class="form-row">
 								<div class="form-group col-md-6">
-									<label for="inputEmail4">Имя</label>
+									<label for="inputEmail4">{{lang.profile_name}}</label>
 									{{ change_user_data_form.name }}
 								</div>
 								<div class="form-group col-md-6">
-									<label for="inputPassword4">Фамилия</label>
+									<label for="inputPassword4">{{lang.profile_surname}}</label>
 									{{ change_user_data_form.surname }}
 								</div>
 							</div>
 							<hr>
 							<div class="form-group">
-								<label for="inputEmail4">Email</label>
+								<label for="inputEmail4">{{lang.profile_email}}</label>
 								{{ change_user_data_form.email }}
 							</div>
 						</form>
 						<hr>
 						<form id="change_password_form">
 							<div class="form-group">
-								<label for="inputPassword4">Старый пароль</label>
+								<label for="inputPassword4">{{lang.profile_oldpass}}</label>
 								{{ change_password_form.old_password }}
 							</div>
 							<div class="form-group">
-								<label for="inputPassword4"> Новый пароль</label>
+								<label for="inputPassword4"> {{lang.profile_newpass}}</label>
 								{{ change_password_form.new_password1 }}
 							</div>
 							<div class="form-group">
-								<label for="inputPassword4">Повторить новый пароль</label>
+								<label for="inputPassword4">{{lang.profile_newpassagain}}</label>
 								{{ change_password_form.new_password2 }}
 							</div>
 						</form>
@@ -104,19 +104,19 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h2 class="modal-title">Настройки</h2>
+						<h2 class="modal-title">{{lang.profile_settings}}</h2>
 					</div>
 					<div class="modal-body">
-						<span>Выберите язык:</span>
+						<span>{{lang.profile_language}}:</span>
 						<div class="btn-group btn-group-lg" style="margin-left: 185px;">
-							<button type="button" class="btn btn-light active">Русский</button>
-							<button type="button" class="btn btn-light">Английский</button>
-							<button type="button" class="btn btn-light" disabled>Немецкий</button>
+							<button type="button" class="btn btn-light active">{{lang.profile_russian}}</button>
+							<button type="button" class="btn btn-light">{{lang.profile_english}}</button>
+							<button type="button" class="btn btn-light" disabled>{{lang.profile_germany}}</button>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-light">Сохранить</button>
+						<button type="button" class="btn btn-light" data-dismiss="modal">{{lang.profile_cancel}}</button>
+						<button type="submit" class="btn btn-light">{{lang.profile_save}}</button>
 					</div>
 				</div>
 			</div>
