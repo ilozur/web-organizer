@@ -76,13 +76,13 @@ function close_note_edit_mode()
 };
 
 function show_cards(){
-    $('#list_id').slideUp('slow');
-    $('#cards_id').slideDown('slow');
+    $('#list_id').hide('slow');
+    $('#cards_id').show('slow');
 };
 
 function show_list(){
-    $('#cards_id').slideUp('slow');
-    $('#list_id').slideDown('slow');
+    $('#cards_id').hide('slow');
+    $('#list_id').show('slow');
 };
 
 function search_notes_ajax()
@@ -196,8 +196,8 @@ function add_note_ajax()
                     '</small><hr/><p id="card_note_description_' + response['id'] + '">' + response['data_part'] + '</p></div></div></div>';
                 $("#list_id").html(result_html_list + $("#list_id").html());
                 $("#cards_id").html(result_html_card + $("#cards_id").html());
-                $('#note_' + response['id']).slideDown(duration='slow');
-                $('#note_card_' + response['id']).slideDown(duration='slow');
+                $('#note_' + response['id']).show(duration='slow');
+                $('#note_card_' + response['id']).show(duration='slow');
                 $("#close_note_btn").trigger("click");
                 voice_text('Заметка добавлена.');
             }
@@ -253,8 +253,8 @@ function delete_note_ajax()
             {
                 if (response['result'] == "100")
                 {
-                    $('#note_' + id).slideUp(duration='slow', complete=function(){$('#note_' + id).remove()});
-                    $('#note_card_' + id).slideUp(duration='slow', complete=function(){$('#note_card' + id).remove()});
+                    $('#note_' + id).hide(duration='slow', complete=function(){$('#note_' + id).remove()});
+                    $('#note_card_' + id).hide(duration='slow', complete=function(){$('#note_card' + id).remove()});
                     voice_text('Заметка удалена.');
                 }
                 else
