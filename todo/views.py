@@ -36,9 +36,9 @@ def index(request):
     sort_type = type_of_sort
     todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
     for item in todos:
-        smart_priority(item, 'index')
-    undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user), 20)
-    done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user), 20)
+        smart_priority(item, 'index', user)
+    undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user, 'none'), 20)
+    done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user, 'none'), 20)
     context['undone_todos'] = undone_todos.page(1).object_list
     context['undone_pages'] = undone_todos.page_range
     context['done_todos'] = done_todos.page(1).object_list
@@ -66,7 +66,7 @@ def add_todo(request):
             if deadline_date > datetime.now():
                 tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
-                tmp.smart_priority = smart_priority(tmp, 'add')
+                tmp.smart_priority = smart_priority(tmp, 'add', user)
                 tmp.save()
                 result = "Success"
                 response_data['id'] = tmp.id
@@ -264,7 +264,7 @@ def check_notify():
                 send_mail(mail)
 
 
-def smart_priority(todo, address):
+def smart_priority(todo, address, user):
     now = datetime.now()
     now = now.strftime("%d.%m.%y")
     now = now.split('.')
@@ -275,7 +275,7 @@ def smart_priority(todo, address):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
         value = deadline*0.4+priority*0.6
-        new_value = round(((value - 1) / (1000 - 1)) * (100 - 1) + 1)
+        new_value = round(((value - 1) / (max(user, now) - 1)) * (100 - 1) + 1)
         tmp = Todos.get_todo_by_id(todo[2])
         tmp.smart_priority = new_value
         tmp.save()
@@ -286,7 +286,7 @@ def smart_priority(todo, address):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
         value = deadline * 0.4 + priority * 0.6
-        new_value = round(((value - 1) / (1000 - 1)) * (100 - 1) + 1)
+        new_value = round(((value - 1) / (max(user, now) - 1)) * (100 - 1) + 1)
         return new_value
 
 
@@ -332,3 +332,15 @@ def days_in_years(tmp):
     return result
 
 
+def max(user, now):
+    todo_list = Todos.get_todos('AtoZ', 'in progress', user, 'sm_priority')
+    max = 0
+    for item in todo_list:
+        deadline = todo_list[item][1]
+        priority = todo_list[item][3]
+        deadline = deadline.split('.')
+        deadline = days_in_years(deadline)-now
+        value = 0.4*deadline+priority*0.6
+        if value>max:
+            max = value
+    return max
