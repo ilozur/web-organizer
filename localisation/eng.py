@@ -43,6 +43,9 @@ notes_changetext = 'Change text'
 notes_rewrite_audio = 'Re-record audio'
 notes_text_count = 'with text'
 notes_voice_count = 'with voice'
+notes_edit_title1 = 'Editing a note'
+notes_save1 = 'Save'
+
 
 
 # --Календарь--
@@ -135,6 +138,7 @@ reminders_changename1 = 'Change name'
 reminders_chose_reminds_for_save = 'Select reminders to save'
 reminders_accomplish_task = 'Task execution'
 reminders_back = 'Backward'
+reminders_not_executed = "Not executed"
 
 
 # --Личный кабинет --
