@@ -22,9 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '88d+i7qn(6y=-@zs93^l3kq+s5u)#i6*szf_okt=3#(c@&8678'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['eva-organizer.tk', 'localhost']
+ALLOWED_HOSTS = ['eva-organizer.tk', 'localhost', '127.0.0.1']
 
 # Application definition
 
