@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
@@ -107,38 +106,32 @@ def show_todo(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def sorting(request):
     response = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            sort_type = request.POST.get('data')
-            response = {
-                'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
-                'result': "Success"
-            }
-        else:
-            response['result'] = "User is not authenticated"
+        sort_type = request.POST.get('data')
+        response = {
+            'todo_list': Todos.get_todos(sort_type, 'in progress', request.user),
+            'result': "Success"
+        }
         return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def status_change(request):
     response = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            todo_id = request.POST.get('id')
-            todo_type = request.POST.get('type')
-            obj = Todos.get_todo_by_id(todo_id)
-            obj.status = todo_type
-            obj.save()
-            response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
-            response['result'] = "Success"
-            response['amount_of_todos'] = Todos.get_amounts(request.user)
-        else:
-            response['result'] = "User is not authenticated"
+        todo_id = request.POST.get('id')
+        todo_type = request.POST.get('type')
+        obj = Todos.get_todo_by_id(todo_id)
+        obj.status = todo_type
+        obj.save()
+        response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
+        response['result'] = "Success"
+        response['amount_of_todos'] = Todos.get_amounts(request.user)
         return HttpResponse(json.dumps(response), content_type='application/json')
     else:
         return HttpResponseRedirect('/')
