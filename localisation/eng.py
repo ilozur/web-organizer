@@ -99,6 +99,7 @@ calendar_download_all_events_from_file = 'To load all events from a file'
 calendar_download_part_of_events_to_file = 'To download part of the events from a file'
 calendar_chose_event_to_save = 'Select events to save'
 calendar_recommended_events = 'Recommended events'
+calendar_all_events = 'All events'
 
 
 

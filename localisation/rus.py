@@ -93,12 +93,13 @@ calendar_Z_A = 'Я..А'
 calendar_map = 'Карта'
 calendar_synchronisation = 'Синхронизация'
 calendar_save_all_events_to_file = 'Сохранить все события в файл'
-calendar_all_events = 'все события'
+calendar_all_events = 'Все события'
 calendar_save_part_of_events_to_file = 'Сохранить часть событий в файл'
 calendar_download_all_events_from_file = 'Загрузить все события из файла'
 calendar_download_part_of_events_to_file = 'Загрузить часть событий из файла'
 calendar_chose_event_to_save = 'Выберите события для сохранения'
 calendar_recommended_events = 'Рекомндованные события'
+calendar_place_holder = 'Мероприятиеюшка'
 
 
 # --Напоминания--
