@@ -12,7 +12,6 @@ from todo.models import Todos
 import json
 from datetime import datetime
 from localisation import eng, rus
-
 type_of_sort = 'AtoZ'
 
 
