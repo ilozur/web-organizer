@@ -261,6 +261,10 @@ function get_event_data_ajax(id){
                 $('#event_title_show').html(response['title']);
                 $('#event_date_show').html(response['date']);
                 $('#event_description_show').html(response['description']);
+                if(response['map_coordinates'] != 'none'){
+                    coords = response['map_coordinates'].split('|')
+                    savePlacemark(coords);
+                }
             }
             else
             {
@@ -295,4 +299,17 @@ function delete_event_ajax()
             }
         });
     }
+};
+
+
+function ShowTable()
+{
+    $("#ViewList").hide("slow");
+    $("#ViewTable").show("slow");
+};
+
+function ShowList()
+{
+    $("#ViewList").show("slow");
+    $("#ViewTable").hide("slow");
 };

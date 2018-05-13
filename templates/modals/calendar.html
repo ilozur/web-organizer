@@ -3,49 +3,47 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Создание мероприятия</h2>
+                <h2 class="modal-title">{{ lang.calendar_create }}</h2>
             </div>
             <div class="modal-body">
                 <form id="add_event_form">
                     {% csrf_token %}
                     {{ add_event_form.media }}
                     <div class="form-group">
-                      <h3>Название</h3>
+                      <h3>{{ lang.calendar_name }}</h3>
                       {{ add_event_form.title }}
                     </div>
                     <div class="form-group">
-                      <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose-Date">
-                      Выбрать дату
-                      </button>
-                      <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose-Time">
-                      Выбрать время
-                      </button>
+                    <span>{{ add_event_form.date }}</span>
+                    <span>{{ add_event_form.time }}</span>
                       <button type="button" class="btn btn-light" data-toggle="modal" data-target="#Choose-Place">
-                      Выбрать место
+                      {{ lang.calendar_chooseplace }}
                       </button>
-                      <span><small>Место и время по желанию</small></span>
+                      <span><small>{{ lang.calendar_place_and_time }}</small></span>
                     </div>
+                    <div id="placemark"></div>
                     <div class="form-group">
-                      <h3>Описание</h3>
+                      <h3>{{ lang.calendar_description }}</h3>
                       {{ add_event_form.description }}
                     </div>
+                    <div hidden>{{ add_event_form.place }}</div>
                     <div class="form-group">
                       <div class="form-check btn btn-light">
                         {{ add_event_form.is_public }}
-                        <label class="form-check-label"> Приватное мероприятие</label>
+                        <label class="form-check-label"> {{ lang.calendar_private_event }}</label>
                       </div>
                     </div>
                 </form>
-                <h3>Записать аудио</h3>
+<!--                 <h3>Записать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
                     </picture>
-                </button>
+                </button> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_calendar_btn">Отменить</button>
-                <button type="button" class="btn btn-light" onclick="add_event_ajax()">Создать</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" id="close_calendar_btn">{{ lang.calendar_cancel }}</button>
+                <button type="button" class="btn btn-light" onclick="add_event_ajax()">{{ lang.calendar_add }}</button>
             </div>
         </div>
     </div>
@@ -56,19 +54,27 @@
         <div id="event_num" hidden>0</div>
         <div class="modal-content">
             <div class="modal-header">
+                <a class="change-button" href="#" role="button">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
                 <h2 class="modal-title" id="event_title_show"></h2>
+                <a class="change-button" href="#" role="button">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
             </div>
             <div class="modal-body">
-                <h3 id="event_date_show">23.10.2018</h3>
+                <h3 id="event_date_show"></h3>
                 <hr/>
                 <h3>Весь день</h3>
                 <hr/>
-                <h3>г.Мытищи, МО, Россия</h3>
-                <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#Watch-in-Map">Посмотреть на карте</button>
+                <h3 id="place_address">...</h3>
+                <div id="show_map" style="width: 450px; height: 350px;"></div>
+<!--                 <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#Watch-in-Map">{{ lang.calendar_onthemap }}</button> -->
                 <hr/>
                 <h4 id="event_description_show"></h4>
                 <hr/>
-                <div class="form-group">
+
+<!--                 <div class="form-group">
                     <div class="like">
                         <button type="button" class="btn btn-light btn-sm">:) <span>12</span></button>
                         <button type="button" class="btn btn-light btn-sm">:( <span>2</span></button>
@@ -80,9 +86,9 @@
                         <button type="button" class="btn btn-light"><del>S</del></button>
                         <button type="button" class="btn btn-light"><ins>U</ins></button>
                     </div>
-                    <button type="button" class="btn btn-light" style="margin-top: 5px;">Отправить</button>
+                    <button type="button" class="btn btn-light" style="margin-top: 5px;">{{ lang.calendar_push }}</button>
                     <button class="btn btn-light" style="margin-top: 5px;" type="button" data-toggle="collapse" data-target="#collapseExample">
-                        Посмотреть комментарии
+                        {{ lang.calendar_check_comments }}
                     </button>
                     <div class="collapse" id="collapseExample">
                         <div class="card bg-light comment">
@@ -124,13 +130,13 @@
                                 <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
                             </div>
                         </nav>
-                        <button type="button" class="btn btn-light" data-toggle="collapse" data-target="#collapseExample">Закрыть</button>
+                        <button type="button" class="btn btn-light" data-toggle="collapse" data-target="#collapseExample">{{ lang.calendar_close }}</button>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_event_ajax()">Удалить</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">ОК</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_event_ajax()">{{ lang.calendar_delete }}</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_save }}</button>
             </div>
         </div>
     </div>

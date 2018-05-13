@@ -1,3 +1,70 @@
+function add_todo_card(item){
+    var str = "'done'";
+    tmp = '<div style="display: none" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
+                    '<div class="card">' +
+                        '<div class="card-body">' +
+                            '<h3>' + item[0] + '</h3>' +
+                            '<small class="date id="card_date_' + item[2] + '">' + item[1] + '</small>' +
+                        '</div>' +
+                        '<div class="card-footer">' +
+                            '<div class="priorities" id="card_priorities_' + item[2] + '">' +
+                            '</div>' +
+                            '<button type="button" onclick="status_change(' + item[2] + ',' + str + ')" class="btn btn-light">&#10003;</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+    $("#CardList").html(tmp + $("#CardList").html());
+    $('#todo_card_' + item[2]).show('slow');
+    get_priorities(item[3], item[2]);
+};
+
+function add_to_list(item){
+    var str = "'done'";
+    var tmp = '<div style="display: none" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');">' +
+    '<a href="#" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
+    '<button type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ', ' + str + ')">' +
+    '&#10003;</button><h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7><div class="priorities">' +
+    '<div class="priorities" id="list_priorities_' + item[2] + '"></div><script>get_priorities(' +
+    item[3] + ', ' + item[2] + ');</script><div class="date"><small id="todo_date_' + item[2] + '">' +
+    item[1] + '</small></div></div></a></div>';
+    $("#ViewList").html(tmp + $("#ViewList").html());
+    $('#todo_' + item[2]).show("slow");
+    get_priorities(item[3], item[2]);
+};
+
+function update_done_todos(item){
+    var str = "'in progress'";
+    tmp = '<a href="#" id="todo_' + item[2] + '" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Open">' +
+              '<h7>' + item[0] + '</h7>' +
+              '<div class="priorities">' +
+                  '<button  type="button" class="btn btn-info" onclick="status_change(' + item[2] + ', ' + str + ')">&#10007;</button>' +
+                  '<div class="date"><small>' + item[1] + '</small></div>' +
+              '</div>' +
+          '</a>';
+    $("#Complete").find(".list-group").html(tmp + $("#Complete").find(".list-group").html());
+    get_priorities(item[3], item[2]);
+}
+
+function get_priorities(value, id){
+    $("#list_priorities_" + id).html('');
+    for (var i = 1; i < value; i++){
+        $("#list_priorities_" + id).html("<span class='badge badge-pill priority-list'>!</span>" + $("#list_priorities_" + id).html());
+    }
+    $("#list_priorities_" + id).html($("#list_priorities_" + id).html() + "<span class='badge badge-pill priority-list-last'>!</span>");
+    $("#card_priorities_" + id).html('');
+    for (var i = 0; i < value; i++){
+        $("#card_priorities_" + id).html($("#card_priorities_" + id).html() + "<span class='badge badge-pill priority'>!</span>");
+    }
+};
+
+function clean_add_todo_fields()
+{
+    $("#id_todo_title").val("");
+    $("#id_todo_text").val("");
+    $("#id_todo_deadline").val("");
+    $("#id_todo_time").val("");
+};
+
 function sorting(type){
     $.ajax({
         type: "POST",
@@ -7,20 +74,47 @@ function sorting(type){
         {
             if (response['result'] == "Success")
             {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');"><a
-                    href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal"
-                     data-target="#Open-Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['notes_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
+                $("#ViewList").html('');
+                for(var i = 0; i < response['todo_list'].length; i++){
+                    add_to_list(response['todo_list'][i]);
+                }
+		        $("#CardList").html('');
+		        for(var i = 0; i < response['todo_list'].length; i++){
+                    add_todo_card(response['todo_list'][i]);
+                }
+            }
+        }
+    });
+};
+
+function search_todo_ajax()
+{
+    form_data = $('#search_todo_form').serialize();
+    $("#search_todo_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#search_todo_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/todo/search',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "Success")
+            {
+                alert(response['result']);
+                $("#ViewList").html('');
+                for(var i = 0; i < response['todo_list'].length; i++){
+                    add_to_list(response['todo_list'][i]);
+                }
+		        $("#CardList").html('');
+		        for(var i = 0; i < response['todo_list'].length; i++){
+                    add_todo_card(response['todo_list'][i]);
                 }
                 $("#search_todo_form").find(':input').each(function(){
                     $(this).removeAttr('disabled');
                 });
-                $('#sign_up_btn').removeAttr('disabled');
+                $('#search_todo_btn').removeAttr('disabled');
             }
         }
     });
@@ -32,18 +126,24 @@ function status_change(id, type){
         url: '/todo/change',
         data: {'id': id, 'type': type},
         success: function(response){
-
+            if (response['result'] == 'Success')
+            {
+		        sorting('new');
+		        if (type == 'done'){
+		            update_done_todos(response['current']);
+		        } else {
+		            $("#todo_" + id).remove();
+		        }
+                $("#amounts small:eq(1)").html(response['amount_of_todos'][0]);
+                $("#amounts small:eq(3)").html(response['amount_of_todos'][1]);
+                $("#amounts small:eq(5)").html(response['amount_of_todos'][2]);
+            };
         }
     });
 };
 
 
 function get_todo_data_ajax(id){
-    $('#note_num').html(id);
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-    $('#todo_title_show').html('loading');
-    $('#todo_text_show').html('loading');
     $.ajax({
         type: "POST",
         url: '/todo/show_todo',
@@ -52,87 +152,21 @@ function get_todo_data_ajax(id){
         {
             if (response['result'] == "Success")
             {
-                $('#todo_title_show').html(response['title']);
-                $('#todo_text_show').html(response['text']);
-                $('#todo_added_time').html(response['added_date_and_time']);
-                if ('last_edit_time' in response)
-                {
-                    $('#todo_last_edit').html(response['last_edit_time'] + '(edited)');
-                }
-            }
-        }
-    });
-};
-
-function clean_add_note_fields()
-{
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_note_data.setData("");
-    $("#id_note_title").val("");
-};
-
-function open_note_edit_mode()
-{
-    $('#Show-Todo-Modal').attr('hidden', '');
-    $('#Edit-Todo-Modal').removeAttr('hidden');
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances.id_todo_data_edit.setData($('#todo_text_show').html());
-    $('#id_todo_title_edit').val($('#todo_title_show').html());
-};
-
-function close_todo_edit_mode()
-{
-    $('#Edit-Todo-Modal').attr('hidden', '');
-    $('#Show-Todo-Modal').removeAttr('hidden');
-};
-
-function show_cards(){
-    $('.list-view').hide();
-    $('.card-view').hide();
-    $('.card-view').removeAttr('hidden');
-    $('.card-view').show('slow');
-};
-
-function show_list(){
-    $('.card-view').hide();
-    $('.list-view').hide();
-    $('.list-view').removeAttr('hidden');
-    $('.list-view').slideDown('slow');
-};
-
-function search_todo_ajax()
-{
-    form_data = $('#search_todo_form').serialize();
-    $("#search_todo_form").find(':input').each(function(){
-        $(this).attr('disabled', 'disabled');
-    });
-    $('#sign_up_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/search',
-        data: form_data,
-        success: function(response)
-        {
-            if (response['result'] == "Success")
-            {
-                $("#list_id").html('');
-                for (var i = 0; i < response['todo_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_todo_data_ajax('+ response['todo_list'][i][2] + ');
-                    "><a href="#" class="list-group-item list-group-item-action list-group-item-warning"
-                    data-toggle="modal" data-target="#Opne_Todo"><h7 id="todo_title_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][0]
-                    + '</h7><div class="date"> <small id="todo_date_'
-                    + response['todo_list'][i][2] + '">' + response['todo_list'][i][1]
-                    + '</small></div></a></div>');
-                }
-                $("#search_todo_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
+                $("#todo_id").html(id);
+                $("#Open-Todo").find("#todo_title_show").html(response['title']);
+                $("#Open-Todo").find("#todo_text_show").html(response['text']);
+		        $("#Open-Todo").find("#todo_id").html(response['id']);
+                $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
+                $("#Open-Todo").find("p:first").html(response['status']);
+                $("#Open-Todo").find("button.btn-light").attr("onclick", "status_change(" + id + ", " + response['current_status'] + ")");
+		        $("#Open-Todo").find("#todo_deadline").html(response['deadline']);
+		        $("#Open-Todo").find("#todo_num").html(response['id']);
+		        $("#Open-Todo").find("#todo_priority").html('');
+		        for (var i = 0; i < response['priority']; i++){
+		            $("#Open-Todo").find("#todo_priority").html($("#Open-Todo").find("#todo_priority").html() + '<span class="badge badge-pill priority">!</span>');
+		            $('#id_todo_edit_time').val(response['time'][0] + ':' + response['time'][1]);
+		            $('#id_todo_edit_deadline').val(response['date'][0] + '-' + response['date'][1] + '-' + response['date'][2]);
+		        }
             }
         }
     });
@@ -141,13 +175,9 @@ function search_todo_ajax()
 function save_todo_ajax()
 {
     var id = $('#todo_num').html();
-    $("#id_todo_id").val(id)
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
-    var form_data = $('#save_todo_form').serialize();
-    form_data['todo_text_edit'] = CKEDITOR.instances.id_todo_data_edit.getData();
-    $("#save_todo_form").find(':input').each(function(){
+    $("#id_todo_id").val(id);
+    var form_data = $('#edit_todo_form').serialize();
+    $("#edit_todo_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');
     });
     $('#save_todo_btn').attr('disabled', 'disabled');
@@ -157,19 +187,23 @@ function save_todo_ajax()
         data: form_data,
         success: function(response)
         {
-            if (response['result'] == "success")
+            if (response['result'] == "Success")
             {
                 alert('OK, Changes were saved');
-                $('#todo_title_' + id).html($('#id_todo_title_edit').val());
+                $('#todo_title_' + id).html($('#id_todo_edit_title').val());
+                $('#todo_card_' + id).html($('#id_todo_edit_title').val());
+                get_priorities(response['priority'], id);
+                $('#todo_date_' + id).html(response['deadline_date']);
                 close_todo_edit_mode();
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
-                $('#todo_text_show').html(CKEDITOR.instances.id_todo_data_edit.getData());
-                $('#todo_title_show').html($('#id_todo_title_edit').val());
+                $('#todo_text_show').html($('#id_todo_edit_text').val());
+                $('#todo_title_show').html($('#id_todo_edit_title').val());
+		        set_priority_edit($('#id_todo_edit_priority').val());
                 $('#todo_last_edit').html(response['edited_time']);
             }
-            $("#save_todo_form").find(':input').each(function(){
+            else{
+                alert(response['result']);
+            }
+            $("#edit_todo_form").find(':input').each(function(){
                 $(this).removeAttr('disabled');
             });
             $('#save_todo_btn').removeAttr('disabled');
@@ -177,13 +211,43 @@ function save_todo_ajax()
     });
 };
 
+function set_priority(value){
+    $("#id_todo_priority").val(value);
+};
+
+function set_priority_edit(value){
+    $("#id_todo_edit_priority").val(value);
+};
+
+function open_todo_edit_mode()
+{
+    $('#Show-Todo-Modal').attr('hidden', '');
+    $('#Edit-Todo-Modal').removeAttr('hidden');
+    $('#id_todo_edit_title').val($('#todo_title_show').html());
+    $('#id_todo_edit_text').val($('#todo_text_show').html());
+};
+
+function close_todo_edit_mode()
+{
+    $('#Edit-Todo-Modal').attr('hidden', '');
+    $('#Show-Todo-Modal').removeAttr('hidden');
+};
+
+function ShowCard()
+{
+    $("#ViewList").hide("slow");
+    $("#ViewCard").show("slow");
+};
+
+function ShowList()
+{
+    $("#ViewList").show("slow");
+    $("#ViewCard").hide("slow");
+};
+
 function add_todo_ajax()
 {
-    for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-    }
     form_data = $('#add_todo_form').serialize();
-    form_data['data'] = CKEDITOR.instances.id_todo_data.getData();;
     $.ajax({
         type: "POST",
         url: '/todo/add',
@@ -192,35 +256,95 @@ function add_todo_ajax()
         {
             if (response['result'] == "Success")
             {
-                alert('OK, todo was added');
-                result_html = '<div id="todo_' + response['id'] + '" onclick="get_todo_data_ajax(' + response['id'] + ');">' +
-                    '<a href="#" class="list-group-item list-group-item-action list-group-item-warning"' +
-                    'data-toggle="modal" data-target="#Open-Todo"> <h7 id="todo_title_' + response['id'] + '">' +
-                    response['title'] + '</h7><div class="date"> <small>' +
-                    response['datetime'] + '</small></div></a></div>';
-                $("#list_id").html(result_html + $("#list_id").html());
+		        var array = [response['title'], response['datetime'], response['id'], response['priority']];
+		        add_to_list(array);
+                add_todo_card(array);
+                $('#todo_' + response['id']).show(duration='slow');
+                $('#todo_card_' + response['id']).show(duration='slow');
                 $("#close_todo_btn").trigger("click");
+            }
+            else{
+                alert(response['result']);
             }
         }
     });
 };
 
 
-function delete_todo_ajax(id)
+function delete_todo_ajax()
 {
-    $('#delete_btn').attr('disabled', 'disabled');
+    var should_delete = confirm('Вы уверены?');
+    if (should_delete)
+    {
+        $.ajax({
+            type: "POST",
+            url: '/todo/delete',
+            data: {"id": $('#todo_id').html()},
+            success: function(response)
+            {
+                if (response['result'] == "Success")
+                {
+                    $('#todo_' + $('#todo_id').html()).hide("slow", complete=function(){$('#todo_' + id).remove()});
+                    $('#todo_card_' + $('#todo_id').html()).hide("slow", complete=function(){$('#todo_card_' + id).remove()});
+                }
+            }
+        });
+    }
+};
+
+function paginate(page, status){
     $.ajax({
         type: "POST",
-        url: '/todo/delete',
-        data: {"id": id},
+        url: "/todo/paginate",
+        data: { "page": page, "status": status },
         success: function(response)
         {
-            if (response['result'] == "Success")
-            {
-                alert('OK, todo was deleted');
-                $('#todo_' + id).slideUp("Slow");
+            if (response['result'] == 200) {
+                for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+                {
+                    $('#paginate_btn_' + i).removeAttr('disabled');
+                }
+                $('#paginate_btn_' + page).attr('disabled', 'disabled');
+                if (status == 'in progress'){
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Progress").removeAttr('disabled');
+                        $("#PrevPage_Progress").attr("onclick", "paginate(" + (page - 1) + ", " + "'in progress'" + ")");
+                    } else {
+                        $("#PrevPage_Progress").attr('disabled', 'disabled');
+                        $("#PrevPage_Progress").removeAttr('onclick');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Progress").removeAttr('disabled');
+                        $("#NextPage_Progress").attr("onclick", "paginate(" + (page + 1) + ", " + "'in progress'" + ")");
+                    }  else {
+                        $("#NextPage_Progress").attr('disabled', 'disabled');
+                        $("#NextPage_Progress").removeAttr('onclick');
+                    }
+                    $("#ViewList").html('');
+                    $("#CardList").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        add_to_list(response['todo_list'][i]);
+                        add_todo_card(response['todo_list'][i]);
+                    }
+                } else {
+                    if (response['buttons'][0]) {
+                        $("#PrevPage_Done").removeAttr('disabled');
+                        $("#PrevPage_Done").attr("onclick", "paginate(" + (page - 1) + ", " + "'done'" + ")");
+                    } else {
+                        $("#PrevPage_Done").attr('disabled', 'disabled');
+                    }
+                    if (response['buttons'][1]) {
+                        $("#NextPage_Done").removeAttr('disabled');
+                        $("#NextPage_Done").attr("onclick", "paginate(" + (page + 1) + ", " + "'done'" + ")");
+                    }  else {
+                        $("#NextPage_Done").attr('disabled', 'disabled');
+                    }
+                    $("#ViewDone").html('');
+                    for(var i = 0; i < response['todo_list'].length; i++){
+                        update_done_todos(response['todo_list'][i]);
+                    }
+                }
             }
-            $('#delete_btn').removeAttr('disabled');
         }
     });
 };

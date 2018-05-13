@@ -4,23 +4,37 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from profile.forms import *
+from userprofile.forms import *
 from main.models import *
 from main.views import create_mail, send_mail, create_key, check_email_uniq, create_unic_key
+from localisation import rus, eng
 
 
 @login_required
 def index(request):
+    """!
+            @brief Function that renders user's profile page
+    """
     if request.method == "GET":
         change_user_data_form = ChangeUserDataForm()
         change_password_form = ChangePasswordForm()
         context = {
-            'title': "User profile page",
-            'header': "User profile header",
+            'title': "User userprofile page",
+            'header': "User userprofile header",
             'change_user_data_form': change_user_data_form,
-            'change_password_form': change_password_form
+            'change_password_form': change_password_form,
+            'language': Language.objects.filter(user=request.user).first().lang,
         }
         if request.user.is_authenticated:
+            user_lang = Language.objects.filter(user=request.user).first().lang
+            if user_lang == "ru":
+                lang = rus
+            elif user_lang == "en":
+                lang = eng
+            else:
+                lang = eng
+            context['language'] = user_lang
+            context['lang'] = lang
             return render(request, "main/profile.html", context)
         else:
             return HttpResponseRedirect('/')
@@ -30,6 +44,9 @@ def index(request):
 
 @login_required
 def get_user_data_ajax(request):
+    """!
+            @brief Function that gets user's data (with ajax)
+    """
     response_data = {}
     user = request.user
     if request.method == "POST":
@@ -52,6 +69,9 @@ def get_user_data_ajax(request):
 
 @login_required
 def change_user_data_ajax(request):
+    """!
+            @brief Function that changes user's data (with ajax)
+    """
     response_data = {}
     user = request.user
     if request.method == "POST":
@@ -91,6 +111,9 @@ def change_user_data_ajax(request):
 
 
 def confirm_mail(request, key):
+    """!
+            @brief Function that processes mail confirmation
+    """
     if request.method == "GET":
         keys = ConfirmMailKey.objects.filter(key=key)
         if keys.count() > 0:
@@ -98,10 +121,13 @@ def confirm_mail(request, key):
             user.email = keys.first().email
             keys.first().delete()
             user.save()
-    return HttpResponseRedirect('/profile')
+    return HttpResponseRedirect('/userprofile')
 
 
 def create_confirm_email_key(user, email):
+    """!
+            @brief Function that creates email confirmation key
+    """
     key = create_key(user.username + user.password, user)
     if check_email_uniq(email):
         if ConfirmMailKey.objects.filter(user=user).count() > 0:
@@ -119,10 +145,13 @@ def create_confirm_email_key(user, email):
 
 @login_required
 def change_password_ajax(request):
+    """!
+            @brief Function that changes password if new one is valid (with ajax)
+    """
     response_data = {}
     user = request.user
     if request.method == "POST":
-        form = ChangeUserDataForm(request.POST)
+        form = ChangePasswordForm(request.POST)
         if form.is_valid():
             password = form.data['old_password']
             new_password1 = form.data['new_password1']
@@ -146,6 +175,9 @@ def change_password_ajax(request):
 
 
 def recover_password_view(request, key):
+    """!
+            @brief Function that renders password recovery page
+    """
     if request.method == "GET":
         recover_form = RecoverPasswordForm()
         context = {
@@ -160,6 +192,9 @@ def recover_password_view(request, key):
 
 
 def recover_password_ajax(request, key):
+    """!
+            @brief Function that recovers password (with ajax)
+    """
     if request.method == "POST":
         response_data = {}
         recover_form = RecoverPasswordForm(request.POST)
@@ -188,6 +223,9 @@ def recover_password_ajax(request, key):
 
 
 def create_recover_password_key_ajax(request):
+    """!
+            @brief Function that creates password recovery key
+    """
     if request.method == "POST":
         response_data = {}
         recover_form = RecoverPasswordUserData(request.POST)
@@ -201,9 +239,9 @@ def create_recover_password_key_ajax(request):
                         key = create_unic_key(user, user.username, user.password)
                         key.save()
                         mail = create_mail(user,
-                                           "Go to this link to recover your password: 127.0.0.1:8000/profile/recover_password/" +
+                                           "Go to this link to recover your password: 127.0.0.1:8000/userprofile/recover_password/" +
                                            key.key,
-                                           "<a href='http://127.0.0.1:8000/profile/recover_password/" + key.key +
+                                           "<a href='http://127.0.0.1:8000/userprofile/recover_password/" + key.key +
                                            "'>Go to this link to recover your password</a>")
                         send_mail(mail)
                     result = "100"

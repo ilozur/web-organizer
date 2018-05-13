@@ -1,15 +1,5 @@
 /*Стили для раздела заметок*/
 
-/*Главные стили*/
-body {
-	text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-	box-shadow: inset 0 0 5rem #fff3cd;
-	background-image: url(../img/bg_notes.jpeg);
-	background-repeat: repeat;
-	background-attachment: fixed;
-	color: #856404;
-}
-
 /*Заголовок*/
 h1 {
 	color: #856404;
@@ -36,6 +26,7 @@ nav .active {
 	border-top: 0px;
 	background-color: #fff3cd;
 	border-radius: 0 0 15px 15px;
+  margin-bottom: 25px;
 }
 
 /*Кнопки*/
@@ -60,11 +51,13 @@ nav .active {
 /*Карточки*/
 .card {
   background-color: #fff3cd;
-  height: 500px;
+  height: 400px;
+  width: 400px;
   transition: 0.5s;
   margin: 10px;
   margin-bottom: 40px;
   cursor: pointer;
+  border-radius: 15px;
 }
 .card:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
@@ -88,13 +81,6 @@ nav .active {
   height: 200px;
 }
 
-/*Модуль*/
-.modal {
-  background-image: url(../img/bg_notes.jpeg);
-  background-repeat: repeat;
-  background-attachment: scroll;
-}
-
 /*Заголовок у модуля*/
 .modal-header {
   background-color: #ffeeba;
@@ -116,6 +102,10 @@ nav .active {
 .list-group-item {
 	color: #856404;	
 	transition: 0.5s;
+	margin-top: 10px;
+	width: 1000px;
+	margin-left: 150px;
+  border-radius: 15px 15px 15px 15px;
 }
 .list-group-item:hover {
 	color: #856404;
@@ -126,4 +116,17 @@ nav .active {
 /*Подвал*/
 footer {
 	color: #fff3cd;
+}
+
+.noanimation{
+    height: auto ;
+    width: 215px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: : 150px;
+        cursor: default;
+}
+
+.noanimation:hover{
+	box-shadow: 0 0;
 }

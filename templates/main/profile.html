@@ -52,7 +52,7 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h2 class="modal-title">Редактировать профиль</h2>
+						<h2 class="modal-title">Редактировать профиль {{user.username}}</h2>
 					</div>
 					<div class="modal-body">
 						<div class="form-group btn btn-light change-avatar">
@@ -87,7 +87,7 @@
 								{{ change_password_form.new_password1 }}
 							</div>
 							<div class="form-group">
-								<label for="inputPassword4">Новый пароль повторить</label>
+								<label for="inputPassword4">Повторить новый пароль</label>
 								{{ change_password_form.new_password2 }}
 							</div>
 						</form>
@@ -107,13 +107,6 @@
 						<h2 class="modal-title">Настройки</h2>
 					</div>
 					<div class="modal-body">
-						<span> Выберите тембр голоса Морриса:</span>
-						<div class="btn-group btn-group-lg" style="margin-left: 50px;">
-							<button type="button" class="btn btn-light">Низкий</button>
-							<button type="button" class="btn btn-light active">Средний</button>
-							<button type="button" class="btn btn-light">Высокий</button>
-						</div>
-						<hr/>
 						<span>Выберите язык:</span>
 						<div class="btn-group btn-group-lg" style="margin-left: 185px;">
 							<button type="button" class="btn btn-light active">Русский</button>

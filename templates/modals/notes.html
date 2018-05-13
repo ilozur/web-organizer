@@ -19,12 +19,12 @@
                         {{ add_note_form.note_data_part }}
                     </div>
                 </form>
-                <h3>Записать аудио</h3>
+<!--                 <h3>Записать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block" onclick="listen_note('add')">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
                     </picture>
-                </button>
+                </button> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal" id="close_note_btn">Отменить</button>
@@ -42,7 +42,7 @@
                 <h2 class="modal-title" id="note_title_show"></h2>
             </div>
             <div class="modal-body">
-                <div id="note_data_show" style="overflow-x: scroll; overflow-y: scroll; height: 200px">
+                <div id="note_data_show" style="overflow-y: auto; height: 200px; word-break: break-all;">
                 </div>
                 <small id="note_added_time"></small>
                 <br/>
@@ -76,12 +76,12 @@
                         {{ edit_note_form.note_data_part_edit }}
                     </div>
                 </form>
-                <h3>Переписать аудио</h3>
+<!--                 <h3>Переписать аудио</h3>
                 <button type="button" class="btn btn-light btn-lg btn-block">
                     <picture>
                         <img src='{% static "icons/micro_icon.png" %}'>
                     </picture>
-                </button>
+                </button> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" onclick="close_note_edit_mode()">Отменить</button>
