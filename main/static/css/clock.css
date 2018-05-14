@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css?family=Droid+Sans+Mono");
+
+#clock_root {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+          margin-left: 50px;
+  height: 10px;
+}
+
+.flipClock {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 50px;
+}
+
+.flipUnitContainer {
+  display: block;
+  position: relative;
+  width: 140px;
+  height: 20px;
+  -webkit-perspective-origin: 50% 50%;
+          perspective-origin: 50% 50%;
+  -webkit-perspective: 300px;
+          perspective: 300px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0px 10px 10px -10px grey;
+}

@@ -1,75 +1,100 @@
-{% extends "main/base.html" %}
-
+﻿{% extends "main/base.html" %}
+{% block meta %}
+{% load staticfiles %}
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/general.css" %}'>
+<link rel="stylesheet" href='{% static "css/base.css" %}'>
+<link rel="stylesheet" href='{% static "css/notes.css" %}'>
+<script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
+<script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
+{% endblock %}
 {% block content %}
-    <h1>{{ header }}</h1>
-    <p>Welcome to the notes index page</p>
-    <li><a href='{% url "notes.add_note" %}'>Add note</a></li>
-    <form id="search_form">
-        {% csrf_token %}
-        {{ search_form }}
-    </form>
-    <input type="submit" value="Search" onclick="search_ajax()"/>
-    <input type="button" value="sort_by_Date_up" onclick="var a = new sort_ajax('date_up')" />
-    <input type="button" value="sort_by_Date_down" onclick="var a = new sort_ajax('date_down')" />
-    <input type="button" value="sort_by_title_A-Z" onclick="var a = new sort_ajax('title_up')" />
-    <input type="button" value="sort_by_title_Z-A" onclick="var a = new sort_ajax('title_down')" />
-    <div id="notes_list">
-        <ul>
-        {% for item in notes_data %}
-            <li><a href='/notes/show/{{ item.2 }}'>{{ item.0 }}</a></li> - added at {{item.1}}
-        {% endfor %}
-        </ul>
-    </div>
-
-    <script>
-        function search_ajax()
-            {
-                form_data = $('#search_form').serialize();
-                $("#search_form").find(':input').each(function(){
-                    $(this).attr('disabled', 'disabled');
-                });
-                $('#sign_up_btn').attr('disabled', 'disabled');
-                $.ajax({
-                    type: "POST",
-                    url: '/notes/search',
-                    data: form_data,
-                    success: function(response)
-                    {
-                        if (response['result'] == "Success")
-                        {
-                            $("#notes_list").html('');
-                            for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#notes_list").append("<li><a href='/notes/show/" + response['notes_list'][i][2] + "'>" + response['notes_list'][i][0] + "</a></li> - added at " + response['notes_list'][i][1])
-                            }
-                        }
-                        $("#search_form").find(':input').each(function(){
-                            $(this).removeAttr('disabled');
-                        });
-                        $('#sign_up_btn').removeAttr('disabled');
-                    }
-                });
-            };
-    </script>
-
-    <script>
-        function sort_ajax(type){
-                result = "";
-                $.ajax({
-                    type: "POST",
-                    url: '/notes/sort',
-                    data: {"data": type},
-                    success: function(response)
-                    {
-                        if (response['result'] == "Success")
-                        {
-                            $("#notes_list").html('');
-                            for (var i = 0; i < response['notes_list'].length; i++) {
-                                $("#notes_list").append("<li><a href='/notes/show/" + response['notes_list'][i][2] + "'>" + response['notes_list'][i][0] + "</a></li> - added at " + response['notes_list'][i][1])
-                            }
-                        }
-                    }
-                });
-            };
-    </script>
-
+<article class="notes">
+	<section class="mast">
+		<h1>Заметки</h1>
+	</section>
+	<section class="content">
+		<div class="row">
+			<div class="col-2">
+				<div class="card mb-3 ml-3 noanimation">
+					<div class="card-header">
+						<div class="btn-group btn-group-lg">
+							<button type="button" class="btn btn-warning" onclick="show_cards();">
+								<picture>
+									<img src='{% static "icons/card_icon.png" %}' class="icon">
+								</picture>
+							</button>
+							<button type="button" class="btn btn-warning" onclick="show_list();">
+								<picture>
+									<img src='{% static "icons/list_icon.png" %}' class="icon">
+								</picture>
+							</button>
+							<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()">+</button>
+						</div>
+					</div>
+					<div class="dropdown btn-lg">
+						<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Сортировка
+						</button>
+						<div class="dropdown-menu">
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_up')">А..Я</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_down')">Я..А</button>
+						</div>
+					</div>
+					<div class="card-footer">
+						<div class="alert alert-warning">
+							<small>Всего заметок: 42</small> <br/>
+							<small>Текстовых: 24</small> <br/>
+							<small>Голосовых: 18</small> <br/>
+						</div>
+					</div>
+				</div>
+				<nav class="navbar">
+					<div class="btn-group btn-group-lg" id="paginate_btn_holder">
+						<a><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
+                        {% for number in notes_pages %}
+                            <a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
+                        {% endfor %}
+						<a><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
+					</div>
+				</nav>
+			</div>
+			<section class="list-view col">
+				<div class="list-group" id="list_id">
+					{% for item in notes_data %}
+					<div id="note_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');">
+						<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
+							<h7 id="note_title_{{ item.2 }}">{{ item.0 }}</h7>
+							<div class="date"> <small id="note_date_{{ item.1 }}">{{ item.1 }}</small></div>
+						</a>
+					</div>
+					{% endfor %}
+				</div>
+                <section class="card-view">
+                    <div class="row" id="cards_id" style="display: none" display="block">
+                        {% for item in notes_data %}
+                            <div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
+                                        <small class="date">{{ item.1 }}</small>
+                                        <hr/>
+                                        <p id="card_note_description_{{ item.2 }}">
+                                            {{ item.3 }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </section>
+		</div>
+	</section>
+</article>
+<article class="modals">
+	{% include "modals/notes.html" %}
+</article>
 {% endblock %}
