@@ -99,7 +99,7 @@ def index(request):
             if last_note:
                 context['last_note_exists'] = True
                 context['last_note_title'] = last_note.name
-                context['last_note_id'] = last_note
+                context['last_note_id'] = last_note.id
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()

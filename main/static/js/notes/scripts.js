@@ -218,18 +218,7 @@ function sort_notes_ajax(type){
         {
             if (response['result'] == "100")
             {
-                $("#list_id").html('');
-                for (var i = 0; i < response['notes_list'].length; i++) {
-                    $("#list_id").append('<div onclick="get_note_data_ajax('+ response['notes_list'][i][2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
-                    + response['notes_list'][i][2] + '">' + response['notes_list'][i][0]
-                    + '</h7><div class="date"> <small id="note_date_'
-                    + response['notes_list'][i][2] + '">' + response['notes_list'][i][1]
-                    + '</small></div></a></div>');
-                }
-                $("#search_note_form").find(':input').each(function(){
-                    $(this).removeAttr('disabled');
-                });
-                $('#sign_up_btn').removeAttr('disabled');
+                //here should be sort by get queries
             }
             else
             {
