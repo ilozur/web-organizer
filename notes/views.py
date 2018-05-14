@@ -12,34 +12,46 @@ from localisation import eng, rus
 
 
 @login_required
-def index(request):
-    context = {
-        'title': "Notes index page",
-    }
-    user_lang = Language.objects.filter(user=request.user).first().lang
-    if user_lang == "ru":
-        lang = rus
-    elif user_lang == "en":
-        lang = eng
-    else:
-        lang = eng
-    context['language'] = user_lang
-    context['lang'] = lang
-    notes_list = []
+def index(request, page=None):
     notes = Notes.objects.filter(user=request.user)
-    context['all_notes_count'] = notes.count()
-    context['voice_notes_count'] = notes.filter(is_voice=True).count()
-    context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
-    notes = notes.order_by('name')
-    for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-    pages = Paginator(notes_list, 20)
-    context['notes_data'] = pages.page(1)
-    context['notes_pages'] = pages.page_range
-    context['search_note_form'] = SearchForm()
-    context['add_note_form'] = AddNoteForm()
-    context['edit_note_form'] = EditNoteForm()
-    return render(request, "notes/index.html", context)
+    notes = notes.order_by('-added_time')
+    if request.method == "GET":
+        context = {
+            'title': "Notes index page",
+        }
+        user_lang = Language.objects.filter(user=request.user).first().lang
+        if user_lang == "ru":
+            lang = rus
+        elif user_lang == "en":
+            lang = eng
+        else:
+            lang = eng
+        context['language'] = user_lang
+        context['lang'] = lang
+        notes_list = []
+        for i in notes:
+            notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+        pages = Paginator(notes_list, 20)
+        if page is None:
+            page = 1
+        else:
+            if (page < 1) or (page > len(pages.page_range)):
+                page = 1
+        context['page'] = page
+        context['all_notes_count'] = notes.count()
+        context['voice_notes_count'] = notes.filter(is_voice=True).count()
+        context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
+        context['notes_data'] = pages.page(page)
+        context['back_paginate_btn'] = pages.page(page).has_previous()
+        context['next_paginate_btn'] = pages.page(page).has_next()
+        context['notes_pages'] = pages.page_range
+        context['search_note_form'] = SearchForm()
+        context['add_note_form'] = AddNoteForm()
+        context['edit_note_form'] = EditNoteForm()
+        return render(request, "notes/index.html", context)
+    else:
+        response = paginate(notes, page)
+        return response
 
 
 @login_required
@@ -231,19 +243,16 @@ def delete_ajax(request):
         return HttpResponseRedirect('/')
 
 
-@login_required
-def paginate(request):
-    if request.method == "POST":
-        response_data = {}
-        notes_list = []
-        notes = Notes.objects.filter(user=request.user)
-        for i in notes:
-            notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-        pages = Paginator(notes_list, 20)
-        page_number = request.POST.get('page')
-        response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
-        response_data['notes_list'] = pages.page(page_number).object_list
-        response_data['result'] = 200
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
+def paginate(notes, page_number):
+    response_data = {}
+    notes_list = []
+    for i in notes:
+        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+    pages = Paginator(notes_list, 20)
+    if (page_number < 1) or (page_number > len(pages.page_range)):
+        page_number = 1
+    response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+    response_data['notes_list'] = pages.page(page_number).object_list
+    response_data['result'] = 200
+    response_data['normal_page'] = page_number
+    return HttpResponse(json.dumps(response_data), content_type="application/json")

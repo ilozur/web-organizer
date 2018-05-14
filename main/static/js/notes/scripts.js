@@ -1,3 +1,9 @@
+onpopstate = function(event) {
+    var tmp = window.location.pathname.split('/');
+    var page = tmp[tmp.length - 1];
+    paginate(page, false)
+}
+
 function add_note_to_list(notes_data){
     $("#list_id").append('<div onclick="get_note_data_ajax('
         + notes_data[2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
@@ -261,11 +267,14 @@ function voice_note()
     voice_text(clean_text);
 };
 
-function paginate(page){
+function paginate(page, push_state=true){
+    if (push_state)
+    {
+        history.pushState(null,null, '/notes/' + page);
+    }
     $.ajax({
         type: "POST",
-        url: "/notes/paginate",
-        data: { "page": page },
+        url: "/notes/" + page,
         success: function(response)
         {
             if (response['result'] == 200) {
@@ -273,17 +282,17 @@ function paginate(page){
                 {
                     $('#paginate_btn_' + i).removeAttr('disabled');
                 }
-                $('#paginate_btn_' + page).attr('disabled', 'disabled');
+                $('#paginate_btn_' + response['normal_page']).attr('disabled', 'disabled');
                 if (response['buttons'][0]) {
                     $("#PrevPage").removeAttr('disabled');
-                    $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+                    $("#PrevPage").attr('onclick', 'paginate(' + (response['normal_page'] - 1) + ')');
                 } else {
                     $("#PrevPage").attr('disabled', 'disabled');
                     $('#PrevPage').removeAttr('onclick');
                 }
                 if (response['buttons'][1]) {
                     $("#NextPage").removeAttr('disabled');
-                    $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+                    $("#NextPage").attr('onclick', 'paginate(' + (response['normal_page'] + 1) + ')');
                 }  else {
                     $("#NextPage").attr('disabled', 'disabled');
                     $('#NextPage').removeAttr('onclick');
