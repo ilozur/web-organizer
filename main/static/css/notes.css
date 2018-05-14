@@ -1,65 +1,67 @@
-/*Стили для раздела 'Заметки'*/
+/*Стили для раздела заметок*/
 
-/*Цвет фона для сайта и отступ в конце*/
-.notes {
-  background-color: #ffd;
-  padding-bottom: 50px;
+/*Заголовок*/
+h1 {
+	color: #856404;
 }
 
-/*Мачта*/
-.mast {
-  padding-top: 6em;
-  padding-bottom: 6em;
+/*Элементы навигационной панели*/
+.nav-item:hover {
   background-color: #fff3cd;
-  text-align: center;
+  color: #856404;
+}
+nav .active {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
 }
 
-/*Оформление карты и анимация при наводке*/
+/*Шапка*/
+.mast {
+	padding-top: 3em;
+	padding-bottom: 3em;
+	text-align: center;
+	color: #856404;
+	border: 1px solid #ffeeba;
+	border-top: 0px;
+	background-color: #fff3cd;
+	border-radius: 0 0 15px 15px;
+  margin-bottom: 25px;
+}
+
+/*Кнопки*/
+.btn,
+.btn:focus,
+.btn:active {
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+.btn:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+  color: #856404;
+  text-shadow: none;
+  background-color: #fff3cd;
+  border: .05rem solid #ffeeba;
+  transition: 0.5s;
+}
+
+/*Карточки*/
 .card {
-  background-color: #ffb;
-  height: 300px;
-  transition: 0.2s;
+  background-color: #fff3cd;
+  height: 400px;
+  width: 400px;
+  transition: 0.5s;
   margin: 10px;
   margin-bottom: 40px;
   cursor: pointer;
+  border-radius: 15px;
 }
 .card:hover {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  transition: 0.2s;
-}
-
-/*Цвет текста в кнопках и костыль*/
-.btn {
-  color: #fff;
-}
-.btn:hover {
-  color: #fff;
-}
-
-/*Последняя карта для добавления новой карты*/
-.last {
-  border: 5px #c90 dotted;
-  text-align: center;
-  background-color: #ffe;
-  font-size: 50pt;
-  padding-top: 20%;
-}
-
-/*Заголовок модуля*/
-.modal-header {
-  background-color: #ffd;
-  border-bottom: 0px;
-}
-
-/*'Тело' модуля*/
-.modal-body {
-  background-color: #ffe;
-}
-
-/*Подвал модуля*/
-.modal-footer {
-  background-color: #ffd;
-  border-top: 0px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
+  transition: 0.5s;
 }
 
 /*Дата*/
@@ -68,9 +70,63 @@
   float: right;
 }
 
-/*Размер изображения пользователя*/
-/*!Нужно переделать!*/
+/*Лого*/
+.logo {
+	color: #856404;
+}
+
+/*Изображение пользователя*/
 .user-image {
-  width: 50px;
-  height: 50px;
+  width: 200px;
+  height: 200px;
+}
+
+/*Заголовок у модуля*/
+.modal-header {
+  background-color: #ffeeba;
+  border-bottom: 0px;
+}
+
+/*Тело у модуля*/
+.modal-body {
+  background-color: #fff3cd;
+}
+
+/*Подвал у модуля*/
+.modal-footer {
+  background-color: #ffeeba;
+  border-top: 0px;
+}
+
+/*Список*/
+.list-group-item {
+	color: #856404;	
+	transition: 0.5s;
+	margin-top: 10px;
+	width: 1000px;
+	margin-left: 150px;
+  border-radius: 15px 15px 15px 15px;
+}
+.list-group-item:hover {
+	color: #856404;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	transition: 0.5s;
+}
+
+/*Подвал*/
+footer {
+	color: #fff3cd;
+}
+
+.noanimation{
+    height: auto ;
+    width: 215px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: : 150px;
+        cursor: default;
+}
+
+.noanimation:hover{
+	box-shadow: 0 0;
 }

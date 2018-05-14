@@ -22,14 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '88d+i7qn(6y=-@zs93^l3kq+s5u)#i6*szf_okt=3#(c@&8678'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['eva-organizer.tk', 'localhost', '127.0.0.1']
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,9 +38,11 @@ INSTALLED_APPS = [
     'calendars.apps.CalendarsConfig',
     'notes.apps.NotesConfig',
     'todo.apps.TodoConfig',
+    'admin.apps.AdminConfig',
     'ckeditor',
     'bootstrapform',
     'ckeditor_uploader',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'morris_butler.urls'
@@ -123,9 +125,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_ROOT = 'static_root'
-STATIC_URL = '/static/'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
+
+STATIC_ROOT = 'morris_butler/static_root'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "main/static"),
+]
 MEDIA_ROOT = 'media_root'
 MEDIA_URL = '/media/'
 
@@ -134,17 +144,13 @@ CKEDITOR_CONFIGS = {
         'toolbar': [
             ['Undo', 'Redo',
              '-', 'Bold', 'Italic', 'Underline',
-             'Format',
-             '-', 'Maximize',
              '-', 'Table',
              '-', 'Image',
-             '-', 'NumberedList', 'BulletedList'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
-             '-', 'Styles', 'Font', 'FontSize', 'TextColor',
-             '-', 'HorizontalRule',
-             '-', 'Blockquote']
+             '-', 'NumberedList', 'BulletedList',
+             '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+             '-', 'Styles', 'Font', 'FontSize', 'TextColor',]
         ],
-        'height': 100,
+        'height': 150,
         'width': '100%',
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
@@ -166,3 +172,21 @@ EMAIL_HOST_USER = 'Morris-Butler-Organaizer@yandex.ru'
 EMAIL_HOST_PASSWORD = '7966915'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'Morris-Butler-Organaizer@yandex.ru'
+INTERNAL_IPS = '127.0.0.1'
+
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    # 'debug_toolbar.panels.settings.SettingsPanel',
+    # 'debug_toolbar.panels.headers.HeadersPanel',
+    # 'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    # 'debug_toolbar.panels.cache.CachePanel',
+    # 'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingDebugPanel',
+]
+# https://django-debug-toolbar.readthedocs.io/en/stable/installation.html/

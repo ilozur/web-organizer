@@ -1,20 +1,22 @@
 from django import forms
-from ckeditor.widgets import CKEditorWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from ckeditor_uploader.fields import RichTextUploadingFormField
 
 
 class AddNoteForm(forms.Form):
-    title = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                          'placeholder': 'Заметочка'}))
-    data = RichTextUploadingFormField(widget=CKEditorUploadingWidget)
+    note_title = forms.CharField(max_length=19, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                              'placeholder': 'Заметочка'}))
+    note_data = RichTextUploadingFormField(widget=CKEditorUploadingWidget)
+    note_data_part = forms.CharField(max_length=128, widget=forms.HiddenInput())
 
 
-class ShowNoteForm(forms.Form):
-    title_show = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                               'placeholder': 'Заметочка'}))
-    data_show = forms.CharField(widget=CKEditorWidget())
+class EditNoteForm(forms.Form):
+    note_title_edit = forms.CharField(max_length=19, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                                   'placeholder': 'Заметочка'}))
+    note_data_edit = RichTextUploadingFormField(widget=CKEditorUploadingWidget())
+    note_id = forms.IntegerField(widget=forms.HiddenInput())
+    note_data_part_edit = forms.CharField(max_length=128, widget=forms.HiddenInput())
 
 
 class SearchForm(forms.Form):
-    result = forms.CharField(label='What are you looking for?', max_length=70)
+    result = forms.CharField(max_length=70)
