@@ -12,9 +12,15 @@ from localisation import eng, rus
 
 
 @login_required
-def index(request, page=None):
+def index(request):
     notes = Notes.objects.filter(user=request.user)
     notes = notes.order_by('-added_time')
+    page = request.GET.get("page")
+    try:
+        page = int(page)
+    except Exception as ex:
+        page = None
+        print(ex)
     if request.method == "GET":
         context = {
             'title': "Notes index page",
@@ -34,9 +40,8 @@ def index(request, page=None):
         pages = Paginator(notes_list, 20)
         if page is None:
             page = 1
-        else:
-            if (page < 1) or (page > len(pages.page_range)):
-                page = 1
+        elif (page < 1) or (page > len(pages.page_range)):
+            page = 1
         context['page'] = page
         context['all_notes_count'] = notes.count()
         context['voice_notes_count'] = notes.filter(is_voice=True).count()
@@ -249,7 +254,9 @@ def paginate(notes, page_number):
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
     pages = Paginator(notes_list, 20)
-    if (page_number < 1) or (page_number > len(pages.page_range)):
+    if page_number is None:
+        page_number = 1
+    elif (page_number < 1) or (page_number > len(pages.page_range)):
         page_number = 1
     response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
     response_data['notes_list'] = pages.page(page_number).object_list

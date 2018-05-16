@@ -1,7 +1,13 @@
 onpopstate = function(event) {
-    var tmp = window.location.pathname.split('/');
-    var page = tmp[tmp.length - 1];
-    paginate(page, false)
+    var tmp = get_key("page");
+    if (tmp)
+    {
+        paginate(tmp, false);
+    }
+    else
+    {
+        paginate(1, false);
+    }
 }
 
 function add_note_to_list(notes_data){
@@ -270,11 +276,11 @@ function voice_note()
 function paginate(page, push_state=true){
     if (push_state)
     {
-        history.pushState(null,null, '/notes/' + page);
+        history.pushState(null,null, '/notes?page=' + page);
     }
     $.ajax({
         type: "POST",
-        url: "/notes/" + page,
+        url: "/notes?page=" + page,
         success: function(response)
         {
             if (response['result'] == 200) {
@@ -306,4 +312,10 @@ function paginate(page, push_state=true){
             }
         }
     });
+};
+
+function get_key(key) {
+    var p = window.location.search;
+    p = p.match(new RegExp(key + '=([^&=]+)'));
+    return p ? p[1] : false;
 };
