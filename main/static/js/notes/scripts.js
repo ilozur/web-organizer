@@ -1,13 +1,7 @@
 onpopstate = function(event) {
-    var tmp = get_key("page");
-    if (tmp)
-    {
-        paginate(tmp, false);
-    }
-    else
-    {
-        paginate(1, false);
-    }
+    var page = get_key("page");
+    var sort_type = get_key("sort_type");
+    paginate(page, false, sort_type);
 }
 
 function add_note_to_list(notes_data){
@@ -221,25 +215,6 @@ function add_note_ajax()
     });
 };
 
-function sort_notes_ajax(type){
-    $.ajax({
-        type: "POST",
-        url: '/notes/sort',
-        data: {"data": type},
-        success: function(response)
-        {
-            if (response['result'] == "100")
-            {
-                //here should be sort by get queries
-            }
-            else
-            {
-                voice_ajax_result(response['result']);
-            }
-        }
-    });
-};
-
 function delete_note_ajax()
 {
     var id = $('#note_num').html();
@@ -273,17 +248,39 @@ function voice_note()
     voice_text(clean_text);
 };
 
-function paginate(page, push_state=true){
+function sort_notes_ajax(sort_type){
+    var page = get_key("page");
+    paginate(page, true, sort_type);
+};
+
+function paginate(page, push_state=true, sort_type=false){
+    if (!sort_type)
+    {
+        sort_type = get_key("sort_type");
+    }
+    if (!page)
+    {
+        page = 1;
+    }
+    var url = "";
+    if (sort_type)
+    {
+        url = "/notes?page=" + page + "&sort_type=" + sort_type;
+    }
+    else
+    {
+        url = "/notes?page=" + page;
+    }
     if (push_state)
     {
-        history.pushState(null,null, '/notes?page=' + page);
+        history.pushState(null,null, url);
     }
     $.ajax({
         type: "POST",
-        url: "/notes?page=" + page,
+        url: url,
         success: function(response)
         {
-            if (response['result'] == 200) {
+            if (response['result'] == 100) {
                 for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
                 {
                     $('#paginate_btn_' + i).removeAttr('disabled');

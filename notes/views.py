@@ -13,13 +13,13 @@ from localisation import eng, rus
 
 @login_required
 def index(request):
-    notes = Notes.objects.filter(user=request.user)
-    notes = notes.order_by('-added_time')
+    sort_type = request.GET.get("sort_type", "date_up")
+    notes = Notes.get_notes(sort_type, user=request.user)
     page = request.GET.get("page")
     try:
         page = int(page)
     except Exception as ex:
-        page = None
+        page = 1
         print(ex)
     if request.method == "GET":
         context = {
@@ -38,9 +38,7 @@ def index(request):
         for i in notes:
             notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
         pages = Paginator(notes_list, 20)
-        if page is None:
-            page = 1
-        elif (page < 1) or (page > len(pages.page_range)):
+        if (page < 1) or (page > len(pages.page_range)):
             page = 1
         context['page'] = page
         context['all_notes_count'] = notes.count()
@@ -155,35 +153,6 @@ def search_ajax(request):
     else:
         return HttpResponseRedirect('/')
 
-
-@login_required
-def sort_ajax(request):
-    """
-    @brief
-    This function sorts notes
-    @detailed
-    This function sorts notes by time and alphabetically
-    """
-    response_data = {}
-    if request.method == "POST":
-        sorting_types = ('date_up', 'date_down', 'title_up', 'title_down')
-        sort_type = request.POST.get('data')
-        if sort_type in sorting_types:
-            notes_list = list()
-            for i in Notes.get_notes(sort_type, request.user):
-                notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
-            response_data = {
-                'notes_list': notes_list
-            }
-            result = '100'
-        else:
-            result = '112'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
-
-
 @login_required
 def save_ajax(request):
     """
@@ -254,12 +223,10 @@ def paginate(notes, page_number):
     for i in notes:
         notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
     pages = Paginator(notes_list, 20)
-    if page_number is None:
-        page_number = 1
-    elif (page_number < 1) or (page_number > len(pages.page_range)):
+    if (page_number < 1) or (page_number > len(pages.page_range)):
         page_number = 1
     response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
     response_data['notes_list'] = pages.page(page_number).object_list
-    response_data['result'] = 200
+    response_data['result'] = 100
     response_data['normal_page'] = page_number
     return HttpResponse(json.dumps(response_data), content_type="application/json")
