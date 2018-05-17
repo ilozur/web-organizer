@@ -21,7 +21,7 @@ function next_month()
     }
     $.ajax({
         type: "POST",
-        url: '/calendar/',
+        url: '/calendar',
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
@@ -87,7 +87,7 @@ function go_to_now_month()
     now_year = today_year;
     $.ajax({
         type: "POST",
-        url: '/calendar/',
+        url: '/calendar',
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
@@ -157,7 +157,7 @@ function back_month()
     }
     $.ajax({
         type: "POST",
-        url: '/calendar/',
+        url: '/calendar',
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {

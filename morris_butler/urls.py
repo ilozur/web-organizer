@@ -21,6 +21,9 @@ import notes.urls
 import todo.urls
 import userprofile.urls
 import admin.urls
+import notes.views
+import todo.views
+import calendars.views
 from main.views import *
 from django.conf.urls.static import static
 from morris_butler import settings
@@ -31,8 +34,11 @@ from userprofile.views import confirm_mail
 urlpatterns = [
     path('admin/', include(admin.urls)),
     path('', index, name='index'),
-    path('notes', include(notes.urls)),
+    path('notes', notes.views.index, name="notes.index"),
+    path('notes/', include(notes.urls)),
+    path('calendar', calendars.views.index, name='calendar.index'),
     path('calendar/', include(calendars.urls)),
+    path('todo', todo.views.index, name='todo.index'),
     path('todo/', include(todo.urls)),
     path('userprofile/', include(userprofile.urls)),
     path('sign_in/', sign_in_ajax, name='sign_in'),
