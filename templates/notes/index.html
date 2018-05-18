@@ -54,9 +54,11 @@
 				<nav class="navbar">
 					<div class="btn-group btn-group-lg" id="paginate_btn_holder">
 						<a><button id="PrevPage" type="button" class="btn btn-warning">&laquo;</button></a>
-                        {% for number in notes_pages %}
-                            <a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
-                        {% endfor %}
+						<div style="overflow-y: scroll; width: 150px; height: 100px">
+							{% for number in notes_pages %}
+								<a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
+							{% endfor %}
+						</div>
 						<a><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
 					</div>
 				</nav>
