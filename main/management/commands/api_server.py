@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from threading import Thread
 from main.forms import *
+from main.views import send_mail, create_mail, create_unic_key, check_email_uniq, check_username_uniq, Language
 
 
 class Logger:
@@ -23,7 +24,6 @@ class Logger:
 
 
 class Listening(Thread):
-
     def __init__(self, name, ip, port):
         Thread.__init__(self)
         self.name = name
@@ -72,6 +72,50 @@ class Listening(Thread):
                         conn.send(result.encode())
                         if result != "100":
                             conn.close()
+                    elif cmds[0] == "register":
+                        form = SignUpForm(
+                            {'username': cmds[1], 'password1': cmds[2], 'password2': cmds[2], 'email': cmds[3],
+                             'name': cmds[4], 'surname': cmds[5]})
+                        if form.is_valid():
+                            email = form.data['email'].lower()
+                            username = form.data['username'].lower()
+                            name = form.data['name']
+                            surname = form.data['surname']
+                            pass1 = form.data['password1']
+                            pass2 = form.data['password2']
+                            email_uniq = check_email_uniq(email)
+                            username_uniq = check_username_uniq(username)
+                            if email_uniq:
+                                if username_uniq:
+                                    if pass1 == pass2:
+                                        user = User(email=email, username=username, first_name=name, last_name=surname,
+                                                    is_active=0)
+                                        user.set_password(pass1)
+                                        user.save()
+                                        # here should be lang=*lang taken from registration*
+                                        lang = Language(user=user)
+                                        lang.save()
+                                        sign_up_key = create_unic_key(user, username, pass1)
+                                        sign_up_key.save()
+                                        mail = create_mail(user,
+                                                           "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
+                                                           sign_up_key.key,
+                                                           "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
+                                                           "'>Go to this link to activate your account</a>")
+                                        send_mail(mail)
+                                        result = "100"
+                                    else:
+                                        result = "101"
+                                else:
+                                    result = "102"
+                            else:
+                                result = "103"
+                        else:
+                            result = "104"
+                    else:
+                        result = "105"
+                    conn.send(result.encode())
+                    conn.close()
 
 
 class ListeningUser(Thread):
