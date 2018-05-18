@@ -60,7 +60,6 @@ function get_priorities(value, id){
 function clean_add_todo_fields()
 {
     $("#id_todo_title").val("");
-    $("#id_todo_text").val("");
     $("#id_todo_deadline").val("");
     $("#id_todo_time").val("");
 };
@@ -154,7 +153,6 @@ function get_todo_data_ajax(id){
             {
                 $("#todo_id").html(id);
                 $("#Open-Todo").find("#todo_title_show").html(response['title']);
-                $("#Open-Todo").find("#todo_text_show").html(response['text']);
 		        $("#Open-Todo").find("#todo_id").html(response['id']);
                 $("#Open-Todo").find("#todo_added_time").html(response['added_date_and_time']);
                 $("#Open-Todo").find("p:first").html(response['status']);
@@ -195,7 +193,6 @@ function save_todo_ajax()
                 get_priorities(response['priority'], id);
                 $('#todo_date_' + id).html(response['deadline_date']);
                 close_todo_edit_mode();
-                $('#todo_text_show').html($('#id_todo_edit_text').val());
                 $('#todo_title_show').html($('#id_todo_edit_title').val());
 		        set_priority_edit($('#id_todo_edit_priority').val());
                 $('#todo_last_edit').html(response['edited_time']);
@@ -224,7 +221,6 @@ function open_todo_edit_mode()
     $('#Show-Todo-Modal').attr('hidden', '');
     $('#Edit-Todo-Modal').removeAttr('hidden');
     $('#id_todo_edit_title').val($('#todo_title_show').html());
-    $('#id_todo_edit_text').val($('#todo_text_show').html());
 };
 
 function close_todo_edit_mode()
