@@ -1,3 +1,9 @@
+onpopstate = function(event) {
+    var page = get_key("page");
+    var sort_type = get_key("sort_type");
+    paginate(page, false, sort_type);
+}
+
 function add_note_to_list(notes_data){
     $("#list_id").append('<div onclick="get_note_data_ajax('
         + notes_data[2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
@@ -209,25 +215,6 @@ function add_note_ajax()
     });
 };
 
-function sort_notes_ajax(type){
-    $.ajax({
-        type: "POST",
-        url: '/notes/sort',
-        data: {"data": type},
-        success: function(response)
-        {
-            if (response['result'] == "100")
-            {
-                //here should be sort by get queries
-            }
-            else
-            {
-                voice_ajax_result(response['result']);
-            }
-        }
-    });
-};
-
 function delete_note_ajax()
 {
     var id = $('#note_num').html();
@@ -261,29 +248,54 @@ function voice_note()
     voice_text(clean_text);
 };
 
-function paginate(page){
+function sort_notes_ajax(sort_type){
+    var page = get_key("page");
+    paginate(page, true, sort_type);
+};
+
+function paginate(page, push_state=true, sort_type=false){
+    if (!sort_type)
+    {
+        sort_type = get_key("sort_type");
+    }
+    if (!page)
+    {
+        page = 1;
+    }
+    var url = "";
+    if (sort_type)
+    {
+        url = "/notes?page=" + page + "&sort_type=" + sort_type;
+    }
+    else
+    {
+        url = "/notes?page=" + page;
+    }
+    if (push_state)
+    {
+        history.pushState(null,null, url);
+    }
     $.ajax({
         type: "POST",
-        url: "/notes/paginate",
-        data: { "page": page },
+        url: url,
         success: function(response)
         {
-            if (response['result'] == 200) {
+            if (response['result'] == 100) {
                 for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
                 {
                     $('#paginate_btn_' + i).removeAttr('disabled');
                 }
-                $('#paginate_btn_' + page).attr('disabled', 'disabled');
+                $('#paginate_btn_' + response['normal_page']).attr('disabled', 'disabled');
                 if (response['buttons'][0]) {
                     $("#PrevPage").removeAttr('disabled');
-                    $("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+                    $("#PrevPage").attr('onclick', 'paginate(' + (response['normal_page'] - 1) + ')');
                 } else {
                     $("#PrevPage").attr('disabled', 'disabled');
                     $('#PrevPage').removeAttr('onclick');
                 }
                 if (response['buttons'][1]) {
                     $("#NextPage").removeAttr('disabled');
-                    $("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+                    $("#NextPage").attr('onclick', 'paginate(' + (response['normal_page'] + 1) + ')');
                 }  else {
                     $("#NextPage").attr('disabled', 'disabled');
                     $('#NextPage').removeAttr('onclick');
@@ -297,4 +309,10 @@ function paginate(page){
             }
         }
     });
+};
+
+function get_key(key) {
+    var p = window.location.search;
+    p = p.match(new RegExp(key + '=([^&=]+)'));
+    return p ? p[1] : false;
 };

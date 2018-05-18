@@ -53,7 +53,7 @@
 				</div>
 				<nav class="navbar">
 					<div class="btn-group btn-group-lg" id="paginate_btn_holder">
-						<a><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
+						<a><button id="PrevPage" type="button" class="btn btn-warning">&laquo;</button></a>
                         {% for number in notes_pages %}
                             <a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
                         {% endfor %}
@@ -97,4 +97,26 @@
 <article class="modals">
 	{% include "modals/notes.html" %}
 </article>
+<script>
+	var page = {{ page }};
+	for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+	{
+		$('#paginate_btn_' + i).removeAttr('disabled');
+	}
+	$('#paginate_btn_' + page).attr('disabled', 'disabled');
+	{% if back_paginate_btn %}
+		$("#PrevPage").removeAttr('disabled');
+		$("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+	{% else %}
+		$("#PrevPage").attr('disabled', 'disabled');
+		$('#PrevPage').removeAttr('onclick');
+	{% endif%}
+	{% if next_paginate_btn %}
+		$("#NextPage").removeAttr('disabled');
+		$("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+	{% else %}
+		$("#NextPage").attr('disabled', 'disabled');
+		$('#NextPage').removeAttr('onclick');
+	{% endif %}
+</script>
 {% endblock %}
