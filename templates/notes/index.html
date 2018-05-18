@@ -52,12 +52,12 @@
 					</div>
 				</div>
 				<nav class="navbar">
-					<div class="btn-group btn-group-lg">
-						<a href="#"><button id="PrevPage" type="button" class="btn btn-warning" disabled>&laquo;</button></a>
-						{% for number in notes_pages %}
-						<a href="#"><button type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
-						{% endfor %}
-						<a href="#"><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
+					<div class="btn-group btn-group-lg" id="paginate_btn_holder">
+						<a><button id="PrevPage" type="button" class="btn btn-warning">&laquo;</button></a>
+                        {% for number in notes_pages %}
+                            <a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
+                        {% endfor %}
+						<a><button id="NextPage" type="button" onclick="paginate(2)" class="btn btn-warning">&raquo;</button></a>
 					</div>
 				</nav>
 			</div>
@@ -72,28 +72,51 @@
 					</div>
 					{% endfor %}
 				</div>
-			<section class="card-view">
-				<div class="row" id="cards_id" style="display: none" display="block">
-					{% for item in notes_data %}
-					<div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
-						<div class="card">
-							<div class="card-body">
-								<h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
-								<small class="date">{{ item.1 }}</small>
-								<hr/>
-								<p id="card_note_description_{{ item.2 }}">
-									{{ item.3 }}
-								</p>
-							</div>
-						</div>
-						{% endfor %}
-					</div>
-				</section>
-			</section>
+                <section class="card-view">
+                    <div class="row" id="cards_id" style="display: none" display="block">
+                        {% for item in notes_data %}
+                            <div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
+                                        <small class="date">{{ item.1 }}</small>
+                                        <hr/>
+                                        <p id="card_note_description_{{ item.2 }}">
+                                            {{ item.3 }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </section>
 		</div>
 	</section>
 </article>
 <article class="modals">
 	{% include "modals/notes.html" %}
 </article>
+<script>
+	var page = {{ page }};
+	for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+	{
+		$('#paginate_btn_' + i).removeAttr('disabled');
+	}
+	$('#paginate_btn_' + page).attr('disabled', 'disabled');
+	{% if back_paginate_btn %}
+		$("#PrevPage").removeAttr('disabled');
+		$("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
+	{% else %}
+		$("#PrevPage").attr('disabled', 'disabled');
+		$('#PrevPage').removeAttr('onclick');
+	{% endif%}
+	{% if next_paginate_btn %}
+		$("#NextPage").removeAttr('disabled');
+		$("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
+	{% else %}
+		$("#NextPage").attr('disabled', 'disabled');
+		$('#NextPage').removeAttr('onclick');
+	{% endif %}
+</script>
 {% endblock %}

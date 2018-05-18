@@ -1,6 +1,6 @@
 function add_todo_card(item){
     var str = "'done'";
-    tmp = '<a href="#" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
+    tmp = '<div style="display: none" id="todo_card_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ')" class="col-md-4" data-toggle="modal" data-target="#Open-Todo">' +
                     '<div class="card">' +
                         '<div class="card-body">' +
                             '<h3>' + item[0] + '</h3>' +
@@ -12,22 +12,23 @@ function add_todo_card(item){
                             '<button type="button" onclick="status_change(' + item[2] + ',' + str + ')" class="btn btn-light">&#10003;</button>' +
                         '</div>' +
                     '</div>' +
-                '</a>';
+                '</div>';
     $("#CardList").html(tmp + $("#CardList").html());
+    $('#todo_card_' + item[2]).show('slow');
     get_priorities(item[3], item[2]);
 };
 
 function add_to_list(item){
     var str = "'done'";
-    tmp = '<a href="#" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
-                '<h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7>' +
-                '<div class="priorities">' +
-                    '<div class="priorities" id="list_priorities_' + item[2] + '"></div>'+
-                    '<button  type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ',' + str + ')">&#10003;</button>'+
-                    '<div class="date"><small id="todo_date_' + item[2] + '">' + item[1] + '</small></div>'+
-                '</div>'+
-            '</a>';
+    var tmp = '<div style="display: none" id="todo_' + item[2] + '" onclick="get_todo_data_ajax(' + item[2] + ');">' +
+    '<a href="#" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">' +
+    '<button type="button" class="btn btn-primary" onclick="status_change(' + item[2] + ', ' + str + ')">' +
+    '&#10003;</button><h7 id="todo_title_' + item[2] + '">' + item[0] + '</h7><div class="priorities">' +
+    '<div class="priorities" id="list_priorities_' + item[2] + '"></div><script>get_priorities(' +
+    item[3] + ', ' + item[2] + ');</script><div class="date"><small id="todo_date_' + item[2] + '">' +
+    item[1] + '</small></div></div></a></div>';
     $("#ViewList").html(tmp + $("#ViewList").html());
+    $('#todo_' + item[2]).show("slow");
     get_priorities(item[3], item[2]);
 };
 
@@ -258,8 +259,8 @@ function add_todo_ajax()
 		        var array = [response['title'], response['datetime'], response['id'], response['priority']];
 		        add_to_list(array);
                 add_todo_card(array);
-                $('#todo_' + response['id']).slideDown(duration='slow');
-                $('#todo_card_' + response['id']).slideDown(duration='slow');
+                $('#todo_' + response['id']).show(duration='slow');
+                $('#todo_card_' + response['id']).show(duration='slow');
                 $("#close_todo_btn").trigger("click");
             }
             else{
@@ -272,21 +273,23 @@ function add_todo_ajax()
 
 function delete_todo_ajax()
 {
-    $('#delete_btn').attr('disabled', 'disabled');
-    $.ajax({
-        type: "POST",
-        url: '/todo/delete',
-        data: {"id": $('#todo_id').html()},
-        success: function(response)
-        {
-            if (response['result'] == "Success")
+    var should_delete = confirm('Вы уверены?');
+    if (should_delete)
+    {
+        $.ajax({
+            type: "POST",
+            url: '/todo/delete',
+            data: {"id": $('#todo_id').html()},
+            success: function(response)
             {
-                $('#todo_' + $('#todo_id').html()).slideUp("slow");
-                $('#todo_card_' + $('#todo_id').html()).slideUp("slow");
+                if (response['result'] == "Success")
+                {
+                    $('#todo_' + $('#todo_id').html()).hide("slow", complete=function(){$('#todo_' + id).remove()});
+                    $('#todo_card_' + $('#todo_id').html()).hide("slow", complete=function(){$('#todo_card_' + id).remove()});
+                }
             }
-            $('#delete_btn').removeAttr('disabled');
-        }
-    });
+        });
+    }
 };
 
 function paginate(page, status){
@@ -297,18 +300,25 @@ function paginate(page, status){
         success: function(response)
         {
             if (response['result'] == 200) {
+                for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+                {
+                    $('#paginate_btn_' + i).removeAttr('disabled');
+                }
+                $('#paginate_btn_' + page).attr('disabled', 'disabled');
                 if (status == 'in progress'){
                     if (response['buttons'][0]) {
                         $("#PrevPage_Progress").removeAttr('disabled');
                         $("#PrevPage_Progress").attr("onclick", "paginate(" + (page - 1) + ", " + "'in progress'" + ")");
                     } else {
                         $("#PrevPage_Progress").attr('disabled', 'disabled');
+                        $("#PrevPage_Progress").removeAttr('onclick');
                     }
                     if (response['buttons'][1]) {
                         $("#NextPage_Progress").removeAttr('disabled');
                         $("#NextPage_Progress").attr("onclick", "paginate(" + (page + 1) + ", " + "'in progress'" + ")");
                     }  else {
                         $("#NextPage_Progress").attr('disabled', 'disabled');
+                        $("#NextPage_Progress").removeAttr('onclick');
                     }
                     $("#ViewList").html('');
                     $("#CardList").html('');

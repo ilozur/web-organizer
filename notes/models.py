@@ -38,10 +38,11 @@ class Notes(models.Model):
             This function get notes by time and alphabetically
             if aim = 'date' -> 'up' = new-old, 'down' = old-new
             if aim = 'title' -> 'up' = a-z, 'down' = z-a
+            if sorting type is not correct returns returns notes sorted like date_up
         """
         if notes is None:
             notes = Notes.objects.filter(user=user)
-        notes = notes.filter(user=user)
+        notes = notes.filter(user=user).order_by('-added_time')
         if sorting_type != 'all':
             sort = sorting_type.split('_')
             aim = sort[0]
@@ -53,11 +54,17 @@ class Notes(models.Model):
                 notes = notes.order_by('-added_time')
             elif direction == "down":
                 notes = notes.order_by('added_time')
+            else:
+                return notes
         elif aim == "title":
             if direction == "up":
                 notes = notes.order_by('name')
             elif direction == "down":
                 notes = notes.order_by('-name')
+            else:
+                return notes
+        else:
+            return notes
         return notes
 
     @staticmethod

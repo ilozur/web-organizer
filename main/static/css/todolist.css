@@ -158,6 +158,7 @@ footer {
     border-radius: 15px;
     text-align: center;
     margin-top: : 150px;
+        cursor: default;
 }
 
 .noanimation:hover{
