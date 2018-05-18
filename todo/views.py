@@ -50,13 +50,12 @@ def add_todo(request):
         form = AddTodoForm(request.POST)
         if form.is_valid():
             title = form.cleaned_data['todo_title']
-            text = form.cleaned_data['todo_text']
             deadline_date = form.cleaned_data['todo_deadline']
             deadline_time = form.cleaned_data['todo_time']
             deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
                                      deadline_time.minute, 0)
             if deadline_date > datetime.now():
-                tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
+                tmp = Todos(title=title, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
                 tmp.save()
                 result = "Success"
@@ -86,7 +85,6 @@ def show_todo(request):
                 current_status = "'in progress'"
             response = {
                 'title': todo.title,
-                'text': todo.text,
                 'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
                 'deadline': todo.deadline.strftime("%I:%M%p on %B %d, %Y"),
                 'priority': todo.priority,
@@ -152,7 +150,6 @@ def edit_todo(request):
                 if Todos.objects.filter(id=todo_id).exists():
                     tmp = Todos.get_todo_by_id(todo_id)
                     tmp.title = form.cleaned_data['todo_edit_title']
-                    tmp.text = form.cleaned_data['todo_edit_text']
                     tmp.priority = form.cleaned_data['todo_edit_priority']
                     tmp.deadline = deadline_date
                     tmp.save()
@@ -191,9 +188,8 @@ def read_file(file_name):
     else:
         status = a[4]
     deadline = a[5]
-    text = a[6]
     title = a[7]
-    p = Todos(text=text, user=user, title=title, added_time=added_time,
+    p = Todos(user=user, title=title, added_time=added_time,
               added_date=added_date, priority=priority, deadline=deadline, status=status)
     p.save()
 
