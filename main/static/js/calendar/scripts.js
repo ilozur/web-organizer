@@ -305,11 +305,14 @@ function delete_event_ajax()
 function ShowTable()
 {
     $("#ViewList").hide("slow");
+    $("#Pagination").hide("fast");
     $("#ViewTable").show("slow");
 };
 
 function ShowList()
 {
     $("#ViewList").show("slow");
+    $("#Pagination").show("fast");
     $("#ViewTable").hide("slow");
+
 };
