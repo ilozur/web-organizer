@@ -68,13 +68,13 @@
                 </div>
                 <nav class="navbar">
                     <div class="btn-group btn-group-lg" id="paginate_btn_holder">
-						<a><button id="PrevPage_Progress" type="button" class="btn btn-warning">&laquo;</button></a>
-						<div style="overflow-y: scroll; width: 150px; height: 100px">
+						<a><button id="PrevPage_Progress" type="button" class="btn btn-primary">&laquo;</button></a>
+						<div style="width: 150px; height: 100px">
 							{% for number in todo_pages %}
-								<a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }}, 'in progress')">{{ number }}</button></a>
+								<a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-primary" onclick="paginate({{ number }}, 'in progress')">{{ number }}</button></a>
 							{% endfor %}
 						</div>
-						<a><button id="NextPage_Progress" type="button" class="btn btn-warning">&raquo;</button></a>
+						<a><button id="NextPage_Progress" type="button" class="btn btn-primary">&raquo;</button></a>
 					</div>
                 </nav>
             </div>
