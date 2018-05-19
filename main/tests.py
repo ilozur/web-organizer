@@ -27,7 +27,7 @@ class TestMainPage(TestCase):
         # check template
         self.assertTemplateUsed(response, 'main/index.html')
 
-        # check html
+        # check html -- сюда код не доходит.
         self.assertContains(response, 'Добро пожаловать')
         self.assertContains(response, "Enter your password")
 
@@ -57,20 +57,8 @@ class TestMainPage(TestCase):
         # check status code
         self.assertEqual(response.status_code, 200)
 
-        # check template
-        self.assertTemplateUsed(response, 'notes/index.html')
-
         # check the adding process
         all_notes = Notes.objects.all()
-        context = {
-            'data_part':'test value',
-            'datetime':datetime.datetime.now(),
-            'name':'test note',
-            'id':'{}'.format(len(all_notes) + 1)}
-
-        response = self.c.post('/notes/add', context)
-
-        self.assertEqual(response.status_code, 200)
 
         response = self.c.post('/notes/add', {
             'data_part':'test value',
@@ -80,14 +68,6 @@ class TestMainPage(TestCase):
 
         self.assertEqual(response.result, 100)
 
-        response = self.c.post('/notes/add', context)
-
-        self.assertEqual(response.result, 100)
-
-        # check the showing process
-        response = self.c.get('/notes/get_note_data')
-        self.assertEqual(response.result, 100)
-
     def test_Todo(self):
         self.c.login(username="testuser", password="pass")
         response = self.c.get('/todo')
@@ -95,24 +75,7 @@ class TestMainPage(TestCase):
         # check status code
         self.assertEqual(response.status_code, 200)
 
-        # check template
-        self.assertTemplateUsed(response, 'todo/index.html')
 
-        # check the adding process
-        all_todos = Todos.objects.all()
-        context = {
-            'priority':5,
-            'datetime':datetime.datetime.now(),
-            'title':'test todo',
-            'id':'{}'.format(len(all_todos) + 1)}
-
-        response = self.c.post('/todo/add', context)
-        print(response)
-        self.assertEqual(response.result, "Success")
-
-        # check the showing process
-        response = self.c.get('/todo/show_todo')
-        self.assertEqual(response.result, "Success")
 
     def test_InvalidValue(self):
         # test the todos get page
@@ -127,3 +90,51 @@ class TestMainPage(TestCase):
             'datetime':datetime.datetime.now(),
             'name':'test note'})
         self.assertEqual(response.status_code, 200)
+
+    def test_NoteShow(self):
+        response = self.c.get('/notes/get_note_data')
+        self.assertEqual(response.status_code, 200, 'SC {}!'.format(response.status_code))
+
+    def test_TodoAdd(self):
+        # check the adding process
+        all_todos = Todos.objects.all()
+        context = {
+            'priority':5,
+            'datetime':datetime.datetime.now(),
+            'title':'test todo',
+            'id':'{}'.format(len(all_todos) + 1)}
+
+        response = self.c.post('/todo/add', context)
+        print(response)
+        self.assertEqual(response.result, "Success")
+
+    def test_TodoHTML(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/todo')
+        self.assertTemplateUsed(response, 'todo/index.html')
+
+    def test_NoteHTML(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/notes')
+        # check template
+        self.assertTemplateUsed(response, 'notes/index.html')
+
+    def test_NoteAdd(self):
+        self.c.login(username="testuser", password="pass")
+
+        # check the adding process
+        all_notes = Notes.objects.all()
+        context = {
+            'data_part':'test value',
+            'datetime':datetime.datetime.now(),
+            'name':'test note',
+            'id':'{}'.format(len(all_notes) + 1)}
+
+        response = self.c.post('/notes/add', context)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_ShowNotes(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/notes/get_note_data')
+        self.assertEqual(response.result, 100)
