@@ -14,13 +14,11 @@ echo "Upgrade packages"
 echo "Refresh db"
 /home/eva/eva/venv/bin/python manage.py migrate
 
-#echo "Some cheats with static files"
-#rm -rf static_root
-#/home/eva/eva/venv/bin/python manage.py collectstatic
-#mv static_root static_tmp
-#mkdir static_root
-#mv static_tmp static_root
-#mv static_root/static_tmp static_root/static
+echo "Some cheats with static files"
+rm -rf /home/eva/eva/static_root
+/home/eva/eva/venv/bin/python manage.py collectstatic
+mkdir /home/eva/eva/static_root
+mv /home/eva/eva/morris_butler/static_root /home/eva/eva/static_root/static
 
 echo "make documentation"
 rm -rf /home/eva/eva/docs
