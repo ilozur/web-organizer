@@ -229,8 +229,8 @@ td:hover {
 .list-group-item {
   color: #721c24; 
   transition: 0.5s;
-  margin-top: 10px;
-  width: 1000px;
+  margin-top: 2%;
+
   border-radius: 15px 15px 15px 15px;
 }
 .list-group-item:hover {
