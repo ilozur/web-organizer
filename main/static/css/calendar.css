@@ -18,7 +18,7 @@ nav .active {
 
 /*Шапка*/
 .mast {
-  padding-top: 2%;
+  padding-top: 1%;
   padding-bottom: 1%;
   text-align: center;
   color: #721c24;
@@ -241,7 +241,7 @@ td:hover {
 
 .noanimation{
     height: auto ;
-    width: 215px;
+    width: 230px;
     border-radius: 15px;
     text-align: center;
     margin-top: : 150px;
