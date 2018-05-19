@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 from main.models import Language
 from main.views import create_mail, send_mail
 from todo.forms import AddTodoForm
@@ -12,9 +12,7 @@ from todo.models import Todos
 import json
 from datetime import datetime
 from localisation import eng, rus
-import requests
-
-
+type_of_sort = 'AtoZ'
 
 
 @login_required
@@ -33,15 +31,17 @@ def index(request):
     context['language'] = user_lang
     context['lang'] = lang
     user = request.user
-    try:
-        sort_type = get_cookie()
-    except KeyError:
-        sort_type = 'AtoZ'
+    global type_of_sort
+    sort_type = type_of_sort
     todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
     for item in todos:
-        smart_priority(item, 'index')
-    context['undone_todos'] = Todos.get_todos(sort_type, 'in progress', user, 'none')
-    context['done_todos'] = Todos.get_todos('AtoZ', 'done', user, 'none')
+        smart_priority(item, 'index', user)
+    undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user, 'none'), 20)
+    done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user, 'none'), 20)
+    context['undone_todos'] = undone_todos.page(1).object_list
+    context['undone_pages'] = undone_todos.page_range
+    context['done_todos'] = done_todos.page(1).object_list
+    context['done_pages'] = done_todos.page_range
     context['amount_of_todos'] = Todos.get_amounts(user)
     context['search_todo_form'] = SearchForm()
     context['add_todo_form'] = AddTodoForm()
@@ -65,13 +65,14 @@ def add_todo(request):
             if deadline_date > datetime.now():
                 tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
-                tmp.smart_priority = smart_priority(tmp, 'add')
+                tmp.smart_priority = smart_priority(tmp, 'add', user)
                 tmp.save()
                 result = "Success"
                 response_data['id'] = tmp.id
                 response_data['title'] = tmp.title
                 response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
                 response_data['priority'] = tmp.priority
+                response_data['smart_priority'] = tmp.smart_priority
             else:
                 result = 'Deadline date has passed'
         else:
@@ -115,7 +116,7 @@ def show_todo(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def sorting(request):
     response = {}
     if request.method == "POST":
@@ -125,7 +126,8 @@ def sorting(request):
                 'todo_list': Todos.get_todos(sort_type, 'in progress', request.user, 'none'),
                 'result': "Success"
             }
-            set_cookie(sort_type)
+            global type_of_sort
+            type_of_sort = sort_type
         else:
             response['result'] = "User is not authenticated"
         return HttpResponse(json.dumps(response), content_type="application/json")
@@ -133,21 +135,18 @@ def sorting(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
+@login_required
 def status_change(request):
     response = {}
     if request.method == "POST":
-        if request.user.is_authenticated:
-            todo_id = request.POST.get('id')
-            todo_type = request.POST.get('type')
-            obj = Todos.get_todo_by_id(todo_id)
-            obj.status = todo_type
-            obj.save()
-            response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
-            response['result'] = "Success"
-            response['amount_of_todos'] = Todos.get_amounts(request.user)
-        else:
-            response['result'] = "User is not authenticated"
+        todo_id = request.POST.get('id')
+        todo_type = request.POST.get('type')
+        obj = Todos.get_todo_by_id(todo_id)
+        obj.status = todo_type
+        obj.save()
+        response['current'] = (obj.title, obj.deadline.strftime("%I:%M%p on %B %d, %Y"), obj.id, obj.priority)
+        response['result'] = "Success"
+        response['amount_of_todos'] = Todos.get_amounts(request.user)
         return HttpResponse(json.dumps(response), content_type='application/json')
     else:
         return HttpResponseRedirect('/')
@@ -265,7 +264,7 @@ def check_notify():
                 send_mail(mail)
 
 
-def smart_priority(todo, address):
+def smart_priority(todo, address, user):
     now = datetime.now()
     now = now.strftime("%d.%m.%y")
     now = now.split('.')
@@ -276,7 +275,9 @@ def smart_priority(todo, address):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
         value = deadline*0.4+priority*0.6
-        new_value = round(((value - 1) / (1000 - 1)) * (100 - 1) + 1)
+        new_value = 100-round(((value - 1) / (max_smart_priority(user, now) - 1)) * (100 - 1) + 1)
+        if new_value == 0:
+            new_value +=1
         tmp = Todos.get_todo_by_id(todo[2])
         tmp.smart_priority = new_value
         tmp.save()
@@ -287,8 +288,25 @@ def smart_priority(todo, address):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline) - now
         value = deadline * 0.4 + priority * 0.6
-        new_value = round(((value - 1) / (1000 - 1)) * (100 - 1) + 1)
+        new_value = 100-round(((value - 1) / (max_smart_priority(user, now) - 1)) * (100 - 1) + 1)
+        if new_value == 0:
+            new_value +=1
         return new_value
+
+
+def paginate(request):
+    response_data = {}
+    status = request.POST.get('status')
+    pages = Paginator(Todos.get_todos('AtoZ', status, request.user), 20)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            page_number = request.POST.get('page')
+            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+            response_data['todo_list'] = pages.page(page_number).object_list
+            response_data['result'] = 200
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
 
 
 def days_in_years(tmp):
@@ -318,18 +336,16 @@ def days_in_years(tmp):
     return result
 
 
-def set_cookie(sort_type):
-    url = 'http://127.0.0.1:8000/todo/'
-    r = requests.put(url, data={'sort_type': sort_type})
-
-
-def get_cookie():
-    url = 'http://127.0.0.1:8000/todo/'
-    r = requests.get(url)
-    sort_type = r.text
-
-    if sort_type['data']['sort_type'] is None:
-        set_cookie('AtoZ')
-        return 'AtoZ'
-    else:
-        return sort_type['data']['sort_type']
+def max_smart_priority(user, now):
+    todo_list = Todos.get_todos('AtoZ', 'in progress', user, 'sm_priority')
+    max = 0
+    for item in todo_list:
+        todo = item
+        deadline = todo[1]
+        priority = todo[3]
+        deadline = deadline.split('.')
+        deadline = days_in_years(deadline)-now
+        value = 0.4*deadline+priority*0.6
+        if value>max:
+            max = value
+    return max

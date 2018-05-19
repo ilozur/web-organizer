@@ -2,7 +2,7 @@ function get_user_data()
 {
 	$.ajax({
 		type: "POST",
-		url: '/siteprofile/get_user_data',
+		url: '/userprofile/get_user_data',
 		success: function(response)
 		{
 			$('#id_name').val(response['user'].name);
@@ -29,7 +29,7 @@ function change_password()
 	$('#change_password_btn').attr('disabled', 'disabled');
 	$.ajax({
 		type: "POST",
-		url: '/siteprofile/change_password',
+		url: '/userprofile/change_password',
 		data: form_data,
 		success: function(response)
 		{
@@ -58,7 +58,7 @@ function change_user_data()
 	$('#save_changes_btn').attr('disabled', 'disabled');
 	$.ajax({
 		type: "POST",
-		url: '/siteprofile/change_user_data',
+		url: '/userprofile/change_user_data',
 		data: form_data,
 		success: function(response)
 		{
