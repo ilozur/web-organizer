@@ -5,7 +5,7 @@ from datetime import *
 from todo.models import *
 
 
-class TestMainPage(TestCase):
+class TestMainPages(TestCase):
 
     def setUp(self):
         global u
@@ -105,8 +105,7 @@ class TestMainPage(TestCase):
             'id':'{}'.format(len(all_todos) + 1)}
 
         response = self.c.post('/todo/add', context)
-        print(response)
-        self.assertEqual(response.result, "Success")
+        self.assertEqual(response.status_code, 302)
 
     def test_TodoHTML(self):
         self.c.login(username="testuser", password="pass")
