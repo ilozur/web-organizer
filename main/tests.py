@@ -107,6 +107,7 @@ class TestMainPage(TestCase):
             'id':'{}'.format(len(all_todos) + 1)}
 
         response = self.c.post('/todo/add', context)
+        print(response)
         self.assertEqual(response.result, "Success")
 
         # check the showing process
@@ -116,7 +117,13 @@ class TestMainPage(TestCase):
     def test_InvalidValue(self):
         # test the todos get page
         self.c.login(username='testuser', password='pass')
-        response = self.c.get('/')
-        self.assertEqual(response.status_code, 200)
         response = self.c.post('/notes/get_note_data', {'some':'shit'})
         self.assertEqual(response.status_code, 200, 'SC {}!'.format(response.status_code))
+
+    def test_PostingInvalidValueNotes(self):
+        self.c.login(username='testuser', password='pass')
+        response = self.c.post('/notes/add', {
+            'data_part':'test value',
+            'datetime':datetime.datetime.now(),
+            'name':'test note'})
+        self.assertEqual(response.status_code, 200)
