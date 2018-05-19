@@ -21,7 +21,11 @@ class Todos(models.Model):
             'new': '-added_date_and_time',
             'deadline': 'deadline'
         }
-        todos = Todos.objects.filter(user=user, status=status).order_by(mode.get(sorting_type))
+        if sorting_type not in mode:
+            sorting_type = 'new'
+        if not status:
+            status = "in progress"
+        todos = Todos.objects.filter(user=user, status=status).order_by(mode[sorting_type])
         todo_list = list()
         for item in todos:
             todo_list.append((item.title, item.deadline.strftime("%I:%M%p on %B %d, %Y"), item.id, item.priority))
