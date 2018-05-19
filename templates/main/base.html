@@ -29,17 +29,15 @@
                       <a href='{% url "index" %}'><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mb-2 logo"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg></a>
         <a class="navbar-brand col-2" href='{% url "index" %}'>EVA</a>
         <div class="collapse navbar-collapse">
-            <div class="col-3 form-inline">
                 <button type="button" class="btn btn-light btn-sm base-button">
                     <img src='{% static "icons/micro_icon.png" %}'>
                 </button>
-                <form>
-                    <input class="form-control" type="search" placeholder="Поиск">
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                     <button type="button" class="btn btn-light btn-sm base-button">
                         <img src='{% static "icons/search_icon.png" %}'>
                     </button>
                 </form>
-            </div>
             <ul class="navbar-nav">
                 <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
                     <a class="nav-link" href='{% url "index" %}'>{{ lang.title }}</a>
