@@ -4,6 +4,7 @@ from notes.models import *
 from datetime import *
 from todo.models import *
 
+
 class TestMainPage(TestCase):
 
     def setUp(self):
@@ -19,7 +20,6 @@ class TestMainPage(TestCase):
         self.assertRedirects(response, '/')
 
     def test_index_non_auth(self):
-        
         response = self.c.get('/')
         # check status code
         self.assertEqual(response.status_code, 200)
@@ -62,15 +62,21 @@ class TestMainPage(TestCase):
 
         # check the adding process
         all_notes = Notes.objects.all()
-        context = {'data_part':'test value',
-                   'datetime':datetime.datetime.now(),
-                   'name':'test note',
-                   'id':'{}'.format(len(all_notes) + 1)}
+        context = {
+            'data_part':'test value',
+            'datetime':datetime.datetime.now(),
+            'name':'test note',
+            'id':'{}'.format(len(all_notes) + 1)}
+
         response = self.c.post('/notes/add', context)
 
         self.assertEqual(response.status_code, 200)
 
-        response = self.c.post('/notes/add', context)
+        response = self.c.post('/notes/add', {
+            'data_part':'test value',
+            'datetime':datetime.datetime.now(),
+            'name':"test note' or 1=1 DROP DATABASE;--",
+            'id':'{}'.format(len(all_notes) + 1)})
 
         self.assertEqual(response.result, 100)
 
@@ -94,15 +100,23 @@ class TestMainPage(TestCase):
 
         # check the adding process
         all_todos = Todos.objects.all()
-        context = {'priority':5,
+        context = {
+            'priority':5,
             'datetime':datetime.datetime.now(),
             'title':'test todo',
             'id':'{}'.format(len(all_todos) + 1)}
 
         response = self.c.post('/todo/add', context)
-
         self.assertEqual(response.result, "Success")
 
         # check the showing process
         response = self.c.get('/todo/show_todo')
         self.assertEqual(response.result, "Success")
+
+    def test_InvalidValue(self):
+        # test the todos get page
+        self.c.login(username='testuser', password='pass')
+        response = self.c.get('/')
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/notes/get_note_data', {'some':'shit'})
+        self.assertEqual(response.status_code, 200, 'SC {}!'.format(response.status_code))
