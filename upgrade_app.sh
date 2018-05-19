@@ -9,7 +9,7 @@ git checkout production
 git merge master
 
 echo "Upgrade packages"
-/home/eva/eva/venv.bin/pip install -r /home/eva/eva/requirements.txt
+/home/eva/eva/venv/bin/pip install -r /home/eva/eva/requirements.txt
 
 echo "Refresh db"
 /home/eva/eva/venv/bin/python manage.py migrate
