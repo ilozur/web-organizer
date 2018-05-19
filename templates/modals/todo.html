@@ -10,13 +10,10 @@
                     {% csrf_token %}
                     {{ add_todo_form.media }}
                     <div class="form-group">
-                        <h3>Название</h3>
+                        <h3>Напоминание</h3>
                         {{ add_todo_form.todo_title }}
                     </div>
                     <div class="form-group">
-                        <h3>Текст</h3>
-                        {{ add_todo_form.todo_text }}
-                        <br/>
                         {{ add_todo_form.todo_deadline }}
                         <br/>
                         {{ add_todo_form.todo_time }}
@@ -54,8 +51,6 @@
                 <h2 class="modal-title" id="todo_title_show"></h2>
             </div>
             <div class="modal-body">
-                <div id="todo_text_show" style="overflow-x: scroll; overflow-y: scroll; height: 200px">
-                </div>
                 <small id="todo_added_time"></small>
                 <br/>
                 Выполнить к <small id="todo_deadline"></small>
@@ -90,12 +85,10 @@
                     {% csrf_token %}
                     {{ edit_todo_form.media }}
                     <div class="form-group">
-                        <h3>Изменить название</h3>
+                        <h3>Изменить напоминание</h3>
                         {{ edit_todo_form.todo_edit_title }}
                     </div>
                     <div class="form-group">
-                        <h3>Изменить текст</h3>
-                        {{ edit_todo_form.todo_edit_text }}
                         <h3>Изменить дедлайн</h3>
                         {{ edit_todo_form.todo_edit_deadline }}
                         </br>

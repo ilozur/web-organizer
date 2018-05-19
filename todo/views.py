@@ -17,36 +17,45 @@ type_of_sort = 'AtoZ'
 
 @login_required
 def index(request):
-    context = {
-        'title': "Todos index page",
-        'header': "Todos index page header",
-    }
-    user_lang = Language.objects.filter(user=request.user).first().lang
-    if user_lang == "ru":
-        lang = rus
-    elif user_lang == "en":
-        lang = eng
-    else:
-        lang = eng
-    context['language'] = user_lang
-    context['lang'] = lang
-    user = request.user
-    global type_of_sort
-    sort_type = type_of_sort
-    todos = Todos.get_todos(sort_type, 'in progress', user, 'sm_priority')
-    for item in todos:
-        smart_priority(item, 'index', user)
-    undone_todos = Paginator(Todos.get_todos('AtoZ', 'in progress', user, 'none'), 20)
-    done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user, 'none'), 20)
-    context['undone_todos'] = undone_todos.page(1).object_list
-    context['undone_pages'] = undone_todos.page_range
-    context['done_todos'] = done_todos.page(1).object_list
-    context['done_pages'] = done_todos.page_range
-    context['amount_of_todos'] = Todos.get_amounts(user)
-    context['search_todo_form'] = SearchForm()
-    context['add_todo_form'] = AddTodoForm()
-    context['edit_todo_form'] = EditTodoForm()
-    return render(request, "todo/index.html", context)
+    sort_type = request.GET.get("sort_type", "new")
+    todo = Todos.get_todos(sort_type, request.POST.get('status'), user=request.user)
+    page = request.GET.get("page")
+    try:
+        page = int(page)
+    except Exception as ex:
+        page = 1
+        print(ex)
+    if request.method == "GET":
+        context = {
+            'title': "Todos index page",
+            'header': "Todos index page header",
+        }
+        user_lang = Language.objects.filter(user=request.user).first().lang
+        if user_lang == "ru":
+            lang = rus
+        elif user_lang == "en":
+            lang = eng
+        else:
+            lang = eng
+        context['language'] = user_lang
+        context['lang'] = lang
+        user = request.user
+        pages = Paginator(todo, 20)
+        if (page < 1) or (page > len(pages.page_range)):
+            page = 1
+        context['page'] = page
+        context['todo_data'] = pages.page(page)
+        context['back_paginate_btn'] = pages.page(page).has_previous()
+        context['next_paginate_btn'] = pages.page(page).has_next()
+        context['todo_pages'] = pages.page_range
+        done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user), 20)
+        context['done_todos'] = done_todos.page(1).object_list
+        context['done_pages'] = done_todos.page_range
+        context['amount_of_todos'] = Todos.get_amounts(user)
+        context['search_todo_form'] = SearchForm()
+        context['add_todo_form'] = AddTodoForm()
+        context['edit_todo_form'] = EditTodoForm()
+        return render(request, "todo/index.html", context)
 
 
 @login_required
@@ -57,13 +66,12 @@ def add_todo(request):
         form = AddTodoForm(request.POST)
         if form.is_valid():
             title = form.cleaned_data['todo_title']
-            text = form.cleaned_data['todo_text']
             deadline_date = form.cleaned_data['todo_deadline']
             deadline_time = form.cleaned_data['todo_time']
             deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
                                      deadline_time.minute, 0)
             if deadline_date > datetime.now():
-                tmp = Todos(title=title, text=text, added_date_and_time=datetime.now(), user=request.user,
+                tmp = Todos(title=title, added_date_and_time=datetime.now(), user=request.user,
                             priority=form.cleaned_data['todo_priority'], deadline=deadline_date)
                 tmp.smart_priority = smart_priority(tmp, 'add', user)
                 tmp.save()
@@ -95,7 +103,6 @@ def show_todo(request):
                 current_status = "'in progress'"
             response = {
                 'title': todo.title,
-                'text': todo.text,
                 'added_date_and_time': todo.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"),
                 'deadline': todo.deadline.strftime("%I:%M%p on %B %d, %Y"),
                 'priority': todo.priority,
@@ -168,7 +175,6 @@ def edit_todo(request):
                 if Todos.objects.filter(id=todo_id).exists():
                     tmp = Todos.get_todo_by_id(todo_id)
                     tmp.title = form.cleaned_data['todo_edit_title']
-                    tmp.text = form.cleaned_data['todo_edit_text']
                     tmp.priority = form.cleaned_data['todo_edit_priority']
                     tmp.deadline = deadline_date
                     tmp.save()
@@ -208,9 +214,8 @@ def read_file(file_name):
     else:
         status = a[4]
     deadline = a[5]
-    text = a[6]
     title = a[7]
-    p = Todos(text=text, user=user, title=title, added_time=added_time,
+    p = Todos(user=user, title=title, added_time=added_time,
               added_date=added_date, priority=priority, deadline=deadline, status=status)
     p.save()
 
@@ -294,19 +299,17 @@ def smart_priority(todo, address, user):
         return new_value
 
 
-def paginate(request):
+def paginate(todo, page_number):
+
     response_data = {}
-    status = request.POST.get('status')
-    pages = Paginator(Todos.get_todos('AtoZ', status, request.user), 20)
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            page_number = request.POST.get('page')
-            response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
-            response_data['todo_list'] = pages.page(page_number).object_list
-            response_data['result'] = 200
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
+    pages = Paginator(todo, 20)
+    if (page_number < 1) or (page_number > len(pages.page_range)):
+        page_number = 1
+    response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+    response_data['todo_list'] = pages.page(page_number).object_list
+    response_data['result'] = 100
+    response_data['normal_page'] = page_number
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def days_in_years(tmp):
