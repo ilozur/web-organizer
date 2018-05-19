@@ -349,6 +349,6 @@ def max_smart_priority(user, now):
         deadline = deadline.split('.')
         deadline = days_in_years(deadline)-now
         value = 0.4*deadline+priority*0.6
-        if value>max:
+        if value > max:
             max = value
     return max
