@@ -320,16 +320,16 @@ def days_in_years(tmp):
 
 def set_cookie(sort_type):
     url = 'http://127.0.0.1:8000/todo/'
-    cookies = sort_type
-    r = requests.get(url, cookies=cookies)
+    r = requests.put(url, data={'sort_type': sort_type})
 
 
 def get_cookie():
     url = 'http://127.0.0.1:8000/todo/'
     r = requests.get(url)
-    sort_type = r.cookies['name']
-    if sort_type is None:
+    sort_type = r.text
+
+    if sort_type['data']['sort_type'] is None:
         set_cookie('AtoZ')
         return 'AtoZ'
     else:
-        return sort_type
+        return sort_type['data']['sort_type']
