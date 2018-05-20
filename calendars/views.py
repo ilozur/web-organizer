@@ -275,21 +275,21 @@ def edit_event(request):
     if request.method == "POST":
         form = EditEventForm(request.POST)
         if form.is_valid():
-            todo_id = form.cleaned_data['todo_id']
-            deadline_date = form.cleaned_data['todo_edit_deadline']
-            deadline_time = form.cleaned_data['todo_edit_time']
+            event_id = form.cleaned_data['event_id']
+            deadline_date = form.cleaned_data['event_edit_deadline']
+            deadline_time = form.cleaned_data['event_edit_time']
             deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
                                      deadline_time.minute, 0)
             if deadline_date > datetime.now():
-                if Event.objects.filter(id=todo_id).exists():
-                    tmp = Event.get_event_by_id(todo_id)
-                    tmp.title = form.cleaned_data['todo_edit_title']
-                    tmp.priority = form.cleaned_data['todo_edit_priority']
+                if Event.objects.filter(id=event_id).exists():
+                    tmp = Event.get_event_by_id(event_id)
+                    tmp.title = form.cleaned_data['event_edit_title']
+                    tmp.desription = form.cleaned_data['event_edit_desription']
                     tmp.deadline = deadline_date
                     tmp.save()
                     response['result'] = "Success"
                     response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
-                    response['priority'] = tmp.priority
+                    response['desrioption'] = tmp.desription
                 else:
                     response['result'] = 'No such todo'
             else:

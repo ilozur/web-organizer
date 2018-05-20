@@ -23,6 +23,12 @@ class AddEventForm(forms.Form):
 
 
 class EditEventForm(forms.Form):
-    description =  RichTextUploadingFormField(widget=CKEditorUploadingWidget())
-    title = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control',
+    event_edit_description =  RichTextUploadingFormField(widget=CKEditorUploadingWidget())
+    event_edit_title = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control',
                                                                                    'placeholder': 'Событие'}))
+    event_edit_time = forms.TimeField(
+        widget=forms.TimeInput(attrs={'form': 'edit_todo_form', 'class': 'form-control', 'type': 'time'}))
+    event_edit_deadline = forms.DateField(
+        widget=forms.DateInput(attrs={'form': 'edit_todo_form', 'class': 'form-control', 'type': 'date'}))
+    event_id = forms.IntegerField(widget=forms.HiddenInput())
+    is_public = forms.BooleanField()
