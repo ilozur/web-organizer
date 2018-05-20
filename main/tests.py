@@ -45,3 +45,33 @@ class TestMainPage(TestCase):
         self.assertContains(response, 'Добрый день')
         self.assertContains(response, 'Последние заметки')
         self.assertContains(response, 'Ближайшие события календаря')
+    
+    def test_TodoAdd(self):
+        # check the adding process
+        all_todos = Todos.objects.all()
+        context = {
+            'priority':5,
+            'datetime':datetime.datetime.now(),
+            'title':'test todo',
+            'id':'{}'.format(len(all_todos) + 1)}
+
+
+        response = self.c.post('/todo/add', context)
+        self.assertEqual(response.context['result'], 302)
+    
+    def test_TodoHTML(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/todo')
+        self.assertTemplateUsed(response, 'todo/index.html')
+
+    def test_ShowTodos(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/todos/get_todo_data')
+        self.assertEqual(response.context['result'], 100)
+        
+    def test_TodoShow(self):
+        response = self.c.get('/todos/get_todo_data')
+        self.assertEqual(response.status_code, 200, 'SC {}!'.format(response.context['result']))
+        
+    
+    
