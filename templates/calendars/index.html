@@ -10,7 +10,7 @@
 <script language="JavaScript" src='{% static "js/calendar/scripts.js" %}'></script>
 <script src="http://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 <script language="JavaScript" src='{% static "js/yandex_map.js" %}'></script>
-<script> setup_date({{ now_month_num }}, {{ now_year }}); </script>
+<script> setup_date({{ stat.now_month_num }}, {{ stat.now_year }}); </script>
 {% endblock %}
 {% block content %}
 <article class="calendar">
