@@ -141,11 +141,11 @@
                     {% for item in my_events %}
                     <a href="#" class="list-group-item list-group-item-light"
                        data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }})">
-                        <h7>item.0</h7>
+                        <h7>{{ item.0 }}</h7>
                         <div class="date-and-place">
-                            <small>item.1</small>
+                            <small>{{ item.1 }}</small>
                             |
-                            <small><b>item.4</b></small>
+                            <small><b>{{ item.4 }}</b></small>
                         </div>
                     </a>
                     {% endfor %}
@@ -196,11 +196,11 @@
                     {% for item in all_events %}
                     <a href="#" class="list-group-item list-group-item-light"
                        data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }})">
-                        <h7>item.0</h7>
+                        <h7>{{ item.0 }}</h7>
                         <div class="date-and-place">
-                            <small>item.1</small>
+                            <small>{{ item.1 }}</small>
                             |
-                            <small><b>item.4</b></small>
+                            <small><b>{{ item.4 }}</b></small>
                         </div>
                     </a>
                     {% endfor %}

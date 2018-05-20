@@ -152,11 +152,11 @@
                     {% for item in weekly_events %}
                     <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
                          onclick="get_event_data_ajax({{ item.2 }})" data-target="#Event-Card">
-                        <h7>item.0</h7>
+                        <h7>{{ item.0 }}</h7>
                         <div class="date-and-place">
-                            <small>item.1</small>
+                            <small>{{ item.1 }}</small>
                             |
-                            <small><b>item.4</b></small>
+                            <small><b>{{ item.4 }}</b></small>
                         </div>
                     </a>
                     {% endfor %}

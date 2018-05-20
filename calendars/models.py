@@ -23,7 +23,7 @@ class Event(models.Model):
     place = models.CharField(max_length=255, default="none")
 
     @staticmethod
-    def get_events(sorting_type, user, is_private=1):
+    def get_events(sorting_type, user, modifier=1):
         """!
             @brief Function that get evens from database by user and sorting type
         """
@@ -35,9 +35,10 @@ class Event(models.Model):
         }
         events_list = list()
         events = Event.objects.order_by(mode.get(sorting_type))
-        events = events.exclude(is_public=is_private) | events.filter(user=user, is_public=is_private)
-        if is_private == 0:
+        if modifier == 0:
             events = events.filter(user=user)
+        else:
+            events = events.exclude(is_public=modifier) | events.filter(user=user, is_public=modifier)
         for item in events:
             events_list.append((item.title, item.date, item.id, item.description, item.place))
         return events_list
