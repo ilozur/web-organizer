@@ -7,40 +7,59 @@ from datetime import datetime
 from notes.forms import AddNoteForm, SearchForm
 from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 from localisation import eng, rus
-
+type_of_sort = ['title_up']
 
 @login_required
 def index(request):
-    context = {
-        'title': "Notes index page",
-    }
-    user_lang = Language.objects.filter(user=request.user).first().lang
-    if user_lang == "ru":
-        lang = rus
-    elif user_lang == "en":
-        lang = eng
-    else:
-        lang = eng
-    context['language'] = user_lang
-    context['lang'] = lang
-    notes_list = []
-    notes = Notes.objects.filter(user=request.user)
-    context['all_notes_count'] = notes.count()
-    context['voice_notes_count'] = notes.filter(is_voice=True).count()
-    context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
-    notes = notes.order_by('name')
-    for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-    context['notes_data'] = notes_list
-    context['search_note_form'] = SearchForm()
-    context['add_note_form'] = AddNoteForm()
-    context['edit_note_form'] = EditNoteForm()
-    return render(request, "notes/index.html", context)
+    sort_type = request.GET.get("sort_type", "date_up")
+    notes = Notes.get_notes(sort_type, user=request.user)
+    page = request.GET.get("page")
+    try:
+        page = int(page)
+    except Exception as ex:
+        page = 1
+        print(ex)
+    if request.method == "GET":
+        context = {
+            'title': "Notes index page",
+        }
+        user_lang = Language.objects.filter(user=request.user).first().lang
+        if user_lang == "ru":
+            lang = rus
+        elif user_lang == "en":
+            lang = eng
+        else:
+            lang = eng
+        context['language'] = user_lang
+        context['lang'] = lang
+        notes_list = []
+        for i in notes:
+            notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+        pages = Paginator(notes_list, 20)
+        if (page < 1) or (page > len(pages.page_range)):
+            page = 1
+        context['page'] = page
+        context['all_notes_count'] = notes.count()
+        context['voice_notes_count'] = notes.filter(is_voice=True).count()
+        context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
+        context['notes_data'] = pages.page(page)
+        context['back_paginate_btn'] = pages.page(page).has_previous()
+        context['next_paginate_btn'] = pages.page(page).has_next()
+        context['notes_pages'] = pages.page_range
+        context['search_note_form'] = SearchForm()
+        context['add_note_form'] = AddNoteForm()
+        context['edit_note_form'] = EditNoteForm()
+        return render(request, "notes/index.html", context)
 
 
 @login_required
 def add_note_ajax(request):
+    """
+    @brief
+    This function adds notes
+    """
     response_data = {}
     if request.method == "POST":
         form = AddNoteForm(request.POST)
@@ -63,9 +82,13 @@ def add_note_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def search_notes(substr):
+def search_notes(substr, user):
     obj = Notes.objects.all()
     ret_list = []
+    """
+        @brief
+        This function searches notes
+        """
     for i in obj:
         if substr in i.name:
             ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
@@ -74,6 +97,12 @@ def search_notes(substr):
 
 @login_required
 def get_note_data_ajax(request):
+    """
+    @brief
+    This function receives information about notes
+    @detailed
+    This function receives information about notes such as date, time, name
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
@@ -97,6 +126,12 @@ def get_note_data_ajax(request):
 
 @login_required
 def search_ajax(request):
+    """
+    @brief
+    This function looks for the notes
+    @detailed
+    This function searches for a note among those that exist
+    """
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -118,6 +153,12 @@ def search_ajax(request):
 
 @login_required
 def sort_ajax(request):
+    """
+    @brief
+    This function sorts notes
+    @detailed
+    This function sorts notes by time and alphabetically
+    """
     response_data = {}
     if request.method == "POST":
         sorting_types = ('date_up', 'date_down', 'title_up', 'title_down')
@@ -130,6 +171,8 @@ def sort_ajax(request):
                 'notes_list': notes_list
             }
             result = '100'
+            global type_of_sort
+            type_of_sort = sort_type
         else:
             result = '112'
         response_data['result'] = result
@@ -140,6 +183,12 @@ def sort_ajax(request):
 
 @login_required
 def save_ajax(request):
+    """
+    @brief
+    This function saves the notes
+    @detailed
+    This function saves the written note
+    """
     response_data = {}
     if request.method == "POST":
         form = EditNoteForm(request.POST)
@@ -167,6 +216,10 @@ def save_ajax(request):
 
 @login_required
 def delete_ajax(request):
+    """
+    @brief
+    This function deletes notes
+    """
     response_data = {}
     if request.method == "POST":
         note_id = request.POST.get('id')
@@ -190,3 +243,18 @@ def delete_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def paginate(notes, page_number):
+    response_data = {}
+    notes_list = []
+    for i in notes:
+        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
+    pages = Paginator(notes_list, 20)
+    if (page_number < 1) or (page_number > len(pages.page_range)):
+        page_number = 1
+    response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
+    response_data['notes_list'] = pages.page(page_number).object_list
+    response_data['result'] = 100
+    response_data['normal_page'] = page_number
+    return HttpResponse(json.dumps(response_data), content_type="application/json")

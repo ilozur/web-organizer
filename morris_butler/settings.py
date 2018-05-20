@@ -24,7 +24,7 @@ SECRET_KEY = '88d+i7qn(6y=-@zs93^l3kq+s5u)#i6*szf_okt=3#(c@&8678'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['eva-organizer.tk', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -120,14 +120,22 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_ROOT = 'static_root'
-STATIC_URL = '/static/'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
+
+STATIC_ROOT = 'morris_butler/static_root'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "main/static"),
+]
 MEDIA_ROOT = 'media_root'
 MEDIA_URL = '/media/'
 
@@ -181,5 +189,4 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     'debug_toolbar.panels.profiling.ProfilingDebugPanel',
 ]
-
 # https://django-debug-toolbar.readthedocs.io/en/stable/installation.html/

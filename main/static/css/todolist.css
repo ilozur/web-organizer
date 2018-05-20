@@ -7,13 +7,10 @@ h1 {
 
 /*Элементы навигационной панели*/
 .nav-item:hover {
-  background-color: #cce5ff;
-  color: #004085;
+  border-bottom: 5px solid #004085;
 }
 nav .active {
-  background-color: #cce5ff;
-  border: 1px solid #b8daff;
-  color: #004085;
+  border-bottom: 5px solid #004085;
 }
 
 /*Шапка*/
@@ -158,6 +155,7 @@ footer {
     border-radius: 15px;
     text-align: center;
     margin-top: : 150px;
+        cursor: default;
 }
 
 .noanimation:hover{
