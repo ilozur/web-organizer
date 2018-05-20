@@ -9,7 +9,7 @@ from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
 from localisation import eng, rus
-
+type_of_sort = ['title_up']
 
 @login_required
 def index(request):
@@ -52,9 +52,6 @@ def index(request):
         context['add_note_form'] = AddNoteForm()
         context['edit_note_form'] = EditNoteForm()
         return render(request, "notes/index.html", context)
-    else:
-        response = paginate(notes, page)
-        return response
 
 
 @login_required
@@ -152,6 +149,37 @@ def search_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+@login_required
+def sort_ajax(request):
+    """
+    @brief
+    This function sorts notes
+    @detailed
+    This function sorts notes by time and alphabetically
+    """
+    response_data = {}
+    if request.method == "POST":
+        sorting_types = ('date_up', 'date_down', 'title_up', 'title_down')
+        sort_type = request.POST.get('data')
+        if sort_type in sorting_types:
+            notes_list = list()
+            for i in Notes.get_notes(sort_type, request.user):
+                notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
+            response_data = {
+                'notes_list': notes_list
+            }
+            result = '100'
+            global type_of_sort
+            type_of_sort = sort_type
+        else:
+            result = '112'
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
 
 @login_required
 def save_ajax(request):

@@ -5,7 +5,7 @@ onpopstate = function(event) {
 }
 
 function add_note_to_list(notes_data){
-    $("#list_id").append('<div onclick="get_note_data_ajax('
+    $("#list_id").append('<div id="note_' + notes_data[2] + ' "onclick="get_note_data_ajax('
         + notes_data[2] + ');"><a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card"><h7 id="note_title_'
         + notes_data[2] + '">'
         + notes_data[0] + '</h7><div class="date"><small id="note_date_'

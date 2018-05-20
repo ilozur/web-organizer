@@ -250,3 +250,22 @@ def delete_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def week_events(sort_type):
+    events = Event.get_events(sort_type)
+    result = []
+    now = datetime.now()
+    now_week = now.strftime('%U')
+    now_day = int(now.strftime('%w'))+1
+    now_time = (int(now.strftime('%H')))*60+int(now.strftime('%M'))
+    for item in events:
+        event = item
+        date = event.date
+        time = event.time
+        date_day = int(date.strftime('%w'))+1
+        date_week = date.strftime('%U')
+        date_time = (int(time.strftime('%H')))*60+int(time.strftime('%M'))
+        if (now_week == date_week) and (date_day >= now_day) and (date_time >now_time):
+            result.append(event)
+    return result

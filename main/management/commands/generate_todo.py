@@ -47,7 +47,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def create_todo(user):
-        text = ''.join(choice(ascii_letters) for i in range(randint(10, 200)))
         title = ''.join(choice(ascii_letters) for i in range(randint(10, 50)))
-        todo = Todos(user=user, text=text, title=title)
+        todo = Todos(user=user, title=title)
         todo.save()
