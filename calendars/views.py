@@ -12,7 +12,7 @@ from localisation import rus, eng
 @login_required
 def index(request):
     """!
-       @brief This function render calendar page for current user
+        @brief This function render calendar page for current user
     """
     if request.method == "GET":
         context = dict(title="Calendar index page", header="Calendar index page header")
@@ -27,6 +27,13 @@ def index(request):
         context['lang'] = lang
         date = datetime.now()
         events = Event.objects.filter(user=request.user)
+        sort_type = request.GET.get("sort_type", "AtoZ")
+        all_events = Event.get_events(sort_type, request.user)
+        my_events = Event.get_events(sort_type, request.user, 0)
+        weekly_events = week_events(request.user)
+        context['all_events'] = all_events
+        context['my_events'] = my_events
+        context['weekly_events'] = weekly_events
         context['weeks'] = get_weeks(date, request.user, events)
         context['all_events_count'] = events.count()
         context['today_events_count'] = events.filter(date=date.date()).count()
@@ -39,7 +46,7 @@ def index(request):
         context['now_year'] = date.year
         context['now_month_num'] = date.month
         context['now_date'] = str(date.year) + "_" + str(date.month)
-        add_event_form = AddingEventForm()
+        add_event_form = AddEventForm()
         context['add_event_form'] = add_event_form
         return render(request, "calendars/index.html", context)
     else:
@@ -184,23 +191,15 @@ def add_event(request, data):
                           should_notify_days=data['should_notify_days'])
             if data['place'] != "":
                 event.place = data['place']
-            print(event.place)
             event.save()
             return "100"
 
 
 @login_required
 def event_view(request):
-    context = {}
-    if request.method == "GET":
-        context['title'] = "Event add page"
-        context['header'] = "Event add page header"
-        adding_form = AddingEventForm()
-        context['adding_form'] = adding_form
-        return render(request, "calendars/add_event.html", context)
-    else:
+    if request.method == "POST":
         response_data = {}
-        form = AddingEventForm(request.POST)
+        form = AddEventForm(request.POST)
         if form.is_valid():
             result = add_event(request, form.cleaned_data)
             response_data['result'] = result
@@ -212,23 +211,21 @@ def event_view(request):
 @login_required
 def get_event_data_ajax(request):
     """!
-        This function get data of event (with ajax)
+        @brief This function get data of event (with ajax)
     """
-    response_data = {}
     if request.method == "POST":
         event_id = request.POST.get('id')
-        if Event.objects.filter(user=request.user, id=event_id).count() > 0:
-            event = Event.objects.filter(id=event_id).first()
+        event = Event.get_event_by_id(event_id)
+        if event:
             response_data = {
                 'title': event.title,
                 'description': event.description,
                 'date': datetime.combine(event.date, event.time).strftime("%I:%M%p on %B %d, %Y"),
                 'map_coordinates': event.place,
+                'result': '100'
             }
-            result = '100'
         else:
-            result = '114'
-        response_data['result'] = result
+            response_data = {'result': '114'}
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
@@ -252,8 +249,8 @@ def delete_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def week_events(sort_type):
-    events = Event.get_events(sort_type)
+def week_events(user):
+    events = Event.objects.filter(user=user)
     result = []
     now = datetime.now()
     now_week = now.strftime('%U')
@@ -266,7 +263,7 @@ def week_events(sort_type):
         date_day = int(date.strftime('%w'))+1
         date_week = date.strftime('%U')
         date_time = (int(time.strftime('%H')))*60+int(time.strftime('%M'))
-        if (now_week == date_week) and (date_day >= now_day) and (date_time >now_time):
+        if (now_week == date_week) and (date_day >= now_day) and (date_time > now_time):
             result.append(event)
     return result
 
