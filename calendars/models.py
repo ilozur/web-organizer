@@ -76,3 +76,10 @@ class Event(models.Model):
         events = events.filter(user=user)
         events = events.filter(date__gte=from_date, date__lte=to_date)
         return events
+
+    @staticmethod
+    def get_todo_by_id(id):
+        if Event.objects.filter(id=id).count() > 0:
+            return Event.objects.filter(id=id).first()
+        else:
+            return False

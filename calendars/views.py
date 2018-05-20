@@ -269,3 +269,36 @@ def week_events(sort_type):
         if (now_week == date_week) and (date_day >= now_day) and (date_time >now_time):
             result.append(event)
     return result
+
+
+@login_required
+def edit_event(request):
+    user = request.user
+    response = {}
+    if request.method == "POST":
+        form = EditEventForm(request.POST)
+        if form.is_valid():
+            todo_id = form.cleaned_data['todo_id']
+            deadline_date = form.cleaned_data['todo_edit_deadline']
+            deadline_time = form.cleaned_data['todo_edit_time']
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
+                                     deadline_time.minute, 0)
+            if deadline_date > datetime.now():
+                if Event.objects.filter(id=todo_id).exists():
+                    tmp = Event.get_event_by_id(todo_id)
+                    tmp.title = form.cleaned_data['todo_edit_title']
+                    tmp.priority = form.cleaned_data['todo_edit_priority']
+                    tmp.deadline = deadline_date
+                    tmp.save()
+                    response['result'] = "Success"
+                    response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
+                    response['priority'] = tmp.priority
+                else:
+                    response['result'] = 'No such todo'
+            else:
+                response['result'] = 'Date has already passed'
+        else:
+            response['result'] = 'Form is not valid'
+        return HttpResponse(json.dumps(response), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')

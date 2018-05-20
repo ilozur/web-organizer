@@ -20,3 +20,9 @@ class AddingEventForm(forms.Form):
     should_notify_hours = forms.IntegerField(min_value=0, max_value=23, required=False)
     should_notify_minutes = forms.IntegerField(min_value=0, max_value=59, required=False)
     place = forms.CharField(max_length=255, required=None)
+
+
+class EditEventForm(forms.Form):
+    description =  RichTextUploadingFormField(widget=CKEditorUploadingWidget())
+    title = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                                   'placeholder': 'Событие'}))
