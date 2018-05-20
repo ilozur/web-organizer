@@ -313,3 +313,10 @@ function ShowList()
     $("#ViewList").show("slow");
     $("#ViewTable").hide("slow");
 };
+
+function get_key(key) {
+    var p = window.location.search;
+    p = p.match(new RegExp(key + '=([^&=]+)'));
+    return p ? p[1] : false;
+};
+
