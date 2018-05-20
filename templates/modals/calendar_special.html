@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <div class="form-check btn btn-light">
                             <input class="form-check-input" type="checkbox">
-                            <label class="form-check-label"> Приватное мероприятие</label>
+                            <label class="form-check-label">Приватное мероприятие</label>
                         </div>
                     </div>
                 </form>
@@ -137,27 +137,18 @@
                     <button type="button" class="btn btn-light">Я..А</button>
                 </div>
                 <br/>
-
                 <div class="list-group">
+                    {% for item in my_events %}
                     <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Событие, что очень важно мне
-                        <small>28.02.2018</small>
+                       data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }})">
+                        <h7>{{ item.0 }}</h7>
+                        <div class="date-and-place">
+                            <small>{{ item.1 }}</small>
+                            |
+                            <small><b>{{ item.4 }}</b></small>
+                        </div>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Просто событие
-                        <small>27.02.2018</small>
-                        <small>Москва</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">День рождения
-                        <small>23.10.2018</small>
-                        <small>Королев</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Событие, что напоминает мне о тех деньках
-                        <small>28.02.2018</small>
-                        <small>Мытищи</small>
-                    </a>
+                    {% endfor %}
                 </div>
                 <nav class=" navbar navbar-pag">
                     <div class="btn-group btn-group-lg">
@@ -202,42 +193,17 @@
                 <br/>
 
                 <div class="list-group">
+                    {% for item in all_events %}
                     <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Where is my mind?
-                        <small>29.02.2018</small>
-                        <small>Москва</small>
+                       data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }})">
+                        <h7>{{ item.0 }}</h7>
+                        <div class="date-and-place">
+                            <small>{{ item.1 }}</small>
+                            |
+                            <small><b>{{ item.4 }}</b></small>
+                        </div>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Sad but True
-                        <small>13.02.2018</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Karma Police
-                        <small>14.02.2018</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Starway to Heaven
-                        <small>27.02.2018</small>
-                        <small>Королев</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Californication
-                        <small>27.02.2018</small>
-                        <small>Мытищи</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Personal Jesus
-                        <small>18.02.2018</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">День рождения
-                        <small>23.10.2018</small>
-                        <small>Королев</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event">Let It Be
-                        <small>22.02.2018</small>
-                    </a>
+                    {% endfor %}
                 </div>
                 <nav class=" navbar navbar-pag">
                     <div class="btn-group btn-group-lg">
@@ -266,7 +232,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Recommend">
+<div class="modal fade" id="Recommended">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

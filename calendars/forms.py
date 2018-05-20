@@ -3,7 +3,7 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from ckeditor_uploader.fields import RichTextUploadingFormField
 
 
-class AddingEventForm(forms.Form):
+class AddEventForm(forms.Form):
     """!
         @brief Form that handles user's event for writing to DB
     """

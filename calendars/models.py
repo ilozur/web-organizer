@@ -23,37 +23,32 @@ class Event(models.Model):
     place = models.CharField(max_length=255, default="none")
 
     @staticmethod
-    def get_events(sorting_type, user=None):
+    def get_events(sorting_type, user, modifier=1):
         """!
             @brief Function that get evens from database by user and sorting type
         """
-        # if aim = 'date' -> 'up' = new-old, 'down' = old-new
-        # if aim = 'title' -> 'up' = a-z, 'down' = z-a
-        sort = sorting_type.split('_')
-        aim = sort[0]
-        direction = sort[1]
-        modificator = sort[2]
-        if user:
-            events = Event.objects.filter(user=user)
+        mode = {
+            'AtoZ': 'title',
+            'ZtoA': '-title',
+            'old': ('-date', '-time'),
+            'new': ('date', 'time')
+        }
+        events_list = list()
+        events = Event.objects.order_by(mode.get(sorting_type))
+        if modifier == 0:
+            events = events.filter(user=user)
         else:
-            events = Event.objects.all()
-        if aim == "date":
-            if direction == "up":
-                events = events.order_by('-date', '-time')
-            elif direction == "down":
-                events = events.order_by('date', 'time')
-        elif aim == "title":
-            if direction == "up":
-                events = events.order_by('title')
-            elif direction == "down":
-                events = events.order_by('-title')
-        if modificator == 'all':
-            pass
-        elif modificator == 'public':
-            events = events.filter(is_public=1)
-        elif modificator == 'private':
-            events = events.filter(is_public=0)
-        return events
+            events = events.exclude(is_public=modifier) | events.filter(user=user, is_public=modifier)
+        for item in events:
+            events_list.append((item.title, item.date, item.id, item.description, item.place))
+        return events_list
+
+    @staticmethod
+    def get_event_by_id(id):
+        if Event.objects.filter(id=id).exists():
+            return Event.objects.filter(id=id).first()
+        else:
+            return False
 
     @staticmethod
     def delete_event(event_id):
@@ -73,6 +68,8 @@ class Event(models.Model):
         """
         if events is None:
             events = Event.objects.all()
-        events = events.filter(user=user)
-        events = events.filter(date__gte=from_date, date__lte=to_date)
+        events_list = list()
+        events = events.filter(user=user, date__gte=from_date, date__lte=to_date)
+        for item in events:
+            events_list.append((item.title, item.date, item.id, item.description, item.place))
         return events
