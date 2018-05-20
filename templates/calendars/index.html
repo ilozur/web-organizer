@@ -10,7 +10,7 @@
 <script language="JavaScript" src='{% static "js/calendar/scripts.js" %}'></script>
 <script src="http://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 <script language="JavaScript" src='{% static "js/yandex_map.js" %}'></script>
-<script> setup_date({{ now_month_num }}, {{ now_year }}); </script>
+<script> setup_date({{ stat.now_month_num }}, {{ stat.now_year }}); </script>
 {% endblock %}
 {% block content %}
 <article class="calendar">
@@ -65,17 +65,17 @@
 							</button> -->
 							<div class="card-footer">
 							<div class="alert alert-danger">
-								<small data-toggle="modal" data-target="#All event">Всего событий: {{ all_events_count }}</small>
+								<small data-toggle="modal" data-target="#All event">Всего событий: {{ stat.all_events_count }}</small>
 								<br/>
-								<small data-toggle="modal" data-target="#For-Today event">На сегодня: {{ today_events_count }}</small>
+								<small data-toggle="modal" data-target="#For-Today event">На сегодня: {{ stat.today_events_count }}</small>
 								<br/>
-								<small>За вчера: {{ yesterday_events_count }}</small>
+								<small>За вчера: {{ stat.yesterday_events_count }}</small>
 								<br/>
-								<small>За неделю: {{ week_events_count }}</small>
+								<small>За неделю: {{ stat.week_events_count }}</small>
 								<br/>
-								<small>За месяц: {{ month_events_count }}</small>
+								<small>За месяц: {{ stat.month_events_count }}</small>
 								<br/>
-								<small>За год: {{ year_events_count }}</small>
+								<small>За год: {{ stat.year_events_count }}</small>
 							</div>
 							</div>
 							</div>
@@ -95,8 +95,8 @@
 				<a>
 				<button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
 				</a>
-				<h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
-					id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
+				<h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ stat.now_month }}</span> <span
+					id="year_holder">{{ stat.now_year }}</span>&nbsp;&nbsp;</h2>
 				<a>
 				<button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>
 				</a>
@@ -119,7 +119,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for week in weeks %}
+					{% for week in stat.weeks %}
 					<tr>
 						<th>{{ week.week_num }}</th>
 						{% for day in week.week_days %}
