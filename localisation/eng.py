@@ -35,7 +35,6 @@ notes_cancel = 'Cancel'
 notes_add = 'Create'
 notes_delete = 'Delete'
 notes_listen = 'Listen'
-notes_edit = 'Edit'
 notes_save = 'ОК'
 notes_edit_title = 'Edit note'
 notes_changename = 'Change name'
@@ -46,6 +45,14 @@ notes_voice_count = 'with voice'
 
 
 # --Календарь--
+today = 'Today'
+sunday = 'Sunday'
+monday = 'Monday'
+tuesday = 'Tuesday'
+wednesday = 'Wednesday'
+thursday = 'Thursday'
+friday = 'Friday'
+saturday = 'Saturday'
 
 closest_events_calendar = 'Nearest events of the calendar'
 events_onday = 'For a day'
@@ -94,7 +101,7 @@ reminders_cancel = 'Cancel'
 reminders_add = 'Create'
 reminders_accomplish_to = 'Accomplish to '
 reminders_status = 'Status'
-reminders_edit = 'Edit'
+
 reminders_save = 'ОК'
 reminders_changename = 'Change name'
 reminders_changetext = 'Change text'
@@ -135,7 +142,15 @@ profile_germany = 'Germany'
 
 
 # --Остальное --
-
+edit = 'Edit'
+cancel = 'Cancel'
+search = 'Search'
+sort = 'Sort'
+highly_important = 'Hihly important'
+first_new = 'At first new'
+first_old = 'At first old'
+AtoZ = 'A..Z'
+ZtoA = 'Z..A'
 good_night = "Good night"
 good_morning = "Good morning"
 good_day = "Good afternoon"

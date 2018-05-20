@@ -37,14 +37,14 @@
                     <div class="dropdown btn-lg">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Сортировка
+                            {{lang.sort}}
                         </button>
                         <div class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="sorting('new')">Сначала новые</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('old')">Сначала старые</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('AtoZ')">А..Я</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('ZtoA')">Я..А</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('deadline')">Горящие задачи
+                            <button type="button" class="dropdown-item" onclick="sorting('new')">{{lang.first_new}}</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('old')">{{lang.first_old}}</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('AtoZ')">{{lang.AtoZ}}</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('ZtoA')">{{lang.ZtoA}}</button>
+                            <button type="button" class="dropdown-item" onclick="sorting('deadline')">{{lang.highly_important}}
                             </button>
                         </div>
                     </div>

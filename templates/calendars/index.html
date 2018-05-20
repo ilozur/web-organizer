@@ -38,17 +38,17 @@
 							</div>
 							<div class="dropdown btn-lg">
 								<button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Сортировка
+								{{lang.sort}}
 								</button>
 								<div class="dropdown-menu">
-									<button type="button" class="dropdown-item">Сначала новые</button>
-									<button type="button" class="dropdown-item">Сначала старые</button>
-									<button type="button" class="dropdown-item">А..Я</button>
-									<button type="button" class="dropdown-item">Я..А</button>
+									<button type="button" class="dropdown-item">{{lang.first_new}}</button>
+									<button type="button" class="dropdown-item">{{lang.first_old}}</button>
+									<button type="button" class="dropdown-item">{{lang.AtoZ}}</button>
+									<button type="button" class="dropdown-item">{{lang.ZtoA}}</button>
 								</div>
 							</div>
 
-							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#In-Map">На карте
+							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#In-Map">{{lang.calendar_onthemap}}
 							</button>
 							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#My">Мои события
 							</button>
@@ -102,20 +102,20 @@
 				</a>
 				&nbsp;&nbsp;
 				<a>
-				<button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button>
+				<button type="button" class="btn btn-danger" onclick="go_to_now_month()">{{lang.today}}</button>
 				</a>
 			</div>
 			<table class="table table-danger table-mouth" id="month_calendar">
 				<thead>
 					<tr>
 						<th></th>
-						<th>Понедельник</th>
-						<th>Вторник</th>
-						<th>Среда</th>
-						<th>Четверг</th>
-						<th>Пятница</th>
-						<th>Суббота</th>
-						<th>Воскресенье</th>
+						<th>{{lang.monday}}</th>
+						<th>{{lang.tuesday}}</th>
+						<th>{{lang.wednesday}}</th>
+						<th>{{lang.thursday}}</th>
+						<th>{{lang.friday}}</th>
+						<th>{{lang.saturday}}</th>
+						<th>{{lang.sunday}}</th>
 					</tr>
 				</thead>
 				<tbody>

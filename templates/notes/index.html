@@ -34,13 +34,13 @@
 					</div>
 					<div class="dropdown btn-lg">
 						<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Сортировка
+						{{lang.sort}}
 						</button>
 						<div class="dropdown-menu">
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_up')">А..Я</button>
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_down')">Я..А</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_up')">{{lang.first_new}}</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_down')">{{lang.first_old}}</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_up')">{{lang.AtoZ}}</button>
+							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_down')">{{lang.ZtoA}}</button>
 						</div>
 					</div>
 					<div class="card-footer">

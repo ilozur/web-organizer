@@ -35,7 +35,6 @@ notes_cancel = 'Отменить'
 notes_add = 'Создать'
 notes_delete = 'Удалить'
 notes_listen = 'Прослушать'
-notes_edit = 'Редактировать'
 notes_save = 'ОК'
 notes_edit_title = 'Редактировать заметку'
 notes_changename = 'Изменить название'
@@ -46,6 +45,14 @@ notes_voice_count = 'голосовых'
 
 
 # --Календарь--
+today = 'Сегодня'
+sunday = 'Воскресение'
+monday = 'Понедельник'
+tuesday = 'Вторник'
+wednesday = 'Среда'
+thursday = 'Четверг'
+friday = 'Пятница'
+saturday = 'Суббота'
 
 closest_events_calendar = 'Ближайшие события календаря'
 events_onday = 'На день'
@@ -65,7 +72,7 @@ calendar_choosetime = 'Выбрать время'
 calendar_chooseplace = 'Выбрать место'
 calendar_description = 'Описание'
 calendar_private_event = 'Приватное мероприятие'
-calendar_cancel = 'Отменить'
+
 calendar_add = 'Создать'
 calendar_onthemap = 'Посмотреть на карте'
 calendar_push = 'Отправить'
@@ -94,7 +101,7 @@ reminders_cancel = 'Отменить'
 reminders_add = 'Создать'
 reminders_accomplish_to = 'Выполнить к'
 reminders_status = 'Статус'
-reminders_edit = 'Редактировать'
+
 reminders_save = 'ОК'
 reminders_changename = 'Изменить имя'
 reminders_changetext = 'Изменить тексть'
@@ -135,7 +142,15 @@ profile_germany = 'Немецкий'
 
 
 # --Остальное --
-
+edit = 'Редактировать'
+cancel = 'Отменить'
+search = 'Поиск'
+sort = 'Сортировка'
+highly_important = 'Горящие задачи'
+first_new = 'Сначала новые'
+first_old = 'Сначала старые'
+AtoZ = 'А..Я'
+ZtoA = 'Я..А'
 good_night = "Доброй ночи"
 good_morning = "Доброе утро"
 good_day = "Добрый день"
