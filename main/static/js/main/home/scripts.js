@@ -1,10 +1,3 @@
-var notes_link;
-
-function setup_link(link)
-{
-    notes_link = link;
-};
-
 function clean_add_note_fields()
 {
     for (instance in CKEDITOR.instances) {
@@ -82,7 +75,7 @@ function add_note_ajax()
                 var now_notes_count = $("#last_notes_holder").find('div').length;
                 if (now_notes_count == 0)
                 {
-                    $("#last_notes_holder").html('<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>');
+                    $("#last_notes_holder").html('<p class="lead"><small><a href="/notes">Показать все</a></small></p></div>');
                     $("#last_notes_holder").parent().find('h5').remove();
                     $("#last_note_title").attr('href', '');
                     $("#last_note_title").attr('data-toggle', 'modal');
@@ -226,7 +219,7 @@ function delete_note_ajax()
                         var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                             'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
                             '">' + response['name'] + '</a></p></div>';
-                        var show_all_label = '<p class="lead"><small><a href="' + notes_link + '">Показать все</a></small></p></div>';
+                        var show_all_label = '<p class="lead"><small><a href="/notes">Показать все</a></small></p></div>';
                         $("#last_notes_holder p:last").remove();
                         $("#last_notes_holder").html($("#last_notes_holder").html() + new_note_html);
                         $("#last_notes_holder").html($("#last_notes_holder").html() + show_all_label);

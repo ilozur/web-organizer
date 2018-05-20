@@ -40,12 +40,11 @@
                             Сортировка
                         </button>
                         <div class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="sorting('new')">Сначала новые</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('old')">Сначала старые</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('AtoZ')">А..Я</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('ZtoA')">Я..А</button>
-                            <button type="button" class="dropdown-item" onclick="sorting('deadline')">Горящие задачи
-                            </button>
+                            <button type="button" class="dropdown-item" onclick="sort_todo_ajax('new')">Сначала новые</button>
+                            <button type="button" class="dropdown-item" onclick="sort_todo_ajax('old')">Сначала старые</button>
+                            <button type="button" class="dropdown-item" onclick="sort_todo_ajax('AtoZ')">А..Я</button>
+                            <button type="button" class="dropdown-item" onclick="sort_todo_ajax('ZtoA')">Я..А</button>
+                            <button type="button" class="dropdown-item" onclick="sort_todo_ajax('deadline')">Горящие задачи</button>
                         </div>
                     </div>
                     <!--                          <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#Synchronization">
@@ -69,27 +68,19 @@
                 </div>
                 <nav class="navbar">
                     <div class="btn-group btn-group-lg" id="paginate_btn_holder">
-                        <a>
-                            <button type="button" id="PrevPage_Progress" class="btn btn-primary"
-                                    disabled>&laquo;</button>
-                        </a>
-                        {% for number in undone_pages %}
-                        <a>
-                            <button id="paginate_btn_{{ number }}" type="button"
-                                    onclick="paginate({{ number }}, 'in progress')" class="btn btn-primary">{{ number }}
-                            </button>
-                        </a>
-                        {% endfor %}
-                        <a>
-                            <button type="button" id="NextPage_Progress" onclick="paginate(2, 'in progress')"
-                                    class="btn btn-primary">&raquo;</button>
-                        </a>
-                    </div>
+						<a><button id="PrevPage_Progress" type="button" class="btn btn-primary">&laquo;</button></a>
+						<div style="width: 150px; height: 100px">
+							{% for number in todo_pages %}
+								<a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-primary" onclick="paginate({{ number }}, 'in progress')">{{ number }}</button></a>
+							{% endfor %}
+						</div>
+						<a><button id="NextPage_Progress" type="button" class="btn btn-primary">&raquo;</button></a>
+					</div>
                 </nav>
             </div>
             <section class="list-view col">
                 <div class="list-group" id="ViewList">
-                    {% for item in undone_todos %}
+                    {% for item in todo_data %}
                         <div id="todo_{{item.2}}" onclick="get_todo_data_ajax('{{item.2}}');">
                             <a href="#" class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#Open-Todo">
                                 <button type="button" class="btn btn-primary" onclick="status_change({{ item.2 }}, 'done')">
@@ -108,7 +99,7 @@
                 </div>
                 <section class="card-view" style="display: None" id="ViewCard">
                     <div class="row" id="CardList">
-                        {% for item in undone_todos %}
+                        {% for item in todo_data %}
                             <div id="todo_card_{{ item.2 }}" onclick="get_todo_data_ajax({{ item.2 }})" class="col-4"
                                data-toggle="modal" data-target="#Open-Todo">
                                 <div class="card">
@@ -135,4 +126,26 @@
 <article class="modals">
     {% include "modals/todo.html" %}
 </article>
+<script>
+	var page = {{ page }};
+	for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
+	{
+		$('#paginate_btn_' + i).removeAttr('disabled');
+	}
+	$('#paginate_btn_' + page).attr('disabled', 'disabled');
+	{% if back_paginate_btn %}
+		$("#PrevPage_Progress").removeAttr('disabled');
+		$("#PrevPage_Progress").attr('onclick', 'paginate(' + (page - 1) + ', "in progress")');
+	{% else %}
+		$("#PrevPage_Progress").attr('disabled', 'disabled');
+		$('#PrevPage_Progress').removeAttr('onclick');
+	{% endif%}
+	{% if next_paginate_btn %}
+		$("#NextPage_Progress").removeAttr('disabled');
+		$("#NextPage_Progress").attr('onclick', 'paginate(' + (page + 1) + ', "in progress")');
+	{% else %}
+		$("#NextPage_Progress").attr('disabled', 'disabled');
+		$('#NextPage_Progress').removeAttr('onclick');
+	{% endif %}
+</script>
 {% endblock %}
