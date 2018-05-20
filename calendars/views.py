@@ -1,12 +1,12 @@
-from calendars.models import *
-from django.shortcuts import render
-from django.contrib.auth.decorators import *
-from datetime import datetime, timedelta
-from calendars.forms import *
-from main.models import Language
-from django.http import HttpResponse, HttpResponseRedirect
 import json
+
+from django.contrib.auth.decorators import *
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from calendars.forms import *
+from calendars.models import *
 from localisation import rus, eng
+from main.models import Language
 
 
 @login_required
@@ -25,27 +25,7 @@ def index(request):
             lang = eng
         context['language'] = user_lang
         context['lang'] = lang
-        date = datetime.now()
-        events = Event.objects.filter(user=request.user)
-        sort_type = request.GET.get("sort_type", "AtoZ")
-        all_events = Event.get_events(sort_type, request.user)
-        my_events = Event.get_events(sort_type, request.user, 0)
-        weekly_events = week_events(request.user)
-        context['all_events'] = all_events
-        context['my_events'] = my_events
-        context['weekly_events'] = weekly_events
-        context['weeks'] = get_weeks(date, request.user, events)
-        context['all_events_count'] = events.count()
-        context['today_events_count'] = events.filter(date=date.date()).count()
-        context['yesterday_events_count'] = events.filter(date=date.date() - timedelta(1)).count()
-        context['week_events_count'] = last_events = events.filter(date__lte=date.date())
-        context['week_events_count'] = last_events.filter(date__gte=date.date() - timedelta(1)).count()
-        context['month_events_count'] = last_events.filter(date__gte=date.date() - timedelta(30)).count()
-        context['year_events_count'] = last_events.filter(date__gte=date.date() - timedelta(365)).count()
-        context['now_month'] = get_month_name(date.month)
-        context['now_year'] = date.year
-        context['now_month_num'] = date.month
-        context['now_date'] = str(date.year) + "_" + str(date.month)
+        context['stat'] = Event.create_calendar_statistics(request)
         add_event_form = AddEventForm()
         context['add_event_form'] = add_event_form
         return render(request, "calendars/index.html", context)
@@ -66,88 +46,13 @@ def index(request):
         except ValueError:
             return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
         events = Event.objects.filter(user=request.user)
-        response_data['weeks'] = get_weeks(now_date, request.user, events)
-        response_data['month_name'] = get_month_name(now_date.month)
+        response_data['weeks'] = Event.get_weeks(now_date, request.user, events)
+        response_data['month_name'] = Event.get_month_name(now_date.month)
         response_data['now_year'] = now_date.year
         response_data['result'] = "100"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def get_weeks(date_time, user, events):
-    """!
-        @brief This function select weeks and belong them events
-    """
-    date = date_time
-    datetime_now = datetime.now()
-    if (date.month == datetime_now.month) and (date.year == datetime_now.year):
-        now_month = True
-    else:
-        now_month = False
-    date -= timedelta(days=date.weekday())
-    if (date.day > 1) and (date.month == date_time.month):
-        date -= timedelta(days=7 * (date.day // 7))
-        if date.month == date_time.month:
-            date -= timedelta(days=7)
-    weeks = []
-    for i in range(1, 5):
-        tmp = dict()
-        tmp['week_num'] = i
-        week_days = []
-        for day in range(1, 8):
-            tmp_day = dict()
-            tmp_day['day'] = date.day
-            day_class = ""
-            if now_month:
-                if (date.day == date_time.day) and (date.month == date_time.month):
-                    day_class = "today"
-                elif date.month != date_time.month:
-                    day_class = "future-date"
-            else:
-                if date.month != date_time.month:
-                    day_class = "future-date"
-            tmp_day_events = events.filter(date=date)
-            tmp_day['class'] = day_class
-            if tmp_day_events.count() > 0:
-                tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
-            week_days.append(tmp_day)
-            date += timedelta(days=1)
-        tmp['week_days'] = week_days
-        weeks.append(tmp)
-    last_month = date.month
-    while last_month == date.month:
-        tmp = dict()
-        tmp['week_num'] = len(weeks) + 1
-        week_days = []
-        for day in range(1, 8):
-            tmp_day = dict()
-            tmp_day['day'] = date.day
-            day_class = ""
-            if now_month:
-                if (date.day == date_time.day) and (date.month == date_time.month):
-                    day_class = "today"
-                elif date.month != date_time.month:
-                    day_class = "future-date"
-            else:
-                if date.month != date_time.month:
-                    day_class = "future-date"
-            tmp_day['class'] = day_class
-            tmp_day_events = events.filter(date=date)
-            if tmp_day_events.count() > 0:
-                tmp_day['event'] = {'caption': tmp_day_events[0].title, 'id': tmp_day_events[0].id}
-            week_days.append(tmp_day)
-            date += timedelta(days=1)
-        tmp['week_days'] = week_days
-        weeks.append(tmp)
-    return weeks
-
-
-def get_month_name(month):
-    """!
-        @brief This functon get name of month by number
-    """
-    m = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь", ]
-    return m[month - 1]
 
 
 def search_events(string):
