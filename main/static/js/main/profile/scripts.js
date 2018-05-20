@@ -79,7 +79,7 @@ function upload_avatar()
 	$('#save_changes_btn').attr('disabled', 'disabled');
 	$.ajax({
 		type: "POST",
-		url: '/siteprofile/upload_avatar',
+		url: '/userprofile/upload_avatar',
 		data: form_data,
 		success: function(response)
 		{

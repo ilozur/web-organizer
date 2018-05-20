@@ -255,3 +255,15 @@ def create_recover_password_key_ajax(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+@login_required
+def upload_avatar(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid:
+            image = UserAvatar(file_field=request.FILES['file'])
+            image.save()
+            return True
+        else:
+            form = UploadFileForm()
+            return form

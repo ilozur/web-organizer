@@ -344,14 +344,3 @@ def sign_out_view(request):
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect('/')
-
-def upload_avatar(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid:
-            image = UserAvatar(file_field=request.FILES['file'])
-            image.save()
-            return true
-        else:
-            form = UploadFileForm()
-            return form
