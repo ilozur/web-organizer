@@ -23,22 +23,23 @@
 }
 
 /* Выделенный курсором раздел и его анимация */
-.nav-item {
-	transition: 0.5s;
-}
 .nav-item:hover {
-	background-color: #dae0e5;
-	border-radius: 30px;
-	color: #fff;
-	transition: 0.5s;
-	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
+	border-bottom: 5px solid #000;
 }
 
 /*Выбранный раздел*/
 nav .active {
-	background-color: #dae0e5;
-	border-radius: 30px;
-	color: #fff;
+	border-bottom: 5px solid #000;
+}
+
+.notif {
+	margin-left: 100px;
+}
+
+.notif-menu {
+	width: 500px;
+	height: auto;
+	box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
 /*Подвал*/
