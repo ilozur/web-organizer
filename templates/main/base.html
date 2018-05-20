@@ -54,6 +54,25 @@
                     <a class="nav-link" href='{% url "todo.index" %}'>{{ lang.reminders_title }}</a>
                 </li>
             </ul>
+            <div class="btn-group notif">
+              <button class="btn dropdown-toggle" data-toggle="dropdown">
+                Уведомления <span class="badge badge-light">4</span>
+              </button>
+              <div class="dropdown-menu notif-menu">
+                    <div class="alert alert-primary" role="alert">
+                      Задача добавлена
+                    </div>
+                    <div class="alert alert-secondary" role="alert">
+                      Не пора ли вам обновить пароль?
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                      Мероприятие начнется через 2 часа!
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                      Заметка "Сделать уведомления" удалена
+                    </div>
+              </div>
+            </div>
             <ul class="navbar-nav ml-auto">
                 <li class="dropdown">
                     <button data-toggle="dropdown" class="btn btn-outline-light">{{ request.user.username }}
@@ -117,6 +136,8 @@
             <li><a class="text-muted" href="#">О нас</a></li>
             <li><a class="text-muted" href="#">О сайте</a></li>
             <li><a class="text-muted" href="#">Контакты</a></li>
+            <li><a class="text-muted" href="#">Приложение под iOS</a></li>
+            <li><a class="text-muted" href="#">Приложение под Android</a></li>
           </ul>
         </div>
       </div>
