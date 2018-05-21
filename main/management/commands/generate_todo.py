@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 from todo.models import *
 from random import choice, randint
-from string import ascii_letters
+
+WORDS = open("/usr/share/dict/words").read().splitlines()
 
 
 class Command(BaseCommand):
@@ -47,6 +48,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def create_todo(user):
-        title = ''.join(choice(ascii_letters) for i in range(randint(10, 50)))
+        title = ' '.join(choice(WORDS) for i in range(randint(1, 5)))
         todo = Todos(user=user, title=title)
         todo.save()

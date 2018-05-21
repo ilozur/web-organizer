@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
 from calendars.models import *
 from random import choice, randint
-from string import ascii_letters
 from datetime import datetime, timedelta
+
+WORDS = open("/usr/share/dict/words").read().splitlines()
 
 
 class Command(BaseCommand):
@@ -48,8 +49,8 @@ class Command(BaseCommand):
 
     @staticmethod
     def create_event(user):
-        text = ''.join(choice(ascii_letters) for i in range(randint(10, 500)))
-        title = ''.join(choice(ascii_letters) for i in range(randint(10, 50)))
+        text = ' '.join(choice(WORDS) for i in range(randint(10, 50)))
+        title = ' '.join(choice(WORDS) for i in range(randint(1, 5)))
         default_date = datetime.now()
         date = default_date.date() + timedelta(randint(0, 365))
         time = (default_date + timedelta(hours=randint(0, 24), minutes=randint(0, 60))).time()
