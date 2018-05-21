@@ -92,57 +92,5 @@
 {% endblock %}
 
 {% block content %} {% endblock %}
-
-{% block footer %}
-{% if user.is_authenticated %}
-<footer class="container py-5">
-      <div class="row">
-        <div class="col-12 col-md">
-          <a href='{% url "index" %}'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mb-2 logo"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg></a>
-          <small class="d-block mb-3 text-muted">MPS51 Team</small>
-          <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
-        </div>
-        <div class="col-6 col-md">
-          <h5>{{ lang.navigation_title }}</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href='{% url "index" %}'>{{ lang.title }}</a></li>
-            <li><a class="text-muted" href='{% url "notes.index" %}'>{{ lang.notes_title }}</a></li>
-            <li><a class="text-muted" href='{% url "calendar.index" %}'>{{ lang.calendars_title }}</a></li>
-            <li><a class="text-muted" href='{% url "todo.index" %}'>{{ lang.reminders_title }}</a></li>
-            <li><a class="text-muted" href='{% url "userprofile.index" %}'>{{ lang.account_title }}</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-md">
-          <h5>{{ lang.resources_title }}</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href="#">Яндекс API</a></li>
-            <li><a class="text-muted" href="#">Bootstrap 4</a></li>
-            <li><a class="text-muted" href="#">jQuery</a></li>
-            <li><a class="text-muted" href="#">Django</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-md">
-          <h5>{{ lang.social_network_title }}</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href="#">VK</a></li>
-            <li><a class="text-muted" href="#">Telegram</a></li>
-            <li><a class="text-muted" href="#">GitLab</a></li>
-            <li><a class="text-muted" href="#">Instagram</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-md">
-          <h5>{{ lang.help_title }}</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href="#">О нас</a></li>
-            <li><a class="text-muted" href="about.html">О сайте</a></li>
-            <li><a class="text-muted" href="#">Контакты</a></li>
-            <li><a class="text-muted" href="#">Приложение под iOS</a></li>
-            <li><a class="text-muted" href="#">Приложение под Android</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
-{% endif %}
-{% endblock %}
 </body>
 </html>

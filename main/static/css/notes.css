@@ -1,10 +1,7 @@
 /*Стили для раздела заметок*/
-
-/*Заголовок*/
-h1 {
-	color: #856404;
+body {
+    background-color: #ffe;
 }
-
 /*Элементы навигационной панели*/
 .nav-item:hover {
   border-bottom: 5px solid #856404;
@@ -13,69 +10,76 @@ nav .active {
   border-bottom: 5px solid #856404;
 }
 
-/*Шапка*/
-.mast {
-	padding-top: 3em;
-	padding-bottom: 3em;
-	text-align: center;
-	color: #856404;
-	border: 1px solid #ffeeba;
-	border-top: 0px;
-	background-color: #fff3cd;
-	border-radius: 0 0 15px 15px;
-  margin-bottom: 25px;
-}
-
-/*Кнопки*/
-.btn,
-.btn:focus,
-.btn:active {
-  color: #856404;
-  text-shadow: none;
-  background-color: #fff3cd;
-  border: .05rem solid #ffeeba;
-  transition: 0.5s;
-}
-.btn:hover {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
-  color: #856404;
-  text-shadow: none;
-  background-color: #fff3cd;
-  border: .05rem solid #ffeeba;
-  transition: 0.5s;
-}
-
-/*Карточки*/
-.card {
-  background-color: #fff3cd;
-  height: 400px;
-  width: 400px;
-  transition: 0.5s;
-  margin: 10px;
-  margin-bottom: 40px;
-  cursor: pointer;
-  border-radius: 15px;
-}
-.card:hover {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
-  transition: 0.5s;
-}
-
-/*Дата*/
-.date {
-  font-size: 10pt;
-  float: right;
-}
-
 /*Лого*/
 .logo {
 	color: #856404;
 }
 
-/*Изображение пользователя*/
-.user-image {
-  width: 200px;
-  height: 200px;
+h1 {
+  color: #856404;
+  margin: 11% 50px 50px 50px;
+}
+
+.btn-warning {
+color: #856404;
+    background-color: #ffeeba;
+}
+
+.main {
+  border-top: 2px solid #856404;
+  height: 500px;
+}
+
+.menu {
+  padding: 0px;
+}
+
+.notes-list {
+  border-right: 2px solid #856404;
+  border-left: 2px solid #856404;
+  padding: 0px;
+  height:500px;
+  width:100%;
+  overflow:auto;
+}
+
+.add {
+  margin: 5px;
+}
+
+.list-group-item {
+  transition: 0.5s;
+}
+
+.list-group-item:hover {
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+}
+
+.input-group {
+  margin: 15px 0px;
+}
+
+.name {
+  width: 500px;
+}
+
+.description {
+  height: 350px;
+}
+
+.list-group {
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown {
+  margin: 5px 25px;
+}
+
+.alert {
+  margin-left: 15px ;
+  margin-right: 15px ;
 }
 
 /*Заголовок у модуля*/
@@ -95,35 +99,14 @@ nav .active {
   border-top: 0px;
 }
 
-/*Список*/
-.list-group-item {
-	color: #856404;	
-	transition: 0.5s;
-	margin-top: 10px;
-	width: 1000px;
-	margin-left: 150px;
-  border-radius: 15px 15px 15px 15px;
-}
-.list-group-item:hover {
-	color: #856404;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-	transition: 0.5s;
+.icon {
+  width: 25px;
+  height: 25px;
+  text-align: center;
 }
 
-/*Подвал*/
-footer {
-	color: #fff3cd;
-}
-
-.noanimation{
-    height: auto ;
-    width: 215px;
-    border-radius: 15px;
-    text-align: center;
-    margin-top: : 150px;
-        cursor: default;
-}
-
-.noanimation:hover{
-	box-shadow: 0 0;
+.date {
+  color: #856404;
+  margin-left: 10px;
+  margin-top: 10px;
 }
