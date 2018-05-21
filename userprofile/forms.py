@@ -45,6 +45,13 @@ class RecoverPasswordUserData(forms.Form):
             @brief Form that handles user's data while recovering
     """
     recover_email = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                           'placeholder': 'Enter your e-mail'}))
+                                                                                   'placeholder': 'Enter your e-mail'}))
     recover_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                         'placeholder': 'Enter your name'}))
+                                                                                 'placeholder': 'Enter your name'}))
+
+
+class ChangeLanguageForm(forms.Form):
+    """!
+            @brief Form that handles user's language
+    """
+    language = forms.CharField(max_length=20)

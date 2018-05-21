@@ -4,7 +4,7 @@
 title = 'Главная'
 notes_title = 'Заметки'
 calendars_title = 'Календарь'
-reminders_title = 'Напоминания'
+reminders_title = 'Задачи'
 account_title = 'Личный кабинет'
 quit_title = 'Выйти'
 navigation_title = 'Навигация'
@@ -14,11 +14,11 @@ help_title = 'Справка'
 
 
 nearest_event_title = 'Ближайшее мероприятие'
-closest_reminder_title = 'Скорейшее напоминание'
+closest_reminder_title = 'Скорейшая задача'
 latest_note_title = 'Последняя заметка'
 no_events_title = 'Нет событий'
 no_notes_title = 'Нет заметок'
-no_todo_title = 'Нет напоминаний'
+no_todo_title = 'Нет задач'
 
 
 # --Заметки--
@@ -76,16 +76,16 @@ calendar_save = 'ОК'
 calendar_place_and_time = 'Место и время по желанию'
 
 
-# --Напоминания--
+# --Задачи--
 
-latest_reminders = 'Последние напоминания'
-closed_reminders = 'Завершенные напоминания'
+latest_reminders = 'Последние задачи'
+closed_reminders = 'Завершенные задачи'
 reminders_showall = 'Показать все'
-total_reminders = 'Всего напоминаний'
-active_reminders = 'Активных напоминаний'
-closed_reminders_count = 'Завершенных напоминаний'
+total_reminders = 'Всего задач'
+active_reminders = 'Активных задач'
+closed_reminders_count = 'Завершенных задач'
 
-reminders_create = 'Создание напоминания'
+reminders_create = 'Создание задачи'
 reminders_name = 'Название'
 reminders_text = 'Текст'
 reminders_priority = 'Приоритет'
@@ -102,10 +102,10 @@ reminders_changedeadline = 'Изменить дедлайн'
 reminders_changepriority = 'Изменить приоритет'
 reminders_savechanges = 'Сохранить'
 reminders_synchronisation = 'Синхронизация'
-reminders_savealltofile = 'Сохранить все напоминания в файл' 
-reminders_saveparttofile = 'Сохранить часть напоминаний в файл'
-reminders_upload_allfromfile = 'Загрузить все напоминания из файла'
-reminders_upload_partfromfile = 'Загрузить некоторые напоминания из файла'
+reminders_savealltofile = 'Сохранить все задачи в файл' 
+reminders_saveparttofile = 'Сохранить часть задач в файл'
+reminders_upload_allfromfile = 'Загрузить все задачи из файла'
+reminders_upload_partfromfile = 'Загрузить некоторые задачи из файла'
 reminders_synchronize = 'Синхронизировать'
 
 

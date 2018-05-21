@@ -14,7 +14,6 @@
 {% block content %}
     <div class="carousel">
         <div class="carousel-item active">
-            <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">
             <div class="carousel-caption text-left">
                 <script> 
                 var h=(new Date()).getHours(); 
@@ -23,6 +22,12 @@
                     if (h >= 12 && h < 17) document.write("<h1>{{ lang.good_day }}, {{ request.user.first_name }}</h1>");
                     if (h >= 17 && h < 23) document.write("<h1>{{ lang.good_evening }}, {{ request.user.first_name }}</h1>");
                 </script> 
+                <h3>{{ lang.latest_note_title }}: </h3>
+                {% if last_note_exists %}
+                    <p><a href="" class="link-section" id="last_note_title" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ last_note_id }})">{{ last_note_title }}</a></p>
+                {% else %}
+                    <p><a class="link-section" id="last_note_title">{{ lang.no_notes_title }}</a></p>
+                {% endif %}
                 <h3>{{ lang.nearest_event_title }}: </h3>
                 {% if nearest_event_exists %}
                     <p><a href="#" class="link-section">{{ nearest_event_name }}</a><br/>
@@ -36,12 +41,6 @@
                     <p><a href="#" class="link-section">{{ nearest_todo_name }}</a></p>
                 {% else %}
                     <p><a href="#" class="link-section">{{ lang.no_todo_title }}</a></p>
-                {% endif %}
-                <h3>{{ lang.latest_note_title }}: </h3>
-                {% if last_note_exists %}
-                    <p><a href="" class="link-section" id="last_note_title" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ last_note_id }})">{{ last_note_title }}</a></p>
-                {% else %}
-                    <p><a class="link-section" id="last_note_title">{{ lang.no_notes_title }}</a></p>
                 {% endif %}
             </div>
         </div>

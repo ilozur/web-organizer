@@ -109,14 +109,17 @@
 					<div class="modal-body">
 						<span>Выберите язык:</span>
 						<div class="btn-group btn-group-lg" style="margin-left: 185px;">
-							<button type="button" class="btn btn-light active">Русский</button>
-							<button type="button" class="btn btn-light">Английский</button>
+							<button type="button"  onclick="$('#id_language').val('ru')" class="btn btn-light active">Русский</button>
+							<button type="button" onclick="$('#id_language').val('en')" class="btn btn-light">Английский</button>
 							<button type="button" class="btn btn-light" disabled>Немецкий</button>
 						</div>
+						<form id="change_language_form">
+							{{ change_language_form }}
+						</form>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
-						<button type="submit" class="btn btn-light">Сохранить</button>
+						<button type="submit" onclick="change_language_ajax()" id="change_language_btn" class="btn btn-light">Сохранить</button>
 					</div>
 				</div>
 			</div>
