@@ -1,12 +1,8 @@
-/*Стили для раздела календаря*/
-
-/*Заголовок*/
-h1 {
-  color: #721c24;
+/*Стили для раздела заметок*/
+body {
+    background-color: #fef;
 }
-
 /*Элементы навигационной панели*/
-
 .nav-item:hover {
   border-bottom: 5px solid #721c24;
 }
@@ -14,93 +10,89 @@ nav .active {
   border-bottom: 5px solid #721c24;
 }
 
-/*Шапка*/
-.mast {
-  padding-top: 3em;
-  padding-bottom: 3em;
-  text-align: center;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-top: 0px;
-  background-color: #f8d7da;
-  border-radius: 0 0 15px 15px;
-}
-
-.change-button{
-  margin-top: 15px;
-}
-
-/*Кнопки*/
-.btn,
-.btn:focus,
-.btn:active {
-  color: #721c24;
-  text-shadow: none;
-  background-color: #f8d7da;
-  border: .05rem solid #f5c6cb;
-  transition: 0.5s;
-}
-.btn:hover {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
-  color: #721c24;
-  text-shadow: none;
-  background-color: #f8d7da;
-  border: .05rem solid #f5c6cb;
-  transition: 0.5s;
-}
-
-/*Карточки*/
-.card {
-  background-color: #f8d7da;
-  height: 400px;
-  width: 400px;
-  transition: 0.5s;
-  margin: 10px;
-  margin-bottom: 40px;
-  cursor: pointer;
-  border-radius: 15px;
-}
-.card:hover {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)inset;
-  transition: 0.5s;
-}
-
 /*Лого*/
 .logo {
   color: #721c24;
 }
 
+h1 {
+  color: #721c24;
+  margin: 11% 50px 50px 50px;
+}
+
+.main {
+  border-top: 2px solid #721c24;
+  height: 500px;
+}
+
+.menu {
+  padding: 0px;
+}
+
+.note {
+  border-right: 2px solid #721c24;
+  border-left: 2px solid #721c24;
+  padding: 0px;
+  height:500px;
+  width:100%;
+  overflow:auto;
+}
+
+
+.list-group-item {
+  transition: 0.5s;
+}
+
+.list-group-item:hover {
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+}
+
+.dropdown {
+  margin: 5px 25px;
+}
+
+.alert {
+  margin-top: 15px;
+  margin-left: 15px ;
+  margin-right: 15px ;
+}
+
 /*Заголовок у модуля*/
 .modal-header {
-  background-color: #f5c6cb;
+  background-color: #ffeeba;
   border-bottom: 0px;
 }
 
 /*Тело у модуля*/
 .modal-body {
-  background-color: #f8d7da;
+  background-color: #fff3cd;
 }
 
 /*Подвал у модуля*/
 .modal-footer {
-  background-color: #f5c6cb;
+  background-color: #ffeeba;
   border-top: 0px;
 }
 
-.month-now {
-  width: 270px;
-  color: #f8d7da;
+.icon {
+  width: 25px;
+  height: 25px;
+  text-align: center;
 }
 
-/*Подвал*/
-footer {
-  color: #f8d7da;
+
+.date {
+  float: right;
+  bottom: 10px;
+  font-size: 20pt;
 }
 
 /*Цвет и распложение текста в таблице*/
 table {
   text-align: center;
   border: 1px solid #721c24;
+  margin-left: 25px;
 }
 
 /*P*/
@@ -113,12 +105,7 @@ th {
 }
 
 .table {
-  height: auto;
   width: 1200px;
-}
-
-.section-mouth {
-  margin-left: 150px;
 }
 
 /*Оформление ячейек и ее аимация при наведении*/
@@ -147,110 +134,4 @@ td:hover {
     vertical-align: bottom;
     border: 2px solid #721c24;
     background-color: #f9d9cb;
-}
-
-/*Цвет ячейки 'Сегодня' и ее анимация при наведении*/
-.today {
-  color: #f8d7da;
-  background-color: #721c24;
-}
-.today:hover {
-  color: #f8d7da;
-  background-color: #721c24;
-  border-radius: 0 0 0 50%;
-}
-
-/*Кнопка 'Месяц'*/
-.btn-mouth {
-  text-align: center;
-  padding: 10px;
-}
-
-/*Таблица неделей*/
-.table-week td {
-  height: 50px;
-}
-
-/*Таблица дней*/
-.table-list td {
-  height: 50px;
-}
-
-/*Дата*/
-.date {
-  float: right;
-  bottom: 10px;
-  font-size: 20pt;
-}
-
-/*Даты, не вхолдящие в данный месяц*/
-.future-date {
-  background-color: #f9c8da;
-}
-.future-date:hover {
-  background-color: #f9c8da;
-  box-shadow: 0 0 0px rgba(0, 0, 0, 0);
-  border: 1px solid #721c24;
-}
-
-/*Событие*/
-.event {
-  text-align: center;
-  border: 1px solid #f5c6cb;
-  color: #f8d7da;
-  background-color: #721c24;
-  cursor: pointer;
-}
-
-/*Расположение лайка*/
-.like {
-  float: right;
-}
-
-/*Комментарий*/
-.comment {
-  margin-top: 15px;
-}
-
-/*Дата в комментарии*/
-.date-of-comments {
-  float: left;
-  font-size: 10pt;
-}
-
-/*Дата в списке*/
-.date-and-place {
-  float: right;
-}
-
-/*Список*/
-.list-group-item {
-  color: #721c24; 
-  transition: 0.5s;
-  margin-top: 10px;
-  width: 1000px;
-  border-radius: 15px 15px 15px 15px;
-}
-.list-group-item:hover {
-  color: #721c24;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  transition: 0.5s;
-}
-
-.noanimation{
-    height: auto ;
-    width: 215px;
-    border-radius: 15px;
-    text-align: center;
-    margin-top: : 150px;
-    cursor: default;
-
-}
-
-.btn-btn {
-  margin: 5px 20px;
-}
-
-.noanimation:hover{
-  box-shadow: 0 0;
 }
