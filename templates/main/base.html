@@ -55,7 +55,7 @@
                 </li>
             </ul>
             <div class="btn-group notif">
-              <button class="btn dropdown-toggle" data-toggle="dropdown">
+              <button class="btn dropdown-toggle user" data-toggle="dropdown">
                 Уведомления <span class="badge badge-light">4</span>
               </button>
               <div class="dropdown-menu notif-menu">
@@ -75,12 +75,12 @@
             </div>
             <ul class="navbar-nav ml-auto">
                 <li class="dropdown">
-                    <button data-toggle="dropdown" class="btn btn-outline-light">{{ request.user.username }}
+                    <button data-toggle="dropdown" class="btn btn-outline user">{{ request.user.username }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
                         <li class="p-3">
-                            <a href='{% url "userprofile.index" %}' class="btn btn-light btn-block">{{ lang.account_title }}</a>
-                            <a href='{% url "sign_out" %}' class="btn btn-light btn-block">{{ lang.quit_title }}</a>
+                            <a href='{% url "userprofile.index" %}' class="btn btn-block user">{{ lang.account_title }}</a>
+                            <a href='{% url "sign_out" %}' class="btn btn-block user">{{ lang.quit_title }}</a>
                         </li>
                     </ul>
                 </li>
