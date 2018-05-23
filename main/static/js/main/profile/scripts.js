@@ -49,6 +49,8 @@ function change_password()
 		}
 	});
 };
+
+
 function change_user_data()
 {
 	form_data = $('#change_user_data_form').serialize();
@@ -67,6 +69,22 @@ function change_user_data()
 				$(this).removeAttr('disabled');
 			});
 			$('#save_changes_btn').removeAttr('disabled');
+		}
+	});
+};
+
+function change_language_ajax()
+{
+    form_data = $('#change_language_form').serialize();
+	$('#change_language_btn').attr('disabled', 'disabled');
+	$.ajax({
+		type: "POST",
+		url: '/userprofile/change_language',
+		data: form_data,
+		success: function(response)
+		{
+			alert(response['answer']);
+			$('#change_language_btn').removeAttr('disabled');
 		}
 	});
 };
