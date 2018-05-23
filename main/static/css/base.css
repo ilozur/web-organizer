@@ -27,7 +27,7 @@
 }
 
 /*Выбранный раздел*/
-nav .active {
+nav .active-link {
 	border-bottom: 5px solid #000;
 }
 

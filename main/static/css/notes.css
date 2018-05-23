@@ -6,7 +6,7 @@ body {
   border-bottom: 5px solid #ffeeba;
 }
 
-nav .active {
+nav .active-link {
   border-bottom: 5px solid #856404;
 }
 
@@ -38,6 +38,10 @@ h3 {
   transition: 0.2s;
 }
 
+.active {
+  background-color: #ffe8a1;
+}
+
 a {
   color: #856404;
 }
@@ -52,6 +56,15 @@ a:hover {
   width: 25px;
   height: 25px;
   text-align: center;
+}
+
+.delete {
+  color: #721c24;
+  background-color: #f5c6cb;
+  border: 1px solid rgba(0, 0, 0, .125);
+  padding: 1px 5px;
+  margin-right: 5px;
+  border-radius: 50%;  
 }
 
 .main {
