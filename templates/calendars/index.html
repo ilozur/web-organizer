@@ -15,94 +15,74 @@
 <h1> Календарь </h1>
 <div class="container-fluid">
 	<div class="row main">
-		<div class="menu col-md-2">
+		<section class="menu col-md-2">
+			<div class="folder">
+				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder">&#9998;</button>
+				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder" style="float: right;">+</button>
+			</div>
 			<div class="list-group">
 				<a href="#" class="list-group-item list-group-item-action list-group-item-danger">Список мероприятии</a>
 				<a href="#" class="list-group-item list-group-item-action list-group-item-danger">Завершенные</a>
 				<a href="#" class="list-group-item list-group-item-action list-group-item-danger">На карте</a>
 				<a href="#" class="list-group-item list-group-item-action list-group-item-danger">Рекомандованные</a>
 			</div>
-			<div id="amounts" class="alert alert-danger">
-<small data-toggle="modal" data-target="#All event">Всего событий: {{ all_events_count }}</small>
-								<br/>
-								<small data-toggle="modal" data-target="#For-Today event">На сегодня: {{ today_events_count }}</small>
-								<br/>
-								<small>За вчера: {{ yesterday_events_count }}</small>
-								<br/>
-								<small>За неделю: {{ week_events_count }}</small>
-								<br/>
-								<small>За месяц: {{ month_events_count }}</small>
-								<br/>
-								<small>За год: {{ year_events_count }}</small>
-
-			</div>
-		</div>
-		<div class="note col-md-10">
-			<section class="section-mouth">
+		</section>
+		<section class="note col-md-10">
+			<div class="section-mouth">
 				<div id="ViewTable">
-			<div class="btn-group btn-group-sm btn-mouth" style="margin-top: 8px;">
-				<a>
-				<button type="button" class="btn btn-danger" onclick="back_month()" style="margin-left: 25px;">&laquo;</button>
-				</a>
-				<h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
-					id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
-				<a>
-				<button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>
-				</a>
-				&nbsp;&nbsp;
-				<a>
-				<button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button>
-				</a>
-
+					<div class="btn-group btn-group-sm btn-mouth">
+						<a><button type="button" class="btn" onclick="back_month()" style="margin-left: 15px;">&laquo;</button></a>
+						<h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
+						<a><button type="button" class="btn" onclick="next_month()">&raquo;</button></a>
+						&nbsp;&nbsp;
+						<a><button type="button" class="btn" onclick="go_to_now_month()" style="margin-left: 25px;">Сегодня</button></a>
+					</div>
+											<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note" style="margin-bottom: 9px;">+</button>
+					<table class="table table-danger table-mouth" id="month_calendar">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Понедельник</th>
+								<th>Вторник</th>
+								<th>Среда</th>
+								<th>Четверг</th>
+								<th>Пятница</th>
+								<th>Суббота</th>
+								<th>Воскресенье</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for week in weeks %}
+							<tr>
+								<th>{{ week.week_num }}</th>
+								{% for day in week.week_days %}
+								{% if day.class %}
+								<td class="{{ day.class }}">
+									{% if day.event %}
+									<div class="alert alert-danger event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+										{{ day.event.caption }}
+									</div>
+									{% endif %}
+									<small class="date">{{ day.day }}</small>
+								</td>
+								{% else %}
+								<td>
+									{% if day.event %}
+									<div class="alert alert-danger event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+										{{ day.event.caption }}
+									</div>
+									{% endif %}
+									<small class="date">{{ day.day }}</small>
+								</td>
+								{% endif %}
+								{% endfor %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 			</div>
-							<button type="button" class="btn btn btn-danger" data-toggle="modal"
-					onclick="" data-target="#New-Note">+
-				</button>
-			<table class="table table-danger table-mouth" id="month_calendar">
-				<thead>
-					<tr>
-						<th></th>
-						<th>Понедельник</th>
-						<th>Вторник</th>
-						<th>Среда</th>
-						<th>Четверг</th>
-						<th>Пятница</th>
-						<th>Суббота</th>
-						<th>Воскресенье</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for week in weeks %}
-					<tr>
-						<th>{{ week.week_num }}</th>
-						{% for day in week.week_days %}
-						{% if day.class %}
-						<td class="{{ day.class }}">
-							{% if day.event %}
-							<div class="alert alert-danger event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
-								{{ day.event.caption }}
-							</div>
-							{% endif %}
-							<small class="date">{{ day.day }}</small>
-						</td>
-						{% else %}
-						<td>
-							{% if day.event %}
-							<div class="alert alert-danger event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
-								{{ day.event.caption }}
-							</div>
-							{% endif %}
-							<small class="date">{{ day.day }}</small>
-						</td>
-						{% endif %}
-						{% endfor %}
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			</div>
-				</section>
-		</div>
+		</section>
 	</div>
 </div>
 {% endblock %}

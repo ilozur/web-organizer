@@ -1,102 +1,51 @@
-/*Стили для раздела заметок*/
 body {
-    background-color: #eff;
+  background-color: #eff;
 }
-/*Элементы навигационной панели*/
+
 .nav-item:hover {
   border-bottom: 5px solid #b8daff;
 }
+
 nav .active {
   border-bottom: 5px solid #004085;
 }
 
-/*Лого*/
 .logo {
   color: #004085;
 }
 
 h1 {
   color: #004085;
-  margin: 11% 50px 50px 50px;
+  margin: 8% 50px 50px 50px;
 }
 
-.btn-warning {
-color: #004085;
-    background-color: #ffeeba;
+h3, h4 {
+  color: #004085;
 }
 
-.main {
-  border-top: 2px solid #004085;
-  height: 500px;
+.btn {
+  color: #004085;
+  background-color: #b8daff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  transition: 0.2s;
 }
 
-.menu {
-  padding: 0px;
+.btn:hover {
+  color: #004085;
+  background-color: #b8daff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  box-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
 }
 
-.notes-list {
-  border-right: 2px solid #004085;
-  border-left: 2px solid #004085;
-  padding: 0px;
-  height:500px;
-  width:100%;
-  overflow:auto;
+a {
+  color: #004085;
 }
 
-.add {
-  margin: 5px;
-}
-
-.list-group-item {
-  transition: 0.5s;
-}
-
-.list-group-item:hover {
-  box-shadow:1px 1px 25px 0px rgba(0,0,0,0.25);
-  transition: 0.5s;
-}
-
-.input-group {
-  margin: 15px 0px;
-}
-
-.name {
-  width: 500px;
-}
-
-.description {
-  height: 150px;
-}
-
-.list-group {
-  margin: 0;
-  padding: 0;
-}
-
-.dropdown {
-  margin: 5px 25px;
-}
-
-.alert {
-  margin-left: 15px ;
-  margin-right: 15px ;
-}
-
-/*Заголовок у модуля*/
-.modal-header {
-  background-color: #ffeeba;
-  border-bottom: 0px;
-}
-
-/*Тело у модуля*/
-.modal-body {
-  background-color: #fff3cd;
-}
-
-/*Подвал у модуля*/
-.modal-footer {
-  background-color: #ffeeba;
-  border-top: 0px;
+a:hover {
+  color: #004085;
+  text-decoration: none;
+  text-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
 }
 
 .icon {
@@ -105,23 +54,106 @@ color: #004085;
   text-align: center;
 }
 
-.date {
+.main {
+  border-top: 2px solid #004085;
+  height: 550px;
+}
+
+.menu {
+  padding: 0px;
+}
+
+.folder {
+  margin: 15px;
+}
+
+.list-group {
+  margin: 0;
+  padding: 0;
+}
+
+.list-group-item {
+  transition: 0.5s;
+}
+
+.list-group-item:hover {
+  box-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.5s;
+}
+
+.todo-list {
+  border-right: 2px solid #004085;
+  border-left: 2px solid #004085;
+  padding: 0px;
+  height: 550px;
+  width: 100%;
+  overflow: auto;
+}
+
+.toolbar {
+  border-bottom: 2px solid #004085;
+}
+
+.dropdown {
+  padding: 0px;
+  margin-right: 15px;
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+.input-group {
+  margin: 15px 0px;
+}
+
+.search {
+  margin-top: 15px;
+  margin-right: 15px;
+  margin-left: 15px;
+  width: auto;
+}
+
+.view {
+  height: 550px;
+}
+
+.todo {
+  padding: 15px;
+  height: 490px;
+  width: 100%;
+  overflow: auto;
+}
+
+.priority {
   color: #004085;
-  margin-left: 10px;
-  margin-top: 10px;
+  background-color: #b8daff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  padding: 1px 11px;
+  border-radius: 50%;
 }
 
-.btn {
-    color: #004085;
-    background-color: #b8daff; 
-    border: 1px solid rgba(0,0,0,.125);
-    transition: 0.2s;
+.lose-todo{
+  color: red;
 }
 
-.btn:hover {
-    color: #004085;
-    background-color: #b8daff; 
-    border: 1px solid rgba(0,0,0,.125);
-    box-shadow:1px 1px 25px 0px rgba(0,0,0,0.25);
-    transition: 0.2s;
+.win-todo {
+  color: green;
+}
+
+.join {
+  margin: auto;
+  padding: auto;
+}
+
+.modal-header {
+  background-color: #b8daff;
+  border-bottom: 0px;
+}
+
+.modal-body {
+  background-color: #fff3cd;
+}
+
+.modal-footer {
+  background-color: #b8daff;
+  border-top: 0px;
 }

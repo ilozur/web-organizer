@@ -1,102 +1,51 @@
-/*Стили для раздела заметок*/
 body {
-    background-color: #ffe;
+  background-color: #ffe;
 }
-/*Элементы навигационной панели*/
+
 .nav-item:hover {
   border-bottom: 5px solid #ffeeba;
 }
+
 nav .active {
   border-bottom: 5px solid #856404;
 }
 
-/*Лого*/
 .logo {
-	color: #856404;
+  color: #856404;
 }
 
 h1 {
   color: #856404;
-  margin: 11% 50px 50px 50px;
+  margin: 8% 50px 50px 50px;
 }
 
-.btn-warning {
-color: #856404;
-    background-color: #ffeeba;
+h3 {
+  color: #856404;
 }
 
-.main {
-  border-top: 2px solid #856404;
-  height: 500px;
-}
-
-.menu {
-  padding: 0px;
-}
-
-.notes-list {
-  border-right: 2px solid #856404;
-  border-left: 2px solid #856404;
-  padding: 0px;
-  height:500px;
-  width:100%;
-  overflow:auto;
-}
-
-.add {
-  margin: 5px;
-}
-
-.list-group-item {
-  transition: 0.5s;
-}
-
-.list-group-item:hover {
-  box-shadow:1px 1px 25px 0px rgba(0,0,0,0.25);
-  transition: 0.5s;
-}
-
-.input-group {
-  margin: 15px 0px;
-}
-
-.name {
-  width: 500px;
-}
-
-.description {
-  height: 350px;
-}
-
-.list-group {
-  margin: 0;
-  padding: 0;
-}
-
-.dropdown {
-  margin: 5px 25px;
-}
-
-.alert {
-  margin-left: 15px ;
-  margin-right: 15px ;
-}
-
-/*Заголовок у модуля*/
-.modal-header {
+.btn {
+  color: #856404;
   background-color: #ffeeba;
-  border-bottom: 0px;
+  border: 1px solid rgba(0, 0, 0, .125);
+  transition: 0.2s;
 }
 
-/*Тело у модуля*/
-.modal-body {
-  background-color: #fff3cd;
-}
-
-/*Подвал у модуля*/
-.modal-footer {
+.btn:hover {
+  color: #856404;
   background-color: #ffeeba;
-  border-top: 0px;
+  border: 1px solid rgba(0, 0, 0, .125);
+  box-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+
+a {
+  color: #856404;
+}
+
+a:hover {
+  color: #856404;
+  text-decoration: none;
+  text-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
 }
 
 .icon {
@@ -105,23 +54,94 @@ color: #856404;
   text-align: center;
 }
 
+.main {
+  border-top: 2px solid #856404;
+  height: 550px;
+}
+
+.menu {
+  padding: 0px;
+}
+
+.folder {
+  margin: 15px;
+}
+
+.list-group {
+  margin: 0;
+  padding: 0;
+}
+
+.list-group-item {
+  transition: 0.5s;
+}
+
+.list-group-item:hover {
+  box-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.5s;
+}
+
+.notes-list {
+  border-right: 2px solid #856404;
+  border-left: 2px solid #856404;
+  padding: 0px;
+  height: 550px;
+  width: 100%;
+  overflow: auto;
+}
+
+.toolbar {
+  border-bottom: 2px solid #856404;
+}
+
+.dropdown {
+  padding: 0px;
+  margin-right: 15px;
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+.input-group {
+  margin: 15px 0px;
+}
+
+.search {
+  margin-top: 15px;
+  margin-right: 15px;
+  margin-left: 15px;
+  width: auto;
+}
+
+.view {
+  height: 550px;
+}
+
+.note {
+  padding: 15px;
+  height: 490px;
+  width: 100%;
+  overflow: auto;
+}
+
 .date {
   color: #856404;
-  margin-left: 10px;
-  margin-top: 10px;
 }
 
-.btn {
-    color: #856404;
-    background-color: #ffeeba; 
-    border: 1px solid rgba(0,0,0,.125);
-    transition: 0.2s;
+.join {
+  margin: auto;
+  padding: auto;
 }
 
-.btn:hover {
-    color: #856404;
-    background-color: #ffeeba; 
-    border: 1px solid rgba(0,0,0,.125);
-    box-shadow:1px 1px 25px 0px rgba(0,0,0,0.25);
-    transition: 0.2s;
+.modal-header {
+  background-color: #ffeeba;
+  border-bottom: 0px;
+}
+
+.modal-body {
+  background-color: #fff3cd;
+}
+
+.modal-footer {
+  background-color: #ffeeba;
+  border-top: 0px;
 }
