@@ -144,7 +144,7 @@ th {
 }
 
 .table {
-  width: 1200px;
+  width: auto;
   margin-top: 7px;
 }
 
@@ -152,8 +152,14 @@ td {
   border: 1px solid #721c24;
   background-color: #f5c6cb;
   transition: 0.2s;
-  width: 150px;
-  height: 150px;
+  width: 83px;
+  height: 83px;
+}
+
+tr {
+  width: 00px;
+
+
 }
 
 td:hover {

@@ -2,7 +2,8 @@
 {% block meta %}
 {% load staticfiles %}
 {% load bootstrap %}
-<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}' xmlns:max-hidth="http://www.w3.org/1999/xhtml"
+	  xmlns:max-hidth="http://www.w3.org/1999/xhtml" xmlns:max-hidth="http://www.w3.org/1999/xhtml">
 <link rel="stylesheet" href='{% static "css/base.css" %}'>
 <link rel="stylesheet" href='{% static "css/calendar.css" %}'>
 <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
@@ -27,28 +28,29 @@
 				<a href="#" class="list-group-item list-group-item-action list-group-item-danger">Рекомандованные</a>
 			</div>
 		</section>
-		<section class="note col-md-10">
-			<div class="section-mouth">
+
+		<section class="note col-md-10" >
+			<div class="section-mouth " >
 				<div id="ViewTable">
 					<div class="btn-group btn-group-sm btn-mouth">
-						<a><button type="button" class="btn" onclick="back_month()" style="margin-left: 15px;">&laquo;</button></a>
-						<h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
+						<a><button type="button" class="btn" onclick="back_month()" style="margin-left: 15px;"> &laquo; </button></a>
+						<h3 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h3>
 						<a><button type="button" class="btn" onclick="next_month()">&raquo;</button></a>
 						&nbsp;&nbsp;
 						<a><button type="button" class="btn" onclick="go_to_now_month()" style="margin-left: 25px;">Сегодня</button></a>
 					</div>
-											<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note" style="margin-bottom: 9px;">+</button>
+											<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note" style="margin-bottom: 3px;"> + </button>
 					<table class="table table-danger table-mouth" id="month_calendar">
 						<thead>
 							<tr>
 								<th></th>
-								<th>Понедельник</th>
-								<th>Вторник</th>
-								<th>Среда</th>
-								<th>Четверг</th>
-								<th>Пятница</th>
-								<th>Суббота</th>
-								<th>Воскресенье</th>
+                                <th> <h6>  <small><small>Понедельник </small> </small> </h6></th>
+                                <th> <h6> <small><small> Вторник</small> </small></h6></th>
+                                <th> <h6><small><small> Среда </small> </small> </h6></th>
+                                <th> <h6><small><small> Четверг </small> </small></h6></th>
+                                <th> <h6><small> <small>Пятница </small></small></h6></th>
+                                <th> <h6><small><small> Суббота </small> </small></h6></th>
+                                <th> <h6><small><small> Воскресенье </small> </small></h6></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -81,6 +83,7 @@
 						</tbody>
 					</table>
 				</div>
+			</div>
 			</div>
 		</section>
 	</div>
