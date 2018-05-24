@@ -60,7 +60,7 @@ a:hover {
 
 .main {
   border-top: 2px solid #721c24;
-  height: 550px;
+  height: 540px;
 }
 
 .menu {
@@ -118,12 +118,12 @@ a:hover {
 }
 
 .view {
-  height: 550px;
+  height: 540px;
 }
 
 .note {
   padding: 15px;
-  height: 550px;
+  height: 540px;
   width: 100%;
   overflow: auto;
 }

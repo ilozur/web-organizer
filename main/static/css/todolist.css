@@ -69,7 +69,7 @@ a:hover {
 
 .main {
   border-top: 2px solid #004085;
-  height: 550px;
+  height: 540px;
 }
 
 .menu {
@@ -98,9 +98,8 @@ a:hover {
   border-right: 2px solid #004085;
   border-left: 2px solid #004085;
   padding: 0px;
-  height: 550px;
+  height: 540px;
   width: 100%;
-  overflow: auto;
 }
 
 .toolbar {
@@ -125,13 +124,25 @@ a:hover {
   width: auto;
 }
 
+.list {
+  height: 420px;
+  overflow: auto; 
+}
+
+.list .list-group-item {
+  padding: 2.75rem 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 2.25rem;
+  text-align: inherit;
+}
+
 .view {
-  height: 550px;
+  height: 540px;
 }
 
 .todo {
   padding: 15px;
-  height: 490px;
+  height: 480px;
   width: 100%;
   overflow: auto;
 }
