@@ -37,15 +37,7 @@ def index(request):
             context['recover_password_form'] = recover_password_user_data_form
             return render(request, "main/index.html", context)
         else:
-            user_lang = Language.objects.filter(user=request.user).first().lang
-            if user_lang == "ru":
-                lang = rus
-            elif user_lang == "en":
-                lang = eng
-            else:
-                lang = eng
-            context['language'] = user_lang
-            context['lang'] = lang
+            context['lang'], context['language'] = get_language(request)
             events = Event.objects.filter(user=request.user)
             notes = Notes.objects.filter(user=request.user)
             todos = Todos.objects.filter(user=request.user)
@@ -344,3 +336,14 @@ def sign_out_view(request):
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect('/')
+
+
+def get_language(request):
+    user_lang = Language.objects.filter(user=request.user).first().lang
+    if user_lang == "ru":
+        lang = rus
+    elif user_lang == "en":
+        lang = eng
+    else:
+        lang = eng
+    return lang, user_lang
