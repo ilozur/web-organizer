@@ -19,4 +19,5 @@ class EditNoteForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    result = forms.CharField(max_length=70)
+    aim = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'type': 'search', 'placeholder': 'Поиск',
+                                                                        'class': 'form-control'}))

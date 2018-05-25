@@ -55,8 +55,6 @@ def index(request):
             context['month_events_count'] = last_events.filter(date__gte=date.date() - timedelta(30)).count()
             context['year_events_count'] = last_events.filter(date__gte=date.date() - timedelta(365)).count()
             context['all_notes_count'] = notes.count()
-            context['voice_notes_count'] = notes.filter(is_voice=True).count()
-            context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
             todos_info = Todos.get_amounts(request.user)
             context['all_todo_count'] = todos_info[0]
             context['active_todo_count'] = todos_info[1]
@@ -90,7 +88,7 @@ def index(request):
             last_note = notes.order_by('-added_time').first()
             if last_note:
                 context['last_note_exists'] = True
-                context['last_note_title'] = last_note.name
+                context['last_note_title'] = last_note.title
                 context['last_note_id'] = last_note.id
             else:
                 context['last_note_exists'] = False

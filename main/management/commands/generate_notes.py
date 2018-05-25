@@ -49,6 +49,6 @@ class Command(BaseCommand):
     @staticmethod
     def create_note(user):
         text = ''.join(choice(ascii_letters) for i in range(randint(10, 500)))
-        title = ''.join(choice(ascii_letters) for i in range(randint(10, 50)))
-        note = Notes(user=user, data=text, name=title, added_time=datetime.now(), data_part=text[0:255:])
+        title = ''.join(choice(ascii_letters) for i in range(randint(10, 40)))
+        note = Notes(user=user, data=text, title=title, added_time=datetime.now())
         note.save()

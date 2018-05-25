@@ -34,7 +34,6 @@ from userprofile.views import confirm_mail
 urlpatterns = [
     path('admin/', include(admin.urls)),
     path('', index, name='index'),
-    path('notes', notes.views.index, name="notes.index"),
     path('notes/', include(notes.urls)),
     path('calendar', calendars.views.index, name='calendar.index'),
     path('calendar/', include(calendars.urls)),

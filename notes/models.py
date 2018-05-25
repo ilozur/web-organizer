@@ -5,27 +5,25 @@ from django.contrib.auth.models import User
 class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
-    name = models.CharField(max_length=128, default="title")
+    title = models.CharField(max_length=50, default="title")
     added_time = models.DateTimeField(auto_now_add=True)
-    is_voice = models.BooleanField(default=False)
-    data_part = models.TextField(max_length=128, default="...")
     last_edit_time = models.DateTimeField(default=None, null=True)
 
     @staticmethod
-    def get_notes_by_ranged_name(user, name_range=list()):
+    def get_notes_by_ranged_title(user, title_range=list()):
         """
         @brief
-        This function get notes by ranged_name
+        This function get notes by ranged title
         """
         notes = Notes.objects.filter(user=user)
         sorted_list = []
-        if len(name_range) == 1:
+        if len(title_range) == 1:
             for i in notes:
-                if i.name[0].lower() == name_range[0].lower():
+                if i.title[0].lower() == title_range[0].lower():
                     sorted_list.append(i)
         else:
             for i in notes:
-                if name_range[0].lower() <= i.name[0].lower() <= name_range[1].lower():
+                if title_range[0].lower() <= i.title[0].lower() <= title_range[1].lower():
                     sorted_list.append(i)
         return sorted_list
 
@@ -43,6 +41,9 @@ class Notes(models.Model):
         if notes is None:
             notes = Notes.objects.filter(user=user)
         notes = notes.filter(user=user).order_by('-added_time')
+        sorting_types = ['date_up', 'date_down', 'title_up', 'title_down', 'all']
+        if sorting_type not in sorting_types:
+            sorting_type = "date_up"
         if sorting_type != 'all':
             sort = sorting_type.split('_')
             aim = sort[0]
@@ -58,9 +59,9 @@ class Notes(models.Model):
                 return notes
         elif aim == "title":
             if direction == "up":
-                notes = notes.order_by('name')
+                notes = notes.order_by('title')
             elif direction == "down":
-                notes = notes.order_by('-name')
+                notes = notes.order_by('-title')
             else:
                 return notes
         else:
@@ -78,30 +79,31 @@ class Notes(models.Model):
         return Notes.objects.filter(id=note_id).first()
 
     @staticmethod
-    def delete_note(note_id):
+    def delete_note(note_id, user):
         """
         @param
         This is ID of notes
         @brief
         This function deletes note
         """
-        if len(Notes.objects.filter(id=note_id)) > 0:
-            Notes.objects.filter(id=note_id).delete()
-            return True
+        notes = Notes.objects.filter(user=user, id=note_id)
+        if len(notes) > 0:
+            notes[0].delete()
+            return 100
         else:
-            return False
+            return 111
 
     @staticmethod
-    def search_notes(string, user):
+    def search_notes(string, user, sorting_type="date_up"):
         """
         @brief
-        This function serches for the notes
+        This function searches for the notes
         """
-        obj = Notes.get_notes('all', user)
+        obj = Notes.get_notes(sorting_type, user)
         ret_list = list()
         for i in obj:
-            if string in i.name:
-                ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id))
+            if string in i.title:
+                ret_list.append(i)
         return ret_list
 
     @staticmethod

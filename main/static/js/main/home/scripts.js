@@ -83,7 +83,7 @@ function add_note_ajax()
                 }
                 var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                     'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
-                    '">' + response['name'] + '</a></p></div>';
+                    '">' + response['title'] + '</a></p></div>';
                 $("#last_notes_holder").html(new_note_html + $("#last_notes_holder").html());
                 if (now_notes_count >= 3)
                 {
@@ -92,7 +92,7 @@ function add_note_ajax()
                 }
                 $('#note_' + response['id']).slideDown('slow');
                 $("#close_note_btn").trigger("click");
-                $("#last_note_title").html(response['name']);
+                $("#last_note_title").html(response['title']);
                 $("#last_note_title").attr('onclick', 'get_note_data_ajax(' + response['id'] + ')');
                 voice_text('Заметка добавлена.');
             }
@@ -190,7 +190,7 @@ function delete_note_ajax()
         $.ajax({
             type: "POST",
             url: '/notes/delete',
-            data: {"id": id, "return_last_note": true},
+            data: {"id": id, "should_return_last_note": true},
             success: function(response)
             {
                 if (response['result'] == "100")
@@ -218,7 +218,7 @@ function delete_note_ajax()
                     {
                         var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                             'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
-                            '">' + response['name'] + '</a></p></div>';
+                            '">' + response['title'] + '</a></p></div>';
                         var show_all_label = '<p class="lead"><small><a href="/notes">Показать все</a></small></p></div>';
                         $("#last_notes_holder p:last").remove();
                         $("#last_notes_holder").html($("#last_notes_holder").html() + new_note_html);

@@ -59,7 +59,7 @@
                         {% else %}
                             <div id="last_notes_holder">
                                 {% for note in last_notes %}
-                                    <div id="note_{{ note.id }}"><p class="lead"> <a href="#" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ note.id }})" id="note_title_{{ note.id }}">{{ note.name }}</a></p></div>
+                                    <div id="note_{{ note.id }}"><p class="lead"> <a href="#" data-toggle="modal" data-target="#Note-Card" onclick="get_note_data_ajax({{ note.id }})" id="note_title_{{ note.id }}">{{ note.title }}</a></p></div>
                                 {% endfor %}
                                 <p class="lead"> <small><a href='{% url "notes.index" %}'>{{ lang.notes_showall }}</a></small></p>
                             </div>
@@ -70,8 +70,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>{{ lang.notes_total}} : {{ all_notes_count }}</h4>
-                        <p class="lead"> {{ text_notes_count }} {{ lang.notes_text_count }} </p>
-                        <p class="lead"> {{ voice_notes_count }} {{ lang.notes_voice_count }} </p>
                     </div>
                 </div>
             </div>
