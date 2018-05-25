@@ -101,9 +101,9 @@ a:hover {
   border-right: 2px solid #856404;
   border-left: 2px solid #856404;
   padding: 0px;
-  height: 540px;
+  height: 550px;
   width: 100%;
-  background-color: #ffeeba;
+  background-color: #ffe;
 }
 
 .toolbar {
@@ -141,7 +141,8 @@ a:hover {
 }
 
 .view {
-  height: 540px;
+  height: 550px;
+  background-color: #ffe;
 }
 
 .note {
@@ -181,11 +182,12 @@ a:hover {
 .title{
   background-color: #ffeeba;
   margin-left: 40%;
-  margin-top: 7%;
+  margin-top: 8%;
   width:250px;
+  border-radius: 5px;
 }
 
 .menu{
-  background-color: #ffeeba;
-  height: 300px;
+  background-color: #ffe;
+  height: 250px;
 }
