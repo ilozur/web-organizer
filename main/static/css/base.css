@@ -55,10 +55,6 @@ footer {
 	margin-right: 100px;
 }
 
-h5{
-	color: #856404;
-}
-
 /*Волны*/
 .wave {
 	position: relative;
@@ -76,7 +72,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s   0.000s linear infinite;
 }
@@ -88,7 +85,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -16.227s linear infinite; 
 }
@@ -100,7 +98,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -15.455s linear infinite; 
 }
@@ -112,7 +111,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -14.682s linear infinite; 
 }
@@ -124,7 +124,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -13.909s linear infinite;
 }
@@ -136,7 +137,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -13.136s linear infinite; 
 }
@@ -148,7 +150,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -12.364s linear infinite; 
 }
@@ -160,7 +163,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -11.591s linear infinite; 
 }
@@ -172,7 +176,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -10.818s linear infinite; 
 }
@@ -184,7 +189,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -10.045s linear infinite; 
 }
@@ -196,7 +202,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s  -9.273s linear infinite;
 }
@@ -208,7 +215,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -8.500s  linear infinite; 
 }
@@ -220,7 +228,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -7.727s linear infinite; 
 }
@@ -232,7 +241,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -6.955s linear infinite; 
 }
@@ -244,7 +254,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -6.182s linear infinite; 
 }
@@ -256,7 +267,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -5.409s linear infinite; 
 }
@@ -268,7 +280,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -4.636s linear infinite; 
 }
@@ -280,7 +293,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -3.864s linear infinite; 
 }
@@ -292,7 +306,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -3.091s linear infinite; 
 }
@@ -304,7 +319,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s -2.318s linear infinite; 
 }
@@ -316,7 +332,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s  -1.545s linear infinite;
 }
@@ -328,7 +345,8 @@ h5{
 	bottom: 5%;
 	border-radius: 10px;
 	position: absolute;
-	background: #856404;
+	background: #000000;
+
 
 	animation: wave 17s  -0.773s linear infinite;	
 }
