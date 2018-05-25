@@ -78,6 +78,12 @@ class Event(models.Model):
         return events
 
     @staticmethod
+    def get_event_by_id(id):
+        if Event.objects.filter(id=id).count() > 0:
+            return Event.objects.filter(id=id).first()
+        else:
+            return False
+
     def get_weeks(date_time, user, events):
         """!
             @brief This function select weeks and belong them events

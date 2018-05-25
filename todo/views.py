@@ -18,7 +18,10 @@ type_of_sort = 'AtoZ'
 @login_required
 def index(request):
     sort_type = request.GET.get("sort_type", "new")
-    todo = Todos.get_todos(sort_type, request.POST.get('status'), user=request.user)
+    todo = Todos.get_todos(sort_type, request.POST.get('status'), user=request.user, why='sm_priority')
+    for item in todo:
+        smart_priority(item,'index', request.user)
+    todo = Todos.get_todos(sort_type, request.POST.get('status'), user=request.user, why='none')
     page = request.GET.get("page")
     try:
         page = int(page)
@@ -48,7 +51,7 @@ def index(request):
         context['back_paginate_btn'] = pages.page(page).has_previous()
         context['next_paginate_btn'] = pages.page(page).has_next()
         context['todo_pages'] = pages.page_range
-        done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user), 20)
+        done_todos = Paginator(Todos.get_todos('AtoZ', 'done', user, why='sm_priority'), 20)
         context['done_todos'] = done_todos.page(1).object_list
         context['done_pages'] = done_todos.page_range
         context['amount_of_todos'] = Todos.get_amounts(user)

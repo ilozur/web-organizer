@@ -136,6 +136,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_event_ajax()">{{ lang.calendar_delete }}</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-Date"
+                        onclick="open_event_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_save }}</button>
             </div>
         </div>

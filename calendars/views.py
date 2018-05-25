@@ -27,7 +27,9 @@ def index(request):
         context['lang'] = lang
         context['stat'] = Event.create_calendar_statistics(request)
         add_event_form = AddEventForm()
+        edit_event_form = EditEventForm()
         context['add_event_form'] = add_event_form
+        context['edit_event_form'] = edit_event_form
         return render(request, "calendars/index.html", context)
     else:
         response_data = {}
@@ -51,8 +53,6 @@ def index(request):
         response_data['now_year'] = now_date.year
         response_data['result'] = "100"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
 
 
 def search_events(string):
@@ -170,7 +170,37 @@ def week_events(user):
         date_time = (int(time.strftime('%H')))*60+int(time.strftime('%M'))
         if (now_week == date_week) and (date_day >= now_day) and (date_time > now_time):
             result.append(event)
-    events = list()
-    for item in result:
-        events.append((item.title, item.date, item.id, item.description, item.place))
-    return events
+    return result
+
+
+@login_required
+def edit_event(request):
+    user = request.user
+    response = {}
+    if request.method == "POST":
+        form = EditEventForm(request.POST)
+        if form.is_valid():
+            event_id = form.cleaned_data['event_id']
+            deadline_date = form.cleaned_data['event_edit_deadline']
+            deadline_time = form.cleaned_data['event_edit_time']
+            deadline_date = datetime(deadline_date.year, deadline_date.month, deadline_date.day, deadline_time.hour,
+                                     deadline_time.minute, 0)
+            if deadline_date > datetime.now():
+                if Event.objects.filter(id=event_id).exists():
+                    tmp = Event.get_event_by_id(event_id)
+                    tmp.title = form.cleaned_data['event_edit_title']
+                    tmp.desription = form.cleaned_data['event_edit_description']
+                    tmp.deadline = deadline_date
+                    tmp.save()
+                    response['result'] = "Success"
+                    response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
+                    response['desrioption'] = tmp.desription
+                else:
+                    response['result'] = 'No such event'
+            else:
+                response['result'] = 'Date has already passed'
+        else:
+            response['result'] = 'Form is not valid'
+        return HttpResponse(json.dumps(response), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')

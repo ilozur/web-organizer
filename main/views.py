@@ -49,7 +49,7 @@ def index(request):
             events = Event.objects.filter(user=request.user)
             notes = Notes.objects.filter(user=request.user)
             todos = Todos.objects.filter(user=request.user)
-            date = datetime.datetime.now()
+            date = datetime.now()
             today_event = events.filter(date=date.date()).first()
             if today_event:
                 context['today_event_exists'] = True
