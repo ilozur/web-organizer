@@ -1,5 +1,7 @@
 body {
-  background-color: #ffe;
+  background-image: url(../img/bg.jpg);
+  background-repeat: repeat;
+  background-attachment: fixed;
 }
 
 .nav-item:hover {
@@ -78,6 +80,7 @@ a:hover {
 
 .folder {
   margin: 15px;
+
 }
 
 .list-group {
@@ -100,6 +103,7 @@ a:hover {
   padding: 0px;
   height: 540px;
   width: 100%;
+  background-color: #ffeeba;
 }
 
 .toolbar {
@@ -172,4 +176,16 @@ a:hover {
 .modal-footer {
   background-color: #ffeeba;
   border-top: 0px;
+}
+
+.title{
+  background-color: #ffeeba;
+  margin-left: 40%;
+  margin-top: 7%;
+  width:250px;
+}
+
+.menu{
+  background-color: #ffeeba;
+  height: 300px;
 }
