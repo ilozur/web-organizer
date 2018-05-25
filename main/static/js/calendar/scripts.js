@@ -313,3 +313,37 @@ function ShowList()
     $("#ViewList").show("slow");
     $("#ViewTable").hide("slow");
 };
+
+
+function save_event_ajax()
+{
+    var id = $('#event_num').html();
+    $("#id_todo_id").val(id);
+    var form_data = $('#edit_event_form').serialize();
+    $("#edit_event_form").find(':input').each(function(){
+        $(this).attr('disabled', 'disabled');
+    });
+    $('#save_event_btn').attr('disabled', 'disabled');
+    $.ajax({
+        type: "POST",
+        url: '/events/edit',
+        data: form_data,
+        success: function(response)
+        {
+            if (response['result'] == "Success")
+            {
+                alert('OK, Changes were saved');
+                $('#event_title_' + id).html($('#id_event_edit_title').val());
+                $('#event_date_' + id).html(response['deadline_date']);
+                $('#event_title_show').html($('#id_event_edit_title').val());
+            }
+            else{
+                alert(response['result']);
+            }
+            $("#edit_event_form").find(':input').each(function(){
+                $(this).removeAttr('disabled');
+            });
+            $('#save_event_btn').removeAttr('disabled');
+        }
+    });
+};

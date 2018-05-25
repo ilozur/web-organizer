@@ -27,7 +27,9 @@ def index(request):
         context['lang'] = lang
         context['stat'] = Event.create_calendar_statistics(request)
         add_event_form = AddEventForm()
+        edit_event_form = EditEventForm()
         context['add_event_form'] = add_event_form
+        context['edit_event_form'] = edit_event_form
         return render(request, "calendars/index.html", context)
     else:
         response_data = {}
@@ -51,8 +53,6 @@ def index(request):
         response_data['now_year'] = now_date.year
         response_data['result'] = "100"
         return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
 
 
 def search_events(string):
@@ -189,14 +189,14 @@ def edit_event(request):
                 if Event.objects.filter(id=event_id).exists():
                     tmp = Event.get_event_by_id(event_id)
                     tmp.title = form.cleaned_data['event_edit_title']
-                    tmp.desription = form.cleaned_data['event_edit_desription']
+                    tmp.desription = form.cleaned_data['event_edit_description']
                     tmp.deadline = deadline_date
                     tmp.save()
                     response['result'] = "Success"
                     response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
                     response['desrioption'] = tmp.desription
                 else:
-                    response['result'] = 'No such todo'
+                    response['result'] = 'No such event'
             else:
                 response['result'] = 'Date has already passed'
         else:
