@@ -10,7 +10,7 @@
 <script language="JavaScript" src='{% static "js/calendar/scripts.js" %}'></script>
 <script src="http://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 <script language="JavaScript" src='{% static "js/yandex_map.js" %}'></script>
-<script> setup_date({{ stat.now_month_num }}, {{ stat.now_year }}); </script>
+<script> setup_date({{ now_month_num }}, {{ now_year }}); </script>
 {% endblock %}
 {% block content %}
 <article class="calendar">
@@ -63,17 +63,17 @@
 						</button> -->
                     <div class="card-footer">
                         <div class="alert alert-danger">
-                            <small data-toggle="modal" data-target="#All event">Всего событий: {{ all_events_count }}</small>
+                            <small>Всего событий: {{ amount_of_events.0 }}</small>
                             <br/>
-                            <small data-toggle="modal" data-target="#For-Today event">На сегодня: {{ today_events_count }}</small>
+                            <small>На сегодня: {{ amount_of_events.1 }}</small>
                             <br/>
-                            <small>За вчера: {{ yesterday_events_count }}</small>
+                            <small>За вчера: {{ amount_of_events.2 }}</small>
                             <br/>
-                            <small>За неделю: {{ week_events_count }}</small>
+                            <small>За неделю: {{ amount_of_events.3 }}</small>
                             <br/>
-                            <small>За месяц: {{ month_events_count }}</small>
+                            <small>За месяц: {{ amount_of_events.4 }}</small>
                             <br/>
-                            <small>За год: {{ year_events_count }}</small>
+                            <small>За год: {{ amount_of_events.5 }}</small>
                         </div>
                     </div>
 			    </div>

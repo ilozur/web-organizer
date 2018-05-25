@@ -23,9 +23,20 @@ def index(request):
             lang = eng
         else:
             lang = eng
+        date = datetime.now()
+        all_events = Event.get_events("AtoZ", request.user)
+        my_events = Event.get_events("AtoZ", request.user, 0)
+        context['all_events'] = all_events
+        context['my_events'] = my_events
+        context['weekly_events'] = week_events(request.user)
         context['language'] = user_lang
         context['lang'] = lang
-        context['stat'] = Event.create_calendar_statistics(request)
+        context['amount_of_events'] = Event.get_stats(date, request.user)
+        context['weeks'] = Event.get_weeks(date, Event.objects.filter(user=request.user))
+        context['now_month'] = Event.get_month_name(date.month)
+        context['now_year'] = date.year
+        context['now_month_num'] = date.month
+        context['now_date'] = str(date.year) + "_" + str(date.month)
         add_event_form = AddEventForm()
         edit_event_form = EditEventForm()
         context['add_event_form'] = add_event_form
@@ -48,7 +59,7 @@ def index(request):
         except ValueError:
             return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
         events = Event.objects.filter(user=request.user)
-        response_data['weeks'] = Event.get_weeks(now_date, request.user, events)
+        response_data['weeks'] = Event.get_weeks(now_date, events)
         response_data['month_name'] = Event.get_month_name(now_date.month)
         response_data['now_year'] = now_date.year
         response_data['result'] = "100"
@@ -175,7 +186,6 @@ def week_events(user):
 
 @login_required
 def edit_event(request):
-    user = request.user
     response = {}
     if request.method == "POST":
         form = EditEventForm(request.POST)
@@ -194,7 +204,7 @@ def edit_event(request):
                     tmp.save()
                     response['result'] = "Success"
                     response['deadline_date'] = tmp.deadline.strftime("%I:%M%p on %B %d, %Y")
-                    response['desrioption'] = tmp.desription
+                    response['description'] = tmp.desription
                 else:
                     response['result'] = 'No such event'
             else:

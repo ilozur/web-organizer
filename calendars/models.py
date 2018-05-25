@@ -84,7 +84,8 @@ class Event(models.Model):
         else:
             return False
 
-    def get_weeks(date_time, user, events):
+    @staticmethod
+    def get_weeks(date_time, events):
         """!
             @brief This function select weeks and belong them events
         """
@@ -151,6 +152,7 @@ class Event(models.Model):
             weeks.append(tmp)
         return weeks
 
+    @staticmethod
     def get_month_name(month):
         """!
             @brief This functon get name of month by number
@@ -159,20 +161,14 @@ class Event(models.Model):
              "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь", ]
         return m[month - 1]
 
-    def create_calendar_statistics(request):
-        exit_data = {}
-        date = datetime.now()
-        events = Event.objects.filter(user=request.user)
-        exit_data['weeks'] = Event.get_weeks(date, request.user, events)
-        exit_data['all_events_count'] = events.count()
-        exit_data['today_events_count'] = events.filter(date=date.date()).count()
-        exit_data['yesterday_events_count'] = events.filter(date=date.date() - timedelta(1)).count()
-        exit_data['week_events_count'] = last_events = events.filter(date__lte=date.date())
-        exit_data['week_events_count'] = last_events.filter(date__gte=date.date() - timedelta(1)).count()
-        exit_data['month_events_count'] = last_events.filter(date__gte=date.date() - timedelta(30)).count()
-        exit_data['year_events_count'] = last_events.filter(date__gte=date.date() - timedelta(365)).count()
-        exit_data['now_month'] = Event.get_month_name(date.month)
-        exit_data['now_year'] = date.year
-        exit_data['now_month_num'] = date.month
-        exit_data['now_date'] = str(date.year) + "_" + str(date.month)
-        return exit_data
+    @staticmethod
+    def get_stats(date, user):
+        queryset = Event.objects.filter(user=user)
+        all_events = queryset.count()
+        today = queryset.filter(date=date.date()).count()
+        yesterday = queryset.filter(date=date.date() - timedelta(1)).count()
+        last_events = queryset.filter(date__lte=date.date())
+        weekly = last_events.filter(date__gte=date.date() - timedelta(1)).count()
+        monthly = last_events.filter(date__gte=date.date() - timedelta(30)).count()
+        yearly = last_events.filter(date__gte=date.date() - timedelta(365)).count()
+        return [all_events, today, yesterday, weekly, monthly, yearly]
