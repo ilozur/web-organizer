@@ -125,44 +125,34 @@
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" onclick="sorting('new', 'my')" class="btn btn-light">Сначала новые</button>
+                    <button type="button" onclick="sorting('old', 'my')" class="btn btn-light">Сначала старые</button>
+                    <button type="button" onclick="sorting('AtoZ', 'my')" class="btn btn-light">А..Я</button>
+                    <button type="button" onclick="sorting('ZtoA', 'my')" class="btn btn-light">Я..А</button>
                 </div>
                 <br/>
-                <div class="list-group">
+                <div class="list-group" id="ViewMy">
                     {% for item in my_events %}
                     <a href="#" class="list-group-item list-group-item-light"
-                       data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }})">
+                       data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }}, 'my')">
                         <h7>{{ item.0 }}</h7>
                         <div class="date-and-place">
-                            <small>{{ item.1 }}</small>
-                            |
-                            <small><b>{{ item.4 }}</b></small>
+                            <small>{{ item.1 }}</small>|<small><b>{{ item.4 }}</b></small>
                         </div>
                     </a>
                     {% endfor %}
                 </div>
-                <nav class=" navbar navbar-pag">
-                    <div class="btn-group btn-group-lg">
-                        <a href="#">
-                            <button type="button" class="btn btn-light">&laquo;</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light disabled">1</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light">2</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light">3</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light">&raquo;</button>
-                        </a>
+                {% if my_pages %}
+                <nav class="navbar navbar-pag">
+                    <div class="btn-group btn-group-lg" id="user_page_holder">
+                        <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                        {% for page in my_pages %}
+                        <a href="#"><button type="button" onclick="paginate({{ page }}, 'my')" class="btn btn-light">{{ page }}</button></a>
+                        {% endfor %}
+                        <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
                     </div>
                 </nav>
+                {% endif %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>
@@ -179,16 +169,15 @@
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-light">Сначала новые</button>
-                    <button type="button" class="btn btn-light">Сначала старые</button>
-                    <button type="button" class="btn btn-light">А..Я</button>
-                    <button type="button" class="btn btn-light">Я..А</button>
+                    <button type="button" onclick="sorting('new', 'all')" class="btn btn-light">Сначала новые</button>
+                    <button type="button" onclick="sorting('old', 'all')" class="btn btn-light">Сначала старые</button>
+                    <button type="button" onclick="sorting('AtoZ', 'all')" class="btn btn-light">А..Я</button>
+                    <button type="button" onclick="sorting('ZtoA', 'all')" class="btn btn-light">Я..А</button>
                 </div>
                 <br/>
-
-                <div class="list-group">
+                <div class="list-group" id="ViewAll">
                     {% for item in all_events %}
-                    <a href="#" class="list-group-item list-group-item-light"
+                    <a href="#All" class="list-group-item list-group-item-light"
                        data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ item.2 }})">
                         <h7>{{ item.0 }}</h7>
                         <div class="date-and-place">
@@ -199,25 +188,17 @@
                     </a>
                     {% endfor %}
                 </div>
-                <nav class=" navbar navbar-pag">
-                    <div class="btn-group btn-group-lg">
-                        <a href="#">
-                            <button type="button" class="btn btn-light">&laquo;</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light disabled">1</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light">2</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light">3</button>
-                        </a>
-                        <a href="#">
-                            <button type="button" class="btn btn-light">&raquo;</button>
-                        </a>
+                {% if all_pages %}
+                <nav class="navbar navbar-pag">
+                    <div class="btn-group btn-group-lg" id="all_page_holder">
+                        <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
+                        {% for page in all_pages %}
+                        <a href="#"><button type="button" onclick="paginate({{ page }}, 'all')" class="btn btn-light">{{ page }}</button></a>
+                        {% endfor %}
+                        <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
                     </div>
                 </nav>
+                {% endif %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Отменить</button>

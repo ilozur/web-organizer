@@ -1,5 +1,5 @@
 import json
-
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import *
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -14,6 +14,20 @@ def index(request):
     """!
         @brief This function render calendar page for current user
     """
+    try:
+        all_page = request.session['all_page']
+        all_sort = request.session['all_sort']
+        my_page = request.session['my_page']
+        my_sort = request.session['my_sort']
+        weekly_page = request.session['weekly_page']
+        weekly_sort = request.session['weekly_sort']
+    except Exception as ex:
+        all_page = my_page = weekly_page = 1
+        request.session['all_page'] = request.session['my_page'] = request.session['weekly_page'] = 1
+        all_sort = my_sort = weekly_sort = 'AtoZ'
+        request.session['all_sort'] = request.session['my_sort'] = request.session['weekly_sort'] = 'AtoZ'
+        print(ex)
+    date = datetime.now()
     if request.method == "GET":
         context = dict(title="Calendar index page", header="Calendar index page header")
         user_lang = Language.objects.filter(user=request.user).first().lang
@@ -23,12 +37,15 @@ def index(request):
             lang = eng
         else:
             lang = eng
-        date = datetime.now()
-        all_events = Event.get_events("AtoZ", request.user)
-        my_events = Event.get_events("AtoZ", request.user, 0)
-        context['all_events'] = all_events
-        context['my_events'] = my_events
-        context['weekly_events'] = week_events(request.user)
+        all_events = Paginator(Event.get_events(all_sort, request.user), 20)
+        my_events = Paginator(Event.get_events(my_sort, request.user, 0), 20)
+        weekly_events = Paginator(Event.week_events(weekly_sort, request.user), 20)
+        context['all_events'] = all_events.page(all_page).object_list
+        context['all_pages'] = all_events.page_range
+        context['my_events'] = my_events.page(my_page).object_list
+        context['my_pages'] = my_events.page_range
+        context['weekly_events'] = weekly_events.page(weekly_page).object_list
+        context['weekly_pages'] = weekly_events.page_range
         context['language'] = user_lang
         context['lang'] = lang
         context['amount_of_events'] = Event.get_stats(date, request.user)
@@ -37,33 +54,22 @@ def index(request):
         context['now_year'] = date.year
         context['now_month_num'] = date.month
         context['now_date'] = str(date.year) + "_" + str(date.month)
-        add_event_form = AddEventForm()
-        edit_event_form = EditEventForm()
-        context['add_event_form'] = add_event_form
-        context['edit_event_form'] = edit_event_form
+        context['add_event_form'] = AddEventForm()
+        context['edit_event_form'] = EditEventForm()
         return render(request, "calendars/index.html", context)
     else:
-        response_data = {}
-        datetime_now = datetime.now()
-        try:
-            now_date_string = request.POST.get('now_date', '')
-            tmp = now_date_string.split('_')
-            tmp = [int(num) for num in tmp]
-            if len(tmp) == 2:
-                if (datetime_now.month == tmp[1]) and (datetime_now.year == tmp[0]):
-                    now_date = datetime(year=tmp[0], month=tmp[1], day=datetime_now.day)
-                else:
-                    now_date = datetime(year=tmp[0], month=tmp[1], day=1)
-            else:
-                return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
-        except ValueError:
-            return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
-        events = Event.objects.filter(user=request.user)
-        response_data['weeks'] = Event.get_weeks(now_date, events)
-        response_data['month_name'] = Event.get_month_name(now_date.month)
-        response_data['now_year'] = now_date.year
-        response_data['result'] = "100"
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        q_type = request.POST.get("type")
+        page = request.POST.get("page", request.session[q_type + '_page'])
+        sort_type = request.POST.get("sort_type", request.session[q_type + '_sort'])
+        request.session[q_type + '_page'] = page
+        request.session[q_type + '_sort'] = sort_type
+        if q_type == 'all':
+            events = Event.get_events(sort_type, request.user)
+        elif q_type == 'my':
+            events = Event.get_events(sort_type, request.user, 0)
+        else:
+            events = Event.week_events(sort_type, request.user)
+        return paginate(events, page)
 
 
 def search_events(string):
@@ -165,25 +171,6 @@ def delete_ajax(request):
         return HttpResponseRedirect('/')
 
 
-def week_events(user):
-    events = Event.objects.filter(user=user)
-    result = []
-    now = datetime.now()
-    now_week = now.strftime('%U')
-    now_day = int(now.strftime('%w'))+1
-    now_time = (int(now.strftime('%H')))*60+int(now.strftime('%M'))
-    for item in events:
-        event = item
-        date = event.date
-        time = event.time
-        date_day = int(date.strftime('%w'))+1
-        date_week = date.strftime('%U')
-        date_time = (int(time.strftime('%H')))*60+int(time.strftime('%M'))
-        if (now_week == date_week) and (date_day >= now_day) and (date_time > now_time):
-            result.append(event)
-    return result
-
-
 @login_required
 def edit_event(request):
     response = {}
@@ -199,7 +186,7 @@ def edit_event(request):
                 if Event.objects.filter(id=event_id).exists():
                     tmp = Event.get_event_by_id(event_id)
                     tmp.title = form.cleaned_data['event_edit_title']
-                    tmp.desription = form.cleaned_data['event_edit_description']
+                    tmp.description = form.cleaned_data['event_edit_description']
                     tmp.deadline = deadline_date
                     tmp.save()
                     response['result'] = "Success"
@@ -214,3 +201,37 @@ def edit_event(request):
         return HttpResponse(json.dumps(response), content_type="application/json")
     else:
         return HttpResponseRedirect('/')
+
+
+def change_month(request):
+    if request.method == "POST":
+        response_data = {}
+        datetime_now = datetime.now()
+        try:
+            now_date_string = request.POST.get('now_date', '')
+            tmp = now_date_string.split('_')
+            tmp = [int(num) for num in tmp]
+            if len(tmp) == 2:
+                if (datetime_now.month == tmp[1]) and (datetime_now.year == tmp[0]):
+                    now_date = datetime(year=tmp[0], month=tmp[1], day=datetime_now.day)
+                else:
+                    now_date = datetime(year=tmp[0], month=tmp[1], day=1)
+            else:
+                return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
+        except ValueError:
+            return HttpResponse(json.dumps({'result': 'failed'}), content_type="application/json")
+        events = Event.objects.filter(user=request.user)
+        response_data['weeks'] = Event.get_weeks(now_date, events)
+        response_data['month_name'] = Event.get_month_name(now_date.month)
+        response_data['now_year'] = now_date.year
+        response_data['result'] = "100"
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def paginate(events, page):
+    response_data = {}
+    pages = Paginator(events, 20)
+    response_data['buttons'] = [pages.page(page).has_previous(), pages.page(page).has_next()]
+    response_data['events_list'] = pages.page(page).object_list
+    response_data['result'] = 100
+    return HttpResponse(json.dumps(response_data), content_type="application/json")

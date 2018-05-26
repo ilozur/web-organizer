@@ -303,7 +303,6 @@ def smart_priority(todo, address, user):
 
 
 def paginate(todo, page_number):
-
     response_data = {}
     pages = Paginator(todo, 20)
     if (page_number < 1) or (page_number > len(pages.page_range)):

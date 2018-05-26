@@ -41,10 +41,10 @@
 						Сортировка
 						</button>
 						<div class="dropdown-menu">
-							<button type="button" onclick="sorting('new')" class="dropdown-item">Сначала новые</button>
-							<button type="button" onclick="sorting('old')" class="dropdown-item">Сначала старые</button>
-							<button type="button" onclick="sorting('AtoZ')" class="dropdown-item">А..Я</button>
-							<button type="button" onclick="sorting('ZtoA')" class="dropdown-item">Я..А</button>
+							<button type="button" onclick="sorting('new', 'weekly')" class="dropdown-item">Сначала новые</button>
+							<button type="button" onclick="sorting('old', 'weekly')" class="dropdown-item">Сначала старые</button>
+							<button type="button" onclick="sorting('AtoZ', 'weekly')" class="dropdown-item">А..Я</button>
+							<button type="button" onclick="sorting('ZtoA', 'weekly')" class="dropdown-item">Я..А</button>
 						</div>
 					</div>
 					<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#In-Map">На карте
@@ -77,15 +77,17 @@
                         </div>
                     </div>
 			    </div>
+                {% if week_pages %}
                 <nav class="navbar">
-                    <div class="btn-group btn-group-lg">
+                    <div class="btn-group btn-group-lg" id="week_page_holder">
                         <button type="button" class="btn btn-danger">&laquo;</button>
-                        <button type="button" class="btn btn-danger disabled">1</button>
-                        <button type="button" class="btn btn-danger">2</button>
-                        <button type="button" class="btn btn-danger">3</button>
+                        {% for page in week_pages %}
+                        <button type="button" onclick="paginate({{ page }})" class="btn btn-danger">{{ page }}</button>
+                        {% endfor %}
                         <button type="button" class="btn btn-danger">&raquo;</button>
                     </div>
                 </nav>
+                {% endif %}
 		    </div>
             <section class="section-mouth col">
                 <div id="ViewTable">
@@ -150,8 +152,8 @@
             <section class="section-list">
                 <div class="list-group" style="display: None" id="ViewList">
                     {% for item in weekly_events %}
-                    <a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-                         onclick="get_event_data_ajax({{ item.2 }})" data-target="#Event-Card">
+                    <a href="#" class="list-group-item list-group-item-light" data-toggle="modal"
+                         onclick="get_event_data_ajax({{ item.2 }}, 'weekly')" data-target="#Event-Card">
                         <h7>{{ item.0 }}</h7>
                         <div class="date-and-place">
                             <small>{{ item.1 }}</small>

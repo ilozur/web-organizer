@@ -33,8 +33,8 @@ class Event(models.Model):
         mode = {
             'AtoZ': 'title',
             'ZtoA': '-title',
-            'old': ('-date', '-time'),
-            'new': ('date', 'time')
+            'old': '-date',
+            'new': 'date'
         }
         events_list = list()
         events = Event.objects.order_by(mode.get(sorting_type))
@@ -43,7 +43,7 @@ class Event(models.Model):
         else:
             events = events.exclude(is_public=modifier) | events.filter(user=user, is_public=modifier)
         for item in events:
-            events_list.append((item.title, item.date, item.id, item.description, item.place))
+            events_list.append((item.title, item.date.strftime("%B %d, %Y"), item.id, item.description, item.place))
         return events_list
 
     @staticmethod
@@ -70,7 +70,7 @@ class Event(models.Model):
             @brief This function get list of events by user and diapason of dates
         """
         if events is None:
-            events = Event.objects.all()
+            events = Event.objects.filter(user=user)
         events_list = list()
         events = events.filter(user=user, date__gte=from_date, date__lte=to_date)
         for item in events:
@@ -83,6 +83,23 @@ class Event(models.Model):
             return Event.objects.filter(id=id).first()
         else:
             return False
+
+    @staticmethod
+    def week_events(sort_type, user):
+        mode = {
+            'AtoZ': 'title',
+            'ZtoA': '-title',
+            'old': '-date',
+            'new': 'date'
+        }
+        today = datetime.today()
+        weekend = 7 - datetime.weekday(today)
+        result = Event.get_events_in_range(today, today + timedelta(weekend), user)
+        result = result.order_by(mode.get(sort_type))
+        events = list()
+        for item in result:
+            events.append((item.title, item.date.strftime("%B %d, %Y"), item.id, item.description, item.place))
+        return events
 
     @staticmethod
     def get_weeks(date_time, events):

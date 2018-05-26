@@ -3,6 +3,15 @@ var now_month = 0;
 var today_month = 0;
 var today_year = 0;
 
+function make_list_item(item){
+    var list_item = '<a href="#" class="list-group-item list-group-item-light" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax(' +
+    item[2] + ')"><h7>' +
+    item[0] + '</h7><div class="date-and-place"><small>' +
+    item[1] + '</small>|<small><b>' +
+    item[4] + '</b></small></div></a>';
+    return list_item
+};
+
 function setup_date(month, year)
 {
     now_year = year;
@@ -21,7 +30,7 @@ function next_month()
     }
     $.ajax({
         type: "POST",
-        url: '/calendar',
+        url: '/calendar/change_month',
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
@@ -87,7 +96,7 @@ function go_to_now_month()
     now_year = today_year;
     $.ajax({
         type: "POST",
-        url: '/calendar',
+        url: '/calendar/change_month',
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
@@ -157,7 +166,7 @@ function back_month()
     }
     $.ajax({
         type: "POST",
-        url: '/calendar',
+        url: '/calendar/change_month',
         data: {'now_date': String(now_year) + '_' + String(now_month)},
         success: function(response)
         {
@@ -344,6 +353,57 @@ function save_event_ajax()
                 $(this).removeAttr('disabled');
             });
             $('#save_event_btn').removeAttr('disabled');
+        }
+    });
+};
+
+function sorting(sort_type, type){
+    if (type == 'all'){
+        for (var i = 1; i < $("#all_page_holder").length - 2; i++){
+            $("#all_page_holder button:eq(" + i + ")").attr("onclick", "paginate(" + i + "," + type + "," + sort_type + ")");
+        }
+        paginate(1, type, sort_type);
+    };
+    if (type == 'my'){
+        for (var i = 1; i < $("#user_page_holder").length - 2; i++){
+            $("#user_page_holder button:eq(" + i + ")").attr("onclick", "paginate(" + i + "," + type + "," + sort_type + ")");
+        }
+        paginate(1, type, sort_type);
+    };
+    if (type == 'weekly'){
+        for (var i = 1; i < $("#week_page_holder").length - 2; i++){
+            $("#week_page_holder button:eq(" + i + ")").attr("onclick", "paginate(" + i + "," + type + "," + sort_type + ")");
+        }
+        paginate(1, type, sort_type)
+    };
+};
+
+function paginate(page, type, sort_type){
+    $.ajax({
+        type: "POST",
+        url: '/calendar',
+        data: {"page": page, "type": type, "sort_type": sort_type},
+        success: function(response){
+            if (response['result'] == '100'){
+                if (type == 'all'){
+                    $("#ViewAll").html("");
+                    for (var i = 0; i < response['events_list'].length; i++){
+                        $("#ViewAll").append(make_list_item(response['events_list'][i]));
+                    }
+                };
+                if (type == 'my'){
+                    $("#ViewMy").html("");
+                    for (var i = 0; i < response['events_list'].length; i++){
+                        $("#ViewMy").append(make_list_item(response['events_list'][i]));
+                    }
+                };
+                if (type == 'weekly'){
+                    $("#ViewList").html("");
+                    for (var i = 0; i < response['events_list'].length; i++){
+                        $("#ViewList").append(make_list_item(response['events_list'][i]));
+                    }
+                };
+            }
         }
     });
 };
