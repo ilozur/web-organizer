@@ -1,9 +1,14 @@
 <!doctype html>
+<<<<<<< HEAD
 {% if user.is_authenticated %}
     <html lang="{{ language }}">
 {% else %}
     <html lang="en">
 {% endif %}
+=======
+<html lang="ru">
+
+>>>>>>> redesign_notes
 <head>
     <title>{{ title }}</title>
     {% load staticfiles %}
@@ -15,77 +20,89 @@
     <script src='{% static "js/popper.min.js" %}'></script>
     <script src='{% static "js/bootstrap.min.js" %}'></script>
     <script src='{% static "js/holder.min.js" %}'></script>
-    <meta charset="utf-8">
-    {% block meta %}
-    {% endblock %}
-    <script>init_speechkit();</script>
+    <meta charset="utf-8"> {% block meta %} {% endblock %}
+    <script>
+        init_speechkit();
+    </script>
     {% if user.is_authenticated %}
-        <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
-        <script src='{% static "js/live_recognizing.js" %}'></script>
-        <script>start_background_listening("{{ language }}");</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+    <script src='{% static "js/live_recognizing.js" %}'></script>
+    <script>
+        start_background_listening("{{ language }}");
+    </script>
     {% endif %}
 </head>
+
 <body>
-{% block header %}
-<header>
-    {% if user.is_authenticated %}
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
-                      <a href='{% url "index" %}'><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block logo"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg></a>
-        <a class="navbar-brand col-2" href='{% url "index" %}'>EVA</a>
-        <div class="collapse navbar-collapse">
+    {% block header %}
+    <header>
+        {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <a href='{% url "index" %}'>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block logo">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+                    <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+                    <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+                    <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+                    <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+                    <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+                </svg>
+            </a>
+            <a class="navbar-brand col-2" href='{% url "index" %}'>EVA</a>
+            <div class="collapse navbar-collapse">
                 <button type="button" class="btn btn-light btn-sm base-button" style="margin-right: 20%;">
                     <img src='{% static "icons/micro_icon.png" %}'>
                 </button>
-            <ul class="navbar-nav">
-                <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active-link{% endif %}">
-                    <a class="nav-link" href='{% url "index" %}'>{{ lang.title }}</a>
-                </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'notes.index' %}active-link{% endif %}">
-                    <a class="nav-link" href='{% url "notes.index" %}'>{{ lang.notes_title }}</a>
-                </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'calendar.index' %}active-link{% endif %}">
-                    <a class="nav-link" href='{% url "calendar.index" %}'>{{ lang.calendars_title }}</a>
-                </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'todo.index' %}active-link{% endif %}">
-                    <a class="nav-link" href='{% url "todo.index" %}'>{{ lang.reminders_title }}</a>
-                </li>
-            </ul>
-            <div class="btn-group notif">
-              <button class="btn dropdown-toggle user" data-toggle="dropdown">
-                Уведомления <span class="badge badge-light">4</span>
-              </button>
-              <div class="dropdown-menu notif-menu">
-                    <div class="alert alert-primary" role="alert">
-                      Задача добавлена
+                <ul class="navbar-nav">
+                    <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active-link{% endif %}">
+                        <a class="nav-link" href='{% url "index" %}'>{{ lang.title }}</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'notes.index' %}active-link{% endif %}">
+                        <a class="nav-link" href='{% url "notes.index" %}'>{{ lang.notes_title }}</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'calendar.index' %}active-link{% endif %}">
+                        <a class="nav-link" href='{% url "calendar.index" %}'>{{ lang.calendars_title }}</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'todo.index' %}active-link{% endif %}">
+                        <a class="nav-link" href='{% url "todo.index" %}'>{{ lang.reminders_title }}</a>
+                    </li>
+                </ul>
+                <div class="btn-group notif">
+                    <button class="btn dropdown-toggle user" data-toggle="dropdown">
+                        Уведомления <span class="badge badge-light">4</span>
+                    </button>
+                    <div class="dropdown-menu notif-menu">
+                        <div class="alert alert-primary" role="alert">
+                            Задача добавлена
+                        </div>
+                        <div class="alert alert-secondary" role="alert">
+                            Не пора ли вам обновить пароль?
+                        </div>
+                        <div class="alert alert-danger" role="alert">
+                            Мероприятие начнется через 2 часа!
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            Заметка "Сделать уведомления" удалена
+                        </div>
                     </div>
-                    <div class="alert alert-secondary" role="alert">
-                      Не пора ли вам обновить пароль?
-                    </div>
-                    <div class="alert alert-danger" role="alert">
-                      Мероприятие начнется через 2 часа!
-                    </div>
-                    <div class="alert alert-warning" role="alert">
-                      Заметка "Сделать уведомления" удалена
-                    </div>
-              </div>
+                </div>
+                <ul class="navbar-nav ml-auto">
+                    <li class="dropdown join">
+                        <button data-toggle="dropdown" class="btn btn-outline user">{{ request.user.username }}</button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="p-3">
+                                <a href='{% url "userprofile.index" %}' class="btn btn-block user">{{ lang.account_title }}</a>
+                                <a href='{% url "sign_out" %}' class="btn btn-block user">{{ lang.quit_title }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <ul class="navbar-nav ml-auto">
-                <li class="dropdown join">
-                    <button data-toggle="dropdown" class="btn btn-outline user">{{ request.user.username }}</button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li class="p-3">
-                            <a href='{% url "userprofile.index" %}' class="btn btn-block user">{{ lang.account_title }}</a>
-                            <a href='{% url "sign_out" %}' class="btn btn-block user">{{ lang.quit_title }}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    {% endif %}
-</header>
-{% endblock %}
-
-{% block content %} {% endblock %}
+        </nav>
+        {% endif %}
+    </header>
+    {% endblock %} {% block content %} {% endblock %}
 </body>
+
 </html>
