@@ -59,12 +59,18 @@ a:hover {
 }
 
 .delete {
-  color: #721c24;
-  background-color: #f5c6cb;
+  color: #fff;
+  background-color: red;
   border: 1px solid rgba(0, 0, 0, .125);
   padding: 1px 5px;
+  transition: 0.5s;
   margin-right: 5px;
   border-radius: 50%;  
+}
+
+.delete:hover {
+  color: #fff;
+  background-color: red;
 }
 
 .main {
