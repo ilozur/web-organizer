@@ -153,6 +153,7 @@ def search_ajax(request):
     else:
         return HttpResponseRedirect('/')
 
+
 @login_required
 def save_ajax(request):
     """
