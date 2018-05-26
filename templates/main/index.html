@@ -86,6 +86,26 @@
                         <div class="form-group col-md-6">
                             {{ sign_up_form.password2|bootstrap }}
                         </div>
+                        <div class="form-group col-md-6">
+                            {{ sign_up_form.timezone }}
+                            <label>Timezone</label>
+                            <select class="form-control" title="Timezone">
+                                <option value="not_selected" style="display:none" selected>Select timezone</option>
+                                {% for timezone in timezones %}
+                                    <option value="{{ timezone }}">{{ timezone }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ sign_up_form.language }}
+                            <label>Language</label>
+                            <select class="form-control" title="Language">
+                                <option value="not_selected" style="display:none" selected>Select language</option>
+                                {% for language in supported_languages %}
+                                    <option value="{{ language.code }}">{{ language.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="form-check" style="margin-bottom: 20px;">
                         <input type="checkbox" class="form-check-input">

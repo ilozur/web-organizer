@@ -12,16 +12,17 @@
 <h1> Заметки </h1>
 <div class="container-fluid">
 	<div class="row main">
-		<section class="menu col-md-2" id="note_groups_list">
+		<section class="menu col-md-2" id="note_folders">
 			<div class="folder">
 				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder">&#9998;</button>
 				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder" style="float: right;">+</button>
 			</div>
 			<div class="list-group">
-				<a href="#" class="list-group-item list-group-item-action list-group-item-warning">Все заметки</a>
-				<a href="#" class="list-group-item list-group-item-action list-group-item-warning">Недавно удаленные</a>
-				<a href="#" class="list-group-item list-group-item-action list-group-item-warning active">Выбранная папка</a>
-				<a href="#" class="list-group-item list-group-item-action list-group-item-warning"><button type="button" class="btn delete">—</button>Папка под удалением</a>
+				<a class="list-group-item list-group-item-action list-group-item-warning active" id="folder_{{ all_folder.id }}">Все заметки</a>
+				<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ recently_deleted_folder.id}}">Недавно удаленные</a>
+				{% for folder in folders %}
+					<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ folder.id }}">{{ folder.title }}</a>
+				{% endfor %}
 			</div>
 		</section>
 		<section class="notes-list col-md-3" id="note_list">
@@ -40,10 +41,9 @@
 					</div>
 				</div>
 				<div class="input-group search">
-					{% csrf_token %}
-                    {{ search_note_form.aim }}
+					<input type="search" name="aim" class="form-control" placeholder="Поиск" maxlength="255">
 					<div class="input-group-append">
-						<button class="btn" type="button" id="search_btn">&#10155;</button>
+						<button class="btn" type="button" id="clean_search_btn" hidden>&#9747;</button>
 					</div>
 				</div>
 			</div>
@@ -51,11 +51,15 @@
                 {% if no_notes %}
                     <p style="margin: auto auto auto auto">{{ lang.no_notes_title }}</p>
                 {% else %}
+					<p style="margin: auto auto auto auto;" hidden>{{ lang.no_notes_title }}</p>
                     {% for note in notes %}
-                        <a id="{{ note.id }}" class="list-group-item list-group-item-action list-group-item-warning">{{ note.title }}</a>
+                        <a id="note_{{ note.id }}" class="list-group-item list-group-item-action list-group-item-warning">{{ note.title }}</a>
                     {% endfor %}
                 {% endif %}
 			</div>
+            <div class="holder" id="show_folder_preloader" hidden>
+                <div class="preloader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
 		</section>
 		<section class="view col-md-7" id="note_show" hidden>
 			<div class="note">
@@ -69,7 +73,7 @@
 			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Редактировать</button>
 			<button type="button" class="btn" id="delete_btn">Удалить</button>
 		</section>
-        <section class="view col-md-7" id="preloader" hidden>
+        <section class="view col-md-7" id="show_note_preloader" hidden>
             <div class="holder">
                 <div class="preloader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             </div>

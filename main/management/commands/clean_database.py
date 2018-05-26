@@ -92,9 +92,6 @@ class Command(BaseCommand):
             self.stdout.write("]")
 
     def delete_all_users(self):
-        self.delete_all_events()
-        self.delete_all_notes()
-        self.delete_all_todo()
         users = User.objects.all()
         users_count = users.count()
         if users_count == 0:
@@ -108,9 +105,6 @@ class Command(BaseCommand):
             self.stdout.write("-", ending="")
         self.stdout.write("]")
         for user in users:
-            langs = Language.objects.filter(user=user)
-            for lang in langs:
-                lang.delete()
             user.delete()
             counter += 1
             percents = int(counter / users_count * 100)

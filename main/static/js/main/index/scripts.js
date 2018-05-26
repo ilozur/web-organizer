@@ -75,6 +75,8 @@ function sign_in_ajax()
 
 function sign_up_ajax()
 {
+    $('input[name="language"]').val($('select[title="Language"]').val());
+    $('input[name="timezone"]').val($('select[title="Timezone"]').val());
     form_data = $('#sign_up_form').serialize();
     $("#sign_up_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');

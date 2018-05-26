@@ -184,7 +184,6 @@ def add_event(request, data):
                           should_notify_days=data['should_notify_days'])
             if data['place'] != "":
                 event.place = data['place']
-            print(event.place)
             event.save()
             return "100"
 

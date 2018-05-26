@@ -1,29 +1,62 @@
 selected_sorting_type = null;
+selected_folder = null;
 
 function init()
 {
-    $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id')) } });
-    document.getElementById('search_btn').onclick = search;
+    $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id').split('_')[1]) } });
+    $.each($('#note_folders .list-group a'), function() { this.onclick = function() { get_folder($(this).attr('id').split('_')[1]) } });
+    document.getElementById('clean_search_btn').onclick = function() { $('input[name="aim"]').val(''); search(); };
+    $('input[name="aim"').on('keyup paste', function() { search(); });
+};
+
+function get_folder(id)
+{
+    selected_folder = id;
+    $.each($('#note_list .list-group a'), function() { $(this).remove(); });
+    $('input[name="aim"]').val('');
+    $('#clean_search_btn').attr('hidden', '');
+    $('#show_folder_preloader').removeAttr('hidden');
+    $.each($('#note_folders .list-group a'), function() { $(this).removeClass('active') })
+    $('#folder_' + id).addClass('active');
+    $.ajax({
+        type: "POST",
+        url: '/notes/get_folder',
+        data: { "id": id, "sorting_type": selected_sorting_type },
+        success: function(response)
+        {
+            $('#show_folder_preloader').attr('hidden', '');
+            if (response['result'] == "100")
+            {
+                $.each($('#note_folders .list-group a'), function() { this.onclick = function() { get_folder($(this).attr('id').split('_')[1]) } });
+                document.getElementById("folder_" + id).onclick = null;
+                fill_notes_list(response['notes'])
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
+        }
+    });
 };
 
 function get_note_data(id)
 {
     $('#note_show').attr('hidden', '');
-    $('#preloader').removeAttr('hidden');
+    $('#show_note_preloader').removeAttr('hidden');
+    $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
+    $('#note_' + id).addClass('active');
     $.ajax({
         type: "POST",
         url: '/notes/get_note_data',
-        data: {"id": id},
+        data: { "id": id },
         success: function(response)
         {
+            $('#show_note_preloader').attr('hidden', '');
             if (response['result'] == "100")
             {
-                $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
-                $('#' + response['id']).addClass('active');
-                init();
-                document.getElementById(response['id']).onclick = null;
+                $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id').split('_')[1]) } });
+                document.getElementById("note_" + response['id']).onclick = null;
                 set_note_show(response);
-                $('#preloader').attr('hidden', '');
                 $('#note_show').removeAttr('hidden');
             }
             else
@@ -48,16 +81,21 @@ function delete_note(id)
     var should_delete = confirm('Вы уверены?');
     if (should_delete)
     {
+        $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
+        $('#note_show').attr('hidden', '');
         $.ajax({
             type: "POST",
             url: '/notes/delete',
-            data: {"id": id},
+            data: { "id": id },
             success: function(response)
             {
                 if (response['result'] == "100")
                 {
-                    $('#note_show').attr('hidden', '');
-                    $('#' + id).remove();
+                    $('#note_' + id).remove();
+                    if ($('#note_list .list-group a').length == 0)
+                    {
+                        $('#note_list .list-group p').removeAttr('hidden');
+                    }
                     voice_text('Заметка удалена.');
                 }
                 else
@@ -71,48 +109,61 @@ function delete_note(id)
 
 function add_note_to_list(id, title)
 {
-    $('#note_list .list-group').append('<a id="' + id + '" class="list-group-item list-group-item-action list-group-item-warning">' + title + '</a>');
-    $('#' + id).click(function() { get_note_data(id) } );
+    $('#note_list .list-group').append('<a id="note_' + id + '" class="list-group-item list-group-item-action list-group-item-warning">' + title + '</a>');
+    $('#note_' + id).click(function() { get_note_data(id) } );
 };
 
 function search()
 {
-    if (selected_sorting_type)
+    if ($('input[name="aim"]').val() == "")
     {
-        sort_notes(selected_sorting_type);
+        $('#clean_search_btn').attr('hidden', '');
     }
     else
     {
-        $.ajax({
-            type: "POST",
-            url: '/notes/search',
-            data: {"aim": $('input[name="aim"]').val()},
-            success: function(response)
-            {
-                $('#note_list .list-group').html('');
-                for (var i = 0; i < response['found_notes'].length; i++)
-                {
-                    add_note_to_list(response['found_notes'][i]['id'], response['found_notes'][i]['title']);
-                }
-            }
-        });
+        $('#clean_search_btn').removeAttr('hidden');
     }
+
+    $.each($('#note_list .list-group a'), function() { $(this).remove(); });
+    $('#show_folder_preloader').removeAttr('hidden');
+    $.ajax({
+        type: "POST",
+        url: '/notes/search',
+        data: { "aim": $("input[name='aim']").val(), "sorting_type": selected_sorting_type, "folder": selected_folder },
+        success: function(response)
+        {
+            $('#show_folder_preloader').attr('hidden', '');
+            fill_notes_list(response['found_notes'], response['no_notes_title'])
+        }
+    });
 };
 
 function sort_notes(sorting_type)
 {
     selected_sorting_type = sorting_type;
+    $.each($('#note_list .list-group a'), function() { $(this).remove(); });
+    $('#show_folder_preloader').removeAttr('hidden');
     $.ajax({
         type: "POST",
         url: '/notes/sort',
-        data: {"aim": $('input[name="aim"]').val(), "sorting_type": sorting_type},
+        data: { "aim": $("input[name='aim']").val(), "sorting_type": sorting_type, "folder": selected_folder },
         success: function(response)
         {
-            $('#note_list .list-group').html('');
-            for (var i = 0; i < response['found_notes'].length; i++)
-            {
-                add_note_to_list(response['found_notes'][i]['id'], response['found_notes'][i]['title']);
-            }
+            $('#show_folder_preloader').attr('hidden', '');
+            fill_notes_list(response['sorted_notes'], response['no_notes_title'])
         }
     });
+};
+
+function fill_notes_list(notes)
+{
+    if (notes.length == 0)
+    {
+        $('#note_list .list-group p').removeAttr('hidden');
+    }
+    for (var i = 0; i < notes.length; i++)
+    {
+        $('#note_list .list-group p').attr('hidden', '');
+        add_note_to_list(notes[i]['id'], notes[i]['title']);
+    }
 };

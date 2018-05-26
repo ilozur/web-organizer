@@ -6,7 +6,8 @@ urlpatterns = [
     #path('save', save_ajax, name='notes.save'),
     path('get_note_data', get_note_data, name='notes.get_note_data'),
     #path('add', add_note_ajax, name='notes.add'),
-    path('search', search, name='notes.search'),
     path('delete', delete_note, name='notes.delete'),
-    path('sort', sort_notes, name='notes.sort'),
+    path('sort', sort, name='notes.sort'),
+    path('get_folder', get_folder, name='notes.get_folder'),
+    path('search', search, name='notes.search')
 ]

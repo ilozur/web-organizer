@@ -5,11 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 import json
 
 from notes.forms import *
-from notes.models import Notes
+from notes.models import *
 
 from datetime import datetime
-
-from django.core.paginator import Paginator
+from django.utils import timezone
+import pytz
 
 from main.views import get_language
 
@@ -21,12 +21,20 @@ def index(request):
         context = dict()
         context['title'] = "Notes index page"
         context['lang'], context['language'] = get_language(request)
+        folders = NotesFolder.objects.filter(user=request.user, recently_deleted=False)
+        recently_deleted_folder = NotesFolder.objects.filter(user=request.user, recently_deleted=True)
+        if len(recently_deleted_folder) == 0:
+            tmp_folder = NotesFolder(user=request.user, title="Recently deleted", recently_deleted=True)
+            tmp_folder.save()
+        recently_deleted_folder = NotesFolder.objects.filter(user=request.user, recently_deleted=True)
+        context['recently_deleted_folder'] = recently_deleted_folder[0]
+        context['all_folder'] = {'id': 'all'}
+        context['folders'] = folders
         if len(notes) > 0:
             context['notes'] = notes
             context['no_notes'] = False
         else:
             context['no_notes'] = True
-        context['search_note_form'] = SearchForm()
         context['add_note_form'] = AddNoteForm()
         context['edit_note_form'] = EditNoteForm()
         return render(request, "notes/index.html", context)
@@ -56,13 +64,13 @@ def get_note_data(request):
     else:
         lang, language = get_language(request)
         note_id = request.POST.get('id')
-        response_data = dict()
+        response = dict()
         result = 100
         if note_id:
             notes = Notes.objects.filter(user=request.user, id=note_id)
             if len(notes) > 0:
                 note = notes[0]
-                response_data = {
+                response = {
                     'title': note.title,
                     'data': note.data,
                     'added_time': create_added_date(lang, note.added_time),
@@ -71,8 +79,8 @@ def get_note_data(request):
                 result = 100
             else:
                 result = 111
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 @login_required
@@ -86,7 +94,7 @@ def delete_note(request):
     else:
         note_id = request.POST.get('id')
         should_return_last_note = request.POST.get('should_return_last_note')
-        response_data = dict()
+        response = dict()
         result = 100
         if note_id:
             result = Notes.delete_note(note_id, request.user)
@@ -97,39 +105,91 @@ def delete_note(request):
                 if last_notes.count() >= 3:
                     last_note = last_notes[0:3][-1]
             if last_note is not None:
-                response_data['id'] = last_note.id
-                response_data['title'] = last_note.title
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+                response['id'] = last_note.id
+                response['title'] = last_note.title
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 @login_required
-def search(request, sorting_type="date_up"):
+def search(request):
     """
     @brief
     This function looks for the notes
     @detailed
     This function searches for a note among those that exist
     """
+    sorting_type = request.POST.get('sorting_type')
+    aim = request.POST.get('aim')
+    folder_id = request.POST.get('folder')
+    if folder_id == "all":
+        folder_id = None
+    if folder_id:
+        folder = NotesFolder.objects.filter(id=folder_id)
+        if len(folder) == 0:
+            folder = None
+        else:
+            folder = folder[0]
+    else:
+        folder = None
+    found_notes = Notes.search_notes(aim, request.user, sorting_type, folder)
+    json_serializable_notes = [{'id': note.id, 'title': note.title} for note in found_notes]
+    response = {
+        'found_notes': json_serializable_notes
+    }
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+@login_required
+def sort(request):
     if request.method == "GET":
         return HttpResponseRedirect('/')
     else:
+        sorting_type = request.POST.get('sorting_type')
         aim = request.POST.get('aim')
-        if aim is None:
-            aim = ""
-        found_notes = Notes.search_notes(aim, request.user, sorting_type)
-        json_serializable_notes = [{'id': note.id, 'title': note.title} for note in found_notes]
+        folder_id = request.POST.get('folder')
+        if folder_id == "all":
+            folder_id = None
+        if folder_id:
+            folder = NotesFolder.objects.filter(id=folder_id)
+            if len(folder) == 0:
+                folder = None
+            else:
+                folder = folder[0]
+        else:
+            folder = None
+        sorted_notes = Notes.search_notes(aim, request.user, sorting_type, folder)
+        json_serializable_notes = [{'id': note.id, 'title': note.title} for note in sorted_notes]
         response = {
-            'found_notes': json_serializable_notes
+            'sorted_notes': json_serializable_notes
         }
         return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 @login_required
-def sort_notes(request):
+def get_folder(request):
     if request.method == "GET":
         return HttpResponseRedirect('/')
     else:
+        folder_id = request.POST.get('id')
         sorting_type = request.POST.get('sorting_type')
-        response = search(request, sorting_type)
-        return response
+        if sorting_type is None:
+            sorting_type = "date_up"
+        response = dict()
+        if folder_id == "all":
+            notes = Notes.get_notes(sorting_type, user=request.user)
+            json_serializable_notes = [{'id': note.id, 'title': note.title} for note in notes]
+            response['notes'] = json_serializable_notes
+            result = "100"
+        else:
+            folder = NotesFolder.objects.filter(id=folder_id)
+            if len(folder) == 0:
+                result = "115"
+            else:
+                folder = folder[0]
+                notes = Notes.get_notes(sorting_type, user=request.user, folder=folder)
+                json_serializable_notes = [{'id': note.id, 'title': note.title} for note in notes]
+                response['notes'] = json_serializable_notes
+                result = "100"
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
