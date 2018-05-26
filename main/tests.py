@@ -73,5 +73,21 @@ class TestMainPage(TestCase):
         response = self.c.get('/todos/get_todo_data')
         self.assertEqual(response.status_code, 200, 'SC {}!'.format(response.context['result']))
         
+     def test_Todos(self):
+        self.c.login(username="testuser", password="pass")
+        response = self.c.get('/todos')
+
+        self.assertEqual(response.status_code, 200)
+        all_todos = Todos.objects.all()
+
+        response = self.c.post('/todos/add', {
+            'data_part':'test value',
+            'datetime':datetime.datetime.now(),
+            'name':"test todo' or 1=1 DROP DATABASE;--",
+            'id':'{}'.format(len(all_todos) + 1)})
+
+        self.assertEqual(response.context['result'], 100)
+
+    
     
     
