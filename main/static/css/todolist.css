@@ -163,6 +163,10 @@ a:hover {
   color: green;
 }
 
+.folder-now {
+  color: #999;
+}
+
 .join {
   margin: auto;
   padding: auto;

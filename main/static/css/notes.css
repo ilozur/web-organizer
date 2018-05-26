@@ -155,6 +155,10 @@ a:hover {
   color: #856404;
 }
 
+.folder-now {
+  color: #999;
+}
+
 .join {
   margin: auto;
   padding: auto;

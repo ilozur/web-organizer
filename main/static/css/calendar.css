@@ -191,6 +191,10 @@ td:hover {
   font-size: 20pt;
 }
 
+.folder-now {
+  color: #999;
+}
+
 .join {
   margin: auto;
   padding: auto;
