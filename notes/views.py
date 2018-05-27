@@ -3,11 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 import json
+import re
 
 from notes.forms import *
 from notes.models import *
-
-from datetime import datetime
+from main.models import Timezone
 from django.utils import timezone
 import pytz
 
@@ -220,6 +220,10 @@ def save_note(request):
                     folder = None
                 if folder is not None:
                     folder = NotesFolder.objects.filter(id=folder)[0]
+                if form.cleaned_data[title_key] == "":
+                    tmp_title = re.sub('<[^>]*>', '', form.cleaned_data[data_key])
+                    tmp_title = tmp_title[0:30]
+                    form.cleaned_data[title_key] = tmp_title
                 response['id'], response['title'] = add_note(request.user, form.cleaned_data[title_key],
                                                              form.cleaned_data[data_key], folder)
             else:
@@ -239,6 +243,8 @@ def save_note(request):
 
 
 def add_note(user, title, data, folder):
-    note = Notes(title=title, user=user, data=data, folder=folder)
+    tzinfo = pytz.timezone(Timezone.objects.filter(user=user)[0].timezone)
+    timenow = timezone.now().astimezone(tzinfo)
+    note = Notes(title=title, user=user, data=data, folder=folder, added_time=timenow)
     note.save()
     return note.id, note.title

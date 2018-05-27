@@ -11,6 +11,6 @@ class SaveNoteForm(forms.Form):
 
 
 class EditNoteForm(forms.Form):
-    note_title_edit = forms.CharField(max_length=19, widget=forms.TextInput(attrs={'class': 'form-control',
-                                                                                   'placeholder': 'Название'}))
+    note_title_edit = forms.CharField(max_length=19, required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Название'}))
     note_data_edit = RichTextUploadingFormField(widget=CKEditorUploadingWidget())
