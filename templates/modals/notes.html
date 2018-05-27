@@ -8,15 +8,14 @@
             <div class="modal-body">
                 <form id="add_note_form">
                     {% csrf_token %}
-                    {{ add_note_form.media }}
+                    {{ save_note_form.media }}
                     <div class="form-group">
                         <h3>Название</h3>
-                        {{ add_note_form.note_title }}
+                        {{ save_note_form.note_title }}
                     </div>
                     <div class="form-group">
                         <h3>Текст</h3>
-                        {{ add_note_form.note_data }}
-                        {{ add_note_form.note_data_part }}
+                        {{ save_note_form.note_data }}
                     </div>
                 </form>
 <!--                 <h3>Записать аудио</h3>

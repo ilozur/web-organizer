@@ -1,228 +1,175 @@
-{% extends "main/base.html" %}
-{% block meta %}
-{% load staticfiles %}
-{% load bootstrap %}
-<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
-<link rel="stylesheet" href='{% static "css/general.css" %}'>
-<link rel="stylesheet" href='{% static "css/calendar.css" %}'>
+{% extends "main/base.html" %} {% block meta %} {% load staticfiles %} {% load bootstrap %}
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}' xmlns:max-hidth="http://www.w3.org/1999/xhtml" xmlns:max-hidth="http://www.w3.org/1999/xhtml" xmlns:max-hidth="http://www.w3.org/1999/xhtml">
 <link rel="stylesheet" href='{% static "css/base.css" %}'>
+<link rel="stylesheet" href='{% static "css/calendar.css" %}'>
 <script language="JavaScript" src='{% static "js/setup_ajax.js" %}'></script>
 <script language="JavaScript" src='{% static "js/calendar/scripts.js" %}'></script>
 <script src="http://api-maps.yandex.ru/2.1/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 <script language="JavaScript" src='{% static "js/yandex_map.js" %}'></script>
-<script> setup_date({{ now_month_num }}, {{ now_year }}); </script>
-{% endblock %}
-{% block content %}
-<article class="calendar">
-	<section class="mast">
-		<h1>Календарь</h1>
-	</section>
-	<section class="content">
-		<<div class="row">
-			<div class="col-2">
-				<div class="card mb-3 ml-3 noanimation">
-					<div class="card-header">
-						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-danger btn-change" data-num="1" onclick="ShowTable()">
-								<picture>
-									<img src='{% static "icons/month_icon.png" %}' class="icon">
-								</picture>
-							</button>
-							<button type="button" class="btn btn-danger btn-change" data-num="3" onclick="ShowList()">
-								<picture>
-									<img src='{% static "icons/list_icon_calendar.png" %}' class="icon">
-								</picture>
-							</button>
-							<button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#New-Date">+</button>
-							</div>
-							</div>
-							<div class="dropdown btn-lg">
-								<button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Сортировка
-								</button>
-								<div class="dropdown-menu">
-									<button type="button" class="dropdown-item">Сначала новые</button>
-									<button type="button" class="dropdown-item">Сначала старые</button>
-									<button type="button" class="dropdown-item">А..Я</button>
-									<button type="button" class="dropdown-item">Я..А</button>
-								</div>
-							</div>
+<script>
+    setup_date({
+        {
+            now_month_num
+        }
+    }, {
+        {
+            now_year
+        }
+    });
+</script>
+{% endblock %} {% block content %}
+<h1> Календарь </h1>
+<div class="container-fluid">
+    <div class="row main">
+        <section class="menu col-md-2">
+            <div class="folder">
+                <button type="button" class="btn" data-toggle="modal" data-target="#New-Folder">&#9998;</button>
+                <button type="button" class="btn" data-toggle="modal" data-target="#New-Folder" style="float: right;">+</button>
+            </div>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger active">Список мероприятии</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Завершенные</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">На карте</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Рекомандованные</a>
+            </div>
+        </section>
 
-							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#In-Map">На карте
-							</button>
-							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#My">Мои события
-							</button>
-							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#All">Все события
-							</button>
-							<button type="button" class="btn btn-lg btn-danger btn-btn" data-toggle="modal" data-target="#Recommend">
-							Рекомендации
-							</button>
+        <section class="notes-list col-md-3">
+            <div class="toolbar">
+                <div class="dropdown btn-lg">
+                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировка</button>
+                    <div class="dropdown-menu">
+                        <button type="button" class="dropdown-item">Сначала новые</button>
+                        <button type="button" class="dropdown-item">Сначала старые</button>
+                        <button type="button" class="dropdown-item">А..Я</button>
+                        <button type="button" class="dropdown-item">Я..А</button>
+                    </div>
+                    <div style="float: right;">
+                        <button type="button" class="btn" data-toggle="modal" data-target="#">&#9998;</button>
+                        <button type="button" class="btn" data-toggle="modal" data-target="#">+</button>
+                    </div>
+                </div>
+                <div class="input-group search">
+                    <input type="search" class="form-control" placeholder="Поиск">
+                    <div class="input-group-append">
+                        <button class="btn" type="button">&#10155;</button>
+                    </div>
+                </div>
+            </div>
+            <div class="list-group list">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a danger list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a info list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a light list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a dark list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger active">Выбранная заметка</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a secondary list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">
+                    <button type="button" class="btn delete">—</button>Заметки под удалением</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">
+                    <button type="button" class="btn delete">—</button>Заметки под удалением</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">
+                    <button type="button" class="btn delete">—</button>Заметки под удалением</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a info list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a dark list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a primary list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a secondary list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a success list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a danger list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a danger list group item</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">This is a info list group item</a>
+            </div>
+        </section>
 
-<!-- 							<button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#Synchronization">
-								<picture>
-									<img src='{% static "icons/sync_icon_calendar.png" %}' class="icon">
-								</picture>
-							</button> -->
-							<div class="card-footer">
-							<div class="alert alert-danger">
-								<small data-toggle="modal" data-target="#All event">Всего событий: {{ all_events_count }}</small>
-								<br/>
-								<small data-toggle="modal" data-target="#For-Today event">На сегодня: {{ today_events_count }}</small>
-								<br/>
-								<small>За вчера: {{ yesterday_events_count }}</small>
-								<br/>
-								<small>За неделю: {{ week_events_count }}</small>
-								<br/>
-								<small>За месяц: {{ month_events_count }}</small>
-								<br/>
-								<small>За год: {{ year_events_count }}</small>
-							</div>
-							</div>
-							</div>
-										<nav class="navbar">
-				<div class="btn-group btn-group-lg">
-					<button type="button" class="btn btn-danger">&laquo;</button>
-					<button type="button" class="btn btn-danger disabled">1</button>
-					<button type="button" class="btn btn-danger">2</button>
-					<button type="button" class="btn btn-danger">3</button>
-					<button type="button" class="btn btn-danger">&raquo;</button>
-				</div>
-			</nav>
-			</div>
-		<section class="section-mouth col">
-			<div id="ViewTable">
-			<div class="btn-group btn-group-sm btn-mouth">
-				<a>
-				<button type="button" class="btn btn-danger" onclick="back_month()">&laquo;</button>
-				</a>
-				<h2 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span
-					id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h2>
-				<a>
-				<button type="button" class="btn btn-danger" onclick="next_month()">&raquo;</button>
-				</a>
-				&nbsp;&nbsp;
-				<a>
-				<button type="button" class="btn btn-danger" onclick="go_to_now_month()">Сегодня</button>
-				</a>
-			</div>
-			<table class="table table-danger table-mouth" id="month_calendar">
-				<thead>
-					<tr>
-						<th></th>
-						<th>Понедельник</th>
-						<th>Вторник</th>
-						<th>Среда</th>
-						<th>Четверг</th>
-						<th>Пятница</th>
-						<th>Суббота</th>
-						<th>Воскресенье</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for week in weeks %}
-					<tr>
-						<th>{{ week.week_num }}</th>
-						{% for day in week.week_days %}
-						{% if day.class %}
-						<td class="{{ day.class }}">
-							{% if day.event %}
-							<div class="alert alert-primary event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
-								{{ day.event.caption }}
-							</div>
-							{% endif %}
-							<small class="date">{{ day.day }}</small>
-						</td>
-						{% else %}
-						<td>
-							{% if day.event %}
-							<div class="alert alert-primary event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
-								{{ day.event.caption }}
-							</div>
-							{% endif %}
-							<small class="date">{{ day.day }}</small>
-						</td>
-						{% endif %}
-						{% endfor %}
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			</div>
-		<section class="section-list">
-			<div class="list-group" style="display: None" id="ViewList">
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Where is my mind?
-					<div class="date-and-place">
-						<small>29.02.2018</small>
-						|
-						<small><b>Москва</b></small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Sad but True
-					<div class="date-and-place">
-						<small>13.02.2018</small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Karma Police
-					<div class="date-and-place">
-						<small>14.02.2018</small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Starway to Heaven
-					<div class="date-and-place">
-						<small>27.02.2018</small>
-						|
-						<small><b>Королев</b></small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Californication
-					<div class="date-and-place">
-						<small>27.02.2018</small>
-						|
-						<small><b>Мытищи</b></small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Personal Jesus
-					<div class="date-and-place">
-						<small>18.02.2018</small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					День рождения
-					<div class="date-and-place">
-						<small>23.10.2018</small>
-						|
-						<small><b>Королев</b></small>
-					</div>
-				</a>
-				<a href="#" class="list-group-item list-group-item-danger" data-toggle="modal"
-					data-target="#Event">
-					Let It Be
-					<div class="date-and-place">
-						<small>22.02.2018</small>
-					</div>
-				</a>
-			</div>
-		</section>
-				</section>
-	</section>
-</article>
-<article class="modals">
-	{% include "modals/calendar_special.html" %}
-	{% include "modals/calendar.html" %}
-	{% include "modals/small_parts.html" %}
-</article>
-</section>
+        <section class="view col-md-7">
+            <div class="event">
+                <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo" style="margin-bottom: 20px;">Вернуться в календарь</button>
+                <h3> Мероприятие </h3>
+                <div class="input-group" hidden>
+                    <input type="text" class="form-control" placeholder="Название">
+                </div>
+                <br/>
+                <small class="folder-now">Выбранная папка</small>
+                <hr/>
+                <h4>Дата: 25.05.2018</h4>
+                <div class="input-group" hidden>
+                    <input type="data" class="form-control" placeholder="Название">
+                </div>
+                <h4>Место</h4>
+            </div>
+            <br/>
+            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Послушать</button>
+            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Редактировать</button>
+            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Удалить</button>
+            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#" hidden>Сохранить</button>
+        </section>
+
+        <section class="note col-md-7" hidden="">
+            <div class="section-mouth">
+                <div id="ViewTable">
+                    <div class="btn-group btn-group-sm btn-mouth">
+                        <a>
+                            <button type="button" class="btn" onclick="back_month()" style="margin-left: 15px;"> &laquo; </button>
+                        </a>
+                        <h3 class="month-now">&nbsp;&nbsp;<span id="month_holder">{{ now_month }}</span> <span id="year_holder">{{ now_year }}</span>&nbsp;&nbsp;</h3> &nbsp;&nbsp;
+                        <a>
+                            <button type="button" class="btn" onclick="go_to_now_month()" style="margin-left: 25px;">Сегодня</button>
+                        </a>
+                    </div>
+                    <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note" style="margin-bottom: 3px;"> + </button>
+                    <a>
+                        <button type="button" class="btn" onclick="next_month()" style="float: right; margin-right: 200px;">&raquo;</button>
+                    </a>
+                    <table class="table table-danger table-mouth" id="month_calendar">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <h6>  <small><small>Понедельник </small> </small> </h6></th>
+                                <th>
+                                    <h6> <small><small> Вторник</small> </small></h6></th>
+                                <th>
+                                    <h6><small><small> Среда </small> </small> </h6></th>
+                                <th>
+                                    <h6><small><small> Четверг </small> </small></h6></th>
+                                <th>
+                                    <h6><small> <small>Пятница </small></small></h6></th>
+                                <th>
+                                    <h6><small><small> Суббота </small> </small></h6></th>
+                                <th>
+                                    <h6><small><small> Воскресенье </small> </small></h6></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for week in weeks %}
+                            <tr>
+                                <th>{{ week.week_num }}</th>
+                                {% for day in week.week_days %} {% if day.class %}
+                                <td class="{{ day.class }}">
+                                    {% if day.event %}
+                                    <div class="alert alert-danger event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                        {{ day.event.caption }}
+                                    </div>
+                                    {% endif %}
+                                    <small class="date">{{ day.day }}</small>
+                                </td>
+                                {% else %}
+                                <td>
+                                    {% if day.event %}
+                                    <div class="alert alert-danger event" data-toggle="modal" data-target="#Event-Card" onclick="get_event_data_ajax({{ day.event.id }})">
+                                        {{ day.event.caption }}
+                                    </div>
+                                    {% endif %}
+                                    <small class="date">{{ day.day }}</small>
+                                </td>
+                                {% endif %} {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+</div>
 {% endblock %}

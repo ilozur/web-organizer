@@ -1,124 +1,94 @@
-﻿{% extends "main/base.html" %}
-{% block meta %}
-{% load staticfiles %}
+{% extends "main/base.html" %} {% block meta %} {% load staticfiles %}
 <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
-<link rel="stylesheet" href='{% static "css/general.css" %}'>
 <link rel="stylesheet" href='{% static "css/base.css" %}'>
 <link rel="stylesheet" href='{% static "css/notes.css" %}'>
+<link rel="stylesheet" href='{% static "css/preloader.css" %}'>
 <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
 <script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
-{% endblock %}
-{% block content %}
-<article class="notes">
-	<section class="mast">
-		<h1>Заметки</h1>
-	</section>
-	<section class="content">
-		<div class="row">
-			<div class="col-2">
-				<div class="card mb-3 ml-3 noanimation">
-					<div class="card-header">
-						<div class="btn-group btn-group-lg">
-							<button type="button" class="btn btn-warning" onclick="show_cards();">
-								<picture>
-									<img src='{% static "icons/card_icon.png" %}' class="icon">
-								</picture>
-							</button>
-							<button type="button" class="btn btn-warning" onclick="show_list();">
-								<picture>
-									<img src='{% static "icons/list_icon.png" %}' class="icon">
-								</picture>
-							</button>
-							<button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#New-Note" onclick="clean_add_note_fields()">+</button>
-						</div>
-					</div>
-					<div class="dropdown btn-lg">
-						<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Сортировка
-						</button>
-						<div class="dropdown-menu">
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_up')">Сначала новые</button>
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('date_down')">Сначала старые</button>
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_up')">А..Я</button>
-							<button type="button" class="dropdown-item" onclick="sort_notes_ajax('title_down')">Я..А</button>
-						</div>
-					</div>
-					<div class="card-footer">
-						<div class="alert alert-warning">
-							<small>Всего заметок: 42</small> <br/>
-							<small>Текстовых: 24</small> <br/>
-							<small>Голосовых: 18</small> <br/>
-						</div>
-					</div>
-				</div>
-				<nav class="navbar">
-					<div class="btn-group btn-group-lg" id="paginate_btn_holder">
-						<a><button id="PrevPage" type="button" class="btn btn-warning">&laquo;</button></a>
-						<div style="width: 150px; height: 100px">
-							{% for number in notes_pages %}
-								<a><button id="paginate_btn_{{ number }}" type="button" class="btn btn-warning" onclick="paginate({{ number }})">{{ number }}</button></a>
-							{% endfor %}
-						</div>
-						<a><button id="NextPage" type="button" class="btn btn-warning">&raquo;</button></a>
-					</div>
-				</nav>
+{% endblock %} {% block content %}
+<h1> Заметки </h1>
+<div class="container-fluid">
+	<div class="row main">
+		<section class="menu col-md-2" id="note_folders">
+			<div class="folder">
+				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder">&#9998;</button>
+				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder" style="float: right;">+</button>
 			</div>
-			<section class="list-view col">
-				<div class="list-group" id="list_id">
-					{% for item in notes_data %}
-					<div id="note_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');">
-						<a href="#" class="list-group-item list-group-item-action list-group-item-warning" data-toggle="modal" data-target="#Note-Card">
-							<h7 id="note_title_{{ item.2 }}">{{ item.0 }}</h7>
-							<div class="date"> <small id="note_date_{{ item.1 }}">{{ item.1 }}</small></div>
-						</a>
+			<div class="list-group">
+				<a class="list-group-item list-group-item-action list-group-item-warning active" id="folder_{{ all_folder.id }}">Все заметки</a>
+				<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ recently_deleted_folder.id}}">Недавно удаленные</a>
+				{% for folder in folders %}
+					<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ folder.id }}">{{ folder.title }}</a>
+				{% endfor %}
+			</div>
+		</section>
+		<section class="notes-list col-md-3" id="note_list">
+			<div class="toolbar">
+				<div class="dropdown btn-lg">
+					<button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировка</button>
+					<div class="dropdown-menu">
+						<button type="button" class="dropdown-item" onclick="sort_notes('date_up')">Сначала новые</button>
+						<button type="button" class="dropdown-item" onclick="sort_notes('date_down')">Сначала старые</button>
+						<button type="button" class="dropdown-item" onclick="sort_notes('title_up')">А..Я</button>
+						<button type="button" class="dropdown-item" onclick="sort_notes('title_down')">Я..А</button>
 					</div>
-					{% endfor %}
+					<div style="float: right;">
+						<button type="button" class="btn" data-toggle="modal" data-target="#New-Note">&#9998;</button>
+						<button type="button" class="btn" id="add_note_btn">+</button>
+					</div>
 				</div>
-                <section class="card-view">
-                    <div class="row" id="cards_id" style="display: none" display="block">
-                        {% for item in notes_data %}
-                            <div id="note_card_{{ item.2 }}" onclick="get_note_data_ajax('{{ item.2 }}');" class="col-4" data-toggle="modal" data-target="#Note-Card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 id="card_note_title_{{ item.2 }}"> {{ item.0 }}</h3>
-                                        <small class="date">{{ item.1 }}</small>
-                                        <hr/>
-                                        <p id="card_note_description_{{ item.2 }}">
-                                            {{ item.3 }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </section>
-            </section>
-		</div>
-	</section>
-</article>
-<article class="modals">
-	{% include "modals/notes.html" %}
-</article>
-<script>
-	var page = {{ page }};
-	for (var i = 1; i <= $('#paginate_btn_holder a').length - 2; i++)
-	{
-		$('#paginate_btn_' + i).removeAttr('disabled');
-	}
-	$('#paginate_btn_' + page).attr('disabled', 'disabled');
-	{% if back_paginate_btn %}
-		$("#PrevPage").removeAttr('disabled');
-		$("#PrevPage").attr('onclick', 'paginate(' + (page - 1) + ')');
-	{% else %}
-		$("#PrevPage").attr('disabled', 'disabled');
-		$('#PrevPage').removeAttr('onclick');
-	{% endif%}
-	{% if next_paginate_btn %}
-		$("#NextPage").removeAttr('disabled');
-		$("#NextPage").attr('onclick', 'paginate(' + (page + 1) + ')');
-	{% else %}
-		$("#NextPage").attr('disabled', 'disabled');
-		$('#NextPage').removeAttr('onclick');
-	{% endif %}
-</script>
+				<div class="input-group search">
+					<input type="search" name="aim" class="form-control" placeholder="Поиск" maxlength="255">
+					<div class="input-group-append">
+						<button class="btn" type="button" id="clean_search_btn" hidden>&#9747;</button>
+					</div>
+				</div>
+			</div>
+			<div class="list-group list">
+                {% if no_notes %}
+                    <p style="margin: auto auto auto auto">{{ lang.no_notes_title }}</p>
+                {% else %}
+					<p style="margin: auto auto auto auto;" hidden>{{ lang.no_notes_title }}</p>
+                    {% for note in notes %}
+                        <a id="note_{{ note.id }}" class="list-group-item list-group-item-action list-group-item-warning">{{ note.title }}</a>
+                    {% endfor %}
+                {% endif %}
+			</div>
+            <div class="holder" id="show_folder_preloader" hidden>
+                <div class="preloader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+		</section>
+		<section class="view col-md-7" id="note_show" hidden>
+			<div class="note">
+				<h3></h3>
+				<small class="date"></small>
+                <hr/>
+				<p class="text"></p>
+			</div>
+			<br/>
+			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Послушать</button>
+			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Редактировать</button>
+			<button type="button" class="btn" id="delete_btn">Удалить</button>
+		</section>
+		<section class="view col-md-7" id="note_add" hidden>
+			<form id="save_note_form">
+				{% csrf_token %}
+				<div class="input-group">
+					{{ save_note_form.note_title }}
+				</div>
+				<div class="input-group">
+					{{ save_note_form.media }}
+					{{ save_note_form.note_data }}
+				</div>
+				<button type="button" class="btn">Сохранить</button>
+			</form>
+		</section>
+        <section class="view col-md-7" id="show_note_preloader" hidden>
+            <div class="holder">
+                <div class="preloader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+        </section>
+	</div>
+</div>
+<script>init();</script>
 {% endblock %}

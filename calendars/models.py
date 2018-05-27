@@ -7,7 +7,7 @@ class Event(models.Model):
     """!
         This is class of user's events
     """
-    user = models.ForeignKey(User, default=1, on_delete=set([1, ]))
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     added_date = models.DateField(default="2018-01-01")
     added_time = models.TimeField(default="00:00:00:000000")
     title = models.CharField(max_length=255)

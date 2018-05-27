@@ -24,10 +24,6 @@ function get_note_data_ajax(id){
                 $('#note_title_show').html(response['title']);
                 $('#note_data_show').html(response['data']);
                 $('#note_added_time').html(response['added_time']);
-                if ('last_edit_time' in response)
-                {
-                    $('#note_last_edit').html(response['last_edit_time'] + '(edited)');
-                }
             }
             else
             {
@@ -60,7 +56,7 @@ function add_note_ajax()
         CKEDITOR.instances[instance].updateElement();
     }
     var clean_text = $('#cke_id_note_data iframe').contents().find('body').text();
-    $('#id_note_data_part').val(clean_text.substr(0, 128));
+    var clean_text = $('#cke_id_note_data iframe').contents().find('body').text();
     var data = CKEDITOR.instances.id_note_data.getData();
     form_data = $('#add_note_form').serialize();
     form_data['data'] = data;
@@ -83,7 +79,7 @@ function add_note_ajax()
                 }
                 var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                     'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
-                    '">' + response['name'] + '</a></p></div>';
+                    '">' + response['title'] + '</a></p></div>';
                 $("#last_notes_holder").html(new_note_html + $("#last_notes_holder").html());
                 if (now_notes_count >= 3)
                 {
@@ -92,7 +88,7 @@ function add_note_ajax()
                 }
                 $('#note_' + response['id']).slideDown('slow');
                 $("#close_note_btn").trigger("click");
-                $("#last_note_title").html(response['name']);
+                $("#last_note_title").html(response['title']);
                 $("#last_note_title").attr('onclick', 'get_note_data_ajax(' + response['id'] + ')');
                 voice_text('Заметка добавлена.');
             }
@@ -134,18 +130,16 @@ function add_event_ajax()
 function save_note_ajax()
 {
     var id = $('#note_num').html();
-    $("#id_note_id").val(id)
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
-    var clean_text = $('#cke_id_note_data_edit iframe').contents().find('body').text();
-    $('#id_note_data_part_edit').val(clean_text.substr(0, 128));
     var form_data = $('#save_note_form').serialize();
     form_data['note_data_edit'] = CKEDITOR.instances.id_note_data_edit.getData();
     $("#save_note_form").find(':input').each(function(){
         $(this).attr('disabled', 'disabled');
     });
     $('#save_note_btn').attr('disabled', 'disabled');
+    form_data += "&id=" + id;
     $.ajax({
         type: "POST",
         url: '/notes/save',
@@ -166,7 +160,6 @@ function save_note_ajax()
                 }
                 $('#note_data_show').html(CKEDITOR.instances.id_note_data_edit.getData());
                 $('#note_title_show').html($('#id_note_title_edit').val());
-                $('#note_last_edit').html(response['edited_time']);
                 voice_text('Заметка сохранена.');
             }
             else
@@ -190,7 +183,7 @@ function delete_note_ajax()
         $.ajax({
             type: "POST",
             url: '/notes/delete',
-            data: {"id": id, "return_last_note": true},
+            data: {"id": id, "should_return_last_note": true},
             success: function(response)
             {
                 if (response['result'] == "100")
@@ -218,7 +211,7 @@ function delete_note_ajax()
                     {
                         var new_note_html = '<div style="display: none" id="note_' + response['id'] + '"><p class="lead"><a href="#" data-toggle="modal" data-target="#Note-Card"' +
                             'onclick="get_note_data_ajax(' + response['id'] + ')" id="note_title_' + response['id'] +
-                            '">' + response['name'] + '</a></p></div>';
+                            '">' + response['title'] + '</a></p></div>';
                         var show_all_label = '<p class="lead"><small><a href="/notes">Показать все</a></small></p></div>';
                         $("#last_notes_holder p:last").remove();
                         $("#last_notes_holder").html($("#last_notes_holder").html() + new_note_html);

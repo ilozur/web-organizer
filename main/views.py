@@ -6,9 +6,10 @@ from main.models import *
 import json
 import hashlib
 import binascii
-from datetime import timedelta
+from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
-from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER
+from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER, SUPPORTED_LANGUAGES,\
+    SUPPORTED_LANGUAGES_CODES, SUPPORTED_TIMEZONES
 from calendars.forms import AddingEventForm
 from notes.forms import *
 from notes.models import *
@@ -18,6 +19,7 @@ from django.contrib.auth.models import User
 from userprofile.forms import RecoverPasswordUserData
 from todo.forms import AddTodoForm, EditTodoForm
 from localisation import rus, eng
+import pytz
 
 
 def index(request):
@@ -35,21 +37,16 @@ def index(request):
             context['sign_up_form'] = sign_up_form
             recover_password_user_data_form = RecoverPasswordUserData()
             context['recover_password_form'] = recover_password_user_data_form
+            context['timezones'] = SUPPORTED_TIMEZONES
+            context['supported_languages'] = SUPPORTED_LANGUAGES
             return render(request, "main/index.html", context)
         else:
-            user_lang = Language.objects.filter(user=request.user).first().lang
-            if user_lang == "ru":
-                lang = rus
-            elif user_lang == "en":
-                lang = eng
-            else:
-                lang = eng
-            context['language'] = user_lang
-            context['lang'] = lang
+            context['lang'], context['language'] = get_language(request)
             events = Event.objects.filter(user=request.user)
             notes = Notes.objects.filter(user=request.user)
             todos = Todos.objects.filter(user=request.user)
-            date = datetime.datetime.now()
+            tzinfo = pytz.timezone(Timezone.objects.filter(user=request.user)[0].timezone)
+            date = timezone.now().astimezone(tzinfo)
             today_event = events.filter(date=date.date()).first()
             if today_event:
                 context['today_event_exists'] = True
@@ -57,14 +54,12 @@ def index(request):
                 context['today_event_id'] = today_event.id
             context['all_events_count'] = events.count()
             context['today_events_count'] = events.filter(date=date.date()).count()
-            context['yesterday_events_count'] = events.filter(date=date.date() - timedelta(1)).count()
+            context['yesterday_events_count'] = events.filter(date=date.date() - timezone.timedelta(1)).count()
             last_events = events.filter(date__lte=date.date())
-            context['week_events_count'] = last_events.filter(date__gte=date.date() - timedelta(1)).count()
-            context['month_events_count'] = last_events.filter(date__gte=date.date() - timedelta(30)).count()
-            context['year_events_count'] = last_events.filter(date__gte=date.date() - timedelta(365)).count()
+            context['week_events_count'] = last_events.filter(date__gte=date.date() - timezone.timedelta(1)).count()
+            context['month_events_count'] = last_events.filter(date__gte=date.date() - timezone.timedelta(30)).count()
+            context['year_events_count'] = last_events.filter(date__gte=date.date() - timezone.timedelta(365)).count()
             context['all_notes_count'] = notes.count()
-            context['voice_notes_count'] = notes.filter(is_voice=True).count()
-            context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
             todos_info = Todos.get_amounts(request.user)
             context['all_todo_count'] = todos_info[0]
             context['active_todo_count'] = todos_info[1]
@@ -98,17 +93,18 @@ def index(request):
             last_note = notes.order_by('-added_time').first()
             if last_note:
                 context['last_note_exists'] = True
-                context['last_note_title'] = last_note.name
+                context['last_note_title'] = last_note.title
                 context['last_note_id'] = last_note.id
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()
-            context['add_note_form'] = AddNoteForm()
+            context['save_note_form'] = SaveNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user, notes)
             context['last_notes_count'] = len(context['last_notes'])
             context['add_todo_form'] = AddTodoForm()
             context['edit_todo_form'] = EditTodoForm()
+            context['hours'] = date.hour
             return render(request, "main/home.html", context)
     else:
         return HttpResponseRedirect('/')
@@ -172,27 +168,27 @@ def sign_up_ajax(request):
     """!
             @brief Function that signs user up (with ajax)
     """
-    context = {}
     if request.method == "GET":
         if not request.user.is_authenticated:
-            context['title'] = "Sign up page"
-            context['header'] = "Sign up page header"
-            sign_up_form = SignUpForm()
-            context['sign_up_form'] = sign_up_form
-            return render(request, "main/sign_up.html", context)
-        else:
             return HttpResponseRedirect('/')
     else:
         response_data = {}
         if not request.user.is_authenticated:
             form = SignUpForm(request.POST)
+            language_checker = False
+            timezone_checker = False
             if form.is_valid():
-                email = form.data['email'].lower()
-                username = form.data['username'].lower()
-                name = form.data['name']
-                surname = form.data['surname']
-                pass1 = form.data['password1']
-                pass2 = form.data['password2']
+                language = form.cleaned_data['language']
+                language_checker = language in SUPPORTED_LANGUAGES_CODES
+                timezone_name = form.cleaned_data['timezone']
+                timezone_checker = timezone_name in SUPPORTED_TIMEZONES
+            if form.is_valid() and language_checker and timezone_checker:
+                email = form.cleaned_data['email'].lower()
+                username = form.cleaned_data['username'].lower()
+                name = form.cleaned_data['name']
+                surname = form.cleaned_data['surname']
+                pass1 = form.cleaned_data['password1']
+                pass2 = form.cleaned_data['password2']
                 email_uniq = check_email_uniq(email)
                 username_uniq = check_username_uniq(username)
                 if email_uniq:
@@ -201,9 +197,10 @@ def sign_up_ajax(request):
                             user = User(email=email, username=username, first_name=name, last_name=surname, is_active=0)
                             user.set_password(pass1)
                             user.save()
-                            # here should be lang=*lang taken from registration*
-                            lang = Language(user=user)
+                            lang = Language(user=user, lang=language)
                             lang.save()
+                            timezone = Timezone(user=user, timezone=timezone_name)
+                            timezone.save()
                             sign_up_key = create_unic_key(user, username, pass1)
                             sign_up_key.save()
                             mail = create_mail(user,
@@ -248,8 +245,9 @@ def create_unic_key(user, username, password):
             @brief Function creates sign up key
     """
     key = create_key(username + password, user)
-    expiration_date = datetime.datetime.now().date()
-    expiration_date += timedelta(days=3)
+    tzinfo = pytz.timezone(Timezone.objects.filter(user=user)[0].timezone)
+    expiration_date = timezone.now().astimezone(tzinfo).date()
+    expiration_date += timezone.timedelta(days=3)
     sign_up_key = ConfirmKey(user=user, key=key, expiration_date=expiration_date)
     return sign_up_key
 
@@ -261,7 +259,8 @@ def activate_key(request, key):
     if request.method == "GET":
         keys = ConfirmKey.objects.filter(key=key)
         if keys.count() > 0:
-            if keys.first().expiration_date >= datetime.datetime.now().date():
+            tzinfo = pytz.timezone(Timezone.objects.filter(user=request.user)[0].timezone)
+            if keys.first().expiration_date >= timezone.now().astimezone(tzinfo).date():
                 user = keys.first().user
                 user.is_active = True
                 user.save()
@@ -294,8 +293,8 @@ def sign_in_ajax(request):
         if not request.user.is_authenticated:
             form = SignInForm(request.POST)
             if form.is_valid():
-                name = form.data['username_sign_in'].lower()
-                password = form.data['password']
+                name = form.cleaned_data['username_sign_in'].lower()
+                password = form.cleaned_data['password']
                 found_user = (len(User.objects.filter(username=name)) > 0) or \
                              (len(User.objects.filter(email=name)) > 0)
                 if not found_user:
@@ -344,3 +343,14 @@ def sign_out_view(request):
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect('/')
+
+
+def get_language(request):
+    user_lang = Language.objects.filter(user=request.user).first().lang
+    if user_lang == "ru":
+        lang = rus
+    elif user_lang == "en":
+        lang = eng
+    else:
+        lang = eng
+    return lang, user_lang

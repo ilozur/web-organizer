@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import pytz
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -114,7 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+SUPPORTED_LANGUAGES = [{"title": "Russian", "code": "ru"}, {"title": "English", "code": "en"}]
+SUPPORTED_LANGUAGES_CODES = ['ru', 'en']
+SUPPORTED_TIMEZONES = pytz.common_timezones
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -155,7 +159,7 @@ CKEDITOR_CONFIGS = {
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
         'filebrowserBrowseUrl': '',
-    }
+    },
 }
 
 CKEDITOR_UPLOAD_PATH = "uploads/"

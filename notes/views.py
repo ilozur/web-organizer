@@ -1,233 +1,244 @@
 from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render
-from notes.forms import *
-from main.models import Language
-import json
-from datetime import datetime
-from notes.forms import AddNoteForm, SearchForm
-from notes.models import Notes
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.paginator import Paginator
-from localisation import eng, rus
+import json
+
+from notes.forms import *
+from notes.models import *
+
+from datetime import datetime
+from django.utils import timezone
+import pytz
+
+from main.views import get_language
 
 
 @login_required
 def index(request):
-    sort_type = request.GET.get("sort_type", "date_up")
-    notes = Notes.get_notes(sort_type, user=request.user)
-    page = request.GET.get("page")
-    try:
-        page = int(page)
-    except Exception as ex:
-        page = 1
-        print(ex)
     if request.method == "GET":
-        context = {
-            'title': "Notes index page",
-        }
-        user_lang = Language.objects.filter(user=request.user).first().lang
-        if user_lang == "ru":
-            lang = rus
-        elif user_lang == "en":
-            lang = eng
+        notes = Notes.get_notes("date_up", request.user)
+        context = dict()
+        context['title'] = "Notes index page"
+        context['lang'], context['language'] = get_language(request)
+        folders = NotesFolder.objects.filter(user=request.user, recently_deleted=False)
+        recently_deleted_folder = NotesFolder.objects.filter(user=request.user, recently_deleted=True)
+        if len(recently_deleted_folder) == 0:
+            tmp_folder = NotesFolder(user=request.user, title="Recently deleted", recently_deleted=True)
+            tmp_folder.save()
+        recently_deleted_folder = NotesFolder.objects.filter(user=request.user, recently_deleted=True)
+        context['recently_deleted_folder'] = recently_deleted_folder[0]
+        context['all_folder'] = {'id': 'all'}
+        context['folders'] = folders
+        if len(notes) > 0:
+            context['notes'] = notes
+            context['no_notes'] = False
         else:
-            lang = eng
-        context['language'] = user_lang
-        context['lang'] = lang
-        notes_list = []
-        for i in notes:
-            notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-        pages = Paginator(notes_list, 20)
-        if (page < 1) or (page > len(pages.page_range)):
-            page = 1
-        context['page'] = page
-        context['all_notes_count'] = notes.count()
-        context['voice_notes_count'] = notes.filter(is_voice=True).count()
-        context['text_notes_count'] = int(context['all_notes_count']) - int(context['voice_notes_count'])
-        context['notes_data'] = pages.page(page)
-        context['back_paginate_btn'] = pages.page(page).has_previous()
-        context['next_paginate_btn'] = pages.page(page).has_next()
-        context['notes_pages'] = pages.page_range
-        context['search_note_form'] = SearchForm()
-        context['add_note_form'] = AddNoteForm()
-        context['edit_note_form'] = EditNoteForm()
+            context['no_notes'] = True
+        context['save_note_form'] = SaveNoteForm()
         return render(request, "notes/index.html", context)
-    else:
-        response = paginate(notes, page)
-        return response
 
 
-@login_required
-def add_note_ajax(request):
+def create_added_date(lang, real_time):
     """
     @brief
-    This function adds notes
+    This function formats added date
+    @detailed
+    This function formats added date using user language and default added date
     """
-    response_data = {}
-    if request.method == "POST":
-        form = AddNoteForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['note_title']
-            data = form.cleaned_data['note_data']
-            data_part = form.cleaned_data['note_data_part']
-            tmp = Notes(name=name, data=data, added_time=datetime.now(), user=request.user, data_part=data_part)
-            tmp.save()
-            result = "100"
-            response_data['data_part'] = tmp.data_part
-            response_data['id'] = tmp.id
-            response_data['name'] = tmp.name
-            response_data['datetime'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
-        else:
-            result = '104'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
-
-
-def search_notes(substr, user):
-    obj = Notes.objects.all()
-    ret_list = []
-    """
-        @brief
-        This function searches notes
-        """
-    for i in obj:
-        if substr in i.name:
-            ret_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, [i.data]))
-    return ret_list
+    date = lang.months[real_time.month - 1] + real_time.strftime(" %d, %Y, %H:%M")
+    return date
 
 
 @login_required
-def get_note_data_ajax(request):
+def get_note_data(request):
     """
     @brief
     This function receives information about notes
     @detailed
     This function receives information about notes such as date, time, name
     """
-    response_data = {}
-    if request.method == "POST":
-        note_id = request.POST.get('id')
-        if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
-            note = Notes.objects.filter(id=note_id).first()
-            response_data = {
-                'title': note.name,
-                'data': note.data,
-                'added_time': note.added_time.strftime("%I:%M%p on %B %d, %Y"),
-            }
-            if note.last_edit_time is not None:
-                response_data['last_edit_time'] = note.last_edit_time.strftime("%I:%M%p on %B %d, %Y")
-            result = '100'
-        else:
-            result = '111'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
+    if request.method == "GET":
         return HttpResponseRedirect('/')
+    else:
+        lang, language = get_language(request)
+        note_id = request.POST.get('id')
+        response = dict()
+        result = 100
+        if note_id:
+            notes = Notes.objects.filter(user=request.user, id=note_id)
+            if len(notes) > 0:
+                note = notes[0]
+                response = {
+                    'title': note.title,
+                    'data': note.data,
+                    'added_time': create_added_date(lang, note.added_time),
+                    'id': note.id,
+                }
+                result = 100
+            else:
+                result = 111
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 @login_required
-def search_ajax(request):
+def delete_note(request):
+    """
+    @brief
+    This function deletes notes
+    """
+    if request.method == "GET":
+        return HttpResponseRedirect('/')
+    else:
+        note_id = request.POST.get('id')
+        should_return_last_note = request.POST.get('should_return_last_note')
+        response = dict()
+        result = 100
+        if note_id:
+            result = Notes.delete_note(note_id, request.user)
+        if should_return_last_note:
+            last_notes = Notes.get_notes("date_up", request.user)
+            last_note = None
+            if last_notes:
+                if last_notes.count() >= 3:
+                    last_note = last_notes[0:3][-1]
+            if last_note is not None:
+                response['id'] = last_note.id
+                response['title'] = last_note.title
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+@login_required
+def search(request):
     """
     @brief
     This function looks for the notes
     @detailed
     This function searches for a note among those that exist
     """
-    if request.method == "POST":
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            string = form.data['result']
-            response_data = {
-                'notes_list': Notes.search_notes(string, request.user)
-            }
-            result = '100'
+    sorting_type = request.POST.get('sorting_type')
+    aim = request.POST.get('aim')
+    folder_id = request.POST.get('folder')
+    if folder_id == "all":
+        folder_id = None
+    if folder_id:
+        folder = NotesFolder.objects.filter(id=folder_id)
+        if len(folder) == 0:
+            folder = None
         else:
-            response_data = {
-                'notes_list': Notes.get_notes(request.sorting_type, request.user)
-            }
-            result = '104'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            folder = folder[0]
     else:
-        return HttpResponseRedirect('/')
+        folder = None
+    found_notes = Notes.search_notes(aim, request.user, sorting_type, folder)
+    json_serializable_notes = [{'id': note.id, 'title': note.title} for note in found_notes]
+    response = {
+        'found_notes': json_serializable_notes
+    }
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 
 @login_required
-def save_ajax(request):
-    """
-    @brief
-    This function saves the notes
-    @detailed
-    This function saves the written note
-    """
-    response_data = {}
-    if request.method == "POST":
-        form = EditNoteForm(request.POST)
-        if form.is_valid():
-            note_id = form.cleaned_data['note_id']
-            if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
-                tmp = Notes.objects.filter(id=note_id).first()
-                tmp.name = form.cleaned_data['note_title_edit']
-                tmp.data = form.cleaned_data['note_data_edit']
-                tmp.data_part = form.cleaned_data['note_data_part_edit']
-                tmp.last_edit_time = datetime.now()
-                tmp.save()
-                result = '100'
-                response_data['edited_time'] = datetime.now().strftime("%I:%M%p on %B %d, %Y")
-                response_data['data_part'] = tmp.data_part
+def sort(request):
+    if request.method == "GET":
+        return HttpResponseRedirect('/')
+    else:
+        sorting_type = request.POST.get('sorting_type')
+        aim = request.POST.get('aim')
+        folder_id = request.POST.get('folder')
+        if folder_id == "all":
+            folder_id = None
+        if folder_id:
+            folder = NotesFolder.objects.filter(id=folder_id)
+            if len(folder) == 0:
+                folder = None
             else:
-                result = '111'
+                folder = folder[0]
         else:
-            result = '104'
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
-        return HttpResponseRedirect('/')
+            folder = None
+        sorted_notes = Notes.search_notes(aim, request.user, sorting_type, folder)
+        json_serializable_notes = [{'id': note.id, 'title': note.title} for note in sorted_notes]
+        response = {
+            'sorted_notes': json_serializable_notes
+        }
+        return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 @login_required
-def delete_ajax(request):
-    """
-    @brief
-    This function deletes notes
-    """
-    response_data = {}
-    if request.method == "POST":
-        note_id = request.POST.get('id')
-        should_return_last_note = request.POST.get('return_last_note')
-        if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
-            if Notes.delete_note(note_id):
+def get_folder(request):
+    if request.method == "GET":
+        return HttpResponseRedirect('/')
+    else:
+        folder_id = request.POST.get('id')
+        sorting_type = request.POST.get('sorting_type')
+        if sorting_type is None:
+            sorting_type = "date_up"
+        response = dict()
+        if folder_id == "all":
+            notes = Notes.get_notes(sorting_type, user=request.user)
+            json_serializable_notes = [{'id': note.id, 'title': note.title} for note in notes]
+            response['notes'] = json_serializable_notes
+            result = "100"
+        else:
+            folder = NotesFolder.objects.filter(id=folder_id)
+            if len(folder) == 0:
+                result = "115"
+            else:
+                folder = folder[0]
+                notes = Notes.get_notes(sorting_type, user=request.user, folder=folder)
+                json_serializable_notes = [{'id': note.id, 'title': note.title} for note in notes]
+                response['notes'] = json_serializable_notes
                 result = "100"
-            else:
-                result = "111"
-        else:
-            result = "111"
-        last_notes = Notes.get_notes("date_up", request.user)
-        last_note = None
-        if last_notes:
-            if last_notes.count() >= 3:
-                last_note = last_notes[0:3][-1]
-        if (last_note is not None) and should_return_last_note:
-            response_data['id'] = last_note.id
-            response_data['name'] = last_note.name
-        response_data['result'] = result
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-    else:
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+@login_required
+def save_note(request):
+    if request.method == "GET":
         return HttpResponseRedirect('/')
+    else:
+        note_id = request.POST.get('id')
+        form_save = SaveNoteForm(request.POST)
+        form_edit = EditNoteForm(request.POST)
+        if form_save.is_valid():
+            form = form_save
+            title_key = "note_title"
+            data_key = "note_data"
+        else:
+            form = form_edit
+            title_key = "note_title_edit"
+            data_key = "note_data_edit"
+        result = "100"
+        response = dict()
+        if form.is_valid():
+            if note_id == "new_note":
+                folder = request.POST.get('folder')
+                if folder == "null":
+                    folder = None
+                if folder is not None:
+                    folder = NotesFolder.objects.filter(id=folder)[0]
+                response['id'] = add_note(request.user, form.cleaned_data[title_key],
+                                          form.cleaned_data[data_key], folder)
+            else:
+                notes = Notes.objects.filter(id=note_id)
+                if len(notes) > 0:
+                    note = notes[0]
+                    note.title = form.cleaned_data[title_key]
+                    note.data = form.cleaned_data[data_key]
+                    note.save()
+                    response['id'] = note.id
+                else:
+                    result = "111"
+        else:
+            result = "104"
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
 
 
-def paginate(notes, page_number):
-    response_data = {}
-    notes_list = []
-    for i in notes:
-        notes_list.append((i.name, i.added_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.data_part))
-    pages = Paginator(notes_list, 20)
-    if (page_number < 1) or (page_number > len(pages.page_range)):
-        page_number = 1
-    response_data['buttons'] = [pages.page(page_number).has_previous(), pages.page(page_number).has_next()]
-    response_data['notes_list'] = pages.page(page_number).object_list
-    response_data['result'] = 100
-    response_data['normal_page'] = page_number
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+def add_note(user, title, data, folder):
+    note = Notes(title=title, user=user, data=data, folder=folder)
+    note.save()
+    return note.id

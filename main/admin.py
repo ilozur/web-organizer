@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 import main.management.commands.generate_notes as gn
 import main.management.commands.generate_events as ge
 import main.management.commands.generate_todo as gt
