@@ -203,9 +203,9 @@ def sign_up_ajax(request):
                             sign_up_key = create_unic_key(user, username, pass1)
                             sign_up_key.save()
                             mail = create_mail(user,
-                                               "Go to this link to activate your account: 127.0.0.1:8000/activate/" +
+                                               "Go to this link to activate your account: eva-organizer.tk/activate/" +
                                                sign_up_key.key,
-                                               "<a href='http://127.0.0.1:8000/activate/" + sign_up_key.key +
+                                               "<a href='https://eva-organizer.tk/activate/" + sign_up_key.key +
                                                "'>Go to this link to activate your account</a>")
                             send_mail(mail)
                             result = "100"
