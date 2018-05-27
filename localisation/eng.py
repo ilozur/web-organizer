@@ -44,6 +44,15 @@ notes_rewrite_audio = 'Re-record audio'
 notes_text_count = 'with text'
 notes_voice_count = 'with voice'
 
+notes_all_notes = 'All notes'
+notes_recently_delete = "Recently deleted"
+notes_sort = 'Sort'
+notes_first_new = 'First new'
+notes_first_old = 'First old'
+notes_A_Z = 'A..Z'
+notes_Z_A = 'Z..A'
+notes_SAVE1 = 'Save'
+
 
 # --Календарь--
 

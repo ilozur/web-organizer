@@ -44,6 +44,14 @@ notes_rewrite_audio = 'Переписать аудио'
 notes_text_count = 'текстовых'
 notes_voice_count = 'голосовых'
 
+notes_all_notes = 'Все заметки'
+notes_recently_delete = "Недавно удаленные"
+notes_sort = 'Сортировка'
+notes_first_new = 'Сначало новые'
+notes_first_old = 'Сначало старые'
+notes_A_Z = 'А..Я'
+notes_Z_A = 'Я..А'
+notes_SAVE1 = 'Сохранить'
 
 # --Календарь--
 
