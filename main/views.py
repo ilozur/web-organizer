@@ -17,7 +17,7 @@ from todo.models import *
 from calendars.models import *
 from django.contrib.auth.models import User
 from userprofile.forms import RecoverPasswordUserData
-from todo.forms import AddTodoForm, EditTodoForm
+from todo.forms import SaveTodoForm, EditTodoForm
 from localisation import rus, eng
 import pytz
 
@@ -101,7 +101,7 @@ def index(request):
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user, notes)
             context['last_notes_count'] = len(context['last_notes'])
-            context['add_todo_form'] = AddTodoForm()
+            context['add_todo_form'] = SaveTodoForm()
             context['edit_todo_form'] = EditTodoForm()
             context['hours'] = date.hour
             return render(request, "main/home.html", context)

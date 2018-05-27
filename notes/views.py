@@ -8,7 +8,6 @@ import re
 from notes.forms import *
 from notes.models import *
 from main.models import Timezone
-from django.utils import timezone
 import pytz
 
 from main.views import get_language

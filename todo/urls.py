@@ -1,12 +1,12 @@
 from django.urls import path
-from todo import views
+from todo.views import *
 
 urlpatterns = [
-    path('edit', views.edit_todo, name='todo.edit_todo'),
-    path('show_todo', views.show_todo, name='todo.show_todo'),
-    path('add', views.add_todo, name='todo.add_todo'),
-    path('search', views.search, name='todo.search'),
-    path('change', views.status_change, name='todo.change'),
-    path('delete', views.delete_todo, name='todo.delete_todo'),
-    path('paginate', views.paginate, name='todo.paginate')
+    path('', index, name='todo.index'),
+    path('save', save_todo, name='todo.save'),
+    path('get_note_data', get_todo_data, name='todo.get_todo_data'),
+    path('delete', delete_todo, name='todo.delete'),
+    path('sort', sort, name='todo.sort'),
+    path('get_folder', get_folder, name='todo.get_folder'),
+    path('search', search, name='todo.search')
 ]

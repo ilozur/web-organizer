@@ -173,6 +173,7 @@ function set_note_show(response)
     $('#note_show .note .text').html(response['data']);
     $('#delete_btn').unbind('click');
     $('#delete_btn').click(function() { delete_note(response['id']); });
+    document.getElementById('listen_note_btn').onclick = function() { voice_text($('#note_show .note .text').text()); };
     document.getElementById('edit_note_btn').onclick = function() { edit_note(response['id']); };
 };
 

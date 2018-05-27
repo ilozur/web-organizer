@@ -108,14 +108,6 @@
                                 <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo"></a> <a href="#" class="badge badge-primary">&#10003;</a> </p>
                             {% endfor %}
                         {% endif %}
-                        <h4>{{ lang.closed_reminders }}:</h4>
-                        {% if finished_notes_count == 0 %}
-                            <h5>{{ lang.no_todo_title }}</h5>
-                        {% else %}
-                            {% for todo in last_finished_todo %}
-                                <p class="lead"> <a href="#" data-toggle="modal" data-target="#Open-Todo-2"></a> <a href="#" class="badge badge-primary">&#10007;</a> </p>
-                            {% endfor %}
-                        {% endif %}
                         <p class="lead"> <small><a href='{% url "todo.index" %}'>{{ lang.reminders_showall }}</a></small></p>
                         <a href="#" class="badge badge-primary add-new" data-toggle="modal" data-target="#New-Todo"><font class="plus">+</font></a>
                     </div>

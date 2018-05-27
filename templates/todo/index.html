@@ -3,7 +3,7 @@
 <link rel="stylesheet" href='{% static "css/base.css" %}'>
 <link rel="stylesheet" href='{% static "css/todolist.css" %}'>
 <script charset='utf-8' type="text/javascript" src='{% static "js/setup_ajax.js" %}'></script>
-<script charset='utf-8' type="text/javascript" src='{% static "js/notes/scripts.js" %}'></script>
+<script charset='utf-8' type="text/javascript" src='{% static "js/todo/scripts.js" %}'></script>
 {% endblock %} {% block content %}
 <h1> Задачи </h1>
 <div class="container-fluid">
@@ -14,12 +14,8 @@
                 <button type="button" class="btn" data-toggle="modal" data-target="#New-Folder" style="float: right;">+</button>
             </div>
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">Все задачи</a>
+                <a href="#" class="list-group-item list-group-item-action list-group-item-primary active">Все задачи</a>
                 <a href="#" class="list-group-item list-group-item-action list-group-item-primary">Завершенные</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">Проваленные</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary active">Выбранная папка</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">
-                    <button type="button" class="btn delete">—</button>Папка под удалением</a>
             </div>
         </section>
         <section class="todo-list col-md-3">
@@ -39,60 +35,35 @@
                     </div>
                 </div>
                 <div class="input-group search">
-                    <input type="search" class="form-control" placeholder="Поиск">
-                    <div class="input-group-append">
-                        <button class="btn" type="button">&#10155;</button>
-                    </div>
-                </div>
+					<input type="search" name="aim" class="form-control" placeholder="Поиск" maxlength="255">
+					<div class="input-group-append">
+						<button class="btn" type="button" id="clean_search_btn" hidden>&#9747;</button>
+					</div>
+				</div>
             </div>
             <div class="list-group list">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary active">Выбранная задача</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a info list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a light list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">
-                    <button type="button" class="btn delete">—</button>Задачи под удалением</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">
-                    <button type="button" class="btn delete">—</button>Задачи под удалением</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">
-                    <button type="button" class="btn delete">—</button>Задачи под удалением</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a success list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a danger list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a primary list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a info list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a dark list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a primary list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a secondary list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a success list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a danger list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a primary list group item</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-primary">This is a info list group item</a>
+                {% if no_todos %}
+                    <p style="margin: auto auto auto auto">{{ lang.no_todo_title }}</p>
+                {% else %}
+					<p style="margin: auto auto auto auto;" hidden>{{ lang.no_todo_title }}</p>
+                    {% for todo in todos %}
+                        <a id="todo_{{ todo.id }}" class="list-group-item list-group-item-action list-group-item-primary">{{ todo.title }}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="holder" id="show_folder_preloader" hidden>
+                <div class="preloader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             </div>
         </section>
-        <section class="view col-md-7">
+        <section class="view col-md-7" id="todo_show" hidden>
             <div class="todo">
-                <h3> Сверстать сайт до пятницы </h3>
-                <div class="input-group" hidden>
-                    <input type="text" class="form-control" placeholder="Название">
-                </div>
-                <br/>
-                <small class="folder-now">Выбранная папка</small>
+                <h3></h3>
                 <hr/>
-                <h4>Дата: 25.05.2018</h4>
-                <div class="input-group" hidden>
-                    <input type="data" class="form-control" placeholder="Название">
-                </div>
-                <div class="input-group" hidden>
-                    <input type="time" class="form-control" placeholder="Название">
-                </div>
-                <h4>Приоритет: 
-                    <span class="priority">!</span>
-                    <span class="priority">!</span>
-                    <span class="priority">!</span>
-                    <span class="priority">!</span>
+                <h4></h4>
+                <h4>{{ lang.reminders_priority }}:
                 </h4>
-                <h4>Статус: <span class="win-todo">Выполнено</span></h4>
-                <h4>Статус: В процессе</h4>
-                <h4>Статус: <span class="lose-todo">Провалено</span> </h4>
+                <h4>{{ lang.reminders_status }}:
+                </h4>
             </div>
             <br/>
             <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Послушать</button>
@@ -100,6 +71,28 @@
             <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Удалить</button>
             <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#" hidden>Сохранить</button>
         </section>
+        <section class="view col-md-7" id="todo_add" hidden>
+			<form id="save_todo_form">
+				{% csrf_token %}
+				<div class="input-group">
+					{{ save_todo_form.todo_title }}
+				</div>
+				<div class="input-group">
+					{{ save_todo_form.todo_time }}
+				</div>
+                <div class="input-group">
+					{{ save_todo_form.todo_deadline }}
+				</div>
+                <h4>Приоритет:
+                    <span class="priority">!</span>
+                    <span class="priority">!</span>
+                    <span class="priority">!</span>
+                    <span class="priority">!</span>
+                    <span class="priority">!</span>
+                </h4>
+				<button type="button" class="btn" id="save_todo_btn">Сохранить</button>
+			</form>
+		</section>
     </div>
 </div>
 {% endblock %}

@@ -37,7 +37,6 @@ urlpatterns = [
     path('notes/', include(notes.urls)),
     path('calendar', calendars.views.index, name='calendar.index'),
     path('calendar/', include(calendars.urls)),
-    path('todo', todo.views.index, name='todo.index'),
     path('todo/', include(todo.urls)),
     path('userprofile/', include(userprofile.urls)),
     path('sign_in/', sign_in_ajax, name='sign_in'),
@@ -49,9 +48,3 @@ urlpatterns = [
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
