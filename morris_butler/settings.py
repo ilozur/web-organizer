@@ -159,7 +159,7 @@ CKEDITOR_CONFIGS = {
         'toolbarCanCollapse': False,
         'forcePasteAsPlainText': True,
         'filebrowserBrowseUrl': '',
-    }
+    },
 }
 
 CKEDITOR_UPLOAD_PATH = "uploads/"

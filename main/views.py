@@ -98,7 +98,7 @@ def index(request):
             else:
                 context['last_note_exists'] = False
             context['add_event_form'] = AddingEventForm()
-            context['add_note_form'] = AddNoteForm()
+            context['save_note_form'] = SaveNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user, notes)
             context['last_notes_count'] = len(context['last_notes'])

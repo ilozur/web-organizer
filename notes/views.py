@@ -35,8 +35,7 @@ def index(request):
             context['no_notes'] = False
         else:
             context['no_notes'] = True
-        context['add_note_form'] = AddNoteForm()
-        context['edit_note_form'] = EditNoteForm()
+        context['save_note_form'] = SaveNoteForm()
         return render(request, "notes/index.html", context)
 
 
@@ -193,3 +192,52 @@ def get_folder(request):
                 result = "100"
         response['result'] = result
         return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+@login_required
+def save_note(request):
+    if request.method == "GET":
+        return HttpResponseRedirect('/')
+    else:
+        note_id = request.POST.get('id')
+        form_save = SaveNoteForm(request.POST)
+        form_edit = EditNoteForm(request.POST)
+        if form_save.is_valid():
+            form = form_save
+            title_key = "note_title"
+            data_key = "note_data"
+        else:
+            form = form_edit
+            title_key = "note_title_edit"
+            data_key = "note_data_edit"
+        result = "100"
+        response = dict()
+        if form.is_valid():
+            if note_id == "new_note":
+                folder = request.POST.get('folder')
+                if folder == "null":
+                    folder = None
+                if folder is not None:
+                    folder = NotesFolder.objects.filter(id=folder)[0]
+                response['id'] = add_note(request.user, form.cleaned_data[title_key],
+                                          form.cleaned_data[data_key], folder)
+            else:
+                notes = Notes.objects.filter(id=note_id)
+                if len(notes) > 0:
+                    note = notes[0]
+                    note.title = form.cleaned_data[title_key]
+                    note.data = form.cleaned_data[data_key]
+                    note.save()
+                    response['id'] = note.id
+                else:
+                    result = "111"
+        else:
+            result = "104"
+        response['result'] = result
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def add_note(user, title, data, folder):
+    note = Notes(title=title, user=user, data=data, folder=folder)
+    note.save()
+    return note.id

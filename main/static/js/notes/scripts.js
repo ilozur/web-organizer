@@ -6,7 +6,26 @@ function init()
     $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id').split('_')[1]) } });
     $.each($('#note_folders .list-group a'), function() { this.onclick = function() { get_folder($(this).attr('id').split('_')[1]) } });
     document.getElementById('clean_search_btn').onclick = function() { $('input[name="aim"]').val(''); search(); };
+    document.getElementById('add_note_btn').onclick = function() { add_note(); };
     $('input[name="aim"').on('keyup paste', function() { search(); });
+};
+
+function add_note()
+{
+    $('#add_note_btn').attr('disabled', '');
+    $('#note_show').attr('hidden', '');
+    $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
+    $('#note_list .list-group').html('<a id="note_adding" class="list-group-item list-group-item-action list-group-item-warning active">Новая заметка</a>' + $('#note_list .list-group').html());
+    $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id').split('_')[1]) } });
+    document.getElementById('note_adding').onclick = null;
+    $('input[name="note_title"').val("Новая заметка");
+    for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
+    CKEDITOR.instances.id_note_data.setData("");
+    $('#id_note_data').val('');
+    $('#note_add').removeAttr('hidden');
+
 };
 
 function get_folder(id)
@@ -39,11 +58,64 @@ function get_folder(id)
     });
 };
 
+function save_note(id)
+{
+    for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
+    var data = $('#save_note_form').serialize();
+    data['note_data'] =  CKEDITOR.instances.id_note_data.getData();
+    data += "&id=" + id + "&folder=" + selected_folder;
+    $.ajax({
+        type: "POST",
+        url: '/notes/save',
+        data: data,
+        success: function(response)
+        {
+            if (response['result'] == "100")
+            {
+                if (id == "new_note")
+                {
+                    $('#note_adding').attr('id', 'note_' + response['id']);
+                }
+            }
+            else
+            {
+                voice_ajax_result(response['result']);
+            }
+        }
+    });
+};
+
 function get_note_data(id)
 {
+    $('#note_add').attr('hidden', '');
     $('#note_show').attr('hidden', '');
     $('#show_note_preloader').removeAttr('hidden');
-    $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
+    $('#add_note_btn').removeAttr('disabled');
+    $.each($('#note_list .list-group a'), function()
+    {
+        if (($(this).attr('id') == "note_adding") && ($(this).hasClass('active')))
+        {
+            if (CKEDITOR.instances.id_note_data.getData() == "")
+            {
+                $(this).remove();
+            }
+            else
+            {
+                save_note('new_note');
+                $(this).removeClass('active');
+            }
+        }
+        else
+        {
+            if ($(this).hasClass('editing'))
+            {
+                save_note($(this).attr('id').split('_')[1]);
+            }
+            $(this).removeClass('active');
+        }
+    });
     $('#note_' + id).addClass('active');
     $.ajax({
         type: "POST",

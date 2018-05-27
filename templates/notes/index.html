@@ -34,7 +34,7 @@
 					</div>
 					<div style="float: right;">
 						<button type="button" class="btn" data-toggle="modal" data-target="#New-Note">&#9998;</button>
-						<button type="button" class="btn" data-toggle="modal" data-target="#New-Note">+</button>
+						<button type="button" class="btn" id="add_note_btn">+</button>
 					</div>
 				</div>
 				<div class="input-group search">
@@ -62,8 +62,6 @@
 			<div class="note">
 				<h3></h3>
 				<small class="date"></small>
-                <br/>
-                <small class="folder-now">Выбранная папка</small>
                 <hr/>
 				<p class="text"></p>
 			</div>
@@ -71,6 +69,19 @@
 			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Послушать</button>
 			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Редактировать</button>
 			<button type="button" class="btn" id="delete_btn">Удалить</button>
+		</section>
+		<section class="view col-md-7" id="note_add" hidden>
+			<form id="save_note_form">
+				{% csrf_token %}
+				<div class="input-group">
+					{{ save_note_form.note_title }}
+				</div>
+				<div class="input-group">
+					{{ save_note_form.media }}
+					{{ save_note_form.note_data }}
+				</div>
+				<button type="button" class="btn">Сохранить</button>
+			</form>
 		</section>
         <section class="view col-md-7" id="show_note_preloader" hidden>
             <div class="holder">

@@ -11,9 +11,8 @@ class NotesFolder(models.Model):
 class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, default="title")
+    title = models.CharField(max_length=100, default="title")
     added_time = models.DateTimeField(auto_now_add=True)
-    last_edit_time = models.DateTimeField(default=None, null=True)
     folder = models.ForeignKey(NotesFolder, on_delete=models.CASCADE, default=None, null=True)
     deleted_at = models.DateTimeField(auto_now_add=False, null=True, default=None)
 
