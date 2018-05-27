@@ -15,8 +15,8 @@
 				<button type="button" class="btn" data-toggle="modal" data-target="#New-Folder" style="float: right;">+</button>
 			</div>
 			<div class="list-group">
-				<a class="list-group-item list-group-item-action list-group-item-warning active" id="folder_{{ all_folder.id }}">Все заметки</a>
-				<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ recently_deleted_folder.id}}">Недавно удаленные</a>
+				<a class="list-group-item list-group-item-action list-group-item-warning active" id="folder_{{ all_folder.id }}">{{ lang.notes_all_notes }}</a>
+				<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ recently_deleted_folder.id}}">{{ lang.notes_recently_delete }}</a>
 				{% for folder in folders %}
 					<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ folder.id }}">{{ folder.title }}</a>
 				{% endfor %}
@@ -25,7 +25,7 @@
 		<section class="notes-list col-md-3" id="note_list">
 			<div class="toolbar">
 				<div class="dropdown btn-lg">
-					<button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировка</button>
+					<button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ lang.notes_sort }}</button>
 					<div class="dropdown-menu">
 						<button type="button" class="dropdown-item" onclick="sort_notes('date_up')">Сначала новые</button>
 						<button type="button" class="dropdown-item" onclick="sort_notes('date_down')">Сначала старые</button>
@@ -66,9 +66,9 @@
 				<p class="text"></p>
 			</div>
 			<br/>
-			<button type="button" class="btn" id="listen_note_btn">Послушать</button>
-			<button type="button" class="btn" id="edit_note_btn">Редактировать</button>
-			<button type="button" class="btn" id="delete_btn">Удалить</button>
+			<button type="button" class="btn" id="listen_note_btn">{{ lang.notes_listen }}</button>
+			<button type="button" class="btn" id="edit_note_btn">{{ lang.notes_edit }}</button>
+			<button type="button" class="btn" id="delete_btn">{{ lang.notes_delete }}</button>
 		</section>
 		<section class="view col-md-7" id="note_add" hidden>
 			<form id="save_note_form">
@@ -80,7 +80,7 @@
 					{{ save_note_form.media }}
 					{{ save_note_form.note_data }}
 				</div>
-				<button type="button" class="btn" id="save_note_btn">Сохранить</button>
+				<button type="button" class="btn" id="save_note_btn">{{ notes.lang_SAVE1 }}</button>
 			</form>
 		</section>
         <section class="view col-md-7" id="show_note_preloader" hidden>
