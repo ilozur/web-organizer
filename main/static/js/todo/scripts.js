@@ -111,7 +111,7 @@ function get_todo_data(id)
     {
         if (($(this).attr('id') == "todo_adding") && ($(this).hasClass('active')))
         {
-            if ($('input[name="todo_title"]'== "")
+            if ($('input[name="todo_title"]'== ""))
             {
                 $(this).remove();
             }
