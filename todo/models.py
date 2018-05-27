@@ -109,3 +109,9 @@ class Todos(models.Model):
             aim = ""
         todos = todos.filter(title__icontains=aim)
         return todos
+
+    @staticmethod
+    def get_amounts(user):
+        every = Todos.objects.filter(user=user).count()
+        undone = Todos.objects.filter(status='in progress', user=user).count()
+        return [every, undone, (every - undone)]
