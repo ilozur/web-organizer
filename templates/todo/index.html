@@ -16,6 +16,9 @@
             <div class="list-group">
                 <a href="#" class="list-group-item list-group-item-action list-group-item-primary active">Все задачи</a>
                 <a href="#" class="list-group-item list-group-item-action list-group-item-primary">Завершенные</a>
+                {% for folder in folders %}
+					<a class="list-group-item list-group-item-action list-group-item-warning" id="folder_{{ folder.id }}">{{ folder.title }}</a>
+				{% endfor %}
             </div>
         </section>
         <section class="todo-list col-md-3">
@@ -23,15 +26,14 @@
                 <div class="dropdown btn-lg">
                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировка</button>
                     <div class="dropdown-menu">
-                        <button type="button" class="dropdown-item">Сначала новые</button>
-                        <button type="button" class="dropdown-item">Сначала старые</button>
-                        <button type="button" class="dropdown-item">А..Я</button>
-                        <button type="button" class="dropdown-item">Я..А</button>
-                        <button type="button" class="dropdown-item">Горящие задачи</button>
+                        <button type="button" class="dropdown-item" onclick="sort_todos('date_up')">Сначала новые</button>
+						<button type="button" class="dropdown-item" onclick="sort_todos('date_down')">Сначала старые</button>
+						<button type="button" class="dropdown-item" onclick="sort_todos('title_up')">А..Я</button>
+						<button type="button" class="dropdown-item" onclick="sort_todos('title_down')">Я..А</button>
                     </div>
                     <div style="float: right;">
                         <button type="button" class="btn" data-toggle="modal" data-target="#New-Todo">&#9998;</button>
-                        <button type="button" class="btn" data-toggle="modal" data-target="#New-Todo">+</button>
+                        <button type="button" class="btn" id="add_todo_btn">+</button>
                     </div>
                 </div>
                 <div class="input-group search">
@@ -57,19 +59,17 @@
         </section>
         <section class="view col-md-7" id="todo_show" hidden>
             <div class="todo">
-                <h3></h3>
+                <h3 id="todo_show_title"></h3>
                 <hr/>
-                <h4></h4>
-                <h4>{{ lang.reminders_priority }}:
+                <h4 id="todo_show_date"></h4>
+                <h4 id="todo_show_priority">>{{ lang.reminders_priority }}:
                 </h4>
-                <h4>{{ lang.reminders_status }}:
+                <h4 id="todo_show_status">>{{ lang.reminders_status }}:
                 </h4>
             </div>
             <br/>
-            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Послушать</button>
-            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Редактировать</button>
-            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Todo">Удалить</button>
-            <button type="button" class="btn" data-toggle="modal" onclick="" data-target="#" hidden>Сохранить</button>
+			<button type="button" class="btn" id="edit_todo_btn">Редактировать</button>
+			<button type="button" class="btn" id="delete_btn">Удалить</button>
         </section>
         <section class="view col-md-7" id="todo_add" hidden>
 			<form id="save_todo_form">
@@ -95,4 +95,5 @@
 		</section>
     </div>
 </div>
+<script>init();</script>
 {% endblock %}

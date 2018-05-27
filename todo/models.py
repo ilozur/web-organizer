@@ -72,31 +72,40 @@ class Todos(models.Model):
         return todos
 
     @staticmethod
-    def get_todo_by_id(id):
-        if Todos.objects.filter(id=id).count() > 0:
-            return Todos.objects.filter(id=id).first()
+    def delete_todo(todo_id, user):
+        """
+        @param
+        This is ID of todos
+        @brief
+        This function deletes todo
+        """
+        todos = Todos.objects.filter(user=user, id=todo_id)
+        if len(todos) > 0:
+            fully_deleted = False
+            if todos[0].folder:
+                if todos[0].folder.done:
+                    todos[0].delete()
+                    fully_deleted = True
+            if not fully_deleted:
+                done_folder = TodosFolder.objects.filter(user=user, done=True)
+                if len(done_folder) == 0:
+                    tmp_folder = TodosFolder(user=user, title="Recently deleted", done=True)
+                    tmp_folder.save()
+                done_folder = TodosFolder.objects.filter(user=user, done=True)
+                todos[0].folder = done_folder[0]
+                todos[0].save()
+            return 100
         else:
-            return False
+            return 111
 
     @staticmethod
-    def delete_todo(id):
-        if len(Todos.objects.filter(id=id)) > 0:
-            Todos.objects.filter(id=id).delete()
-            return True
-        else:
-            return False
-
-    @staticmethod
-    def search_todos(string, user):
-        obj = Todos.objects.filter(user=user)
-        ret_list = list()
-        for i in obj:
-            if string in i.title:
-                ret_list.append((i.title, i.added_date_and_time.strftime("%I:%M%p on %B %d, %Y"), i.id, i.priority))
-        return ret_list
-
-    @staticmethod
-    def get_amounts(user):
-        every = Todos.objects.filter(user=user).count()
-        undone = Todos.objects.filter(status='in progress', user=user).count()
-        return [every, undone, (every - undone)]
+    def search_todos(aim, user, sorting_type="date_up", folder=None):
+        """
+        @brief
+        This function searches for the todos
+        """
+        todos = Todos.get_todos(sorting_type, user, folder=folder)
+        if aim is None:
+            aim = ""
+        todos = todos.filter(title__icontains=aim)
+        return todos
