@@ -1,11 +1,12 @@
-from django.contrib.auth.models import User
+import json
+
 from django.shortcuts import render
-from main.forms import SignInForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse, HttpResponseRedirect
-import json
+from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test
+
+from main.forms import SignInForm
 import main.management.commands.generate_notes as gn
 import main.management.commands.generate_events as ge
 import main.management.commands.generate_todo as gt

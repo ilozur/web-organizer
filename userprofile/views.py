@@ -18,11 +18,13 @@ def index(request):
     if request.method == "GET":
         change_user_data_form = ChangeUserDataForm()
         change_password_form = ChangePasswordForm()
+        change_language_form = ChangeLanguageForm()
         context = {
             'title': "User userprofile page",
             'header': "User userprofile header",
             'change_user_data_form': change_user_data_form,
             'change_password_form': change_password_form,
+            'change_language_form': change_language_form,
             'language': Language.objects.filter(user=request.user).first().lang,
         }
         if request.user.is_authenticated:
@@ -101,6 +103,35 @@ def change_user_data_ajax(request):
             else:
                 result = "Success"
                 response_data['answer'] = "Ok, data were changed "
+        else:
+            result = 'Error'
+            response_data['answer'] = "Form is not valid"
+        response_data['result'] = result
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        return HttpResponseRedirect('/')
+
+
+def change_language_ajax(request):
+    """!
+            @brief Function that changes user's data (with ajax)
+    """
+    response_data = {}
+    user = request.user
+    if request.method == "POST":
+        result = ""
+        form = ChangeLanguageForm(request.POST)
+        if form.is_valid():
+            language = form.data['language']
+            tmp = Language.objects.filter(user=user).first()
+            if language == 'ru':
+                tmp.lang = 'ru'
+                tmp.save()
+            elif language == 'en':
+                tmp.lang = 'en'
+                tmp.save()
+            else:
+                response_data['answer'] = "wrong type"
         else:
             result = 'Error'
             response_data['answer'] = "Form is not valid"

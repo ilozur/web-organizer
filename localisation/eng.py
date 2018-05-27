@@ -140,3 +140,5 @@ good_night = "Good night"
 good_morning = "Good morning"
 good_day = "Good afternoon"
 good_evening = "Good evening"
+months = ['January', 'February', 'March', 'April', 'May', 'June',
+          'August', 'September', 'October', 'November', 'December']

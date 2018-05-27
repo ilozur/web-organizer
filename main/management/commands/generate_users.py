@@ -2,7 +2,8 @@ from django.core.management.base import BaseCommand
 from calendars.models import *
 from random import choice, randint
 from string import ascii_letters
-from main.models import Language
+from main.models import Language, Timezone
+from morris_butler.settings import SUPPORTED_TIMEZONES, SUPPORTED_LANGUAGES_CODES
 
 
 class Command(BaseCommand):
@@ -30,9 +31,10 @@ class Command(BaseCommand):
             user = User(username=username, is_active=True)
             user.set_password(" ")
             user.save()
-            tmp = ['ru', 'en']
-            lang = Language(user=user, lang=choice(tmp))
+            lang = Language(user=user, lang=choice(SUPPORTED_LANGUAGES_CODES))
             lang.save()
+            timezone = Timezone(user=user, timezone=choice(SUPPORTED_TIMEZONES))
+            timezone.save()
             result = "ok"
         else:
             result = "username used"

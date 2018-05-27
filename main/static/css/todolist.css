@@ -1,164 +1,193 @@
-/*Стили для раздела напоминаний*/
-
-/*Заголовок*/
-h1 {
-  color: #004085;
+body {
+  background-color: #eff;
 }
 
-/*Элементы навигационной панели*/
 .nav-item:hover {
+  border-bottom: 5px solid #b8daff;
+}
+
+nav .active-link {
   border-bottom: 5px solid #004085;
 }
-nav .active {
-  border-bottom: 5px solid #004085;
-}
 
-/*Шапка*/
-.mast {
-  padding-top: 3em;
-  padding-bottom: 3em;
-  text-align: center;
-  color: #004085;
-  border: 1px solid #b8daff;
-  border-top: 0px;
-  background-color: #cce5ff;
-  border-radius: 0 0 15px 15px;
-  margin-bottom: 25px;
-}
-
-/*Кнопки*/
-.btn,
-.btn:focus,
-.btn:active {
-  color: #004085;
-  text-shadow: none;
-  background-color: #cce5ff;
-  border: .05rem solid #b8daff;
-  transition: 0.5s;
-}
-.btn:hover {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)inset;
-  color: #004085;
-  text-shadow: none;
-  background-color: #cce5ff;
-  border: .05rem solid #b8daff;
-  transition: 0.5s;
-}
-
-/*Список*/
-.list-group-item {
-  color: #004085; 
-  transition: 0.5s;
-  margin-top: 10px;
-  width: 1000px;
-  margin-left: 150px;
-  border-radius: 15px 15px 15px 15px;
-}
-.list-group-item:hover {
-  color: #004085;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  transition: 0.5s;
-}
-
-/*Лого*/
 .logo {
   color: #004085;
 }
 
-/*Заголовок у модуля*/
+h1 {
+  color: #004085;
+  margin: 8% 50px 50px 50px;
+}
+
+h3, h4 {
+  color: #004085;
+}
+
+.btn {
+  color: #004085;
+  background-color: #b8daff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  transition: 0.2s;
+}
+
+.btn:hover {
+  color: #004085;
+  background-color: #b8daff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  box-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+
+.active {
+  background-color: #9fcdff;
+}
+
+a {
+  color: #004085;
+}
+
+a:hover {
+  color: #004085;
+  text-decoration: none;
+  text-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+
+.delete {
+  color: #fff;
+  background-color: red;
+  border: 1px solid rgba(0, 0, 0, .125);
+  padding: 1px 5px;
+  transition: 0.5s;
+  margin-right: 5px;
+  border-radius: 50%;  
+}
+
+.delete:hover {
+  color: #fff;
+  background-color: red;
+}
+
+.main {
+  border-top: 2px solid #004085;
+  height: 540px;
+}
+
+.menu {
+  padding: 0px;
+}
+
+.folder {
+  margin: 15px;
+}
+
+.list-group {
+  margin: 0;
+  padding: 0;
+}
+
+.list-group-item {
+  transition: 0.5s;
+}
+
+.list-group-item:hover {
+  box-shadow: 1px 1px 25px 0px rgba(0, 0, 0, 0.25);
+  transition: 0.5s;
+}
+
+.todo-list {
+  border-right: 2px solid #004085;
+  border-left: 2px solid #004085;
+  padding: 0px;
+  height: 540px;
+  width: 100%;
+}
+
+.toolbar {
+  border-bottom: 2px solid #004085;
+}
+
+.dropdown {
+  padding: 0px;
+  margin-right: 15px;
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+.input-group {
+  margin: 15px 0px;
+}
+
+.search {
+  margin-top: 15px;
+  margin-right: 15px;
+  margin-left: 15px;
+  width: auto;
+}
+
+.list {
+  height: 420px;
+  overflow: auto; 
+}
+
+.list .list-group-item {
+  padding: 2.75rem 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 2.25rem;
+  text-align: inherit;
+}
+
+.view {
+  height: 540px;
+}
+
+.todo {
+  padding: 15px;
+  height: 480px;
+  width: 100%;
+  overflow: auto;
+}
+
+.priority {
+  color: #004085;
+  background-color: #b8daff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  padding: 1px 11px;
+  border-radius: 50%;
+}
+
+.lose-todo{
+  color: red;
+}
+
+.win-todo {
+  color: green;
+}
+
+.folder-now {
+  color: #999;
+}
+
+.join {
+  margin: auto;
+  padding: auto;
+}
+
 .modal-header {
   background-color: #b8daff;
   border-bottom: 0px;
 }
 
-/*Тело у модуля*/
 .modal-body {
-  background-color: #cce5ff;
+  background-color: #fff3cd;
 }
 
-/*Подвал у модуля*/
 .modal-footer {
   background-color: #b8daff;
   border-top: 0px;
 }
-
-/*Подвал*/
-footer {
-  color: #cce5ff;
-}
-
-/*Оформление карты и анимация при наводке*/
-.card {
-  background-color: #cce5ff;
-  height: 200px;
-  width: 400px;
-  transition: 0.5s;
-  margin: 10px;
-  margin-bottom: 40px;
-  cursor: pointer;
-  border-radius: 15px;
-}
-.card:hover {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  transition: 0.2s;
-}
-
-/*Оформление последней карты для добавления нового напоминания*/
-.last {
-  border: 5px #dae0e5 dotted;
-  text-align: center;
-  background-color: #cce5ff;
-  font-size: 25pt;
-}
-
-/*Оформление даты в списках*/
-.date {
-  font-size: 8pt;
-  float: right;
-}
-
-/*Позиционирование значков приоритета*/
-.priorities {
-  float: right;
-}
-
-/*Оформление блока приоритета*/
-.priority {
-  border-radius: 50%;
-  background-color: #cce5ff;
-  font-size: 12pt;
-  color: #004085;
-}
-
-/*Оформление значка с приоритетами*/
-.priority-list {
-  border-radius: 50%;
-  background-color: #cce5ff;
-  font-size: 12pt;
-  color: #004085;
-  text-align: center;
-}
-
-/*Оформление последнего значка приоритета*/
-.priority-list-last {
-  border-radius: 50%;
-  background-color: #cce5ff;
-  font-size: 12pt;
-  color: #004085;
-  margin-right: 50px;
-  text-align: center;
-}
-
-.noanimation{
-    height: auto ;
-    width: 215px;
-    border-radius: 15px;
-    text-align: center;
-    margin-top: : 150px;
-        cursor: default;
-}
-
-.noanimation:hover{
-  box-shadow: 0 0;
-}
-

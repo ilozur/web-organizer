@@ -9,7 +9,7 @@ from threading import Thread
 from main.forms import SignInForm, SignUpForm
 from main.models import Language
 from main.views import check_email_uniq, check_username_uniq, create_unic_key, create_mail, send_mail
-from notes.forms import AddNoteForm
+from notes.forms import SaveNoteForm, EditNoteForm
 from notes.models import Notes
 
 
@@ -31,7 +31,7 @@ class Logger:
 class Listening(Thread):
     def __init__(self, name, ip, port):
         Thread.__init__(self)
-        self.name = name
+        self.user = name
         self.port = port
         self.ip = ip
         self.sock = None
@@ -66,7 +66,6 @@ class Listening(Thread):
                                     if loginned_user is None:
                                         result = "107"
                                     else:
-                                        print(loginned_user.username)
                                         userthread = ListeningUser(loginned_user.username, conn, addr)
                                         userthread.daemon = True
                                         userthread.start()
@@ -129,7 +128,7 @@ class Listening(Thread):
 class ListeningUser(Thread):
     def __init__(self, name, conn, addr):
         Thread.__init__(self)
-        self.name = name
+        self.user = User.objects.filter(username=name).first()
         self.conn = conn
         self.addr = addr
 
@@ -137,23 +136,65 @@ class ListeningUser(Thread):
         Logger.save_logs("Started private connection with user " + self.addr[0] +
                          " (" + str(datetime.now()) + ")")
         while True:
-            bytes_data = self.conn.recv(1024)
+            try:
+                bytes_data = self.conn.recv(1024)
+            except ConnectionResetError:
+                self.conn.close()
             if bytes_data:
                 data = bytes_data.decode('utf-8')
                 cmds = data.split('||')
                 if cmds[0] == "add_note":
-                    form = AddNoteForm({'note_title': cmds[1], 'note_data': cmds[2], 'note_data_part': cmds[2]})
-                    if form.is_valid():
-                        name = form.cleaned_data['note_title']
-                        data = form.cleaned_data['note_data']
-                        data_part = form.cleaned_data['note_data_part']
-                        tmp = Notes(name=name, data=data, added_time=datetime.now(), user=User.objects.filter(username=self.name).first(), data_part=data_part)
-                        tmp.save()
-                        result = "100"
-                    else:
-                        result = '104'
-                    self.conn.send(result.encode())
-                # speaking commands with user
+                    self.add_note(cmds)
+                if cmds[0] == "get_all_notes":
+                    self.get_all_notes()
+                if cmds[0] == "get_note":
+                    self.get_note(cmds[1])
+                if cmds[0] == "edit_note":
+                    self.edit_note(cmds)
+                    # speaking commands with user
+
+    def add_note(self, cmds):
+        form = SaveNoteForm({'note_title': cmds[1], 'note_data': cmds[2]})
+        if form.is_valid():
+            name = form.cleaned_data['note_title']
+            data = form.cleaned_data['note_data']
+            tmp = Notes(name=name, data=data, added_time=datetime.now(),
+                        user=User.objects.filter(username=self.user).first())
+            tmp.save()
+            result = "100"
+        else:
+            result = '104'
+        self.conn.send(result.encode())
+
+    def get_all_notes(self):
+        result = "100"
+        notes_list = Notes.objects.filter(user=self.user)
+        for i in notes_list:
+            result += '|' + str(i.id)
+        self.conn.send(result.encode())
+
+    def get_note(self, id):
+        note = Notes.objects.filter(user=self.user, id=id).first()
+        result = '100|' + note.name + '|' + note.data
+        self.conn.send(result.encode())
+
+    def edit_note(self, cmds):
+        form = EditNoteForm(
+            {'note_title_edit': cmds[1], 'note_data_edit': cmds[2]})
+        if form.is_valid():
+            note_id = cmds[3]
+            if Notes.objects.filter(user=self.user, id=note_id).count() > 0:
+                tmp = Notes.objects.filter(id=note_id).first()
+                tmp.name = form.cleaned_data['note_title_edit']
+                tmp.data = form.cleaned_data['note_data_edit']
+                tmp.last_edit_time = datetime.now()
+                tmp.save()
+                result = '100'
+            else:
+                result = '111'
+        else:
+            result = '104'
+        self.conn.send(result.encode())
 
 
 class Command(BaseCommand):
@@ -176,9 +217,7 @@ class Command(BaseCommand):
         Logger.prepare_logger("logs.txt")
         self.start_server(options['ip'], options['port'])
         while True:
-            cmd = input("> ")
-            if cmd == "exit":
-                exit()
+            pass
 
     def start_server(self, ip, port):
         self.stdout.write("Starting server on " + ip + ":" + str(port))
