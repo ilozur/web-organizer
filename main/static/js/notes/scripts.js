@@ -7,7 +7,7 @@ function init()
     $.each($('#note_folders .list-group a'), function() { this.onclick = function() { get_folder($(this).attr('id').split('_')[1]) } });
     document.getElementById('clean_search_btn').onclick = function() { $('input[name="aim"]').val(''); search(); };
     document.getElementById('add_note_btn').onclick = function() { add_note(); };
-    $('input[name="aim"').on('keyup paste', function() { search(); });
+    $('input[name="aim"]').on('keyup paste', function() { search(); });
 };
 
 function add_note()
@@ -32,6 +32,7 @@ function add_note()
     document.getElementById('save_note_btn').onclick = function() { save_note('new_note', true); };
     CKEDITOR.instances.id_note_data.setData("");
     $('#id_note_data').val('');
+    $('#id_note_title').val('');
     $('#note_add').removeAttr('hidden');
 
 };
