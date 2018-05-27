@@ -23,7 +23,7 @@ function add_todo()
             $(this).removeClass('editing');
         }
         $(this).removeClass('active') });
-    $('#todo_list .list-group').html('<a id="todo_adding" class="list-group-item list-group-item-action list-group-item-warning active">Новая заметка</a>' + $('#todo_list .list-group').html());
+    $('#todo_list .list-group').html('<a id="todo_adding" class="list-group-item list-group-item-action list-group-item-primary active">Новая задача</a>' + $('#todo_list .list-group').html());
     $.each($('#todo_list .list-group a'), function() { this.onclick = function() { get_todo_data($(this).attr('id').split('_')[1]) } });
     document.getElementById('todo_adding').onclick = null;
     document.getElementById('save_todo_btn').onclick = function() { save_todo('new_todo', true); };
@@ -40,6 +40,7 @@ function edit_todo(id)
     document.getElementById('save_todo_btn').onclick = function() { save_todo(id, true); };
     $('#todo_add').removeAttr('hidden');
 };
+
 function get_folder(id)
 {
     selected_folder = id;
