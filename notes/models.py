@@ -12,7 +12,7 @@ class Notes(models.Model):
     data = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, default="title")
-    added_time = models.DateTimeField(auto_now_add=True)
+    added_time = models.DateTimeField(auto_now_add=False)
     folder = models.ForeignKey(NotesFolder, on_delete=models.CASCADE, default=None, null=True)
     deleted_at = models.DateTimeField(auto_now_add=False, null=True, default=None)
 

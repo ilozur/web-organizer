@@ -14,14 +14,15 @@ function add_note()
 {
     $('#add_note_btn').attr('disabled', '');
     $('#note_show').attr('hidden', '');
+    $('#note_list .list-group p').attr('hidden', '');
     $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
     $('#note_list .list-group').html('<a id="note_adding" class="list-group-item list-group-item-action list-group-item-warning active">Новая заметка</a>' + $('#note_list .list-group').html());
     $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id').split('_')[1]) } });
     document.getElementById('note_adding').onclick = null;
-    $('input[name="note_title"').val("Новая заметка");
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
+    document.getElementById('save_note_btn').onclick = function() { save_note('new_note', true); };
     CKEDITOR.instances.id_note_data.setData("");
     $('#id_note_data').val('');
     $('#note_add').removeAttr('hidden');
@@ -58,7 +59,7 @@ function get_folder(id)
     });
 };
 
-function save_note(id)
+function save_note(id, show_note=false)
 {
     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
@@ -74,9 +75,15 @@ function save_note(id)
         {
             if (response['result'] == "100")
             {
+                $('#note_add').attr('hidden', '');
                 if (id == "new_note")
                 {
                     $('#note_adding').attr('id', 'note_' + response['id']);
+                }
+                $('#note_' + response['id']).html(response['title']);
+                if (show_note)
+                {
+                    get_note_data(response['id']);
                 }
             }
             else
