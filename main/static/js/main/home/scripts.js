@@ -60,9 +60,10 @@ function add_note_ajax()
     var data = CKEDITOR.instances.id_note_data.getData();
     form_data = $('#add_note_form').serialize();
     form_data['data'] = data;
+    form_data += "&id=" + "new_note";
     $.ajax({
         type: "POST",
-        url: '/notes/add',
+        url: '/notes/save',
         data: form_data,
         success: function(response)
         {
