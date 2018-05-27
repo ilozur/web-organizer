@@ -220,8 +220,8 @@ def save_note(request):
                     folder = None
                 if folder is not None:
                     folder = NotesFolder.objects.filter(id=folder)[0]
-                response['id'] = add_note(request.user, form.cleaned_data[title_key],
-                                          form.cleaned_data[data_key], folder)
+                response['id'], response['title'] = add_note(request.user, form.cleaned_data[title_key],
+                                                             form.cleaned_data[data_key], folder)
             else:
                 notes = Notes.objects.filter(id=note_id)
                 if len(notes) > 0:
@@ -241,4 +241,4 @@ def save_note(request):
 def add_note(user, title, data, folder):
     note = Notes(title=title, user=user, data=data, folder=folder)
     note.save()
-    return note.id
+    return note.id, note.title
