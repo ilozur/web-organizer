@@ -69,10 +69,11 @@ def get_note_data(request):
             notes = Notes.objects.filter(user=request.user, id=note_id)
             if len(notes) > 0:
                 note = notes[0]
+                tzinfo = pytz.timezone(Timezone.objects.filter(user=request.user)[0].timezone)
                 response = {
                     'title': note.title,
                     'data': note.data,
-                    'added_time': create_added_date(lang, note.added_time),
+                    'added_time': create_added_date(lang, note.added_time.astimezone(tzinfo)),
                     'id': note.id,
                 }
                 result = 100
@@ -243,8 +244,6 @@ def save_note(request):
 
 
 def add_note(user, title, data, folder):
-    tzinfo = pytz.timezone(Timezone.objects.filter(user=user)[0].timezone)
-    timenow = timezone.now().astimezone(tzinfo)
-    note = Notes(title=title, user=user, data=data, folder=folder, added_time=timenow)
+    note = Notes(title=title, user=user, data=data, folder=folder)
     note.save()
     return note.id, note.title
