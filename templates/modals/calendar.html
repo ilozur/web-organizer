@@ -22,10 +22,10 @@
                       <span><small>{{ lang.calendar_place_and_time }}</small></span>
                     </div>
                     <div id="placemark"></div>
-<!--                     <div class="form-group">
+                    <div class="form-group">
                       <h3>{{ lang.calendar_description }}</h3>
                       {{ add_event_form.description }}
-                    </div> -->
+                    </div>
                     <div hidden>{{ add_event_form.place }}</div>
                     <div class="form-group">
                       <div class="form-check btn btn-light">
@@ -34,12 +34,6 @@
                       </div>
                     </div>
                 </form>
-<!--                 <h3>Записать аудио</h3>
-                <button type="button" class="btn btn-light btn-lg btn-block">
-                    <picture>
-                        <img src='{% static "icons/micro_icon.png" %}'>
-                    </picture>
-                </button> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal" id="close_calendar_btn">{{ lang.calendar_cancel }}</button>
@@ -65,77 +59,17 @@
             <div class="modal-body">
                 <h3 id="event_date_show"></h3>
                 <hr/>
-                <h3>Весь день</h3>
-                <hr/>
                 <h3 id="place_address">...</h3>
                 <div id="show_map" style="width: 450px; height: 350px;"></div>
 <!--                 <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#Watch-in-Map">{{ lang.calendar_onthemap }}</button> -->
                 <hr/>
                 <h4 id="event_description_show"></h4>
                 <hr/>
-
-<!--                 <div class="form-group">
-                    <div class="like">
-                        <button type="button" class="btn btn-light btn-sm">:) <span>12</span></button>
-                        <button type="button" class="btn btn-light btn-sm">:( <span>2</span></button>
-                    </div>
-                    <textarea class="form-control" rows="3" cols="3" placeholder="Комментарий"></textarea>
-                    <div class="btn-group btn-group-sm WYSIWYG">
-                        <button type="button" class="btn btn-light"><strong>B</strong></button>
-                        <button type="button" class="btn btn-light"><em>I</em></button>
-                        <button type="button" class="btn btn-light"><del>S</del></button>
-                        <button type="button" class="btn btn-light"><ins>U</ins></button>
-                    </div>
-                    <button type="button" class="btn btn-light" style="margin-top: 5px;">{{ lang.calendar_push }}</button>
-                    <button class="btn btn-light" style="margin-top: 5px;" type="button" data-toggle="collapse" data-target="#collapseExample">
-                        {{ lang.calendar_check_comments }}
-                    </button>
-                    <div class="collapse" id="collapseExample">
-                        <div class="card bg-light comment">
-                            <div class="card-header">
-                                <picture><img src='{% static "img/avatar.png" %}'></picture>
-                                <h5>John Doe</h5>
-                                <span class="date-of-comments">28.02.2018</span>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">I think, it will be so <i>cool</i>.</p>
-                            </div>
-                        </div>
-                        <div class="card bg-light comment">
-                            <div class="card-header">
-                                <picture><img src='{% static "img/avatar.png" %}'></picture>
-                                <h5>Alice</h5>
-                                <span class="date-of-comments">27.02.2018</span>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Yep-yep, I thinking about it too.</p>
-                            </div>
-                        </div>
-                        <div class="card bg-light comment">
-                            <div class="card-header">
-                                <picture><img src='{% static "img/avatar.png" %}'></picture>
-                                <h5>Bob</h5>
-                                <span class="date-of-comments">26.02.2018</span>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">I hope.</p>
-                            </div>
-                        </div>
-                        <nav class=" navbar navbar-pag">
-                            <div class="btn-group btn-group-sm">
-                                <a href="#"><button type="button" class="btn btn-light">&laquo;</button></a>
-                                <a href="#"><button type="button" class="btn btn-light disabled">1</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">2</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">3</button></a>
-                                <a href="#"><button type="button" class="btn btn-light">&raquo;</button></a>
-                            </div>
-                        </nav>
-                        <button type="button" class="btn btn-light" data-toggle="collapse" data-target="#collapseExample">{{ lang.calendar_close }}</button>
-                    </div>
-                </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal" onclick="delete_event_ajax()">{{ lang.calendar_delete }}</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-Date"
+                        onclick="open_event_edit_mode()">Редактировать</button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">{{ lang.calendar_save }}</button>
             </div>
         </div>

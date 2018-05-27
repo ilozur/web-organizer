@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
 from morris_butler.settings import SECRET_KEY, EMAIL_HOST_USER, SUPPORTED_LANGUAGES,\
     SUPPORTED_LANGUAGES_CODES, SUPPORTED_TIMEZONES
-from calendars.forms import AddingEventForm
+from calendars.forms import AddEventForm
 from notes.forms import *
 from notes.models import *
 from todo.models import *
@@ -96,7 +96,7 @@ def index(request):
                 context['last_note_id'] = last_note.id
             else:
                 context['last_note_exists'] = False
-            context['add_event_form'] = AddingEventForm()
+            context['add_event_form'] = AddEventForm()
             context['save_note_form'] = SaveNoteForm()
             context['edit_note_form'] = EditNoteForm()
             context['last_notes'] = get_last_notes(request.user, notes)
