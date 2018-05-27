@@ -9,7 +9,7 @@ from threading import Thread
 from main.forms import SignInForm, SignUpForm
 from main.models import Language
 from main.views import check_email_uniq, check_username_uniq, create_unic_key, create_mail, send_mail
-from notes.forms import AddNoteForm, EditNoteForm
+from notes.forms import SaveNoteForm, EditNoteForm
 from notes.models import Notes
 
 
@@ -66,7 +66,6 @@ class Listening(Thread):
                                     if loginned_user is None:
                                         result = "107"
                                     else:
-                                        print(loginned_user.username)
                                         userthread = ListeningUser(loginned_user.username, conn, addr)
                                         userthread.daemon = True
                                         userthread.start()
@@ -144,7 +143,6 @@ class ListeningUser(Thread):
             if bytes_data:
                 data = bytes_data.decode('utf-8')
                 cmds = data.split('||')
-                print(cmds)
                 if cmds[0] == "add_note":
                     self.add_note(cmds)
                 if cmds[0] == "get_all_notes":
@@ -156,13 +154,12 @@ class ListeningUser(Thread):
                     # speaking commands with user
 
     def add_note(self, cmds):
-        form = AddNoteForm({'note_title': cmds[1], 'note_data': cmds[2], 'note_data_part': cmds[2]})
+        form = SaveNoteForm({'note_title': cmds[1], 'note_data': cmds[2]})
         if form.is_valid():
             name = form.cleaned_data['note_title']
             data = form.cleaned_data['note_data']
-            data_part = form.cleaned_data['note_data_part']
             tmp = Notes(name=name, data=data, added_time=datetime.now(),
-                        user=User.objects.filter(username=self.user).first(), data_part=data_part)
+                        user=User.objects.filter(username=self.user).first())
             tmp.save()
             result = "100"
         else:
@@ -183,14 +180,13 @@ class ListeningUser(Thread):
 
     def edit_note(self, cmds):
         form = EditNoteForm(
-            {'note_title_edit': cmds[1], 'note_data_edit': cmds[2], 'note_id': cmds[3], 'note_data_part_edit': cmds[2]})
+            {'note_title_edit': cmds[1], 'note_data_edit': cmds[2]})
         if form.is_valid():
-            note_id = form.cleaned_data['note_id']
+            note_id = cmds[3]
             if Notes.objects.filter(user=self.user, id=note_id).count() > 0:
                 tmp = Notes.objects.filter(id=note_id).first()
                 tmp.name = form.cleaned_data['note_title_edit']
                 tmp.data = form.cleaned_data['note_data_edit']
-                tmp.data_part = form.cleaned_data['note_data_part_edit']
                 tmp.last_edit_time = datetime.now()
                 tmp.save()
                 result = '100'
@@ -221,9 +217,7 @@ class Command(BaseCommand):
         Logger.prepare_logger("logs.txt")
         self.start_server(options['ip'], options['port'])
         while True:
-            cmd = input("> ")
-            if cmd == "exit":
-                exit()
+            pass
 
     def start_server(self, ip, port):
         self.stdout.write("Starting server on " + ip + ":" + str(port))
