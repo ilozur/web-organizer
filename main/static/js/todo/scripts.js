@@ -73,6 +73,7 @@ function get_folder(id)
 
 function save_todo(id, show_todo=false)
 {
+    $('#id_todo_priority').val($('#save_todo_form .selected').html());
     var data = $('#save_todo_form').serialize();
     data += "&id=" + id + "&folder=" + selected_folder;
     $.ajax({
