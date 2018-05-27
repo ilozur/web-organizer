@@ -170,9 +170,9 @@ CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'Morris-Butler-Organaizer@yandex.ru'
+EMAIL_HOST_USER = 'EVA-ORGANIZER@yandex.ru'
 EMAIL_HOST_PASSWORD = '7966915'
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'Morris-Butler-Organaizer@yandex.ru'
+DEFAULT_FROM_EMAIL = 'EVA-ORGANIZER@yandex.ru'
 INTERNAL_IPS = '127.0.0.1'
 # https://django-debug-toolbar.readthedocs.io/en/stable/installation.html/
