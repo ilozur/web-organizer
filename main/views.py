@@ -258,9 +258,9 @@ def activate_key(request, key):
     if request.method == "GET":
         keys = ConfirmKey.objects.filter(key=key)
         if keys.count() > 0:
-            tzinfo = pytz.timezone(Timezone.objects.filter(user=request.user)[0].timezone)
+            user = keys.first().user
+            tzinfo = pytz.timezone(Timezone.objects.filter(user=user)[0].timezone)
             if keys.first().expiration_date >= timezone.now().astimezone(tzinfo).date():
-                user = keys.first().user
                 user.is_active = True
                 user.save()
                 keys.first().delete()
