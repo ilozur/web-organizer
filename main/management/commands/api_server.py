@@ -144,12 +144,15 @@ class ListeningUser(Thread):
             if bytes_data:
                 data = bytes_data.decode('utf-8')
                 cmds = data.split('||')
+                print(cmds)
                 if cmds[0] == "add_note":
                     self.add_note(cmds)
                 if cmds[0] == "get_all_notes":
                     self.get_all_notes()
                 if cmds[0] == "get_note":
                     self.get_note(cmds[1])
+                if cmds[0] == "edit_note":
+                    self.edit_note(cmds)
                     # speaking commands with user
 
     def add_note(self, cmds):
@@ -179,10 +182,11 @@ class ListeningUser(Thread):
         self.conn.send(result.encode())
 
     def edit_note(self, cmds):
-        form = EditNoteForm({'note_title_edit': cmds[1], 'note_data_edit': cmds[2], 'note_id': cmds[2]})
+        form = EditNoteForm(
+            {'note_title_edit': cmds[1], 'note_data_edit': cmds[2], 'note_id': cmds[3], 'note_data_part_edit': cmds[2]})
         if form.is_valid():
             note_id = form.cleaned_data['note_id']
-            if Notes.objects.filter(user=request.user, id=note_id).count() > 0:
+            if Notes.objects.filter(user=self.user, id=note_id).count() > 0:
                 tmp = Notes.objects.filter(id=note_id).first()
                 tmp.name = form.cleaned_data['note_title_edit']
                 tmp.data = form.cleaned_data['note_data_edit']
@@ -195,7 +199,6 @@ class ListeningUser(Thread):
         else:
             result = '104'
         self.conn.send(result.encode())
-
 
 
 class Command(BaseCommand):
