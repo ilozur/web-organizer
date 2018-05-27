@@ -1,4 +1,4 @@
-{% extends "main/base.html" %} {% block meta %} {% load staticfiles %}
+﻿{% extends "main/base.html" %} {% block meta %} {% load staticfiles %}
 <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
 <link rel="stylesheet" href='{% static "css/base.css" %}'>
 <link rel="stylesheet" href='{% static "css/notes.css" %}'>
@@ -67,7 +67,7 @@
 			</div>
 			<br/>
 			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Послушать</button>
-			<button type="button" class="btn" data-toggle="modal" onclick="" data-target="#New-Note">Редактировать</button>
+			<button type="button" class="btn" id="edit_note_btn">Редактировать</button>
 			<button type="button" class="btn" id="delete_btn">Удалить</button>
 		</section>
 		<section class="view col-md-7" id="note_add" hidden>

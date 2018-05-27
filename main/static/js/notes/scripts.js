@@ -15,7 +15,14 @@ function add_note()
     $('#add_note_btn').attr('disabled', '');
     $('#note_show').attr('hidden', '');
     $('#note_list .list-group p').attr('hidden', '');
-    $.each($('#note_list .list-group a'), function() { $(this).removeClass('active') })
+    $.each($('#note_list .list-group a'), function()
+    {
+        if ($(this).hasClass('editing'))
+        {
+            save_note($(this).attr('id').split('_')[1]);
+            $(this).removeClass('editing');
+        }
+        $(this).removeClass('active') });
     $('#note_list .list-group').html('<a id="note_adding" class="list-group-item list-group-item-action list-group-item-warning active">Новая заметка</a>' + $('#note_list .list-group').html());
     $.each($('#note_list .list-group a'), function() { this.onclick = function() { get_note_data($(this).attr('id').split('_')[1]) } });
     document.getElementById('note_adding').onclick = null;
@@ -29,6 +36,18 @@ function add_note()
 
 };
 
+function edit_note(id)
+{
+    $('#note_' + id).addClass('editing');
+    $('#note_show').attr('hidden', '');
+    $('input[name="note_title"]').val($('#note_show h3').html());
+    CKEDITOR.instances.id_note_data.setData($('#note_show p').html());
+    for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
+    document.getElementById('save_note_btn').onclick = function() { save_note(id, true); };
+    $('#note_add').removeAttr('hidden');
+};
 function get_folder(id)
 {
     selected_folder = id;
@@ -119,6 +138,7 @@ function get_note_data(id)
             if ($(this).hasClass('editing'))
             {
                 save_note($(this).attr('id').split('_')[1]);
+                $(this).removeClass('editing');
             }
             $(this).removeClass('active');
         }
@@ -153,6 +173,7 @@ function set_note_show(response)
     $('#note_show .note .text').html(response['data']);
     $('#delete_btn').unbind('click');
     $('#delete_btn').click(function() { delete_note(response['id']); });
+    document.getElementById('edit_note_btn').onclick = function() { edit_note(response['id']); };
 };
 
 function delete_note(id)
